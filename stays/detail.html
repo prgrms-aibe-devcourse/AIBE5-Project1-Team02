@@ -1,0 +1,512 @@
+<!doctype html>
+<html class="light" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Triplet Hotel Detail - Location Aid</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#4C6FFF",
+              "neutral-gray": "#F3F4F6",
+              "text-main": "#1F2937",
+              "text-muted": "#6B7280",
+            },
+            fontFamily: {
+              sans: ["Manrope", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+    <style type="text/tailwindcss">
+      body {
+        font-family: "Manrope", sans-serif;
+        @apply bg-[#F9FAFB] text-text-main;
+      }
+      .material-symbols-outlined {
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 300,
+          "GRAD" 0,
+          "opsz" 24;
+      }
+      .filled-icon {
+        font-variation-settings: "FILL" 1;
+      }
+      .star-rating {
+        position: relative;
+        display: inline-block;
+        font-size: 20px;
+        color: #e5e7eb;
+      }
+      .star-rating::before {
+        content: "★★★★★";
+      }
+      .star-rating-fill {
+        position: absolute;
+        top: 0;
+        left: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        color: #facc15;
+        content: "★★★★★";
+      }
+      #map-expansion:checked ~ #map-content {
+        max-height: 400px;
+        opacity: 1;
+        margin-top: 1rem;
+      }
+      #map-expansion:checked ~ label .expand-icon {
+        transform: rotate(180deg);
+      }
+    </style>
+  </head>
+  <body class="min-h-screen">
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-[110]">
+      <div
+        class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between"
+      >
+        <div class="flex items-center gap-8">
+          <div class="flex items-center gap-2">
+            <div
+              class="w-8 h-8 bg-primary rounded flex items-center justify-center text-white"
+            >
+              <span class="material-symbols-outlined text-sm filled-icon"
+                >explore</span
+              >
+            </div>
+            <span class="text-xl font-extrabold tracking-tight">Triplet</span>
+          </div>
+          <nav class="hidden md:flex gap-6">
+            <a class="text-sm font-semibold text-primary" href="#">Hotels</a>
+            <a
+              class="text-sm font-semibold text-text-muted hover:text-text-main transition-colors"
+              href="#"
+              >Planners</a
+            >
+            <a
+              class="text-sm font-semibold text-text-muted hover:text-text-main transition-colors"
+              href="#"
+              >Community</a
+            >
+          </nav>
+        </div>
+        <div class="flex items-center gap-6">
+          <a
+            class="text-sm font-bold text-primary hover:text-[#3d5ed9] transition-colors whitespace-nowrap"
+            href="#"
+          >
+            [ 비교함 (2) ]
+          </a>
+          <div class="flex items-center gap-4">
+            <button
+              class="text-text-muted hover:text-text-main transition-colors flex items-center"
+            >
+              <span class="material-symbols-outlined">search</span>
+            </button>
+            <div
+              class="w-8 h-8 rounded-full bg-gray-200 border border-gray-300 overflow-hidden cursor-pointer"
+            >
+              <img
+                alt="User"
+                class="w-full h-full object-cover"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCqsTzBw2MMY63WYLCGxYgugKj3pnkGFa9mcNo4bKY6yOZFfNhimGAZ8QTT5rEGSIUB0rUq2oRXQZXarjXqIfsbulqE1ZxICSrLX7RGQRWwHWGSLoZ4uR6GUbznqDl-y78XF3a0HqJIlCB80tEr5YV37mvmqCa0Hxwm5FhUHJbAZqoJG31CHA9ZyzR45B_YXf1-hLRdEn5BhIT5RgXm4A5oIXeGrfQyxlPDZO7GodIB0co58LDF94a-tVt_-vYCe835j8JFrgvwjQ"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    <main class="max-w-7xl mx-auto px-6 py-8">
+      <div class="grid grid-cols-12 gap-4 mb-8">
+        <div
+          class="col-span-12 lg:col-span-8 h-[450px] overflow-hidden rounded-2xl relative"
+        >
+          <img
+            alt="Main Hotel Image"
+            class="w-full h-full object-cover"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuD5f5ud9MRCMnNyw8BWaZdBh5RL6nAOT4iU5f1ibLtl2ZpNZP1bp-iaCsHM53Ah13j2Hh5sZebKNWpy71ZVqJH5o5ubU3tcRgkgnat-GEQNVKSjhQR2sK3y18W4nK8TOBLaKQsLNmsR-CO5-ruLlKv6Lp0gqp4uUyqs_mIEsTQDl69TsosuQmZ95FVwHSnXf_raKPnY0ucYT-iLX1WC_1HGNng09FYYJsEJusUrJMH9x6EU4eSaUpAs-1kT9ZqnYfVtUmw5Um5KWg"
+          />
+        </div>
+        <div class="col-span-12 lg:col-span-4 flex flex-col gap-4">
+          <div class="flex items-center justify-between">
+            <span
+              class="text-xs font-bold uppercase tracking-widest text-text-muted"
+              >Traveler Photos</span
+            >
+            <button class="text-xs font-bold text-primary hover:underline">
+              View all 124
+            </button>
+          </div>
+          <div class="grid grid-cols-2 gap-3 h-full">
+            <div class="rounded-xl overflow-hidden h-[185px]">
+              <img
+                alt="User photo 1"
+                class="w-full h-full object-cover"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAnv5EJIz3QIHqdxyEtSVYhNEPtU6ffygRy5Kmf3UQ9i0DIAIKEfnG970bBJUVz1IYz0hMV32lq5q9Yum6n98IKb5qEN4xRBZYqbDd-5NfppJ9TQg0pjDxY_P9h_jgl8WH_IX76aIxBv5MfXsp5YEiPFjKgDRVSbh19wOs59qoL4_kqDnHDDRqtH4Ctx9jmsg7q7WfNjUmM_xA10fWwBZd0tv3f5A3BbDZRxyk8JJo5ynmxGLcX1_g8HYUzp3tlSHCeOPzRGVBDtw"
+              />
+            </div>
+            <div class="rounded-xl overflow-hidden h-[185px]">
+              <img
+                alt="User photo 2"
+                class="w-full h-full object-cover"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuByW1bQFEoXi9_8qutC6egSXxvhRMsd6lu1TR2npL57-LfMeoWTI_gPgzBonl7o-mMq9lUi1xKVU9jssA5YKYRpskugbGvH3equj8VDAEb-tHvx2sLYGNcvEtE72HLV8r2Seh_An5CEpU5nhVTzsSINMyKafYOZf0ogJQAX-MipSmR9_vhMOI90NzsumaJmTKCHKnPkoxybaXvnnZnSkuQ8DefN3S76D9ICx3EKz6kORQsB1ognvgh_tpmzvgWQkcICboGVjeX_eA"
+              />
+            </div>
+            <div class="rounded-xl overflow-hidden h-[185px]">
+              <img
+                alt="User photo 3"
+                class="w-full h-full object-cover"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCfzbrNtWSVNhyoRIUEx01dCvJhsF9_72ajm1frFJP40Q_IKfW700QIRwh-Wo48jipBMkBVVvOUBnGiI7YqOrFfon4gHs6MRgqrEEHsQgHq-DRzQm3HQTM3_o4FhI88KO-BXIxLLurRWSLiE3svesKDraBP5d_K7vZ69OdwZZkpx_flHxTOD2TFlOqz9s0WEQNLY1piDiEbXTintpJ8zwA2b76HmoIowORuw0LA2pATDyH6u5jJN4c3HQ_U7mCj1IUKR_wtgAmm0g"
+              />
+            </div>
+            <div class="rounded-xl overflow-hidden h-[185px]">
+              <img
+                alt="User photo 4"
+                class="w-full h-full object-cover"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBiW3gBIUUrHxMMo9ZXFIByYfCNOGGfkRT_fCJSMHnWd9yzIbR17j9tpSLA63gHZAGFrSKELoobl0NRzx6Mz-axk-hLK92oBAnliITC-rz6YDoVbwW6A7SzQ8vIhZ5Fsd90a3ZLI6bWVENWdkyzTiUPiVsmdR0KZb-N4xifH5AF_yrcclGdWIQkx6ClRp9W6SttsVEdAhsWlqgasx-E3h9VIcy6flfBxGi7rL5Dy-AsuQHDYHD50oNhyGH5xB3zgsGZmXaMByvVcw"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mb-10">
+        <h1 class="text-4xl font-extrabold mb-4">The Nordic Retreat</h1>
+        <div class="flex flex-col gap-4">
+          <div class="flex flex-wrap items-center gap-x-6 gap-y-2">
+            <div class="flex items-center gap-2">
+              <div class="star-rating">
+                <div class="star-rating-fill" style="width: 86%">★★★★★</div>
+              </div>
+              <span class="font-bold text-lg ml-1">4.3</span>
+              <span class="text-text-muted">(238 reviews)</span>
+            </div>
+            <div class="hidden md:block w-[1px] h-4 bg-gray-300"></div>
+            <div class="flex items-center gap-3">
+              <div class="flex items-center gap-1.5 text-text-main font-bold">
+                <span
+                  class="material-symbols-outlined text-xl text-primary filled-icon"
+                  >train</span
+                >
+                <span>Ueno Station · 3 min walk</span>
+              </div>
+              <div class="relative inline-block">
+                <input class="hidden peer" id="map-expansion" type="checkbox" />
+                <label
+                  class="text-sm font-bold text-[#4C6FFF] hover:underline cursor-pointer flex items-center gap-0.5 select-none"
+                  for="map-expansion"
+                >
+                  View on map
+                  <span
+                    class="material-symbols-outlined text-sm expand-icon transition-transform duration-200"
+                    >expand_more</span
+                  >
+                </label>
+                <div
+                  class="max-h-0 opacity-0 overflow-hidden transition-all duration-300 ease-in-out absolute left-0 top-full mt-0 w-[360px] z-50"
+                  id="map-content"
+                >
+                  <div
+                    class="bg-white border border-gray-200 rounded-2xl shadow-xl p-2"
+                  >
+                    <div
+                      class="bg-gray-50 w-full h-48 rounded-xl relative overflow-hidden border border-gray-100"
+                    >
+                      <div class="absolute inset-0 opacity-20">
+                        <div
+                          class="absolute top-1/4 left-0 w-full h-[2px] bg-gray-400 -rotate-12"
+                        ></div>
+                        <div
+                          class="absolute top-0 left-1/3 w-[2px] h-full bg-gray-400 rotate-6"
+                        ></div>
+                        <div
+                          class="absolute bottom-1/3 left-0 w-full h-[2px] bg-gray-400 rotate-3"
+                        ></div>
+                      </div>
+                      <div
+                        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center"
+                      >
+                        <div
+                          class="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white shadow-lg ring-4 ring-white"
+                        >
+                          <span
+                            class="material-symbols-outlined text-sm filled-icon"
+                            >hotel</span
+                          >
+                        </div>
+                        <span
+                          class="text-[10px] font-extrabold bg-white px-2 py-0.5 rounded-full mt-1 border border-gray-100 shadow-sm"
+                          >Hotel</span
+                        >
+                      </div>
+                      <div
+                        class="absolute top-1/4 left-1/4 flex flex-col items-center"
+                      >
+                        <div
+                          class="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center text-white shadow-lg ring-4 ring-white"
+                        >
+                          <span
+                            class="material-symbols-outlined text-sm filled-icon"
+                            >train</span
+                          >
+                        </div>
+                        <span
+                          class="text-[10px] font-extrabold bg-white px-2 py-0.5 rounded-full mt-1 border border-gray-100 shadow-sm"
+                          >Ueno Station</span
+                        >
+                      </div>
+                      <div
+                        class="absolute top-[40%] left-[38%] w-12 h-[2px] border-t-2 border-dashed border-primary rotate-[30deg]"
+                      ></div>
+                    </div>
+                    <div class="p-3">
+                      <p
+                        class="text-[10px] text-text-muted font-bold uppercase tracking-widest"
+                      >
+                        Decision Aid
+                      </p>
+                      <p class="text-xs font-medium text-text-main mt-1">
+                        280m from Iriya Exit, Ueno Station. Flat walking path.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+        <div class="lg:col-span-2 space-y-12">
+          <section>
+            <h2 class="text-lg font-bold mb-6">Key Information</h2>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              <div
+                class="bg-white border border-gray-100 p-4 rounded-xl shadow-sm"
+              >
+                <span class="material-symbols-outlined text-text-muted mb-2"
+                  >schedule</span
+                >
+                <p
+                  class="text-[10px] uppercase font-bold text-text-muted tracking-tighter"
+                >
+                  Check-in/out
+                </p>
+                <p class="text-sm font-bold">15:00 / 11:00</p>
+              </div>
+              <div
+                class="bg-white border border-gray-100 p-4 rounded-xl shadow-sm"
+              >
+                <span class="material-symbols-outlined text-text-muted mb-2"
+                  >bed</span
+                >
+                <p
+                  class="text-[10px] uppercase font-bold text-text-muted tracking-tighter"
+                >
+                  Twin Room
+                </p>
+                <p class="text-sm font-bold">Available</p>
+              </div>
+              <div
+                class="bg-white border border-gray-100 p-4 rounded-xl shadow-sm"
+              >
+                <span class="material-symbols-outlined text-text-muted mb-2"
+                  >smoke_free</span
+                >
+                <p
+                  class="text-[10px] uppercase font-bold text-text-muted tracking-tighter"
+                >
+                  Smoking
+                </p>
+                <p class="text-sm font-bold">Non-smoking</p>
+              </div>
+              <div
+                class="bg-white border border-gray-100 p-4 rounded-xl shadow-sm"
+              >
+                <span class="material-symbols-outlined text-text-muted mb-2"
+                  >wifi</span
+                >
+                <p
+                  class="text-[10px] uppercase font-bold text-text-muted tracking-tighter"
+                >
+                  Connectivity
+                </p>
+                <p class="text-sm font-bold">Free Wi-Fi</p>
+              </div>
+            </div>
+          </section>
+          <section>
+            <div class="flex items-center justify-between mb-6">
+              <h2 class="text-lg font-bold">Traveler Feedback</h2>
+              <a class="text-sm font-bold text-primary hover:underline" href="#"
+                >View all reviews</a
+              >
+            </div>
+            <div class="space-y-4">
+              <div
+                class="p-5 bg-white border border-gray-100 rounded-2xl shadow-sm"
+              >
+                <div class="flex gap-0.5 mb-2">
+                  <span class="text-yellow-400 text-sm">★★★★★</span>
+                </div>
+                <p class="text-sm text-text-main leading-relaxed italic">
+                  "Extremely clean and efficient. The proximity to the station
+                  is unbeatable for catching the morning Shinkansen."
+                </p>
+                <p class="mt-3 text-xs font-bold text-text-muted">— Sarah M.</p>
+              </div>
+              <div
+                class="p-5 bg-white border border-gray-100 rounded-2xl shadow-sm"
+              >
+                <div class="flex gap-0.5 mb-2">
+                  <span class="text-yellow-400 text-sm">★★★★</span
+                  ><span class="text-gray-200 text-sm">★</span>
+                </div>
+                <p class="text-sm text-text-main leading-relaxed italic">
+                  "Great twin room setup. Very quiet despite being so central.
+                  The minimalist design really helps you unwind after a long day
+                  of sightseeing."
+                </p>
+                <p class="mt-3 text-xs font-bold text-text-muted">— James L.</p>
+              </div>
+            </div>
+          </section>
+        </div>
+        <div class="lg:col-span-1">
+          <div class="sticky top-24">
+            <div
+              class="bg-white border border-gray-200 rounded-3xl p-8 shadow-sm"
+            >
+              <div class="mb-8">
+                <div class="flex items-center justify-between mb-2">
+                  <p class="text-sm font-bold text-text-muted">Twin Room</p>
+                  <span
+                    class="bg-green-100 text-green-700 px-2 py-0.5 rounded text-[10px] font-black uppercase"
+                    >Best price found</span
+                  >
+                </div>
+                <div class="flex items-baseline gap-1">
+                  <span class="text-4xl font-extrabold tracking-tight"
+                    >¥18,500</span
+                  >
+                  <span class="text-text-muted font-medium">/night</span>
+                </div>
+                <p class="text-xs text-text-muted mt-1 italic">
+                  Taxes and fees included
+                </p>
+              </div>
+              <div class="space-y-4">
+                <button
+                  class="w-full bg-primary hover:bg-[#3d5ed9] text-white font-bold py-4 rounded-2xl transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2"
+                >
+                  <span class="material-symbols-outlined text-xl"
+                    >calendar_add_on</span
+                  >
+                  Add to planner
+                </button>
+                <div class="flex items-center gap-3">
+                  <button
+                    class="flex-1 flex items-center justify-center gap-2 py-3 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors"
+                  >
+                    <span class="material-symbols-outlined text-pink-500"
+                      >favorite</span
+                    >
+                    <span class="text-sm font-bold">Like</span>
+                  </button>
+                  <button
+                    class="flex-1 flex items-center justify-center gap-2 py-3 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors"
+                  >
+                    <span class="material-symbols-outlined text-primary"
+                      >compare_arrows</span
+                    >
+                    <span class="text-sm font-bold">Add to compare</span>
+                  </button>
+                </div>
+              </div>
+              <div class="mt-8 pt-8 border-t border-gray-100 space-y-3">
+                <p
+                  class="text-[10px] font-bold text-text-muted uppercase tracking-widest"
+                >
+                  Available via
+                </p>
+                <div
+                  class="flex items-center justify-between py-2 border-b border-gray-50"
+                >
+                  <span class="text-sm font-semibold">Direct Website</span>
+                  <span class="text-sm font-bold">¥18,500</span>
+                </div>
+                <div
+                  class="flex items-center justify-between py-2 border-b border-gray-50"
+                >
+                  <span class="text-sm font-semibold">Booking Portal A</span>
+                  <span class="text-sm font-bold text-text-muted">¥19,200</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer class="mt-20 border-t border-gray-200 bg-white py-12 px-6">
+      <div
+        class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6"
+      >
+        <div class="flex items-center gap-2">
+          <div
+            class="w-6 h-6 bg-gray-200 rounded flex items-center justify-center text-text-muted"
+          >
+            <span class="material-symbols-outlined text-xs">explore</span>
+          </div>
+          <span class="font-bold text-sm">Triplet Travel</span>
+        </div>
+        <div class="text-xs text-text-muted">
+          © 2024 Triplet Travel Ltd. High-efficiency accommodation planning.
+        </div>
+        <div class="flex gap-6">
+          <a
+            class="text-xs font-bold text-text-muted hover:text-text-main"
+            href="#"
+            >Privacy</a
+          >
+          <a
+            class="text-xs font-bold text-text-muted hover:text-text-main"
+            href="#"
+            >Terms</a
+          >
+          <a
+            class="text-xs font-bold text-text-muted hover:text-text-main"
+            href="#"
+            >Help</a
+          >
+        </div>
+      </div>
+    </footer>
+    <div class="fixed bottom-8 left-1/2 -translate-x-1/2 z-[100]">
+      <div
+        class="bg-[#1F2937] text-white px-5 py-3 rounded-full shadow-2xl flex items-center gap-3"
+      >
+        <span
+          class="material-symbols-outlined text-green-400 text-sm filled-icon"
+          >check_circle</span
+        >
+        <span class="text-sm font-medium">Added to compare</span>
+        <a class="text-sm font-bold text-primary hover:underline ml-1" href="#"
+          >[View compare]</a
+        >
+      </div>
+    </div>
+  </body>
+</html>
