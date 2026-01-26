@@ -10,7 +10,7 @@
 
       /* CSS 변수 정의 */
       :root {
-        --primary-color: #00c4b4;
+        --primary-color: #008774;
         --secondary-color: #ff8c42;
         --text-dark: #333333;
         --text-light: #666666;
@@ -155,11 +155,7 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        background-image: linear-gradient(
-          to right,
-          var(--primary-color),
-          var(--secondary-color)
-        );
+        background-color: var(--primary-color);
         color: white;
         padding: 1rem 3rem;
         border-radius: 9999px;
@@ -168,12 +164,12 @@
         border: none;
         cursor: pointer;
         transition: all 0.3s;
-        box-shadow: 0 10px 20px -5px rgba(0, 196, 180, 0.4);
+        box-shadow: 0 10px 20px -5px rgba(0, 135, 116, 0.4); /* #008774에 맞게 조정 */
       }
       /* 시작 버튼 호버 시 효과 */
       .start-button:hover {
         transform: scale(1.05);
-        box-shadow: 0 15px 25px -5px rgba(0, 196, 180, 0.5);
+        box-shadow: 0 15px 25px -5px rgba(0, 135, 116, 0.5); /* #008774에 맞게 조정 */
       }
 
       /* --- 테스트 섹션 --- */
@@ -311,6 +307,7 @@
         justify-content: center;
         text-align: center;
         animation: fadeIn 0.3s;
+        overflow: hidden; /* 추가 */
       }
 
       /* 카드 획득 화면의 내용 컨테이너 */
@@ -319,6 +316,103 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
+        position: relative; /* 별 배경 위에 오도록 z-index를 위해 추가 */
+        z-index: 1; /* 별 배경보다 위에 표시 */
+      }
+
+      /* 별 배경 스타일 */
+      .star-background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: black; /* 기본 배경은 검정색 */
+        background-image:
+          radial-gradient(circle at 15% 50%, rgba(255, 255, 255, 0.8) 0.5px, transparent 1px),
+          radial-gradient(circle at 70% 30%, rgba(255, 255, 255, 0.7) 0.5px, transparent 1px),
+          radial-gradient(circle at 40% 80%, rgba(255, 255, 255, 0.9) 1px, transparent 1.5px),
+          radial-gradient(circle at 85% 60%, rgba(255, 255, 255, 0.6) 1px, transparent 1.5px),
+          radial-gradient(circle at 25% 10%, rgba(255, 255, 255, 0.8) 0.8px, transparent 1.2px),
+          radial-gradient(circle at 5% 90%, rgba(255, 255, 255, 0.7) 0.7px, transparent 1.1px),
+          radial-gradient(circle at 60% 5%, rgba(255, 255, 255, 0.9) 1.2px, transparent 1.8px);
+        background-size: 150px 150px, 180px 180px, 200px 200px, 220px 220px, 160px 160px, 190px 190px, 210px 210px;
+        background-repeat: repeat;
+        opacity: 0.8; /* 기본 투명도 */
+        animation: star-twinkle 5s ease-in-out infinite alternate;
+        z-index: 0; /* acquisition-content 아래에 표시 */
+      }
+
+      @keyframes star-twinkle {
+          0%, 100% { opacity: 0.7; }
+          50% { opacity: 1; }
+      }
+
+      /* [수정] 유성 효과 컨테이너 */
+      .shooting-stars {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        pointer-events: none; /* 클릭 방해하지 않도록 설정 */
+        z-index: 0;
+      }
+
+      /* [수정] 개별 유성 스타일 */
+      .shooting-star {
+        position: absolute;
+        height: 2px;
+        /* 배경색: 꼬리가 자연스럽게 사라지도록 그라디언트 조정 */
+        background: linear-gradient(to right, transparent, rgba(255, 255, 255, 1)); /* 머리 쪽으로 떨어지게 변경 */
+        border-radius: 50%;
+        /* 초기 회전 각도 45도 (오른쪽 아래 대각선) */
+        transform: rotate(45deg); 
+        opacity: 0;
+        animation: shooting-star-anim linear infinite;
+      }
+
+      /* [수정] 유성 애니메이션: 대각선 아래로 떨어지게 변경 */
+      @keyframes shooting-star-anim {
+        0% {
+          opacity: 1;
+          transform: rotate(45deg) translateX(0);
+        }
+        100% {
+          opacity: 0;
+          /* 45도 기울어진 상태에서 X축으로 이동하면 대각선으로 떨어짐 */
+          transform: rotate(45deg) translateX(150vh); 
+        }
+      }
+
+      /* [수정] 로켓 스타일 (물리 효과 적용) */
+      .cat-rocket { /* 클래스 이름 다시 cat-rocket으로 변경 */
+        position: absolute;
+        font-size: 3rem;
+        filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.6));
+        z-index: 100; /* 다른 요소보다 위에 */
+        cursor: grab; /* 잡을 수 있다는 표시 */
+        user-select: none; /* 드래그 시 텍스트 선택 방지 */
+        touch-action: none; /* 모바일 터치 대응 */
+        /* 부드러운 움직임을 위해 transition 제거 (JS로 제어) */
+        will-change: transform;
+      }
+
+      /* 로켓을 잡았을 때 커서 모양 */
+      .cat-rocket:active {
+        cursor: grabbing;
+      }
+
+      /* [수정] 로켓 애니메이션: 동적 회전 각도를 받아 이동 */
+      /* 이 애니메이션은 이제 사용되지 않지만, 기존 CSS 구조 유지를 위해 남겨둠 */
+      @keyframes fly-rocket { 
+        0% {
+          transform: rotate(var(--rocket-rotation, 0deg)) translateX(0);
+        }
+        100% {
+          transform: rotate(var(--rocket-rotation, 0deg)) translateX(150vw);
+        }
       }
 
       /* 떠다니는 카드 효과를 위한 컨테이너 */
@@ -361,11 +455,7 @@
 
       /* 카드 공개 버튼 스타일 */
       .reveal-button {
-        background-image: linear-gradient(
-          to right,
-          var(--primary-color),
-          var(--secondary-color)
-        );
+        background-color: var(--primary-color);
         color: white;
         padding: 1rem 2rem;
         border-radius: 9999px;
@@ -525,11 +615,11 @@
           transparent 100%
         );
         pointer-events: none;
-        mix-blend-mode: overlay; 
+        mix-blend-mode: overlay;
         opacity: 0.8;
         transform: translateX(-100%);
         animation: holographic-animation 3s infinite;
-        animation-delay: 1s; 
+        animation-delay: 1s;
       }
 
       /* 홀로그래픽 애니메이션 정의 */
@@ -618,23 +708,12 @@
       .card-back-content {
         overflow-y: auto;
         height: 100%;
-        padding-right: 10px;
         max-height: 100%;
+        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none; /* Firefox */
       }
-      /* 웹킷 기반 브라우저용 커스텀 스크롤바 */
       .card-back-content::-webkit-scrollbar {
-        width: 4px;
-      }
-      .card-back-content::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 2px;
-      }
-      .card-back-content::-webkit-scrollbar-thumb {
-        background: #ccc;
-        border-radius: 2px;
-      }
-      .card-back-content::-webkit-scrollbar-thumb:hover {
-        background: #aaa;
+        display: none; /* for Chrome, Safari, and Opera */
       }
 
       /* 카드 뒷면 헤더 */
@@ -908,11 +987,7 @@
       /* 추천받기 버튼 스타일 */
       .get-recommendations-button {
         width: 100%;
-        background-image: linear-gradient(
-          to right,
-          var(--primary-color),
-          var(--secondary-color)
-        );
+        background-color: var(--primary-color);
         color: white;
         padding: 1.5rem;
         border-radius: 9999px;
@@ -920,7 +995,7 @@
         font-size: 1.125rem;
         border: none;
         cursor: pointer;
-        box-shadow: 0 10px 20px -5px rgba(0, 196, 180, 0.4);
+        box-shadow: 0 10px 20px -5px rgba(0, 135, 116, 0.4); /* #008774에 맞게 조정 */
         transition: all 0.3s;
         margin-top: 2.5rem;
         margin-bottom: 1rem;
@@ -929,7 +1004,7 @@
       /* 추천받기 버튼 호버 시 효과 */
       .get-recommendations-button:hover {
         transform: scale(1.02);
-        box-shadow: 0 15px 25px -5px rgba(0, 196, 180, 0.5);
+        box-shadow: 0 15px 25px -5px rgba(0, 135, 116, 0.5); /* #008774에 맞게 조정 */
       }
 
       /* --- 그라디언트 배경 --- */
@@ -1036,9 +1111,7 @@
             9개 질문으로 알아보는 나의 여행 성향<br />맞춤 여행지와 여행 카드를
             받아보세요!
           </p>
-          <div id="personality-preview" class="personality-preview-grid">
-            
-          </div>
+          <div id="personality-preview" class="personality-preview-grid"></div>
           <button id="start-btn" class="start-button">
             테스트 시작하기
             <lord-icon
@@ -1064,9 +1137,7 @@
         </div>
         <div id="question-container" class="question-container">
           <h2 id="question-title"></h2>
-          <div id="options-container" class="options-container">
-            
-          </div>
+          <div id="options-container" class="options-container"></div>
         </div>
         <button id="prev-btn" class="prev-button">
           <lord-icon
@@ -1081,8 +1152,7 @@
         </button>
       </section>
 
-      <section id="result-section" class="step-section">
-      </section>
+      <section id="result-section" class="step-section"></section>
     </div>
 
     <script>
@@ -1383,9 +1453,9 @@
           const previewItem = document.createElement("div");
           previewItem.className = "personality-preview-item";
           previewItem.innerHTML = `
-            <div class="emoji">${type.character}</div>
-            <div class="name">${type.nickname}</div>
-        `;
+              <div class="emoji">${type.character}</div>
+              <div class="name">${type.nickname}</div>
+          `;
           personalityPreview.appendChild(previewItem);
         });
       }
@@ -1394,7 +1464,6 @@
       function renderQuestion() {
         const question = questions[currentQuestion];
 
-        
         progressLabel.textContent = `질문 ${currentQuestion + 1} / ${questions.length}`;
         const percentage = Math.round(
           ((currentQuestion + 1) / questions.length) * 100,
@@ -1402,25 +1471,22 @@
         progressPercentage.textContent = `${percentage}%`;
         progressBarInner.style.width = `${percentage}%`;
 
-        
         questionTitle.textContent = question.question;
 
-        
         optionsContainer.innerHTML = "";
         question.options.forEach((option, index) => {
           const optionButton = document.createElement("button");
           optionButton.className = "option-button";
           optionButton.innerHTML = `
-            <div class="option-number">${index + 1}</div>
-            <span class="option-text">${option.text}</span>
-        `;
+              <div class="option-number">${index + 1}</div>
+              <span class="option-text">${option.text}</span>
+          `;
           optionButton.addEventListener("click", () =>
             handleAnswer(option.type),
           );
           optionsContainer.appendChild(optionButton);
         });
 
-        
         prevBtn.style.display = currentQuestion > 0 ? "flex" : "none";
       }
 
@@ -1434,8 +1500,8 @@
           renderQuestion();
         } else {
           calculateResult();
-          showStep("result");
           renderResult();
+          showStep("result");
         }
       }
 
@@ -1460,6 +1526,9 @@
         resultType = Number(
           Object.entries(typeCounts).sort((a, b) => b[1] - a[1])[0][0],
         );
+
+        // [추가된 코드] 결과를 브라우저에 저장합니다 (키 이름: 'myTravelType')
+        localStorage.setItem('myTravelType', resultType);
       }
 
       // 테스트를 처음부터 다시 시작하기 위해 모든 상태를 초기화하고 인트로 화면으로 돌아가는 함수입니다.
@@ -1474,28 +1543,172 @@
       // 먼저 카드 획득 화면을 보여준 후, 사용자가 버튼을 클릭하면 상세 결과 카드와 추천, 공유 옵션을 표시합니다.
       function renderResult() {
         const resultData = enneagramTypes[resultType];
-        resultSection.innerHTML = ""; 
+        resultSection.innerHTML = "";
 
-        
         const acquisitionScreen = document.createElement("div");
         acquisitionScreen.className = "acquisition-screen";
         acquisitionScreen.innerHTML = `
-        <div class="acquisition-content">
-            <div class="floating-card-container">
-                <div class="card-visual ${resultData.gradient}-bg">
-                    <div class="card-character">${resultData.character}</div>
-                </div>
-            </div>
-            <h2 class="acquisition-title">카드를 획득했어요!</h2>
-            <p class="acquisition-subtitle">${resultData.nickname}</p>
-            <button class="reveal-button">
-                <span>클릭하여 카드 확인하기</span>
-            </button>
-        </div>
-    `;
+          <div class="star-background"></div>
+          <div class="shooting-stars"></div>
+          <div class="acquisition-content">
+              <div class="floating-card-container">
+                  <div class="card-visual ${resultData.gradient}-bg">
+                      <div class="card-character">${resultData.character}</div>
+                  </div>
+              </div>
+              <h2 class="acquisition-title">카드를 획득했어요!</h2>
+              <p class="acquisition-subtitle">${resultData.nickname}</p>
+              <button class="reveal-button">
+                  <span>클릭하여 카드 확인하기</span>
+              </button>
+          </div>
+      `;
         resultSection.appendChild(acquisitionScreen);
 
+        const shootingStarsContainer = acquisitionScreen.querySelector('.shooting-stars');
         
+        // [수정된 유성 생성 로직]
+        const numberOfStars = 5; // 유성 개수를 5개로 재조정
+        for (let i = 0; i < numberOfStars; i++) {
+            const star = document.createElement('div');
+            star.className = 'shooting-star';
+            
+            // 위치 랜덤 설정 (화면 전체에서 나타나도록 left 값 되돌림)
+            const top = Math.random() * 50 - 20; // -20% ~ 30% (화면 위쪽)
+            const left = Math.random() * 120 - 10; // -10% ~ 110% (좌우 전체)
+            
+            const duration = Math.random() * 5 + 5; // 5 ~ 10초 (더 느리게)
+            const delay = Math.random() * 15; // 0 ~ 15초 딜레이로 빈도 줄임
+            const width = Math.random() * 100 + 80; // 길이 80px ~ 180px
+            
+            star.style.top = `${top}%`;
+            star.style.left = `${left}%`;
+            star.style.width = `${width}px`;
+            star.style.animationDuration = `${duration}s`;
+            star.style.animationDelay = `${delay}s`;
+            
+            shootingStarsContainer.appendChild(star);
+        }
+
+        // [수정] 고양이 로켓 생성 및 물리 엔진 적용
+        const rocket = document.createElement('div');
+        rocket.className = 'cat-rocket'; // 클래스 이름 cat-rocket 유지
+        rocket.innerHTML = '🚀'; // 로켓만 남김
+        shootingStarsContainer.appendChild(rocket);
+
+        // --- 물리 엔진 변수 설정 ---
+        let posX = Math.random() * window.innerWidth; // 초기 위치 X (화면 전체 랜덤)
+        let posY = Math.random() * (window.innerHeight / 3); // 초기 위치 Y (화면 상단 1/3 지점 랜덤)
+        let velX = (Math.random() - 0.5) * 2; // 초기 속도 X (더 느리게)
+        let velY = (Math.random() - 0.5) * 2; // 초기 속도 Y (더 느리게)
+        let rotation = 0;
+        
+        // 드래그 관련 변수
+        let isDragging = false;
+        let lastMouseX = 0;
+        let lastMouseY = 0;
+        let dragVelX = 0;
+        let dragVelY = 0;
+
+        // --- 애니메이션 루프 (매 프레임 실행) ---
+        function animateRocket() {
+            if (!isDragging) {
+                // 1. 위치 업데이트
+                posX += velX;
+                posY += velY;
+
+                // 2. 화면 경계 튕기기 (Bounce)
+                const rocketWidth = rocket.offsetWidth || 50;
+                const rocketHeight = rocket.offsetHeight || 50;
+                const maxX = window.innerWidth - rocketWidth;
+                const maxY = window.innerHeight - rocketHeight;
+
+                // 왼쪽 벽
+                if (posX <= 0) {
+                    posX = 0;
+                    velX *= -1; // 속도 반전
+                }
+                // 오른쪽 벽
+                if (posX >= maxX) {
+                    posX = maxX;
+                    velX *= -1;
+                }
+                // 천장
+                if (posY <= 0) {
+                    posY = 0;
+                    velY *= -1;
+                }
+                // 바닥
+                if (posY >= maxY) {
+                    posY = maxY;
+                    velY *= -1;
+                }
+
+                // 3. 이동 방향에 맞춰 회전 (이모지 🚀가 45도 기울어져 있으므로 보정)
+                // Math.atan2(y, x)는 라디안 값을 반환하므로 도로 변환
+                const angle = Math.atan2(velY, velX) * (180 / Math.PI);
+                rotation = angle + 45; // 이모지 기본 각도 보정
+            }
+
+            // 4. 스타일 적용 (GPU 가속 사용)
+            rocket.style.transform = `translate(${posX}px, ${posY}px) rotate(${rotation}deg)`;
+
+            // 다음 프레임 요청
+            requestAnimationFrame(animateRocket);
+        }
+
+        // --- 드래그 이벤트 핸들러 ---
+        rocket.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            lastMouseX = e.clientX;
+            lastMouseY = e.clientY;
+            // 잡는 순간 속도 0으로 (멈춤)
+            velX = 0;
+            velY = 0;
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+
+            // 현재 마우스 위치로 로켓 이동
+            const currentMouseX = e.clientX;
+            const currentMouseY = e.clientY;
+            
+            // 던지는 속도 계산 (현재 위치 - 이전 위치)
+            dragVelX = currentMouseX - lastMouseX;
+            dragVelY = currentMouseY - lastMouseY;
+
+            // 위치 업데이트
+            posX = currentMouseX - (rocket.offsetWidth / 2);
+            posY = currentMouseY - (rocket.offsetHeight / 2);
+
+            lastMouseX = currentMouseX;
+            lastMouseY = currentMouseY;
+            
+            // 드래그 중에는 마우스 이동 방향으로 회전
+            const angle = Math.atan2(dragVelY, dragVelX) * (180 / Math.PI);
+            rotation = angle + 45;
+        });
+
+        window.addEventListener('mouseup', () => {
+            if (!isDragging) return;
+            isDragging = false;
+            
+            // 손을 놓으면 마지막 마우스 이동 속도로 로켓 발사!
+            // 너무 빠르거나 느리지 않게 속도 제한 및 보정
+            velX = dragVelX * 0.2; // 약간의 감속 계수 (더 느리게)
+            velY = dragVelY * 0.2; // 약간의 감속 계수 (더 느리게)
+
+            // 정지 상태 방지 (너무 느리면 랜덤 속도 부여)
+            if (Math.abs(velX) < 1 && Math.abs(velY) < 1) {
+                 velX = (Math.random() - 0.5) * 2; // (더 느리게)
+                 velY = (Math.random() - 0.5) * 2; // (더 느리게)
+            }
+        });
+        
+        // 애니메이션 시작
+        requestAnimationFrame(animateRocket);
+
         const cardVisual = acquisitionScreen.querySelector(".card-visual");
         cardVisual.animate(
           [
@@ -1511,66 +1724,65 @@
 
         const resultView = document.createElement("div");
         resultView.className = "result-view";
-        resultView.style.display = "none"; 
+        resultView.style.display = "none";
         resultView.innerHTML = `
-        <div class="result-header">
-            <h1 class="result-title">당신의 여행 성향을 찾았어요!</h1>
-            <p class="result-subtitle">카드를 클릭하거나 드래그해서 돌려보세요</p>
-        </div>
-        <div class="interactive-card-container">
-            
-        </div>
+          <div class="result-header">
+              <h1 class="result-title">당신의 여행 성향을 찾았어요!</h1>
+              <p class="result-subtitle">카드를 클릭하거나 드래그해서 돌려보세요</p>
+          </div>
+          <div class="interactive-card-container">
+              
+          </div>
 
-        <div class="result-details-grid">
-            <div class="recommendation-panel">
-                <h3 class="panel-title">AI가 이렇게 추천했어요!</h3>
-                <p class="panel-subtitle">당신의 성향에 딱 맞는 여행지</p>
-                <div class="recommendation-list">
-                    ${resultData.recommendations
-                      .map(
-                        (rec, index) => `
-                        <div class="recommendation-item">
-                            <div class="recommendation-number">${index + 1}</div>
-                            <span>${rec}</span>
-                        </div>
-                    `,
-                      )
-                      .join("")}
-                </div>
-            </div>
+          <div class="result-details-grid">
+              <div class="recommendation-panel">
+                  <h3 class="panel-title">AI가 이렇게 추천했어요!</h3>
+                  <p class="panel-subtitle">당신의 성향에 딱 맞는 여행지</p>
+                  <div class="recommendation-list">
+                      ${resultData.recommendations
+                        .map(
+                          (rec, index) => `
+                          <div class="recommendation-item">
+                              <div class="recommendation-number">${index + 1}</div>
+                              <span>${rec}</span>
+                          </div>
+                      `,
+                        )
+                        .join("")}
+                  </div>
+              </div>
 
-            <div class="share-panel">
-                <h3 class="panel-title">공유하기</h3>
-                <button class="share-button">
-                    <lord-icon
-                        src="https://cdn.lordicon.com/bxxnzvfm.json"
-                        trigger="hover"
-                        colors="primary:#ffffff"
-                        style="width:20px;height:20px;margin-right:8px;">
-                    </lord-icon>
-                    결과 공유하기
-                </button>
-                <div class="share-text-area">
-                    <p class="panel-subtitle">나의 여행 성향은!</p>
-                    <div class="personality-share-badge">
-                        <span class="share-character">${resultData.character}</span>
-                        <div class="share-text-content">
-                            <p class="share-type">유형 ${resultData.type}</p>
-                            <p class="share-nickname">${resultData.nickname}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <button id="get-recommendations-btn" class="get-recommendations-button">
-            맞춤 여행 추천받기 →
-        </button>
-        <button id="restart-btn" class="start-button">다시 시작하기</button>
-    `;
+              <div class="share-panel">
+                  <h3 class="panel-title">공유하기</h3>
+                  <button id="share-btn" class="share-button">
+                      <lord-icon
+                          src="https://cdn.lordicon.com/bxxnzvfm.json"
+                          trigger="hover"
+                          colors="primary:#ffffff"
+                          style="width:20px;height:20px;margin-right:8px;">
+                      </lord-icon>
+                      결과 공유하기
+                  </button>
+                  <div class="share-text-area">
+                      <p class="panel-subtitle">나의 여행 성향은!</p>
+                      <div class="personality-share-badge">
+                          <span class="share-character">${resultData.character}</span>
+                          <div class="share-text-content">
+                              <p class="share-type">유형 ${resultData.type}</p>
+                              <p class="share-nickname">${resultData.nickname}</p>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          
+          <button id="get-recommendations-btn" class="get-recommendations-button">
+              맞춤 여행 추천받기 →
+          </button>
+          <button id="restart-btn" class="start-button">다시 시작하기</button>
+      `;
         resultSection.appendChild(resultView);
 
-        
         acquisitionScreen
           .querySelector(".reveal-button")
           .addEventListener("click", () => {
@@ -1578,6 +1790,33 @@
             resultView.style.display = "block";
             renderFlippableCard(resultData);
           });
+
+        document.getElementById("share-btn").addEventListener("click", () => {
+          const shareUrl = window.location.href;
+          const shareTitle = "AI 여행 성향 테스트";
+          const shareText = `내 여행 성향은 '${resultData.nickname}'! 당신의 성향도 알아보세요!`;
+
+          if (navigator.share) {
+            navigator
+              .share({
+                title: shareTitle,
+                text: shareText,
+                url: shareUrl,
+              })
+              .then(() => console.log("Successful share"))
+              .catch((error) => console.log("Error sharing", error));
+          } else {
+            navigator.clipboard
+              .writeText(shareUrl)
+              .then(() => {
+                alert("결과 URL이 클립보드에 복사되었어요!");
+              })
+              .catch((err) => {
+                console.error("Could not copy text: ", err);
+                alert("URL 복사에 실패했습니다.");
+              });
+          }
+        });
 
         document
           .getElementById("get-recommendations-btn")
@@ -1594,60 +1833,59 @@
       function renderFlippableCard(data) {
         const container = document.querySelector(".interactive-card-container");
         container.innerHTML = `
-        <div class="card-scene">
-            <div class="card-object">
-                <div class="card-face card-face--front ${data.gradient}-bg">
-                    <div class="card-border"></div>
-                    <div class="card-content">
-                        <div class="card-top-ornament">✦</div>
-                        <div class="card-character-main">${data.character}</div>
-                        <div class="card-title-group">
-                            <div class="card-main-type">${data.type}</div>
-                            <h2 class="card-main-nickname">${data.nickname}</h2>
-                            <p class="card-main-subtitle">${data.subtitle}</p>
-                        </div>
-                        <div class="card-bottom-ornament">✦</div>
-                    </div>
-                    <div class="sparkle-overlay"></div>
-                    <div class="holographic-overlay"></div>
-                </div>
-                <div class="card-face card-face--back">
-                     <div class="card-back-content">
-                        <div class="back-header">
-                            <div class="back-character">${data.character}</div>
-                            <div class="back-type">${data.type}</div>
-                            <h3 class="back-nickname">${data.nickname}</h3>
-                            <p class="back-subtitle">${data.subtitle}</p>
-                        </div>
-                        <p class="back-description">"${data.travelMotivation}"</p>
-                        <div class="back-section">
-                            <h4 class="back-section-title">주요 특징</h4>
-                            <div class="traits-grid">
-                                ${data.traits.map((trait) => `<div class="trait-item">${trait}</div>`).join("")}
-                            </div>
-                        </div>
-                        <div class="back-section">
-                            <h4 class="back-section-title">여행 강점</h4>
-                            <ul class="strengths-list">
-                                ${data.strengths.map((s) => `<li>${s}</li>`).join("")}
-                            </ul>
-                        </div>
-                         <div class="back-section">
-                            <h4 class="back-section-title">추천 여행 스타일</h4>
-                             <div class="recommendations-list">
-                                ${data.recommendations.map((r) => `<span>#${r}</span>`).join(" ")}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
+          <div class="card-scene">
+              <div class="card-object">
+                  <div class="card-face card-face--front ${data.gradient}-bg">
+                      <div class="card-border"></div>
+                      <div class="card-content">
+                          <div class="card-top-ornament">✦</div>
+                          <div class="card-character-main">${data.character}</div>
+                          <div class="card-title-group">
+                              <div class="card-main-type">${data.type}</div>
+                              <h2 class="card-main-nickname">${data.nickname}</h2>
+                              <p class="card-main-subtitle">${data.subtitle}</p>
+                          </div>
+                          <div class="card-bottom-ornament">✦</div>
+                      </div>
+                      <div class="sparkle-overlay"></div>
+                      <div class="holographic-overlay"></div>
+                  </div>
+                  <div class="card-face card-face--back">
+                      <div class="card-back-content">
+                          <div class="back-header">
+                              <div class="back-character">${data.character}</div>
+                              <div class="back-type">${data.type}</div>
+                              <h3 class="back-nickname">${data.nickname}</h3>
+                              <p class="back-subtitle">${data.subtitle}</p>
+                          </div>
+                          <p class="back-description">"${data.travelMotivation}"</p>
+                          <div class="back-section">
+                              <h4 class="back-section-title">주요 특징</h4>
+                              <div class="traits-grid">
+                                  ${data.traits.map((trait) => `<div class="trait-item">${trait}</div>`).join("")}
+                              </div>
+                          </div>
+                          <div class="back-section">
+                              <h4 class="back-section-title">여행 강점</h4>
+                              <ul class="strengths-list">
+                                  ${data.strengths.map((s) => `<li>${s}</li>`).join("")}
+                              </ul>
+                          </div>
+                          <div class="back-section">
+                              <h4 class="back-section-title">추천 여행 스타일</h4>
+                              <div class="recommendations-list">
+                                  ${data.recommendations.map((r) => `<span>#${r}</span>`).join(" ")}
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      `;
 
         const cardObject = container.querySelector(".card-object");
         const sparkleOverlay = container.querySelector(".sparkle-overlay");
 
-        
         for (let i = 0; i < 30; i++) {
           const sparkle = document.createElement("div");
           sparkle.className = "card-sparkle";
@@ -1657,15 +1895,13 @@
           sparkleOverlay.appendChild(sparkle);
         }
 
-        
         cardObject.addEventListener("click", () => {
           cardObject.classList.toggle("is-flipped");
-          
+
           cardObject.style.setProperty("--rotate-x", "0deg");
           cardObject.style.setProperty("--rotate-y", "0deg");
         });
 
-        
         const cardScene = container.querySelector(".card-scene");
         cardScene.addEventListener("mousemove", (e) => {
           if (cardObject.classList.contains("is-flipped")) return;

@@ -1,0 +1,493 @@
+<!doctype html>
+<html class="light" lang="ko">
+    <head>
+        <meta charset="utf-8" />
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <title>여백 - 회원가입</title>
+        <script src="https://cdn.tailwindcss.com?plugins=forms,typography,container-queries"></script>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&amp;display=swap"
+            rel="stylesheet"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet"
+        />
+        <script>
+            tailwind.config = {
+                darkMode: "class",
+                theme: {
+                    extend: {
+                        colors: {
+                            primary: "#00897b",
+                            "background-light": "#fcfaf7",
+                            "background-dark": "#111827",
+                        },
+                        fontFamily: {
+                            display: ["Noto Sans KR", "sans-serif"],
+                        },
+                        borderRadius: {
+                            DEFAULT: "0.75rem",
+                        },
+                    },
+                },
+            };
+        </script>
+        <style type="text/tailwindcss">
+            body {
+                font-family: "Noto Sans KR", sans-serif;
+            }
+            .split-screen {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                min-height: 100vh;
+            }
+            @media (max-width: 1024px) {
+                .split-screen {
+                    grid-template-columns: 1fr;
+                }
+                .image-side {
+                    display: none;
+                }
+            }
+            .material-symbols-outlined {
+                font-variation-settings:
+                    "FILL" 0,
+                    "wght" 400,
+                    "GRAD" 0,
+                    "opsz" 24;
+            }
+            .modal-overlay {
+                transition: opacity 0.3s ease;
+            }
+            input[type="date"]::-webkit-calendar-picker-indicator {
+                cursor: pointer;
+                filter: invert(0.5) brightness(1.5);
+            }
+            .dark input[type="date"]::-webkit-calendar-picker-indicator {
+                filter: invert(1) brightness(0.9);
+            }
+            .dark input[type="date"] {
+                color-scheme: dark;
+            }
+        </style>
+    </head>
+    <body
+        class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 transition-colors duration-300"
+    >
+        <div class="split-screen overflow-hidden">
+            <div
+                class="image-side relative hidden lg:flex flex-col justify-end p-16 overflow-hidden"
+            >
+                <img
+                    id="background-image-1"
+                    class="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out"
+                    src="../../images/Login_Background_image01.jpg"
+                    alt="Background Image"
+                />
+                <img
+                    id="background-image-2"
+                    class="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out opacity-0"
+                    src=""
+                    alt="Background Image"
+                />
+                <div
+                    class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"
+                ></div>
+                <div class="relative z-10 max-w-lg">
+                    <!-- <div class="flex items-center space-x-2 mb-8">
+                        <div
+                            class="w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center"
+                        >
+                            <span class="material-symbols-outlined text-white"
+                                >explore</span
+                            >
+                        </div>
+                        <span
+                            class="text-white text-2xl font-bold tracking-tight"
+                            >여백</span
+                        >
+                    </div> -->
+                    <h1
+                        class="text-5xl font-bold text-white leading-tight mb-6"
+                    >
+                        여백과 함께 <br />
+                        <span class="text-primary"
+                            >새로운 여행을 시작하세요</span
+                        >
+                    </h1>
+                    <p class="text-xl text-white/80 mb-10 leading-relaxed">
+                        당신만의 특별한 여행을 계획해보세요. <br />
+                        AI가 추천하는 맞춤 일정으로 행복한 여행을 시작합니다.
+                    </p>
+                    <div class="flex space-x-2">
+                        <div class="h-1.5 w-8 bg-primary rounded-full"></div>
+                        <div class="h-1.5 w-1.5 bg-white/40 rounded-full"></div>
+                        <div class="h-1.5 w-1.5 bg-white/40 rounded-full"></div>
+                    </div>
+                </div>
+            </div>
+            <div
+                class="flex flex-col items-center justify-center p-8 md:p-12 lg:p-20 bg-background-light dark:bg-slate-900 overflow-y-auto"
+            >
+                <main class="w-full max-w-md my-auto">
+                    <div class="lg:hidden flex justify-center mb-8">
+                        <div class="flex items-center space-x-2">
+                            <span
+                                class="material-symbols-outlined text-primary text-3xl font-bold"
+                                >explore</span
+                            >
+                            <span
+                                class="text-2xl font-bold text-slate-900 dark:text-white"
+                                >여백</span
+                            >
+                        </div>
+                    </div>
+                    <div class="mb-8 text-center lg:text-left">
+                        <h2
+                            class="text-3xl font-bold text-slate-900 dark:text-white mb-2"
+                        >
+                            계정 만들기
+                        </h2>
+                        <p class="text-slate-500 dark:text-slate-400">
+                            여백과 함께 새로운 여행을 시작해보세요.
+                        </p>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 mb-6">
+                        <button
+                            class="flex items-center justify-center px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-all shadow-sm"
+                        >
+                            <img
+                                alt="Google Logo"
+                                class="w-5 h-5 mr-3"
+                                src="../../images/Logo_Google.png"
+                            />
+                            <span class="text-sm font-medium">Google</span>
+                        </button>
+                        <button
+                            class="flex items-center justify-center px-4 py-3 bg-[#FEE500] hover:bg-[#FADB00] border border-transparent rounded-xl transition-all shadow-sm"
+                        >
+                            <span
+                                class="material-symbols-outlined text-lg mr-2 text-black/80"
+                                >chat_bubble</span
+                            >
+                            <span class="text-sm font-medium text-black/80"
+                                >Kakao</span
+                            >
+                        </button>
+                    </div>
+                    <div class="relative mb-6">
+                        <div class="absolute inset-0 flex items-center">
+                            <div
+                                class="w-full border-t border-slate-200 dark:border-slate-700"
+                            ></div>
+                        </div>
+                        <div class="relative flex justify-center text-sm">
+                            <span
+                                class="px-4 bg-background-light dark:bg-slate-900 text-slate-400 uppercase"
+                                >또는</span
+                            >
+                        </div>
+                    </div>
+                    <form action="#" id="signupForm" class="space-y-4">
+                        <div>
+                            <label
+                                class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5"
+                                for="name"
+                                >이름</label
+                            >
+                            <div class="relative">
+                                <span
+                                    class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xl"
+                                    >person</span
+                                >
+                                <input
+                                    class="w-full pl-12 pr-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all dark:text-white"
+                                    id="name"
+                                    placeholder="이름을 입력하세요"
+                                    type="text"
+                                />
+                            </div>
+                        </div>
+
+                        <div>
+                            <label
+                                class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5"
+                                >성별</label
+                            >
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <input
+                                        type="radio"
+                                        id="gender-male"
+                                        name="gender"
+                                        value="male"
+                                        class="sr-only peer"
+                                    />
+                                    <label
+                                        for="gender-male"
+                                        class="flex items-center justify-center w-full py-3 px-4 text-sm font-medium text-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl cursor-pointer transition-all peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary"
+                                    >
+                                        <span
+                                            class="material-symbols-outlined mr-2"
+                                            >male</span
+                                        >
+                                        남자
+                                    </label>
+                                </div>
+                                <div>
+                                    <input
+                                        type="radio"
+                                        id="gender-female"
+                                        name="gender"
+                                        value="female"
+                                        class="sr-only peer"
+                                    />
+                                    <label
+                                        for="gender-female"
+                                        class="flex items-center justify-center w-full py-3 px-4 text-sm font-medium text-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl cursor-pointer transition-all peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary"
+                                    >
+                                        <span
+                                            class="material-symbols-outlined mr-2"
+                                            >female</span
+                                        >
+                                        여자
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label
+                                class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5"
+                                for="birthdate"
+                                >생년월일</label
+                            >
+                            <div class="relative">
+                                <span
+                                    class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xl"
+                                    >cake</span
+                                >
+                                <input
+                                    class="w-full pl-12 pr-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all dark:text-white"
+                                    id="birthdate"
+                                    type="date"
+                                />
+                            </div>
+                        </div>
+
+                        <div>
+                            <label
+                                class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5"
+                                for="email"
+                                >이메일</label
+                            >
+                            <div class="relative">
+                                <span
+                                    class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xl"
+                                    >mail</span
+                                >
+                                <input
+                                    class="w-full pl-12 pr-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all dark:text-white"
+                                    id="email"
+                                    placeholder="이메일을 입력하세요"
+                                    type="email"
+                                />
+                            </div>
+                        </div>
+
+                        <div>
+                            <label
+                                class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5"
+                                for="password"
+                                >비밀번호</label
+                            >
+                            <div class="relative">
+                                <span
+                                    class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xl"
+                                    >lock</span
+                                >
+                                <input
+                                    class="w-full pl-12 pr-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all dark:text-white"
+                                    id="password"
+                                    placeholder="••••••••"
+                                    type="password"
+                                />
+                            </div>
+                        </div>
+                        <div>
+                            <label
+                                class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5"
+                                for="confirm-password"
+                                >비밀번호 확인</label
+                            >
+                            <div class="relative">
+                                <span
+                                    class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xl"
+                                    >shield</span
+                                >
+                                <input
+                                    class="w-full pl-12 pr-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all dark:text-white"
+                                    id="confirm-password"
+                                    placeholder="••••••••"
+                                    type="password"
+                                />
+                            </div>
+                        </div>
+                        <div class="space-y-3 pt-2">
+                            <label
+                                class="flex items-start space-x-3 cursor-pointer"
+                            >
+                                <input
+                                    class="mt-1 w-4 h-4 text-primary focus:ring-primary border-slate-300 dark:border-slate-700 rounded bg-white"
+                                    type="checkbox"
+                                />
+                                <span
+                                    class="text-xs text-slate-600 dark:text-slate-400 leading-normal"
+                                >
+                                    본인은
+                                    <a
+                                        class="text-primary hover:underline font-medium"
+                                        href="#"
+                                        >이용약관</a
+                                    >
+                                    및
+                                    <a
+                                        class="text-primary hover:underline font-medium"
+                                        href="#"
+                                        >개인정보 처리방침</a
+                                    >에 동의합니다.
+                                </span>
+                            </label>
+                        </div>
+                        <button
+                            class="w-full py-4 bg-primary text-white font-bold rounded-xl shadow-lg shadow-teal-600/20 hover:bg-teal-700 transform transition-all active:scale-[0.98] flex items-center justify-center mt-6"
+                            type="submit"
+                        >
+                            계정 만들기
+                            <span class="material-symbols-outlined text-lg ml-2"
+                                >arrow_forward</span
+                            >
+                        </button>
+                    </form>
+                    <p
+                        class="mt-8 text-center text-sm text-slate-600 dark:text-slate-400"
+                    >
+                        이미 계정이 있으신가요?
+                        <a
+                            class="font-bold text-primary hover:underline ml-1"
+                            href="./SignIn.html"
+                            >로그인</a
+                        >
+                    </p>
+                    <div class="mt-12 text-center text-xs text-slate-400">
+                        © 2026 Yeobaek Travel Inc. All rights reserved.
+                    </div>
+                </main>
+            </div>
+        </div>
+
+        <!-- Custom Modal -->
+        <div
+            id="custom-modal"
+            class="modal-overlay fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden z-50"
+        >
+            <div
+                class="bg-background-light dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-sm m-4 transform transition-transform scale-95 opacity-0"
+            >
+                <div class="p-8 text-center">
+                    <div
+                        class="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto"
+                    >
+                        <span class="material-symbols-outlined text-4xl">
+                            check_circle
+                        </span>
+                    </div>
+                    <h3
+                        class="mt-6 text-2xl font-bold text-slate-900 dark:text-white"
+                    >
+                        회원가입 완료!
+                    </h3>
+                    <p class="mt-2 text-slate-600 dark:text-slate-400">
+                        계정이 성공적으로 생성되었습니다. <br />로그인 페이지로
+                        이동합니다.
+                    </p>
+                    <button
+                        id="modal-confirm-btn"
+                        class="mt-8 w-full py-3 bg-primary text-white font-bold rounded-xl shadow-lg shadow-teal-600/20 hover:bg-teal-700 transform transition-all active:scale-[0.98]"
+                    >
+                        확인
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <button
+            class="fixed bottom-6 right-6 w-12 h-12 rounded-full bg-white dark:bg-slate-800 shadow-xl border border-slate-100 dark:border-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:scale-110 transition-transform z-50"
+            onclick="document.documentElement.classList.toggle('dark')"
+        >
+            <span class="material-symbols-outlined dark:hidden">dark_mode</span>
+            <span class="material-symbols-outlined hidden dark:block"
+                >light_mode</span
+            >
+        </button>
+        <script>
+            const signupForm = document.getElementById("signupForm");
+            const customModal = document.getElementById("custom-modal");
+            const modalConfirmBtn =
+                document.getElementById("modal-confirm-btn");
+            const modalPanel = customModal.querySelector(".transform");
+
+            signupForm.addEventListener("submit", function (event) {
+                event.preventDefault();
+
+                customModal.classList.remove("hidden");
+
+                setTimeout(() => {
+                    modalPanel.classList.remove("scale-95", "opacity-0");
+                    modalPanel.classList.add("scale-100", "opacity-100");
+                }, 50);
+            });
+
+            modalConfirmBtn.addEventListener("click", function () {
+                window.location.href = "SignIn.html";
+            });
+
+            // New script for background image cross-fade
+            const bgImage1 = document.getElementById("background-image-1");
+            const bgImage2 = document.getElementById("background-image-2");
+            if (bgImage1 && bgImage2) {
+                const imageUrls = [
+                    "../../images/Login_Background_image01.jpg",
+                    "../../images/Login_Background_image02.jpg",
+                    "../../images/Login_Background_image03.jpg",
+                ];
+                let currentImageIndex = 0;
+                let isImage1Active = true;
+
+                // Preload images
+                const images = imageUrls.map((src) => {
+                    const img = new Image();
+                    img.src = src;
+                    return img;
+                });
+
+                setInterval(() => {
+                    currentImageIndex = (currentImageIndex + 1) % images.length;
+                    const nextImageSrc = images[currentImageIndex].src;
+
+                    if (isImage1Active) {
+                        bgImage2.src = nextImageSrc;
+                        bgImage1.classList.add("opacity-0");
+                        bgImage2.classList.remove("opacity-0");
+                    } else {
+                        bgImage1.src = nextImageSrc;
+                        bgImage2.classList.add("opacity-0");
+                        bgImage1.classList.remove("opacity-0");
+                    }
+                    isImage1Active = !isImage1Active;
+                }, 5000);
+            }
+        </script>
+    </body>
+</html>
