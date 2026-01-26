@@ -330,8 +330,8 @@ function renderFlightInfoTab(flight) {
                 <div class="flight-duration">
                     <div style="margin-bottom: 0.25rem;">${flight.outbound.flightTime}</div>
                     <svg width="100" height="20" viewBox="0 0 100 20" fill="none">
-                        <line x1="0" y1="10" x2="100" y2="10" stroke="#d1d5db" stroke-width="2"/>
-                        <circle cx="100" cy="10" r="4" fill="#3b82f6"/>
+                        <line x1="0" y1="10" x2="95" y2="10" stroke="#d1d5db" stroke-width="2"/>
+                        <circle cx="95" cy="10" r="4" fill="#3b82f6"/>
                     </svg>
                     <div style="margin-top: 0.25rem; color: var(--color-gray-500);">대한항공</div>
                 </div>
@@ -356,8 +356,8 @@ function renderFlightInfoTab(flight) {
                 <div class="flight-duration">
                     <div style="margin-bottom: 0.25rem;">${flight.inbound.flightTime}</div>
                     <svg width="100" height="20" viewBox="0 0 100 20" fill="none">
-                        <line x1="0" y1="10" x2="100" y2="10" stroke="#d1d5db" stroke-width="2"/>
-                        <circle cx="100" cy="10" r="4" fill="#3b82f6"/>
+                        <line x1="0" y1="10" x2="95" y2="10" stroke="#d1d5db" stroke-width="2"/>
+                        <circle cx="95" cy="10" r="4" fill="#3b82f6"/>
                     </svg>
                     <div style="margin-top: 0.25rem; color: var(--color-gray-500);">대한항공</div>
                 </div>
@@ -865,8 +865,11 @@ function renderFlightCard(flight) {
                     <div class="flight-current-price">${formatCurrency(flight.price)}</div>
                 </div>
                 
-                <button class="flight-book-btn" onclick="bookFlight('${flight.id}')">
+                <button class="popular-detail-btn" onclick="bookFlight('${flight.id}')">
                     항공권 보기
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="9 18 15 12 9 6"/>
+                    </svg>
                 </button>
             </div>
         </div>
