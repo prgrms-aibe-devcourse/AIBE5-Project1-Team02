@@ -33,6 +33,112 @@
         align-items: center;
         min-height: 100vh;
         overflow: hidden; /* 스크롤 방지 */
+        position: relative; /* 배경 요소 배치를 위해 relative 설정 */
+      }
+
+      /* --- [추가] 별 배경 스타일 --- */
+      .star-background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: black;
+        background-image:
+          radial-gradient(
+            circle at 15% 50%,
+            rgba(255, 255, 255, 0.8) 0.5px,
+            transparent 1px
+          ),
+          radial-gradient(
+            circle at 70% 30%,
+            rgba(255, 255, 255, 0.7) 0.5px,
+            transparent 1px
+          ),
+          radial-gradient(
+            circle at 40% 80%,
+            rgba(255, 255, 255, 0.9) 1px,
+            transparent 1.5px
+          ),
+          radial-gradient(
+            circle at 85% 60%,
+            rgba(255, 255, 255, 0.6) 1px,
+            transparent 1.5px
+          ),
+          radial-gradient(
+            circle at 25% 10%,
+            rgba(255, 255, 255, 0.8) 0.8px,
+            transparent 1.2px
+          ),
+          radial-gradient(
+            circle at 5% 90%,
+            rgba(255, 255, 255, 0.7) 0.7px,
+            transparent 1.1px
+          ),
+          radial-gradient(
+            circle at 60% 5%,
+            rgba(255, 255, 255, 0.9) 1.2px,
+            transparent 1.8px
+          );
+        background-size:
+          150px 150px,
+          180px 180px,
+          200px 200px,
+          220px 220px,
+          160px 160px,
+          190px 190px,
+          210px 210px;
+        background-repeat: repeat;
+        opacity: 0.8;
+        animation: star-twinkle 5s ease-in-out infinite alternate;
+        z-index: 0; /* 제일 뒤에 배치 */
+      }
+
+      @keyframes star-twinkle {
+        0%,
+        100% {
+          opacity: 0.7;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+
+      /* --- [추가] 유성우(별똥별) 스타일 --- */
+      .shooting-stars {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        pointer-events: none;
+        z-index: 0; /* 별 배경 바로 위 */
+      }
+
+      .shooting-star {
+        position: absolute;
+        height: 2px;
+        background: linear-gradient(
+          to right,
+          transparent,
+          rgba(255, 255, 255, 1)
+        );
+        border-radius: 50%;
+        transform: rotate(45deg);
+        opacity: 0;
+        animation: shooting-star-anim linear infinite;
+      }
+
+      @keyframes shooting-star-anim {
+        0% {
+          opacity: 1;
+          transform: rotate(45deg) translateX(0);
+        }
+        100% {
+          opacity: 0;
+          transform: rotate(45deg) translateX(150vh);
+        }
       }
 
       /* --- 3D 카드 관련 스타일 (기존 코드 유지) --- */
@@ -397,12 +503,46 @@
     </style>
   </head>
   <body>
+    <div class="star-background"></div>
+    <div class="shooting-stars"></div>
+
     <div id="card-viewer" class="interactive-card-container"></div>
 
     <button id="close-btn" class="confirm-button">확인</button>
 
     <script>
-      // 데이터 (원본 파일과 동일한 데이터 사용)
+      // 1. 유성우(Shooting Stars) 생성 로직 추가
+      function createShootingStars() {
+        const shootingStarsContainer =
+          document.querySelector(".shooting-stars");
+        const numberOfStars = 5; // 적절한 개수 설정
+
+        for (let i = 0; i < numberOfStars; i++) {
+          const star = document.createElement("div");
+          star.className = "shooting-star";
+
+          // 화면 상단(-20% ~ 30%) 및 전체 좌우 폭(-10% ~ 110%)에서 랜덤 시작
+          const top = Math.random() * 50 - 20;
+          const left = Math.random() * 120 - 10;
+
+          const duration = Math.random() * 5 + 5; // 5~10초 (천천히 떨어짐)
+          const delay = Math.random() * 15; // 0~15초 랜덤 딜레이
+          const width = Math.random() * 100 + 80; // 길이 랜덤
+
+          star.style.top = `${top}%`;
+          star.style.left = `${left}%`;
+          star.style.width = `${width}px`;
+          star.style.animationDuration = `${duration}s`;
+          star.style.animationDelay = `${delay}s`;
+
+          shootingStarsContainer.appendChild(star);
+        }
+      }
+
+      // 페이지 로드 시 유성우 생성 실행
+      createShootingStars();
+
+      // --- 기존 로직 (데이터 및 카드 렌더링) ---
       const enneagramTypes = {
         1: {
           type: 1,
