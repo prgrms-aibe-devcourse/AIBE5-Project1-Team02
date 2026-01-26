@@ -1,8 +1,8 @@
 // ================================================
 // 전역 변수
 // ================================================
-let displayedFlightsCount = 6; // 처음에 보여줄 항공권 개수
-let displayedDestinationsCount = 6; // 처음에 보여줄 여행지 개수
+let displayedFlightsCount = 3; // 처음에 보여줄 항공권 개수
+let displayedDestinationsCount = 3; // 처음에 보여줄 여행지 개수
 
 // 여행 관리 모듈
 const trips = {
@@ -772,12 +772,20 @@ function renderFlightTravelTab(flight) {
 
 // 더 많은 항공권 보기 함수
 function viewMoreFlights() {
-    displayedFlightsCount = flightDealsData.length; // 전체 개수로 설정
-    renderFlights();
-    showAlert(
-        `전체 ${flightDealsData.length}개의 항공권을 표시 중입니다 ✈️`,
-        "info",
-    );
+    if (displayedFlightsCount >= flightDealsData.length) {
+        // 접기
+        displayedFlightsCount = 3; // 초기값으로 복원
+        renderFlights();
+        showAlert("항공권을 접었습니다 ✈️", "info");
+    } else {
+        // 펼치기
+        displayedFlightsCount = flightDealsData.length; // 전체 개수로 설정
+        renderFlights();
+        showAlert(
+            `전체 ${flightDealsData.length}개의 항공권을 표시 중입니다 ✈️`,
+            "info",
+        );
+    }
 }
 
 // 항공권 섹션 렌더링
@@ -794,9 +802,21 @@ function renderFlights() {
     const moreBtn = document.getElementById("moreFlightsBtn");
     if (moreBtn) {
         if (displayedFlightsCount >= flightDealsData.length) {
-            moreBtn.style.display = "none";
+            // 전체 표시 중 → 접기 버튼으로 변경
+            moreBtn.innerHTML = `
+                접기
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left: 0.5rem;">
+                    <polyline points="18 15 12 9 6 15"/>
+                </svg>
+            `;
         } else {
-            moreBtn.style.display = "inline-flex";
+            // 일부만 표시 중 → 더보기 버튼으로 변경
+            moreBtn.innerHTML = `
+                더 많은 항공권 보기
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left: 0.5rem;">
+                    <polyline points="9 18 15 12 9 6"/>
+                </svg>
+            `;
         }
     }
 }
@@ -930,6 +950,247 @@ function renderPopularCard(destination, index) {
             </div>
         </div>
     `;
+}
+
+// 🎯 추천 여행지 카드 렌더링 (간소화)
+function renderRecommendedCard(destination) {
+    return `
+        <div class="recommended-card" onclick="openRecommendedModal('${destination.id}')">
+            <div class="recommended-card-image-wrapper">
+                <img src="${destination.image}" alt="${destination.name}" class="recommended-card-image" onerror="handleImageError(this)">
+                <div class="match-score-badge">
+                    ${destination.matchScore}%
+                </div>
+            </div>
+            <div class="recommended-card-body">
+                <h3 class="recommended-name">${destination.emoji} ${escapeHtml(destination.name)}</h3>
+                <p class="recommended-country">${escapeHtml(destination.country)}</p>
+                <p class="recommended-desc">${escapeHtml(destination.description)}</p>
+                <div class="recommended-tags">
+                    ${destination.tags
+                        .slice(0, 3)
+                        .map(
+                            (tag) => `
+                        <span class="recommended-tag">${escapeHtml(tag)}</span>
+                    `,
+                        )
+                        .join("")}
+                </div>
+                <button class="recommended-view-btn">
+                    상세보기
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="9 18 15 12 9 6"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    `;
+}
+
+// 🎯 추천 여행지 모달 열기
+function openRecommendedModal(destinationId) {
+    const destination = recommendedDestinationsData.find(
+        (d) => d.id === destinationId,
+    );
+    if (!destination) return;
+
+    // 해당 여행지와 관련된 항공권 찾기 (도시명으로 매칭)
+    const relatedFlights = flightDealsData.filter((flight) => {
+        const cityName = destination.name.toLowerCase();
+        const flightTo = flight.to.toLowerCase();
+        return flightTo.includes(cityName) || cityName.includes(flightTo);
+    });
+
+    // 항공권이 없으면 임의로 추천 항공권 선택
+    const recommendedFlights =
+        relatedFlights.length > 0
+            ? relatedFlights.slice(0, 2)
+            : flightDealsData.slice(0, 2);
+
+    const modalHTML = `
+        <div class="recommended-modal-overlay" onclick="closeRecommendedModal()">
+            <div class="recommended-modal-container" onclick="event.stopPropagation()">
+                <button class="recommended-modal-close" onclick="closeRecommendedModal()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+                
+                <div class="recommended-modal-content">
+                    <!-- 좌측: 여행지 정보 -->
+                    <div class="recommended-modal-left">
+                        <div class="recommended-modal-image-wrapper">
+                            <img src="${destination.image}" alt="${destination.name}" class="recommended-modal-image" onerror="handleImageError(this)">
+                            <div class="recommended-modal-match-badge">
+                                <div class="match-badge-score">${destination.matchScore}%</div>
+                                <div class="match-badge-text">매치</div>
+                            </div>
+                        </div>
+                        
+                        <div class="recommended-modal-info">
+                            <div class="recommended-modal-header">
+                                <h2 class="recommended-modal-title">${destination.emoji} ${escapeHtml(destination.name)}</h2>
+                                <p class="recommended-modal-country">📍 ${escapeHtml(destination.country)}</p>
+                            </div>
+                            
+                            <p class="recommended-modal-description">${escapeHtml(destination.longDescription)}</p>
+                            
+                            <div class="recommended-modal-section">
+                                <h3 class="recommended-modal-section-title">🎯 왜 당신에게 추천할까요?</h3>
+                                <div class="recommended-modal-reasons">
+                                    ${destination.matchReasons
+                                        .map(
+                                            (reason) => `
+                                        <div class="recommended-modal-reason">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                                <polyline points="20 6 9 17 4 12"/>
+                                            </svg>
+                                            ${escapeHtml(reason)}
+                                        </div>
+                                    `,
+                                        )
+                                        .join("")}
+                                </div>
+                            </div>
+                            
+                            <div class="recommended-modal-section">
+                                <h3 class="recommended-modal-section-title">✨ 주요 액티비티</h3>
+                                <div class="recommended-modal-highlights">
+                                    ${destination.highlights
+                                        .map(
+                                            (highlight) => `
+                                        <div class="recommended-modal-highlight">
+                                            <div class="highlight-icon-large">${highlight.icon}</div>
+                                            <div>
+                                                <div class="highlight-title-large">${escapeHtml(highlight.title)}</div>
+                                                <div class="highlight-desc-large">${escapeHtml(highlight.desc)}</div>
+                                            </div>
+                                        </div>
+                                    `,
+                                        )
+                                        .join("")}
+                                </div>
+                            </div>
+                            
+                            <div class="recommended-modal-meta">
+                                <div class="meta-item">
+                                    <span class="meta-icon">⭐</span>
+                                    <span class="meta-label">평점:</span>
+                                    <span class="meta-value">${destination.rating}</span>
+                                </div>
+                                <div class="meta-item">
+                                    <span class="meta-icon">🗓️</span>
+                                    <span class="meta-label">최적 시즌:</span>
+                                    <span class="meta-value">${destination.bestSeason}</span>
+                                </div>
+                                <div class="meta-item">
+                                    <span class="meta-icon">💰</span>
+                                    <span class="meta-label">예상 경비:</span>
+                                    <span class="meta-value">${destination.estimatedBudget}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 우측: 추천 항공권 -->
+                    <div class="recommended-modal-right">
+                        <h3 class="recommended-modal-flights-title">✈️ 추천 항공권</h3>
+                        <div class="recommended-modal-flights">
+                            ${recommendedFlights
+                                .map(
+                                    (flight) => `
+                                <div class="recommended-flight-card" onclick="event.stopPropagation(); viewFlightDetail('${flight.id}')">
+                                    <div class="recommended-flight-header">
+                                        <div class="recommended-flight-route">
+                                            <span class="flight-city">${escapeHtml(flight.from)}</span>
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <line x1="5" y1="12" x2="19" y2="12"/>
+                                                <polyline points="12 5 19 12 12 19"/>
+                                            </svg>
+                                            <span class="flight-city">${escapeHtml(flight.to)}</span>
+                                        </div>
+                                        <div class="recommended-flight-discount">-${flight.discount}%</div>
+                                    </div>
+                                    
+                                    <div class="recommended-flight-info">
+                                        <div class="flight-info-row">
+                                            <span class="flight-info-label">항공사:</span>
+                                            <span class="flight-info-value">${escapeHtml(flight.airline)}</span>
+                                        </div>
+                                        <div class="flight-info-row">
+                                            <span class="flight-info-label">기간:</span>
+                                            <span class="flight-info-value">${flight.duration}</span>
+                                        </div>
+                                        <div class="flight-info-row">
+                                            <span class="flight-info-label">출발:</span>
+                                            <span class="flight-info-value">${flight.date}</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="recommended-flight-price">
+                                        <div class="flight-price-original">₩${formatNumber(flight.originalPrice)}</div>
+                                        <div class="flight-price-current">₩${formatNumber(flight.currentPrice)}</div>
+                                    </div>
+                                    
+                                    <button class="recommended-flight-btn">
+                                        자세히 보기
+                                    </button>
+                                </div>
+                            `,
+                                )
+                                .join("")}
+                        </div>
+                        
+                        ${
+                            recommendedFlights.length === 0
+                                ? `
+                            <div class="no-flights-message">
+                                <p>현재 이용 가능한 항공권이 없습니다.</p>
+                            </div>
+                        `
+                                : ""
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.body.insertAdjacentHTML("beforeend", modalHTML);
+    document.body.style.overflow = "hidden";
+}
+
+// 🎯 추천 여행지 모달 닫기
+function closeRecommendedModal() {
+    const modal = document.querySelector(".recommended-modal-overlay");
+    if (modal) {
+        modal.remove();
+        document.body.style.overflow = "";
+    }
+}
+
+// 항공권 상세보기 (추천 모달에서 호출)
+function viewFlightDetail(flightId) {
+    // 먼저 추천 모달 닫기
+    closeRecommendedModal();
+
+    // 항공권 찾기
+    const flight = flightDealsData.find((f) => f.id === flightId);
+    if (!flight) return;
+
+    // 항공권 모달 열기
+    bookFlight(flightId);
+}
+
+// 🎯 추천 여행지 섹션 렌더링
+function renderRecommendedDestinations() {
+    const recommendedGrid = document.getElementById("recommendedGrid");
+    if (!recommendedGrid) return;
+
+    recommendedGrid.innerHTML = recommendedDestinationsData
+        .map((dest) => renderRecommendedCard(dest))
+        .join("");
 }
 
 // 인기 여행지 섹션 렌더링
