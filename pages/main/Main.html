@@ -153,6 +153,12 @@
                 padding: 1.25rem;
             }
 
+            .flight-card-body .flight-duration {
+                text-align: left;
+                font-size: 0.875rem;
+                color: #6b7280;
+            }
+
             .flight-route {
                 display: flex;
                 align-items: center;
@@ -160,8 +166,8 @@
                 margin-bottom: 1rem;
             }
 
-            .flight-location:last-child {
-                text-align: right;
+            .flight-location {
+                flex: 1;
             }
 
             .location-label {
@@ -173,6 +179,10 @@
             .location-name {
                 font-weight: 600;
                 font-size: 0.9375rem;
+            }
+
+            .flight-location:last-child {
+                text-align: right;
             }
 
             .flight-arrow {
@@ -451,15 +461,21 @@
             }
 
             .flight-time .flight-location {
-                font-size: 0.875rem;
-                color: #6b7280;
-            }
-
-            .flight-duration {
                 flex: 1;
                 text-align: center;
                 font-size: 0.875rem;
                 color: #6b7280;
+            }
+
+            .flight-time-row .flight-duration {
+                flex: 1;
+                text-align: center;
+                font-size: 0.875rem;
+                color: #6b7280;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
             }
 
             .flight-detail-section {
