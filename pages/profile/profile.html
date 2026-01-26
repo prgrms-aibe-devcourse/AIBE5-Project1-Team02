@@ -329,89 +329,13 @@
                     </div>
                     <h2 class="text-xl font-bold text-slate-900 dark:text-white">여행 여권</h2>
                 </div>
-                <button onclick="togglePassportModal()"
-                    class="bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 px-4 py-1.5 rounded-full text-xs font-bold hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors">
-                    방문 국가: <span id="passportCountBadge">12개국</span>
-                </button>
+                <div class="text-slate-500 dark:text-slate-400 text-sm font-medium">
+                    전체 <span id="passportCountBadge" class="text-primary font-bold">21</span>개
+                </div>
             </div>
 
-            <div id="mainPassportPreview" class="grid grid-cols-4 gap-4 mb-6">
-                <!-- Badge 1 -->
-                <div class="flex flex-col items-center">
-                    <div
-                        class="w-16 h-16 rounded-full bg-white dark:bg-slate-700 border-4 border-slate-50 dark:border-slate-600 shadow-sm flex items-center justify-center mb-3 overflow-hidden p-1">
-                        <span class="text-3xl">��</span>
-                    </div>
-                    <span class="text-sm font-bold text-slate-900 dark:text-white mb-0.5">일본</span>
-                    <span class="text-xs text-slate-400">2023.12</span>
-                </div>
-                <!-- Badge 2 -->
-                <div class="flex flex-col items-center">
-                    <div
-                        class="w-16 h-16 rounded-full bg-white dark:bg-slate-700 border-4 border-slate-50 dark:border-slate-600 shadow-sm flex items-center justify-center mb-3 overflow-hidden p-1">
-                        <span class="text-3xl">🇮🇸</span>
-                    </div>
-                    <span class="text-sm font-bold text-slate-900 dark:text-white mb-0.5">아이슬란드</span>
-                    <span class="text-xs text-slate-400">2023.10</span>
-                </div>
-                <!-- Badge 3 -->
-                <div class="flex flex-col items-center">
-                    <div
-                        class="w-16 h-16 rounded-full bg-white dark:bg-slate-700 border-4 border-slate-50 dark:border-slate-600 shadow-sm flex items-center justify-center mb-3 overflow-hidden p-1">
-                        <span class="text-3xl">🇮🇹</span>
-                    </div>
-                    <span class="text-sm font-bold text-slate-900 dark:text-white mb-0.5">이탈리아</span>
-                    <span class="text-xs text-slate-400">2022.08</span>
-                </div>
-
-
-                <!-- Badge 5 (Hidden) -->
-                <div class="passport-hidden hidden flex-col items-center animate-fade-in">
-                    <div
-                        class="w-16 h-16 rounded-full bg-white dark:bg-slate-700 border-4 border-slate-50 dark:border-slate-600 shadow-sm flex items-center justify-center mb-3 overflow-hidden p-1">
-                        <span class="text-3xl">🇺🇸</span>
-                    </div>
-                    <span class="text-sm font-bold text-slate-900 dark:text-white mb-0.5">미국</span>
-                    <span class="text-xs text-slate-400">2022.01</span>
-                </div>
-                <!-- Badge 6 (Hidden) -->
-                <div class="passport-hidden hidden flex-col items-center animate-fade-in">
-                    <div
-                        class="w-16 h-16 rounded-full bg-white dark:bg-slate-700 border-4 border-slate-50 dark:border-slate-600 shadow-sm flex items-center justify-center mb-3 overflow-hidden p-1">
-                        <span class="text-3xl">��</span>
-                    </div>
-                    <span class="text-sm font-bold text-slate-900 dark:text-white mb-0.5">프랑스</span>
-                    <span class="text-xs text-slate-400">2021.11</span>
-                </div>
-                <!-- Badge 7 (Hidden) -->
-                <div class="passport-hidden hidden flex-col items-center animate-fade-in">
-                    <div
-                        class="w-16 h-16 rounded-full bg-white dark:bg-slate-700 border-4 border-slate-50 dark:border-slate-600 shadow-sm flex items-center justify-center mb-3 overflow-hidden p-1">
-                        <span class="text-3xl">��</span>
-                    </div>
-                    <span class="text-sm font-bold text-slate-900 dark:text-white mb-0.5">독일</span>
-                    <span class="text-xs text-slate-400">2021.05</span>
-                </div>
-                <!-- Badge 8 (Hidden) -->
-                <div class="passport-hidden hidden flex-col items-center animate-fade-in">
-                    <div
-                        class="w-16 h-16 rounded-full bg-white dark:bg-slate-700 border-4 border-slate-50 dark:border-slate-600 shadow-sm flex items-center justify-center mb-3 overflow-hidden p-1">
-                        <span class="text-3xl">��</span>
-                    </div>
-                    <span class="text-sm font-bold text-slate-900 dark:text-white mb-0.5">영국</span>
-                    <span class="text-xs text-slate-400">2020.12</span>
-                </div>
-
-                <!-- Badge 4 (Add Button - Moved to End) -->
-                <div class="flex flex-col items-center cursor-pointer hover:scale-105 transition-transform"
-                    onclick="toggleAddCountryModal()">
-                    <div
-                        class="w-16 h-16 rounded-full bg-slate-50 dark:bg-slate-800 border-4 border-dashed border-slate-300 dark:border-slate-600 flex items-center justify-center mb-3 text-slate-400 hover:text-primary hover:border-primary transition-colors">
-                        <span class="material-symbols-outlined">add</span>
-                    </div>
-                    <span class="text-sm font-bold text-slate-900 dark:text-white mb-0.5">추가하기</span>
-                    <span class="text-xs text-slate-400">New</span>
-                </div>
+            <div id="mainPassportPreview" class="grid grid-cols-2 sm:grid-cols-4 gap-6 mb-6">
+                <!-- Dynamically populated -->
             </div>
 
             <button id="expandPassportBtn" onclick="togglePassportExpansion()"
@@ -600,6 +524,39 @@
                                 <textarea id="editBioInput" rows="3"
                                     class="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary outline-none dark:text-white resize-none"></textarea>
                             </div>
+
+                            <div class="pt-4 border-t border-slate-100 dark:border-slate-700">
+                                <h4 class="text-sm font-bold text-slate-900 dark:text-white mb-4 flex items-center">
+                                    <span class="material-symbols-outlined text-sm mr-1">lock</span>
+                                    비밀번호 변경
+                                </h4>
+                                <div class="space-y-4">
+                                    <div>
+                                        <label
+                                            class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">현재
+                                            비밀번호</label>
+                                        <input type="password" id="currentPasswordInput" placeholder="현재 비밀번호 입력"
+                                            class="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary outline-none dark:text-white" />
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label
+                                                class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">새
+                                                비밀번호</label>
+                                            <input type="password" id="newPasswordInput" placeholder="새 비밀번호"
+                                                class="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary outline-none dark:text-white" />
+                                        </div>
+                                        <div>
+                                            <label
+                                                class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">새
+                                                비밀번호 확인</label>
+                                            <input type="password" id="confirmPasswordInput" placeholder="비밀번호 확인"
+                                                class="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary outline-none dark:text-white" />
+                                        </div>
+                                    </div>
+                                    <p class="text-[10px] text-slate-400">비밀번호 변경을 원하지 않으시면 빈칸으로 두세요.</p>
+                                </div>
+                            </div>
                         </form>
                     </div>
                     <div
@@ -617,84 +574,7 @@
     </div>
     </div>
 
-    <!-- Passport Modal -->
-    <div id="passportModal" class="fixed inset-0 z-[100] hidden" aria-labelledby="passport-modal-title" role="dialog"
-        aria-modal="true">
-        <!-- Backdrop -->
-        <div class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm transition-opacity opacity-0" id="passportBackdrop">
-        </div>
 
-        <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
-            <div class="flex min-h-full items-end justify-center p-0 text-center sm:items-center sm:p-0">
-                <div class="relative transform overflow-hidden bg-white dark:bg-slate-900 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg rounded-t-2xl sm:rounded-2xl translate-y-full sm:translate-y-0 opacity-0"
-                    id="passportPanel">
-                    <div class="bg-gradient-to-r from-teal-500 to-primary px-4 py-6 sm:px-6">
-                        <div class="flex justify-between items-center text-white">
-                            <div class="flex items-center space-x-2">
-                                <span class="material-symbols-outlined text-2xl">public</span>
-                                <h3 class="text-lg font-bold" id="passport-modal-title">나의 여행 여권</h3>
-                            </div>
-                            <button onclick="togglePassportModal()"
-                                class="text-white/80 hover:text-white transition-colors">
-                                <span class="material-symbols-outlined">close</span>
-                            </button>
-                        </div>
-                        <p class="text-teal-100 text-xs mt-1">지금까지 <span id="passportCount"
-                                class="font-bold text-white">5개국</span>을
-                            여행하셨네요!</p>
-                    </div>
-
-                    <div class="px-4 py-6 sm:p-6 bg-slate-50 dark:bg-slate-800/50 max-h-[60vh] overflow-y-auto">
-                        <div id="passportGrid" class="grid grid-cols-3 gap-4">
-                            <!-- Existing Badges -->
-                            <div
-                                class="aspect-square bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 flex flex-col items-center justify-center shadow-sm p-4 hover:scale-105 transition-transform">
-                                <span class="text-4xl mb-2">🇻🇳</span>
-                                <span class="text-sm font-bold text-slate-700 dark:text-slate-300">베트남</span>
-                                <span class="text-[10px] text-slate-400 mt-1">2025.12</span>
-                            </div>
-                            <div
-                                class="aspect-square bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 flex flex-col items-center justify-center shadow-sm p-4 hover:scale-105 transition-transform">
-                                <span class="text-4xl mb-2">🇹🇭</span>
-                                <span class="text-sm font-bold text-slate-700 dark:text-slate-300">태국</span>
-                                <span class="text-[10px] text-slate-400 mt-1">2024.08</span>
-                            </div>
-                            <div
-                                class="aspect-square bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 flex flex-col items-center justify-center shadow-sm p-4 hover:scale-105 transition-transform">
-                                <span class="text-4xl mb-2">🇯🇵</span>
-                                <span class="text-sm font-bold text-slate-700 dark:text-slate-300">일본</span>
-                                <span class="text-[10px] text-slate-400 mt-1">2024.01</span>
-                            </div>
-                            <div
-                                class="aspect-square bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 flex flex-col items-center justify-center shadow-sm p-4 hover:scale-105 transition-transform">
-                                <span class="text-4xl mb-2">🇫🇷</span>
-                                <span class="text-sm font-bold text-slate-700 dark:text-slate-300">프랑스</span>
-                                <span class="text-[10px] text-slate-400 mt-1">2023.05</span>
-                            </div>
-                            <div
-                                class="aspect-square bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 flex flex-col items-center justify-center shadow-sm p-4 hover:scale-105 transition-transform">
-                                <span class="text-4xl mb-2">🇺🇸</span>
-                                <span class="text-sm font-bold text-slate-700 dark:text-slate-300">미국</span>
-                                <span class="text-[10px] text-slate-400 mt-1">2022.11</span>
-                            </div>
-                            <!-- Next Goal -->
-                            <div class="aspect-square bg-white dark:bg-slate-800 border-2 border-dashed border-slate-200 dark:border-slate-600 rounded-2xl flex flex-col items-center justify-center text-slate-400 hover:border-primary hover:text-primary transition-colors cursor-pointer"
-                                onclick="toggleAddCountryModal()">
-                                <span class="material-symbols-outlined text-3xl mb-1">add_location_alt</span>
-                                <span class="text-xs text-center px-2">여행 추가하기</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div
-                        class="bg-white dark:bg-slate-900 px-4 py-3 sm:px-6 border-t border-slate-100 dark:border-slate-800">
-                        <button type="button"
-                            class="w-full inline-flex justify-center rounded-xl bg-slate-100 dark:bg-slate-800 px-3 py-3 text-sm font-bold text-slate-900 dark:text-slate-200 shadow-sm hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
-                            onclick="togglePassportModal()">닫기</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Add Country Modal -->
     <div id="addCountryModal" class="fixed inset-0 z-[110] hidden" aria-labelledby="add-country-modal-title"
@@ -790,50 +670,33 @@
             if (activeBtn) activeBtn.className = "flex-shrink-0 px-4 py-2 bg-primary text-white rounded-xl text-sm font-bold shadow-md shadow-teal-500/20 transition-all";
         }
 
-        function togglePassportModal() {
-            const modal = document.getElementById('passportModal');
-            const backdrop = document.getElementById('passportBackdrop');
-            const panel = document.getElementById('passportPanel');
-
-            if (modal.classList.contains('hidden')) {
-                // Open
-                modal.classList.remove('hidden');
-                setTimeout(() => {
-                    backdrop.classList.remove('opacity-0');
-                    panel.classList.remove('opacity-0', 'translate-y-full', 'sm:translate-y-0');
-                }, 10);
-            } else {
-                // Close
-                backdrop.classList.add('opacity-0');
-                panel.classList.add('opacity-0', 'translate-y-full', 'sm:translate-y-0');
-
-                setTimeout(() => {
-                    modal.classList.add('hidden');
-                }, 300);
-            }
-        }
 
 
 
-        // Country Data
+
+        // Destination Data (Based on pro_img - 21 cities)
         const allCountries = [
-            { name: '이탈리아', flag: '🇮🇹' },
-            { name: '스페인', flag: '🇪🇸' },
-            { name: '영국', flag: '🇬🇧' },
-            { name: '중국', flag: '🇨🇳' },
-            { name: '대만', flag: '🇹🇼' },
-            { name: '호주', flag: '🇦🇺' },
-            { name: '홍콩', flag: '🇭🇰' },
-            { name: '독일', flag: '🇩🇪' },
-            { name: '스위스', flag: '🇨🇭' },
-            { name: '캐나다', flag: '🇨🇦' },
-            { name: '싱가포르', flag: '🇸🇬' },
-            { name: '말레이시아', flag: '🇲🇾' },
-            { name: '미국', flag: '🇺🇸' },
-            { name: '일본', flag: '🇯🇵' },
-            { name: '프랑스', flag: '🇫🇷' },
-            { name: '베트남', flag: '🇻🇳' },
-            { name: '태국', flag: '🇹🇭' },
+            { name: '방콕', location: 'Thailand', img: 'pro_img/BANGKOK.png' },
+            { name: '바르셀로나', location: 'Spain', img: 'pro_img/BARCELONA.png' },
+            { name: '베이징', location: 'China', img: 'pro_img/BEIJING.png' },
+            { name: '베를린', location: 'Germany', img: 'pro_img/BERLIN.png' },
+            { name: '다낭', location: 'Vietnam', img: 'pro_img/DANANG.png' },
+            { name: '하노이', location: 'Vietnam', img: 'pro_img/HANOI.png' },
+            { name: '홍콩', location: 'Hong Kong', img: 'pro_img/HONG KONG ISLAND.png' },
+            { name: '지우펀', location: 'Taiwan', img: 'pro_img/JIUFEN.png' },
+            { name: '라스베이거스', location: 'USA', img: 'pro_img/LASVEGAS.png' },
+            { name: '런던', location: 'UK', img: 'pro_img/LONDON.png' },
+            { name: '마드리드', location: 'Spain', img: 'pro_img/MADRID.png' },
+            { name: '마리나 베이', location: 'Singapore', img: 'pro_img/MARINA BAY.png' },
+            { name: '멜버른', location: 'Australia', img: 'pro_img/MELBOURNE.png' },
+            { name: '뮌헨', location: 'Germany', img: 'pro_img/MUNICH.png' },
+            { name: '뉴욕', location: 'USA', img: 'pro_img/NEW YORK.png' },
+            { name: '오사카', location: 'Japan', img: 'pro_img/OSAKA.png' },
+            { name: '파리', location: 'France', img: 'pro_img/PARIS.png' },
+            { name: '상하이', location: 'China', img: 'pro_img/SHANGHAI.png' },
+            { name: '시드니', location: 'Australia', img: 'pro_img/SYDNEY.png' },
+            { name: '타이베이', location: 'Taiwan', img: 'pro_img/TAIPEI.png' },
+            { name: '도쿄', location: 'Japan', img: 'pro_img/TOKYO.png' }
         ];
 
         function toggleAddCountryModal() {
@@ -901,6 +764,14 @@
                 backdrop.classList.add('opacity-0');
                 panel.classList.add('opacity-0', 'translate-y-full', 'sm:translate-y-0');
 
+                // Clear Password fields
+                const cp = document.getElementById('currentPasswordInput');
+                const np = document.getElementById('newPasswordInput');
+                const cnp = document.getElementById('confirmPasswordInput');
+                if (cp) cp.value = '';
+                if (np) np.value = '';
+                if (cnp) cnp.value = '';
+
                 setTimeout(() => {
                     modal.classList.add('hidden');
                 }, 300);
@@ -909,10 +780,31 @@
 
         function saveProfile() {
             const newBio = document.getElementById('editBioInput').value;
-            // Add quotes back for display consistency
+            const currentPw = document.getElementById('currentPasswordInput').value;
+            const newPw = document.getElementById('newPasswordInput').value;
+            const confirmPw = document.getElementById('confirmPasswordInput').value;
+
+            // Password Change Logic (Demo)
+            if (currentPw || newPw || confirmPw) {
+                if (!currentPw) {
+                    showToast('현재 비밀번호를 입력해주세요.');
+                    return;
+                }
+                if (newPw !== confirmPw) {
+                    showToast('새 비밀번호가 일치하지 않습니다.');
+                    return;
+                }
+                if (newPw.length < 4) {
+                    showToast('새 비밀번호는 4자 이상이어야 합니다.');
+                    return;
+                }
+                showToast('비밀번호가 성공적으로 변경되었습니다.');
+            }
+
+            // Update Bio
             document.getElementById('profileBio').innerText = `"${newBio}"`;
 
-            showToast('프로필이 수정되었습니다.');
+            showToast('프로필 정보가 저장되었습니다.');
             toggleEditModal();
         }
 
@@ -1037,13 +929,16 @@
             if (!grid) return;
             grid.innerHTML = '';
 
-            list.forEach(country => {
+            list.forEach(item => {
                 const btn = document.createElement('button');
-                btn.className = 'flex flex-col items-center justify-center p-3 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-primary hover:bg-slate-50 dark:hover:bg-slate-800 transition-all';
-                btn.onclick = () => addCountry(country.name, country.flag);
+                btn.className = 'flex flex-col items-center justify-center p-3 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-primary hover:bg-slate-50 dark:hover:bg-slate-800 transition-all group';
+                btn.onclick = () => addCountry(item.name, item.img, item.location);
                 btn.innerHTML = `
-                    <span class="text-3xl mb-1">${country.flag}</span>
-                    <span class="text-xs font-medium text-slate-700 dark:text-slate-300">${country.name}</span>
+                    <div class="w-12 h-12 rounded-full mb-2 overflow-hidden border border-slate-100 dark:border-slate-600 group-hover:scale-110 transition-transform">
+                        <img src="${item.img}" alt="${item.name}" class="w-full h-full object-cover">
+                    </div>
+                    <span class="text-[11px] font-bold text-slate-700 dark:text-slate-300">${item.name}</span>
+                    <span class="text-[9px] text-slate-400">${item.location}</span>
                 `;
                 grid.appendChild(btn);
             });
@@ -1053,60 +948,32 @@
             }
         }
 
-        function addCountry(name, flag) {
+        function addCountry(name, img, location) {
             // 1. Get Date from Selects
             const year = document.getElementById('travelYearInput').value;
             const month = document.getElementById('travelMonthInput').value;
             const dateStr = `${year}.${month}`;
 
-            // 2. Add to Passport Modal Grid
-            const grid = document.getElementById('passportGrid');
-            const addButton = grid.lastElementChild;
+            // ADDED: Actually add to myPassport and refresh grid
+            const selectedCountry = allCountries.find(c => c.name === name);
+            if (selectedCountry) {
+                // Check if already exists to prevent duplicates (optional, but good UX)
+                if (!myPassport.some(p => p.name === selectedCountry.name)) {
+                    myPassport.unshift({
+                        ...selectedCountry,
+                        date: dateStr // Use selected date
+                    });
 
-            const newBadge = document.createElement('div');
-            newBadge.className = 'aspect-square bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 flex flex-col items-center justify-center shadow-sm p-4 hover:scale-105 transition-transform animate-fade-in';
+                    // Preservation of expansion state
+                    const btn = document.getElementById('expandPassportBtn');
+                    const wasExpanded = btn && btn.innerText === '접기';
 
-            newBadge.innerHTML = `
-                <span class="text-4xl mb-2">${flag}</span>
-                <span class="text-sm font-bold text-slate-700 dark:text-slate-300">${name}</span>
-                <span class="text-[10px] text-slate-400 mt-1">${dateStr}</span>
-            `;
-
-            grid.insertBefore(newBadge, addButton);
-
-            // 2. Add to Main Page Preview Grid
-            const previewGrid = document.getElementById('mainPassportPreview');
-            if (previewGrid) {
-                const previewAddBtn = previewGrid.lastElementChild;
-
-                const previewBadge = document.createElement('div');
-                previewBadge.className = 'flex flex-col items-center animate-fade-in';
-                previewBadge.innerHTML = `
-                    <div class="w-16 h-16 rounded-full bg-white dark:bg-slate-700 border-4 border-slate-50 dark:border-slate-600 shadow-sm flex items-center justify-center mb-3 overflow-hidden p-1">
-                        <span class="text-3xl">${flag}</span>
-                    </div>
-                    <span class="text-sm font-bold text-slate-900 dark:text-white mb-0.5">${name}</span>
-                    <span class="text-xs text-slate-400">${dateStr}</span>
-                `;
-
-                if (previewGrid.children.length >= 4) {
-                    previewGrid.removeChild(previewGrid.firstElementChild);
+                    initPassportGrid(wasExpanded);
+                    updatePassportCounts();
+                } else {
+                    alert('이미 여권에 추가된 도시입니다!');
+                    return;
                 }
-
-                previewGrid.insertBefore(previewBadge, previewAddBtn);
-            }
-
-            // 4. Update Count
-            const countSpan = document.getElementById('passportCount');
-            if (countSpan) {
-                const currentCount = parseInt(countSpan.innerText.replace(/[^0-9]/g, '')) || 0;
-                countSpan.innerText = `${currentCount + 1}개국`;
-            }
-            // Update Badge Count
-            const countBadge = document.getElementById('passportCountBadge');
-            if (countBadge) {
-                const currentCount = parseInt(countBadge.innerText.replace(/[^0-9]/g, '')) || 0;
-                countBadge.innerText = `${currentCount + 1}개국`;
             }
 
             toggleAddCountryModal();
@@ -1114,6 +981,95 @@
                 alert(`${name} (${dateStr}) 여행이 여권에 추가되었습니다!`);
             }, 300);
         }
+
+        // Initialize User's Passport with 6 demo items
+        let myPassport = allCountries.slice(0, 6).map((item, index) => {
+            const years = ['2023', '2022', '2021'];
+            const months = ['01', '05', '08', '12'];
+            return {
+                ...item,
+                date: `${years[index % 3]}.${months[index % 4]}`
+            };
+        });
+
+        function updatePassportCounts() {
+            const count = myPassport.length;
+            const countSpan = document.getElementById('passportCount');
+            const countBadge = document.getElementById('passportCountBadge');
+
+            if (countSpan) countSpan.innerText = `${count}개국`;
+            if (countBadge) countBadge.innerText = count;
+        }
+
+        // Initialize Passport Grid with 3 initial items + show/hide logic
+        function initPassportGrid(forceExpanded = false) {
+            const grid = document.getElementById('mainPassportPreview');
+            if (!grid) return;
+
+            grid.innerHTML = '';
+
+            // Render based on myPassport
+            myPassport.forEach((item, index) => {
+                const badge = document.createElement('div');
+                // Hide items beyond initial 3 unless forced expanded
+                const isHidden = !forceExpanded && index >= 3;
+                badge.className = `flex flex-col items-center transition-all duration-300 ${isHidden ? 'hidden passport-extra' : 'passport-extra-visible'}`;
+                if (index >= 3) badge.classList.add('passport-extra'); // Mark extras for toggling
+
+                badge.innerHTML = `
+                    <div class="w-20 h-20 rounded-full bg-white dark:bg-slate-700 border-2 border-slate-100 dark:border-slate-600 shadow-sm flex items-center justify-center mb-3 overflow-hidden group-hover:scale-110 transition-transform">
+                        <img src="${item.img}" alt="${item.name}" class="w-full h-full object-cover">
+                    </div>
+                    <span class="text-sm font-bold text-slate-900 dark:text-white mb-0.5">${item.name}</span>
+                    <span class="text-xs text-slate-400">${item.date}</span>
+                `;
+                grid.appendChild(badge);
+            });
+
+            // Add [Add Button]
+            const addBtn = document.createElement('div');
+            addBtn.className = "flex flex-col items-center cursor-pointer hover:scale-105 transition-transform order-last";
+            addBtn.onclick = () => toggleAddCountryModal();
+            addBtn.innerHTML = `
+                <div class="w-20 h-20 rounded-full bg-slate-50 dark:bg-slate-800 border-4 border-dashed border-slate-300 dark:border-slate-600 flex items-center justify-center mb-3 text-slate-400 hover:text-primary hover:border-primary transition-colors">
+                    <span class="material-symbols-outlined text-3xl">add</span>
+                </div>
+                <span class="text-sm font-bold text-slate-900 dark:text-white mb-0.5">추가하기</span>
+                <span class="text-xs text-slate-400">New</span>
+            `;
+            grid.appendChild(addBtn);
+
+            // Sync Button Text if forced expanded
+            const btn = document.getElementById('expandPassportBtn');
+            if (btn && forceExpanded) {
+                btn.innerText = '접기';
+            }
+        }
+
+        // Expanded/Collapsed state for Passport
+        function togglePassportExpansion() {
+            const extras = document.querySelectorAll('.passport-extra');
+            const btn = document.getElementById('expandPassportBtn');
+            const isExpanded = btn.innerText === '접기';
+
+            extras.forEach(el => {
+                if (isExpanded) {
+                    el.classList.add('hidden');
+                } else {
+                    el.classList.remove('hidden');
+                    el.classList.add('animate-fade-in');
+                }
+            });
+
+            btn.innerText = isExpanded ? '모두 보기' : '접기';
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', () => {
+            updatePassportCounts(); // Set initial counts
+            initPassportGrid();
+            // ... (other inits if any)
+        });
     </script>
 </body>
 
