@@ -664,10 +664,21 @@
 
       // URL 파라미터에서 카드 타입 가져오기
       function getCardTypeFromUrl() {
+        // 1. localStorage에서 먼저 결과 타입 확인
+        const storedType = localStorage.getItem('myTravelType');
+        if (storedType && enneagramTypes[storedType]) {
+            return storedType;
+        }
+
+        // 2. localStorage에 없으면 URL 파라미터에서 확인 (기존 로직)
         const params = new URLSearchParams(window.location.search);
         const type = params.get("type");
-        // 타입이 없거나 유효하지 않으면 기본값 1로 설정
-        return enneagramTypes[type] ? type : 1;
+        if (type && enneagramTypes[type]) {
+            return type;
+        }
+
+        // 3. 둘 다 없으면 기본값 1로 설정
+        return 1;
       }
 
       // 카드 렌더링 함수
