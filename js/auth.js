@@ -119,6 +119,16 @@ function populateProfile() {
     const editGender = document.getElementById('edit-gender');
     if(editGender) editGender.value = user.gender;
 
+    const profileBio = document.getElementById('profileBio');
+    if (profileBio) {
+        profileBio.innerText = user.selfIntroduction ? `"${user.selfIntroduction}"` : `"새로운 곳에서의 설렘을 즐기는 여행자입니다. 주로 휴양지보다는 도심 속 숨겨진 명소를 찾는 것을 좋아해요!"`;
+    }
+
+    const editBioInput = document.getElementById('editBioInput');
+    if (editBioInput) {
+        editBioInput.value = user.selfIntroduction || "";
+    }
+
 }
 
 function handleProfileUpdate(event) {
@@ -127,12 +137,15 @@ function handleProfileUpdate(event) {
     const updatedName = document.getElementById('edit-name').value;
     const updatedBirthdate = document.getElementById('edit-birthdate').value;
     const updatedGender = document.getElementById('edit-gender').value;
+    const updatedSelfIntroduction = document.getElementById('editBioInput').value;
+
 
     const user = JSON.parse(localStorage.getItem('user'));
     
     user.name = updatedName;
     user.birthdate = updatedBirthdate;
     user.gender = updatedGender;
+    user.selfIntroduction = updatedSelfIntroduction;
 
     localStorage.setItem('user', JSON.stringify(user));
 

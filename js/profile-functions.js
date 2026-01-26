@@ -1,3 +1,4 @@
+// 탭 전환 함수
 function switchTab(tabName) {
     ["plans", "posts", "reviews"].forEach((name) => {
         const el = document.getElementById(`content-${name}`);
@@ -19,7 +20,7 @@ function switchTab(tabName) {
             "flex-shrink-0 px-4 py-2 bg-primary text-white rounded-xl text-sm font-bold shadow-md shadow-teal-500/20 transition-all";
 }
 
-// Destination Data (Based on ../../images/profile - 21 cities)
+// Destination Data & Functions
 const allCountries = [
     {
         name: "방콕",
@@ -143,22 +144,16 @@ function toggleAddCountryModal() {
                 "sm:translate-y-0",
             );
         }, 10);
-
         document.getElementById("countrySearchInput").value = "";
-
         const now = new Date();
         const yyyy = now.getFullYear();
         const mm = String(now.getMonth() + 1).padStart(2, "0");
-
-        const yearSelect =
-            document.getElementById("travelYearInput");
+        const yearSelect = document.getElementById("travelYearInput");
         if (yearSelect.querySelector(`option[value="${yyyy}"]`)) {
             yearSelect.value = yyyy;
         }
-        const monthSelect =
-            document.getElementById("travelMonthInput");
+        const monthSelect = document.getElementById("travelMonthInput");
         monthSelect.value = mm;
-
         renderCountries(allCountries);
     } else {
         backdrop.classList.add("opacity-0");
@@ -167,69 +162,51 @@ function toggleAddCountryModal() {
             "translate-y-full",
             "sm:translate-y-0",
         );
-
         setTimeout(() => {
             modal.classList.add("hidden");
         }, 300);
     }
 }
 
-function closePasswordCheckModal() {
-    const modal = document.getElementById("passwordCheckModal");
-    const backdrop = document.getElementById(
-        "passwordCheckBackdrop",
-    );
-    const panel = document.getElementById("passwordCheckPanel");
+function toggleEditModal() {
+    const modal = document.getElementById("editModal");
+    const backdrop = document.getElementById("modalBackdrop");
+    const panel = document.getElementById("modalPanel");
 
-    backdrop.classList.add("opacity-0");
-    panel.classList.add("opacity-0", "scale-95");
-    panel.classList.remove("scale-100");
-
-    setTimeout(() => {
-        modal.classList.add("hidden");
-    }, 300);
-}
-
-function requestEditProfile() {
-    const modal = document.getElementById("passwordCheckModal");
-    const backdrop = document.getElementById(
-        "passwordCheckBackdrop",
-    );
-    const panel = document.getElementById("passwordCheckPanel");
-    const input = document.getElementById("passwordCheckInput");
-
-    input.value = ""; // Reset
-    modal.classList.remove("hidden");
-
-    setTimeout(() => {
-        backdrop.classList.remove("opacity-0");
-        panel.classList.remove("opacity-0", "scale-95");
-        panel.classList.add("scale-100");
-        input.focus();
-    }, 10);
-}
-
-
-function verifyPasswordAndEdit() {
-    const input = document.getElementById("passwordCheckInput");
-    const user = JSON.parse(localStorage.getItem('user'));
-    if (input.value === user.password) {
-        closePasswordCheckModal();
+    if (modal.classList.contains("hidden")) {
+        modal.classList.remove("hidden");
+        // populateProfile is in auth.js and needs to be called
+        if (typeof populateProfile === "function") {
+            populateProfile();
+        }
         setTimeout(() => {
-            toggleEditModal();
-        }, 300);
+            backdrop.classList.remove("opacity-0");
+            panel.classList.remove(
+                "opacity-0",
+                "translate-y-full",
+                "sm:translate-y-0",
+            );
+        }, 10);
     } else {
-        alert("비밀번호가 올바르지 않습니다.");
-        input.focus();
+        backdrop.classList.add("opacity-0");
+        panel.classList.add(
+            "opacity-0",
+            "translate-y-full",
+            "sm:translate-y-0",
+        );
+        document.getElementById("currentPasswordInput").value = "";
+        document.getElementById("newPasswordInput").value = "";
+        document.getElementById("confirmPasswordInput").value = "";
+        setTimeout(() => {
+            modal.classList.add("hidden");
+        }, 300);
     }
 }
-
 
 function togglePersonalityModal() {
     const modal = document.getElementById("personalityModal");
     const backdrop = document.getElementById("personalityBackdrop");
     const panel = document.getElementById("personalityPanel");
-
     if (modal.classList.contains("hidden")) {
         modal.classList.remove("hidden");
         setTimeout(() => {
@@ -239,12 +216,8 @@ function togglePersonalityModal() {
         }, 10);
     } else {
         backdrop.classList.add("opacity-0");
-        panel.classList.add(
-            "opacity-0",
-            "translate-y-full",
-            "sm:translate-y-0",
-        );
-
+        panel.classList.add("opacity-0", "scale-95");
+        panel.classList.remove("scale-100");
         setTimeout(() => {
             modal.classList.add("hidden");
         }, 300);
@@ -255,31 +228,10 @@ function showPersonalityInfo() {
     togglePersonalityModal();
 }
 
-function togglePassportExpansion() {
-    const hiddenItems =
-        document.querySelectorAll(".passport-hidden");
-    const btn = document.getElementById("expandPassportBtn");
-    const isExpanded = btn && btn.innerText === "접기";
-
-    hiddenItems.forEach((item) => {
-        if (isExpanded) {
-            item.classList.add("hidden");
-        } else {
-            item.classList.remove("hidden");
-            item.classList.add("flex");
-        }
-    });
-
-    if (btn) {
-        btn.innerText = isExpanded ? "모두 보기" : "접기";
-    }
-}
-
 function togglePremiumModal() {
     const modal = document.getElementById("premiumModal");
     const backdrop = document.getElementById("premiumBackdrop");
     const panel = document.getElementById("premiumPanel");
-
     if (modal.classList.contains("hidden")) {
         modal.classList.remove("hidden");
         setTimeout(() => {
@@ -289,12 +241,8 @@ function togglePremiumModal() {
         }, 10);
     } else {
         backdrop.classList.add("opacity-0");
-        panel.classList.add(
-            "opacity-0",
-            "translate-y-full",
-            "sm:translate-y-0",
-        );
-
+        panel.classList.add("opacity-0", "scale-95");
+        panel.classList.remove("scale-100");
         setTimeout(() => {
             modal.classList.add("hidden");
         }, 300);
@@ -315,13 +263,11 @@ function renderCountries(list) {
     const grid = document.getElementById("countryListGrid");
     if (!grid) return;
     grid.innerHTML = "";
-
     list.forEach((item) => {
         const btn = document.createElement("button");
         btn.className =
             "flex flex-col items-center justify-center p-3 rounded-xl border border-slate-200 hover:border-primary hover:bg-slate-50 transition-all group";
-        btn.onclick = () =>
-            addCountry(item.name, item.img, item.location);
+        btn.onclick = () => addCountry(item.name, item.img, item.location);
         btn.innerHTML = `
         <div class="w-12 h-12 rounded-full mb-2 overflow-hidden border border-slate-100 group-hover:scale-110 transition-transform">
             <img src="${item.img}" alt="${item.name}" class="w-full h-full object-cover">
@@ -331,7 +277,6 @@ function renderCountries(list) {
     `;
         grid.appendChild(btn);
     });
-
     if (list.length === 0) {
         grid.innerHTML =
             '<p class="col-span-3 text-center text-slate-400 py-4">검색 결과가 없습니다.</p>';
@@ -342,23 +287,15 @@ function addCountry(name, img, location) {
     const year = document.getElementById("travelYearInput").value;
     const month = document.getElementById("travelMonthInput").value;
     const dateStr = `${year}.${month}`;
-
-    const selectedCountry = allCountries.find(
-        (c) => c.name === name,
-    );
+    const selectedCountry = allCountries.find((c) => c.name === name);
     if (selectedCountry) {
-        if (
-            !myPassport.some((p) => p.name === selectedCountry.name)
-        ) {
+        if (!myPassport.some((p) => p.name === selectedCountry.name)) {
             myPassport.unshift({
                 ...selectedCountry,
                 date: dateStr,
             });
-
-            const btn =
-                document.getElementById("expandPassportBtn");
+            const btn = document.getElementById("expandPassportBtn");
             const wasExpanded = btn && btn.innerText === "접기";
-
             initPassportGrid(wasExpanded);
             updatePassportCounts();
         } else {
@@ -366,7 +303,6 @@ function addCountry(name, img, location) {
             return;
         }
     }
-
     toggleAddCountryModal();
     setTimeout(() => {
         alert(`${name} (${dateStr}) 여행이 여권에 추가되었습니다!`);
@@ -384,26 +320,19 @@ let myPassport = allCountries.slice(0, 6).map((item, index) => {
 
 function updatePassportCounts() {
     const count = myPassport.length;
-    const countSpan = document.getElementById("passportCount");
-    const countBadge =
-        document.getElementById("passportCountBadge");
-
-    if (countSpan) countSpan.innerText = `${count}개국`;
+    const countBadge = document.getElementById("passportCountBadge");
     if (countBadge) countBadge.innerText = count;
 }
 
 function initPassportGrid(forceExpanded = false) {
     const grid = document.getElementById("mainPassportPreview");
     if (!grid) return;
-
     grid.innerHTML = "";
-
     myPassport.forEach((item, index) => {
         const badge = document.createElement("div");
         const isHidden = !forceExpanded && index >= 3;
         badge.className = `flex flex-col items-center transition-all duration-300 ${isHidden ? "hidden passport-extra" : "passport-extra-visible"}`;
         if (index >= 3) badge.classList.add("passport-extra");
-
         badge.innerHTML = `
         <div class="w-20 h-20 rounded-full bg-white border-2 border-slate-100 shadow-sm flex items-center justify-center mb-3 overflow-hidden group-hover:scale-110 transition-transform">
             <img src="${item.img}" alt="${item.name}" class="w-full h-full object-cover">
@@ -413,7 +342,6 @@ function initPassportGrid(forceExpanded = false) {
     `;
         grid.appendChild(badge);
     });
-
     const addBtn = document.createElement("div");
     addBtn.className =
         "flex flex-col items-center cursor-pointer hover:scale-105 transition-transform order-last";
@@ -426,7 +354,6 @@ function initPassportGrid(forceExpanded = false) {
     <span class="text-xs text-slate-400">New</span>
 `;
     grid.appendChild(addBtn);
-
     const btn = document.getElementById("expandPassportBtn");
     if (btn && forceExpanded) {
         btn.innerText = "접기";
@@ -436,8 +363,7 @@ function initPassportGrid(forceExpanded = false) {
 function togglePassportExpansion() {
     const extras = document.querySelectorAll(".passport-extra");
     const btn = document.getElementById("expandPassportBtn");
-    const isExpanded = btn && btn.innerText === "접기";
-
+    const isExpanded = btn.innerText === "접기";
     extras.forEach((el) => {
         if (isExpanded) {
             el.classList.add("hidden");
@@ -446,20 +372,103 @@ function togglePassportExpansion() {
             el.classList.add("animate-fade-in");
         }
     });
+    btn.innerText = isExpanded ? "모두 보기" : "접기";
+}
 
-    if (btn) {
-        btn.innerText = isExpanded ? "모두 보기" : "접기";
+// -----------------------------------------------------------
+// [새로 추가된 부분] 비밀번호 확인 및 프로필 수정 모달 로직
+// -----------------------------------------------------------
+
+// 1. 비밀번호 확인 모달 열기
+function openPasswordCheckModal() {
+    const modal = document.getElementById("passwordCheckModal");
+    const backdrop = document.getElementById("passwordCheckBackdrop");
+    const panel = document.getElementById("passwordCheckPanel");
+
+    if (modal) {
+        modal.classList.remove("hidden");
+        setTimeout(() => {
+            backdrop.classList.remove("opacity-0");
+            panel.classList.remove("opacity-0", "scale-95");
+            panel.classList.add("opacity-100", "scale-100");
+        }, 10);
+    } else {
+        console.error("비밀번호 모달을 찾을 수 없습니다.");
     }
 }
 
-// Initialize on load
-        </script>
-        <script src="../../js/auth.js"></script>
-        <script>
-            document.addEventListener("DOMContentLoaded", () => {
-                populateProfile();
-                updatePassportCounts();
-                initPassportGrid();
-            });
-    </body>
-</html>
+// 2. 비밀번호 확인 모달 닫기
+function closePasswordCheckModal() {
+    const modal = document.getElementById("passwordCheckModal");
+    const backdrop = document.getElementById("passwordCheckBackdrop");
+    const panel = document.getElementById("passwordCheckPanel");
+
+    if (backdrop && panel) {
+        backdrop.classList.add("opacity-0");
+        panel.classList.remove("opacity-100", "scale-100");
+        panel.classList.add("opacity-0", "scale-95");
+
+        setTimeout(() => {
+            if (modal) modal.classList.add("hidden");
+            // 입력 필드 초기화
+            const input = document.getElementById("passwordCheckInput");
+            if (input) input.value = "";
+        }, 300);
+    }
+}
+
+// 3. 비밀번호 확인 로직
+function verifyPasswordAndEdit() {
+    const passwordInput = document.getElementById("passwordCheckInput");
+
+    if (passwordInput && passwordInput.value.length > 0) {
+        closePasswordCheckModal(); // 비밀번호 모달 닫기
+        setTimeout(() => {
+            toggleEditModal(); // 프로필 수정 모달 열기
+        }, 300);
+    } else {
+        alert("비밀번호를 입력해주세요.");
+    }
+}
+
+// HTML onclick에서 사용할 수 있도록 전역 객체에 등록
+window.switchTab = switchTab;
+window.toggleAddCountryModal = toggleAddCountryModal;
+window.toggleEditModal = toggleEditModal;
+window.togglePersonalityModal = togglePersonalityModal;
+window.showPersonalityInfo = showPersonalityInfo;
+window.togglePremiumModal = togglePremiumModal;
+window.filterCountries = filterCountries;
+window.renderCountries = renderCountries;
+window.addCountry = addCountry;
+window.updatePassportCounts = updatePassportCounts;
+window.initPassportGrid = initPassportGrid;
+window.togglePassportExpansion = togglePassportExpansion;
+// 새로 추가된 함수들도 등록
+window.openPasswordCheckModal = openPasswordCheckModal;
+window.closePasswordCheckModal = closePasswordCheckModal;
+window.verifyPasswordAndEdit = verifyPasswordAndEdit;
+
+// 이벤트 리스너 등록
+document.addEventListener("DOMContentLoaded", () => {
+    // 기존에 있던 requestEditProfileBtn 관련 리스너는 삭제함 (HTML onclick으로 대체)
+
+    const verifyPasswordAndEditBtn = document.getElementById(
+        "verifyPasswordAndEditBtn",
+    );
+    if (verifyPasswordAndEditBtn) {
+        verifyPasswordAndEditBtn.addEventListener(
+            "click",
+            verifyPasswordAndEdit,
+        );
+    }
+
+    const passwordCheckInput = document.getElementById("passwordCheckInput");
+    if (passwordCheckInput) {
+        passwordCheckInput.addEventListener("keypress", (event) => {
+            if (event.key === "Enter") {
+                verifyPasswordAndEdit();
+            }
+        });
+    }
+});
