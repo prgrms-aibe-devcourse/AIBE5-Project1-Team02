@@ -934,7 +934,7 @@
                 >
                     <a
                         class="transition-colors hover:text-foreground/80 text-foreground/60 hover:text-foreground transition-colors"
-                        href=""
+                        href="../plan/planner.html"
                         >플래너</a
                     >
                     <a
@@ -949,7 +949,7 @@
                     >
                 </nav>
 
-                <div class="flex items-center gap-4">
+                <div id="auth-links" class="flex items-center gap-4">
                     <a href="../auth/SignIn.html" class="text-sm font-medium"
                         >로그인</a
                     >
@@ -1464,5 +1464,9 @@
             }
         </script>
         <script src="../../js/main.js"></script>
+        <script src="../../js/auth.js"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", checkLoginStatus);
+        </script>
     </body>
 </html>
