@@ -1,0 +1,449 @@
+<!doctype html>
+<html class="light" lang="ko">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>PINPOINT - Planner</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        brand: "#8247FF", /* Purple from design */
+                        "primary-bg": "#F8F9FD",
+                    },
+                    fontFamily: {
+                        sans: ["Inter", "sans-serif"],
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(100%)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-out forwards',
+                        'slide-up': 'slideUp 0.3s ease-out forwards',
+                    },
+                },
+            },
+        };
+    </script>
+    <style type="text/tailwindcss">
+        body {
+                font-family: "Inter", sans-serif;
+            }
+            .material-symbols-outlined {
+                font-variation-settings:
+                    "FILL" 1,
+                    "wght" 400,
+                    "GRAD" 0,
+                    "opsz" 24;
+            }
+            /* Custom Scrollbar for better aesthetics */
+            ::-webkit-scrollbar {
+                width: 6px;
+            }
+            ::-webkit-scrollbar-track {
+                background: transparent;
+            }
+            ::-webkit-scrollbar-thumb {
+                background: #cbd5e1;
+                border-radius: 3px;
+            }
+        </style>
+</head>
+
+<body class="bg-primary-bg text-slate-800 h-screen flex flex-col overflow-hidden relative">
+    <!-- Toast Container -->
+    <div id="toast-container"
+        class="fixed bottom-10 left-1/2 -translate-x-1/2 z-[200] flex flex-col items-center gap-2 pointer-events-none w-full max-w-sm px-4">
+    </div>
+
+    <!-- Top Navigation -->
+    <nav class="bg-white border-b border-slate-200 px-6 py-3 flex justify-between items-center z-50">
+        <div class="flex items-center space-x-2">
+            <span class="material-symbols-outlined text-brand text-3xl">flight_takeoff</span>
+            <span class="text-xl font-bold tracking-tight">PINPOINT</span>
+        </div>
+        <div class="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-500">
+            <a href="#" class="hover:text-brand transition-colors"
+                onclick="showToast('Exploration feature coming soon!')">Explore</a>
+            <a href="#" class="text-brand flex items-center" onclick="location.reload()"><span
+                    class="material-symbols-outlined text-lg mr-1">calendar_month</span> Planner</a>
+            <a href="#" class="hover:text-brand transition-colors"
+                onclick="showToast('Community feature coming soon!')">Community</a>
+        </div>
+        <div class="flex items-center space-x-4">
+            <div
+                class="hidden md:flex items-center bg-purple-50 text-brand px-3 py-1.5 rounded-full text-xs font-bold ring-1 ring-purple-100">
+                <span class="w-2 h-2 bg-brand rounded-full mr-2"></span>
+                AI Assistant Active
+            </div>
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="User"
+                class="w-9 h-9 rounded-full bg-slate-100 border border-slate-200" />
+        </div>
+    </nav>
+
+    <div class="flex flex-1 overflow-hidden">
+        <!-- Left Sidebar: Trip Navigation -->
+        <aside class="w-80 bg-white border-r border-slate-200 flex flex-col overflow-y-auto hidden lg:flex">
+            <div class="p-6">
+                <div class="flex items-center space-x-2 text-xs font-bold text-slate-400 mb-4 uppercase tracking-wider">
+                    <span class="material-symbols-outlined text-base">tune</span>
+                    Trip Settings
+                </div>
+
+                <!-- Trip General Info -->
+                <div class="space-y-3 mb-8">
+                    <div class="flex items-center p-3 border border-slate-200 rounded-xl bg-white shadow-sm">
+                        <span class="material-symbols-outlined text-slate-400 mr-3">flight_takeoff</span>
+                        <span class="text-sm font-semibold">Seoul, Korea</span>
+                    </div>
+                    <div class="flex items-center p-3 border border-slate-200 rounded-xl bg-white shadow-sm">
+                        <span class="material-symbols-outlined text-slate-400 mr-3">location_on</span>
+                        <span class="text-sm font-semibold">Tokyo, Japan</span>
+                    </div>
+                    <div class="flex items-center p-3 border border-slate-200 rounded-xl bg-white shadow-sm">
+                        <span class="material-symbols-outlined text-slate-400 mr-3">calendar_today</span>
+                        <span class="text-sm font-semibold">Oct 24 - Oct 30</span>
+                    </div>
+                </div>
+
+                <!-- Days Navigation -->
+                <div class="space-y-4">
+                    <div class="group cursor-pointer" onclick="navigateToDay('Oct 24')">
+                        <div class="text-xs text-slate-400 font-medium mb-1 pl-4">Oct 24</div>
+                        <div
+                            class="pl-4 py-1 text-sm font-medium text-slate-600 group-hover:text-brand transition-colors">
+                            Arrival</div>
+                    </div>
+
+                    <!-- Active Day -->
+                    <div class="relative pl-4 py-3 bg-purple-50 rounded-r-xl border-l-4 border-brand">
+                        <div class="text-xs text-brand font-bold mb-0.5">Oct 25</div>
+                        <div class="text-sm font-bold text-slate-900">Cultural Immersion</div>
+                        <span
+                            class="absolute right-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-brand text-sm">chevron_right</span>
+                    </div>
+
+                    <div class="group cursor-pointer" onclick="navigateToDay('Oct 26')">
+                        <div class="text-xs text-slate-400 font-medium mb-1 pl-4">Oct 26</div>
+                        <div
+                            class="pl-4 py-1 text-sm font-medium text-slate-600 group-hover:text-brand transition-colors">
+                            Modern Tech</div>
+                    </div>
+
+                    <div class="group cursor-pointer" onclick="navigateToDay('Oct 27')">
+                        <div class="text-xs text-slate-400 font-medium mb-1 pl-4">Oct 27</div>
+                        <div
+                            class="pl-4 py-1 text-sm font-medium text-slate-600 group-hover:text-brand transition-colors">
+                            Nature & Parks</div>
+                    </div>
+                </div>
+
+                <!-- Add Day Button -->
+                <button onclick="addDay()"
+                    class="mt-8 w-full py-3 border border-dashed border-slate-300 rounded-xl text-slate-500 text-sm font-medium hover:border-brand hover:text-brand transition-colors flex items-center justify-center">
+                    <span class="material-symbols-outlined text-base mr-1">add</span> Add Day
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content: Day Timeline -->
+        <main class="flex-1 overflow-y-auto p-4 lg:p-8 relative">
+            <div class="max-w-3xl mx-auto bg-white rounded-3xl shadow-sm min-h-full p-8 border border-slate-100">
+                <!-- Day Header -->
+                <header class="flex justify-between items-start mb-10">
+                    <div>
+                        <h1 class="text-3xl font-bold text-slate-900 mb-2">Day 2: Cultural Immersion</h1>
+                        <div class="flex items-center text-slate-500 text-sm">
+                            <span>Minato City, Tokyo</span>
+                            <span class="mx-2">•</span>
+                            <span class="flex items-center"><span
+                                    class="material-symbols-outlined text-yellow-500 text-base mr-1">sunny</span> Sunny
+                                22°C</span>
+                        </div>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button class="p-2 text-slate-400 hover:text-brand transition-colors">
+                            <span class="material-symbols-outlined">share</span>
+                        </button>
+                        <button onclick="savePlan()"
+                            class="px-4 py-2 bg-brand text-white rounded-xl text-sm font-bold hover:bg-purple-700 transition-colors shadow-lg shadow-purple-500/20">
+                            Save Plan
+                        </button>
+                    </div>
+                </header>
+
+                <!-- Timeline -->
+                <div class="relative pl-8 border-l border-slate-100 space-y-12">
+
+                    <!-- 09:00 AM Item -->
+                    <div class="relative group">
+                        <!-- Time Indicator -->
+                        <span
+                            class="absolute -left-[45px] top-4 w-3 h-3 rounded-full border-2 border-slate-300 bg-white group-hover:border-brand group-hover:bg-brand transition-colors"></span>
+                        <span
+                            class="absolute -left-[100px] top-3 text-xs font-semibold text-slate-400 w-12 text-right">09:00
+                            AM</span>
+
+                        <!-- Simple Card -->
+                        <div
+                            class="bg-orange-50 rounded-2xl p-5 border border-orange-100 hover:shadow-md transition-shadow">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h3 class="font-bold text-slate-900 mb-1">Breakfast at Tsukiji</h3>
+                                    <p class="text-sm text-slate-500">Authentic sushi breakfast at the outer market.</p>
+                                </div>
+                                <span
+                                    class="bg-orange-100 text-orange-600 text-[10px] font-bold px-2 py-1 rounded-lg">Food</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 10:30 AM Item (Active) -->
+                    <div class="relative group">
+                        <span
+                            class="absolute -left-[46px] top-6 w-4 h-4 rounded-full border-4 border-brand bg-white"></span>
+                        <span class="absolute -left-[100px] top-5 text-sm font-bold text-brand w-12 text-right">10:30
+                            AM</span>
+
+                        <!-- Detailed Card -->
+                        <div class="bg-white rounded-2xl p-1 border-2 border-brand shadow-lg overflow-hidden relative">
+                            <!-- Connection Line to Right -->
+                            <div class="hidden lg:block absolute -right-3 top-1/2 w-4 h-[2px] bg-brand"></div>
+                            <div
+                                class="absolute -right-[5px] top-1/2 -translate-y-[1px] w-2 h-2 rounded-full bg-brand lg:block hidden">
+                            </div>
+
+                            <div class="p-5">
+                                <div class="flex justify-between items-start mb-4">
+                                    <div class="flex space-x-4">
+                                        <img src="https://images.unsplash.com/photo-1536098561742-ca998e48cbcc?q=80&w=200&auto=format&fit=crop"
+                                            class="w-16 h-16 rounded-xl object-cover shadow-sm" alt="Tokyo Tower">
+                                        <div>
+                                            <h3 class="font-bold text-slate-900 text-lg">Tokyo Tower</h3>
+                                            <p class="text-xs text-slate-500 leading-snug max-w-[200px] mt-1">Iconic
+                                                communications and observation tower. 1.5h visit.</p>
+                                        </div>
+                                    </div>
+                                    <span
+                                        class="bg-purple-100 text-brand text-[10px] font-bold px-2 py-1 rounded-lg">Sightseeing</span>
+                                </div>
+                                <div class="flex space-x-4 ml-20">
+                                    <button class="flex items-center text-xs font-bold text-brand hover:underline">
+                                        <span class="material-symbols-outlined text-sm mr-1">confirmation_number</span>
+                                        View Tickets
+                                    </button>
+                                    <button
+                                        class="flex items-center text-xs font-bold text-slate-500 hover:text-slate-800 transition-colors">
+                                        <span class="material-symbols-outlined text-sm mr-1">map</span> Directions
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 01:00 PM Gap -->
+                    <div class="relative group">
+                        <span
+                            class="absolute -left-[45px] top-1/2 w-3 h-3 rounded-full border-2 border-slate-300 bg-white"></span>
+                        <span
+                            class="absolute -left-[100px] top-[calc(50%-8px)] text-xs font-semibold text-slate-400 w-12 text-right">01:00
+                            PM</span>
+
+                        <!-- Add Activity Placeholder -->
+                        <button onclick="addActivity()"
+                            class="w-full py-8 border-2 border-dashed border-slate-100 rounded-2xl bg-slate-50 hover:bg-slate-100 hover:border-slate-200 transition-all flex flex-col items-center justify-center text-slate-400 group-hover:text-slate-500">
+                            <span class="material-symbols-outlined text-2xl mb-1">add_circle</span>
+                            <span class="text-xs font-medium">Add Activity</span>
+                        </button>
+                    </div>
+
+                    <!-- 03:00 PM Item -->
+                    <div class="relative group">
+                        <span
+                            class="absolute -left-[45px] top-4 w-3 h-3 rounded-full border-2 border-slate-300 bg-white group-hover:border-brand group-hover:bg-brand transition-colors"></span>
+                        <span
+                            class="absolute -left-[100px] top-3 text-xs font-semibold text-slate-400 w-12 text-right">03:00
+                            PM</span>
+
+                        <div
+                            class="bg-gray-50 rounded-2xl p-5 border border-gray-100 hover:shadow-md transition-shadow">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h3 class="font-bold text-slate-900 mb-1">TeamLabs Planets</h3>
+                                    <p class="text-sm text-slate-500">Immersive digital art museum. Requires
+                                        reservation.</p>
+                                </div>
+                                <span
+                                    class="bg-purple-100 text-purple-600 text-[10px] font-bold px-2 py-1 rounded-lg">Art</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Right Sidebar: Widgets -->
+        <aside class="w-96 bg-white border-l border-slate-200 hidden xl:flex flex-col p-6 overflow-y-auto">
+            <!-- Mini Map -->
+            <div class="rounded-2xl overflow-hidden shadow-sm border border-slate-200 h-48 relative mb-8 bg-slate-100">
+                <!-- Fake Map Image/Style -->
+                <div
+                    class="absolute inset-0 bg-[url('https://maps.googleapis.com/maps/api/staticmap?center=Tokyo+Tower&zoom=14&size=400x300&sensor=false')] bg-cover bg-center opacity-50 grayscale">
+                </div>
+                <!-- Map Pins -->
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
+                    <span class="material-symbols-outlined text-brand text-4xl drop-shadow-md">location_on</span>
+                </div>
+                <div class="absolute top-10 left-20 flex flex-col items-center">
+                    <span class="material-symbols-outlined text-slate-500 text-2xl drop-shadow-md">park</span>
+                    <span class="text-[8px] font-bold bg-white px-1 rounded shadow-sm">Shiba Park</span>
+                </div>
+
+                <button
+                    class="absolute bottom-3 right-3 bg-white text-xs font-bold px-3 py-1.5 rounded-lg shadow-sm border border-slate-200 hover:bg-slate-50 text-slate-600">
+                    Interactive Map
+                </button>
+            </div>
+
+            <!-- Suggestions -->
+            <div>
+                <div class="flex items-center space-x-2 text-brand font-bold mb-1">
+                    <span class="material-symbols-outlined text-lg">auto_awesome</span>
+                    <span class="text-sm uppercase tracking-wider">Smart Suggestions</span>
+                </div>
+                <p class="text-xs text-slate-500 mb-6">Because you're visiting <span
+                        class="font-bold text-slate-700">Tokyo Tower</span> around lunch time:</p>
+
+                <div class="space-y-4">
+                    <!-- Suggestion 1 -->
+                    <div class="bg-white rounded-xl border border-slate-100 p-3 hover:shadow-md transition-shadow">
+                        <div class="flex items-start space-x-3 mb-3">
+                            <img src="https://images.unsplash.com/photo-1570538965615-j1d85d714652?q=80&w=150&auto=format&fit=crop"
+                                class="w-12 h-12 rounded-lg object-cover" alt="Temple">
+                            <div class="flex-1">
+                                <div class="flex justify-between items-start">
+                                    <h4 class="font-bold text-sm text-slate-900">Zojoji Temple</h4>
+                                    <span class="text-[10px] text-slate-400">0.2 mi</span>
+                                </div>
+                                <p class="text-[10px] text-slate-500 leading-tight mt-1">Historic temple with Tokyo
+                                    Tower backdrop. Great for photos.</p>
+                            </div>
+                        </div>
+                        <button onclick="addToPlan('Zojoji Temple')"
+                            class="w-full py-1.5 rounded-lg border border-brand text-brand text-xs font-bold hover:bg-purple-50 transition-colors flex items-center justify-center">
+                            <span class="material-symbols-outlined text-sm mr-1">add</span> Add to Plan
+                        </button>
+                    </div>
+
+                    <!-- Suggestion 2 -->
+                    <div class="bg-white rounded-xl border border-slate-100 p-3 hover:shadow-md transition-shadow">
+                        <div class="flex items-start space-x-3 mb-3">
+                            <img src="https://images.unsplash.com/photo-1598460592754-072551ec7495?q=80&w=150&auto=format&fit=crop"
+                                class="w-12 h-12 rounded-lg object-cover" alt="Park">
+                            <div class="flex-1">
+                                <div class="flex justify-between items-start">
+                                    <h4 class="font-bold text-sm text-slate-900">Shiba Park</h4>
+                                    <span class="text-[10px] text-slate-400">0.3 mi</span>
+                                </div>
+                                <p class="text-[10px] text-slate-500 leading-tight mt-1">Relaxing green space perfect
+                                    for a picnic after the tower.</p>
+                            </div>
+                        </div>
+                        <button onclick="addToPlan('Shiba Park')"
+                            class="w-full py-1.5 rounded-lg border border-brand text-brand text-xs font-bold hover:bg-purple-50 transition-colors flex items-center justify-center">
+                            <span class="material-symbols-outlined text-sm mr-1">add</span> Add to Plan
+                        </button>
+                    </div>
+
+                    <!-- Suggestion 3 -->
+                    <div class="bg-white rounded-xl border border-slate-100 p-3 hover:shadow-md transition-shadow">
+                        <div class="flex items-start space-x-3 mb-3">
+                            <img src="https://images.unsplash.com/photo-1553621042-f6e147245754?q=80&w=150&auto=format&fit=crop"
+                                class="w-12 h-12 rounded-lg object-cover" alt="Tofu">
+                            <div class="flex-1">
+                                <div class="flex justify-between items-start">
+                                    <h4 class="font-bold text-sm text-slate-900">Tofuya Ukai</h4>
+                                    <span class="text-[10px] text-slate-400">0.1 mi</span>
+                                </div>
+                                <p class="text-[10px] text-slate-500 leading-tight mt-1">Famous tofu restaurant in a
+                                    traditional garden setting.</p>
+                            </div>
+                        </div>
+                        <button onclick="addToPlan('Tofuya Ukai')"
+                            class="w-full py-1.5 rounded-lg border border-slate-200 text-slate-600 text-xs font-bold hover:bg-slate-50 transition-colors flex items-center justify-center">
+                            <span class="material-symbols-outlined text-sm mr-1">restaurant</span> Reserve
+                        </button>
+                    </div>
+                </div>
+                <button onclick="viewMoreSuggestions()"
+                    class="w-full mt-6 py-2 text-xs font-bold text-brand hover:underline">View more
+                    suggestions</button>
+            </div>
+        </aside>
+    </div>
+
+    <script>
+        // Toast Function
+        function showToast(message) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'bg-slate-800/90 text-white px-4 py-3 rounded-full shadow-lg text-sm font-medium animate-slide-up pointer-events-auto flex items-center';
+            toast.innerHTML = `
+                <span class="material-symbols-outlined text-base mr-2 text-brand">check_circle</span>
+                ${message}
+            `;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(10px)';
+                toast.style.transition = 'all 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        function addDay() {
+            showToast('Adding a new day to the itinerary...');
+        }
+
+        function savePlan() {
+            showToast('Plan saved successfully!');
+        }
+
+        function addActivity() {
+            showToast('Opening activity selector...');
+        }
+
+        function addToPlan(itemName) {
+            showToast(`Adding ${itemName} to your plan...`);
+        }
+
+        function viewMoreSuggestions() {
+            showToast('Loading more suggestions...');
+        }
+
+        function navigateToDay(date) {
+            showToast(`Navigating to ${date}...`);
+            // In a real app, this would scroll or update the view
+        }
+    </script>
+</body>
+
+</html>
