@@ -19,6 +19,7 @@
             href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
             rel="stylesheet"
         />
+        <link rel="stylesheet" href="../../styles.css" />
 
         <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
         <script>
@@ -27,8 +28,8 @@
                 theme: {
                     extend: {
                         colors: {
-                            primary: "#4f46e5",
-                            "primary-dark": "#4338ca",
+                            primary: "#00897b",
+                            "primary-dark": "#00897b",
                             secondary: "#f4f4f5",
                         },
                         fontFamily: {
@@ -42,6 +43,10 @@
             };
         </script>
         <style>
+            body {
+                background-color: #f3f4f6;
+            }
+
             ::-webkit-scrollbar {
                 width: 8px;
             }
@@ -95,51 +100,47 @@
             /* --- 수정된 부분 끝 --- */
         </style>
     </head>
-    <body class="bg-gray-50 text-gray-800 font-sans flex flex-col min-h-screen">
-        <header
-            class="sticky top-0 z-50 w-full border-b border-gray-200 bg-white/80 backdrop-blur-sm"
-        >
-            <div
-                class="mx-auto relative flex h-16 max-w-screen-2xl items-center justify-between px-6"
-            >
-                <a class="flex items-center space-x-2" href="../main/Main.html">
+    <body class="text-gray-800 flex flex-col min-h-screen">
+                <header class="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+            <div class="w-full px-8 relative flex h-20 items-center justify-between">
+                
+                <a class="flex items-center space-x-2 transition-transform duration-300 hover:scale-105" href="Main.html">
                     <img
                         src="../../images/Logo.png"
                         alt="여백 로고"
                         class="h-9 w-9 rounded-full object-cover"
                     />
-                    <span class="font-bold ml-2 text-xl text-gray-800"
-                        >여백</span
-                    >
+                    <span class="font-serif text-foreground font-bold ml-2 text-xl">여백</span>
                 </a>
+
                 <nav
-                    class="hidden md:flex items-center gap-8 text-base font-medium absolute left-1/2 -translate-x-1/2"
+                    class="flex items-center justify-center text-muted-foreground gap-8 text-lg font-medium"
+                    style="position: absolute; left: 50%; transform: translateX(-50%);"
                 >
-                    <a
-                        class="transition-colors text-primary font-semibold"
-                        href="planner.html"
-                        >플래너</a
-                    >
-                    <a
-                        class="transition-colors hover:text-primary text-gray-600"
-                        href="#"
-                        >숙소</a
-                    >
-                    <a
-                        class="transition-colors hover:text-primary text-gray-600"
-                        href="#"
-                        >여행기록</a
-                    >
+                    <a href="../plan/planner.html" class="group relative py-1 transition-colors hover:text-foreground">
+                        플래너
+                        <span class="absolute left-0 bottom-0 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                    <a href="" class="group relative py-1 transition-colors hover:text-foreground">
+                        숙소
+                        <span class="absolute left-0 bottom-0 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                    <a href="" class="group relative py-1 transition-colors hover:text-foreground">
+                        여행기록
+                        <span class="absolute left-0 bottom-0 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full"></span>
+                    </a>
                 </nav>
-                <div id="auth-links" class="flex items-center gap-4">
-                    <a href="../auth/SignIn.html" class="text-sm font-medium"
-                        >로그인</a
-                    >
+
+                <div id="auth-links" class="flex items-center gap-6">
+                    <a href="../auth/SignIn.html" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                        로그인
+                    </a>
                     <a
                         href="../auth/SignUp.html"
-                        class="text-sm font-medium text-primary-foreground px-4 py-2 rounded-md"
-                        >회원가입</a
+                        class="text-sm font-bold text-white bg-primary px-5 py-2.5 rounded-full shadow-md transition-all duration-200 hover:bg-indigo-700 hover:shadow-lg hover:-translate-y-0.5 active:scale-95"
                     >
+                        회원가입
+                    </a>
                 </div>
             </div>
         </header>
@@ -487,7 +488,13 @@
                 </div>
             </div>
         </div>
-
+        <footer class="bg-muted py-8">
+            <div
+                class="container mx-auto text-center text-muted-foreground text-sm"
+            >
+                © 2026 여백. All rights reserved.
+            </div>
+        </footer>
         <script>
             const AIRLINES = [
                 {
