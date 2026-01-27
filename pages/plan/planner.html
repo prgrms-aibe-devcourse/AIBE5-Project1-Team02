@@ -6,11 +6,7 @@
         <title>Trip Planner v2 (Korean Patch)</title>
 
         <link href="https://fonts.googleapis.com" rel="preconnect" />
-        <link
-            crossorigin=""
-            href="https://fonts.gstatic.com"
-            rel="preconnect"
-        />
+        <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
         <link
             href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
             rel="stylesheet"
@@ -20,29 +16,28 @@
             rel="stylesheet"
         />
         <link rel="stylesheet" href="../../styles.css" />
-        
+
         <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-        
 
         <script id="tailwind-config">
             tailwind.config = {
-                darkMode: "class",
+                darkMode: 'class',
                 theme: {
                     extend: {
                         colors: {
-                            primary: "#00897b", // 사이트 테마색(Indigo)
-                            "primary-dark": "#00897b", // 호버 색상
-                            "background-light": "#f3f4f6",
-                            "background-dark": "#1f262e"
+                            primary: '#00897b', // 사이트 테마색(Indigo)
+                            'primary-dark': '#00897b', // 호버 색상
+                            'background-light': '#f3f4f6',
+                            'background-dark': '#1f262e',
                         },
                         fontFamily: {
-                            display: ["Plus Jakarta Sans", "sans-serif"],
+                            display: ['Plus Jakarta Sans', 'sans-serif'],
                         },
                         borderRadius: {
-                            DEFAULT: "0.5rem",
-                            lg: "1rem",
-                            xl: "1.5rem",
-                            full: "9999px",
+                            DEFAULT: '0.5rem',
+                            lg: '1rem',
+                            xl: '1.5rem',
+                            full: '9999px',
                         },
                     },
                 },
@@ -88,8 +83,7 @@
 
             /* 지도 마커 애니메이션 */
             .marker-pulse {
-                animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1)
-                    infinite;
+                animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
             }
             @keyframes pulse-ring {
                 0% {
@@ -104,10 +98,15 @@
             }
         </style>
     </head>
-    <body class=" h-screen overflow-hidden text-gray-800"
-          style='background-color: #f3f4f6; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; line-height: 1.6; color: #111827;'
+    <body
+        class="h-screen overflow-hidden text-gray-800"
+        style="
+            background-color: #f3f4f6;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #111827;
+        "
     >
-        
         <div id="app" class="h-full flex flex-col relative"></div>
 
         <script>
@@ -137,158 +136,327 @@
 
             const INITIAL_PLACES = [
                 {
-                    id: "1",
-                    name: "에펠탑",
-                    country: "프랑스 파리",
-                    image: "https://images.unsplash.com/photo-1431274172761-fca41d930114?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
-                    category: "landmark",
-                    description: "파리의 상징적인 철탑",
+                    id: '1',
+                    name: '에펠탑',
+                    country: '프랑스 파리',
+                    image: 'https://images.unsplash.com/photo-1431274172761-fca41d930114?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400',
+                    category: 'landmark',
+                    description: '파리의 상징적인 철탑',
                 },
                 {
-                    id: "2",
-                    name: "도쿄 타워",
-                    country: "일본 도쿄",
-                    image: "https://images.unsplash.com/photo-1583915223588-7d88ebf23414?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
-                    category: "landmark",
-                    description: "도쿄의 랜드마크",
+                    id: '2',
+                    name: '도쿄 타워',
+                    country: '일본 도쿄',
+                    image: 'https://images.unsplash.com/photo-1583915223588-7d88ebf23414?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400',
+                    category: 'landmark',
+                    description: '도쿄의 랜드마크',
                 },
                 {
-                    id: "3",
-                    name: "스위스 알프스",
-                    country: "스위스",
-                    image: "https://images.unsplash.com/photo-1527668752968-14dc70a27c95?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
-                    category: "nature",
-                    description: "아름다운 산악 경관",
+                    id: '3',
+                    name: '스위스 알프스',
+                    country: '스위스',
+                    image: 'https://images.unsplash.com/photo-1527668752968-14dc70a27c95?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400',
+                    category: 'nature',
+                    description: '아름다운 산악 경관',
                 },
                 {
-                    id: "4",
-                    name: "산토리니",
-                    country: "그리스",
-                    image: "https://images.unsplash.com/photo-1676730056228-7e38cbb88edc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
-                    category: "nature",
-                    description: "환상적인 석양",
+                    id: '4',
+                    name: '산토리니',
+                    country: '그리스',
+                    image: 'https://images.unsplash.com/photo-1676730056228-7e38cbb88edc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400',
+                    category: 'nature',
+                    description: '환상적인 석양',
                 },
                 {
-                    id: "5",
-                    name: "사그라다 파밀리아",
-                    country: "스페인",
-                    image: "https://images.unsplash.com/photo-1583422409516-2895a77efded?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
-                    category: "landmark",
-                    description: "가우디의 미완성 걸작",
+                    id: '5',
+                    name: '사그라다 파밀리아',
+                    country: '스페인',
+                    image: 'https://images.unsplash.com/photo-1583422409516-2895a77efded?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400',
+                    category: 'landmark',
+                    description: '가우디의 미완성 걸작',
                 },
                 {
-                    id: "6",
-                    name: "몰디브 해변",
-                    country: "몰디브",
-                    image: "https://images.unsplash.com/photo-1602455891364-31034e19a826?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
-                    category: "nature",
-                    description: "열대 해변 휴양지",
+                    id: '6',
+                    name: '몰디브 해변',
+                    country: '몰디브',
+                    image: 'https://images.unsplash.com/photo-1602455891364-31034e19a826?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400',
+                    category: 'nature',
+                    description: '열대 해변 휴양지',
                 },
                 {
-                    id: "7",
-                    name: "로마 콜로세움",
-                    country: "이탈리아",
-                    image: "https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=400&q=80",
-                    category: "landmark",
-                    description: "고대 로마의 원형 경기장",
+                    id: '7',
+                    name: '로마 콜로세움',
+                    country: '이탈리아',
+                    image: 'https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=400&q=80',
+                    category: 'landmark',
+                    description: '고대 로마의 원형 경기장',
                 },
                 {
-                    id: "8",
-                    name: "두바이",
-                    country: "UAE",
-                    image: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=400&q=80",
-                    category: "landmark",
-                    description: "현대적인 도시 경관",
+                    id: '8',
+                    name: '두바이',
+                    country: 'UAE',
+                    image: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=400&q=80',
+                    category: 'landmark',
+                    description: '현대적인 도시 경관',
+                },
+                {
+                    id: '9',
+                    name: '빅벤',
+                    country: '영국 런던',
+                    image: 'https://images.unsplash.com/photo-1529655683826-aba9b3e77383?w=400&q=80',
+                    category: 'landmark',
+                    description: '런던의 대표 랜드마크',
+                },
+                {
+                    id: '10',
+                    name: '자유의 여신상',
+                    country: '미국 뉴욕',
+                    image: 'https://images.unsplash.com/photo-1503572327579-b5c6afe5c5c5?q=80&w=1484&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                    category: 'landmark',
+                    description: '뉴욕을 상징하는 관광지',
+                },
+                {
+                    id: '11',
+                    name: '방콕 왕궁',
+                    country: '태국 방콕',
+                    image: 'https://images.unsplash.com/photo-1728017237938-8829b36c1850?q=80&w=1631&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                    category: 'landmark',
+                    description: '태국 전통 건축과 문화의 중심',
+                },
+                {
+                    id: '12',
+                    name: '다낭 미케비치',
+                    country: '베트남 다낭',
+                    image: 'https://images.unsplash.com/photo-1723142282970-1fd415eec1ad?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                    category: 'nature',
+                    description: '휴양에 좋은 해변',
+                },
+                {
+                    id: '13',
+                    name: '시드니 오페라하우스',
+                    country: '호주 시드니',
+                    image: 'https://images.unsplash.com/photo-1523059623039-a9ed027e7fad?q=80&w=1664&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                    category: 'landmark',
+                    description: '호주의 대표 랜드마크',
+                },
+                {
+                    id: '14',
+                    name: '프라하 구시가지',
+                    country: '체코 프라하',
+                    image: 'https://images.unsplash.com/photo-1673272294301-c9d959edc6d4?q=80&w=1587&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                    category: 'city',
+                    description: '동유럽 감성 도시',
+                },
+                {
+                    id: '15',
+                    name: '인터라켄',
+                    country: '스위스',
+                    image: 'https://images.unsplash.com/photo-1605825856823-cabe105ab0af?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                    category: 'nature',
+                    description: '알프스 액티비티 중심지',
+                },
+                {
+                    id: '16',
+                    name: '하와이 와이키키',
+                    country: '미국 하와이',
+                    image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&q=80',
+                    category: 'nature',
+                    description: '대표적인 휴양 해변',
+                },
+                {
+                    id: '17',
+                    name: '이스탄불 블루모스크',
+                    country: '터키 이스탄불',
+                    image: 'https://images.unsplash.com/photo-1673586796931-7c2232e81db8?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                    category: 'landmark',
+                    description: '이슬람 건축 명소',
+                },
+                {
+                    id: '18',
+                    name: '마추픽추',
+                    country: '페루',
+                    image: 'https://images.unsplash.com/photo-1587595431973-160d0d94add1?q=80&w=1476&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                    category: 'landmark',
+                    description: '잉카 문명의 유적',
+                },
+                {
+                    id: '19',
+                    name: '바르셀로나 해변',
+                    country: '스페인',
+                    image: 'https://images.unsplash.com/photo-1464790719320-516ecd75af6c?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                    category: 'nature',
+                    description: '도시 속 휴양지',
+                },
+                {
+                    id: '20',
+                    name: '베네치아 곤돌라',
+                    country: '이탈리아 베네치아',
+                    image: 'https://images.unsplash.com/photo-1736252333436-9f0234de7dbd?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                    category: 'city',
+                    description: '물의 도시 로맨스',
+                },
+                {
+                    id: '21',
+                    name: '상하이 와이탄',
+                    country: '중국 상하이',
+                    image: 'https://images.unsplash.com/photo-1723949140609-064a06e52db2?q=80&w=1587&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                    category: 'city',
+                    description: '야경 명소',
+                },
+                {
+                    id: '22',
+                    name: '런던 타워브릿지',
+                    country: '영국 런던',
+                    image: 'https://images.unsplash.com/photo-1533929736458-ca588d08c8be?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                    category: 'landmark',
+                    description: '영국 대표 다리',
+                },
+                {
+                    id: '23',
+                    name: '부다페스트 국회의사당',
+                    country: '헝가리',
+                    image: 'https://images.unsplash.com/photo-1617034592886-5c36bb6de0d1?q=80&w=1632&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                    category: 'landmark',
+                    description: '야경 명소',
+                },
+                {
+                    id: '24',
+                    name: '하노이 호안끼엠 호수',
+                    country: '베트남 하노이',
+                    image: 'https://images.unsplash.com/photo-1651384360692-2de84bdb84c1?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                    category: 'city',
+                    description: '도심 속 호수',
+                },
+                {
+                    id: '25',
+                    name: '오사카 도톤보리',
+                    country: '일본 오사카',
+                    image: 'https://images.unsplash.com/photo-1713925104997-2786602b1313?q=80&w=1548&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                    category: 'city',
+                    description: '먹거리 천국',
+                },
+                {
+                    id: '26',
+                    name: '코펜하겐 뉘하운',
+                    country: '덴마크',
+                    image: 'https://images.unsplash.com/photo-1659379820723-6d695a163ecf?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                    category: 'city',
+                    description: '알록달록 항구',
+                },
+                {
+                    id: '27',
+                    name: '케이프타운 테이블마운틴',
+                    country: '남아프리카공화국',
+                    image: 'https://images.unsplash.com/photo-1712850244310-5765b9373353?q=80&w=1587&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                    category: 'nature',
+                    description: '대자연 전망',
+                },
+                {
+                    id: '28',
+                    name: '리우 코르코바도',
+                    country: '브라질',
+                    image: 'https://images.unsplash.com/photo-1700677866588-95226be09b39?q=80&w=1548&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                    category: 'landmark',
+                    description: '예수상 전망대',
+                },
+                {
+                    id: '29',
+                    name: '로포텐 제도',
+                    country: '노르웨이',
+                    image: 'https://images.unsplash.com/photo-1710762635726-531b4a22d4ca?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                    category: 'nature',
+                    description: '북유럽 자연 풍경',
+                },
+                {
+                    id: '30',
+                    name: '세부 오슬롭',
+                    country: '필리핀 세부',
+                    image: 'https://images.unsplash.com/photo-1718560171948-08d6ac9ee837?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                    category: 'nature',
+                    description: '에메랄드 바다',
                 },
             ];
 
             const BASE_PLACE_DETAILS = {
-                phone: "+82-2-1234-5678",
-                hours: "09:00 - 18:00",
+                phone: '+82-2-1234-5678',
+                hours: '09:00 - 18:00',
                 rating: 4.5,
                 reviewCount: 234,
-                tags: ["인기", "사진 명소", "가족 여행", "데이트"],
+                tags: ['인기', '사진 명소', '가족 여행', '데이트'],
                 reviews: [
                     {
-                        id: "1",
-                        author: "여행러버",
+                        id: '1',
+                        author: '여행러버',
                         rating: 5,
-                        date: "2026-01-15",
-                        content:
-                            "정말 멋진 곳이었어요! 사진 찍기에도 좋고 주변에 맛집도 많아요. 강력 추천합니다!",
+                        date: '2026-01-15',
+                        content: '정말 멋진 곳이었어요! 사진 찍기에도 좋고 주변에 맛집도 많아요. 강력 추천합니다!',
                         likes: 12,
                     },
                     {
-                        id: "2",
-                        author: "세계여행가",
+                        id: '2',
+                        author: '세계여행가',
                         rating: 4,
-                        date: "2026-01-10",
+                        date: '2026-01-10',
                         content:
-                            "기대했던 것보다 좋았습니다. 다만 사람이 많아서 조금 붐볐어요. 평일에 가시는 걸 추천드려요.",
+                            '기대했던 것보다 좋았습니다. 다만 사람이 많아서 조금 붐볐어요. 평일에 가시는 걸 추천드려요.',
                         likes: 8,
                     },
                     {
-                        id: "3",
-                        author: "가족여행",
+                        id: '3',
+                        author: '가족여행',
                         rating: 5,
-                        date: "2026-01-05",
-                        content:
-                            "아이들과 함께 가기 정말 좋은 곳이에요. 시설도 깨끗하고 직원분들도 친절하셨습니다.",
+                        date: '2026-01-05',
+                        content: '아이들과 함께 가기 정말 좋은 곳이에요. 시설도 깨끗하고 직원분들도 친절하셨습니다.',
                         likes: 15,
                     },
                 ],
-                facilities: [
-                    "주차 가능",
-                    "와이파이",
-                    "휠체어 접근",
-                    "반려동물 동반 가능",
-                ],
+                facilities: ['주차 가능', '와이파이', '휠체어 접근', '반려동물 동반 가능'],
             };
 
             const getNearbyPlaces = (currentPlace) => {
                 return [
                     {
-                        id: "nearby-1",
-                        name: "현지 맛집",
-                        category: "음식점",
+                        id: 'nearby-1',
+                        name: '현지 맛집',
+                        category: '음식점',
                         rating: 4.5,
-                        distance: "200m",
+                        distance: '200m',
                         lat: 48.8584 + 0.001,
                         lng: 2.2945 + 0.001,
                     },
                     {
-                        id: "nearby-2",
-                        name: "박물관",
-                        category: "문화",
+                        id: 'nearby-2',
+                        name: '박물관',
+                        category: '문화',
                         rating: 4.8,
-                        distance: "350m",
+                        distance: '350m',
                         lat: 48.8584 - 0.002,
                         lng: 2.2945 + 0.002,
                     },
                     {
-                        id: "nearby-3",
-                        name: "기념품 가게",
-                        category: "쇼핑",
+                        id: 'nearby-3',
+                        name: '기념품 가게',
+                        category: '쇼핑',
                         rating: 4.2,
-                        distance: "150m",
+                        distance: '150m',
                         lat: 48.8584 + 0.002,
                         lng: 2.2945 - 0.001,
                     },
                     {
-                        id: "nearby-4",
-                        name: "카페",
-                        category: "카페",
+                        id: 'nearby-4',
+                        name: '카페',
+                        category: '카페',
                         rating: 4.6,
-                        distance: "280m",
+                        distance: '280m',
                         lat: 48.8584 - 0.001,
                         lng: 2.2945 - 0.002,
                     },
                     {
-                        id: "nearby-5",
-                        name: "공원",
-                        category: "휴식",
+                        id: 'nearby-5',
+                        name: '공원',
+                        category: '휴식',
                         rating: 4.4,
-                        distance: "500m",
+                        distance: '500m',
                         lat: 48.8584 + 0.003,
                         lng: 2.2945 + 0.003,
                     },
@@ -300,11 +468,11 @@
             // ==========================================
             const Store = {
                 state: {
-                    tripName: "나의 멋진 여행", // 기본 제목 변경
-                    startDate: "",
-                    endDate: "",
-                    departure: "",
-                    destination: "",
+                    tripName: '나의 멋진 여행', // 기본 제목 변경
+                    startDate: '',
+                    endDate: '',
+                    departure: '',
+                    destination: '',
                     schedule: [],
                     selectedDay: 0,
                     savedPlans: [],
@@ -330,9 +498,7 @@
                     }
 
                     // 2. ★ [수정됨] Flight.html에서 넘어온 데이터가 있는지 확인
-                    const flightInfo = localStorage.getItem(
-                        "tripPlanner_flightInfo",
-                    );
+                    const flightInfo = localStorage.getItem('tripPlanner_flightInfo');
 
                     if (flightInfo) {
                         const fData = JSON.parse(flightInfo);
@@ -348,7 +514,10 @@
                     }
                     // 3. 작업 중이던 임시 데이터(Draft) 확인 (항공권 정보가 없을 때만)
                     else {
-                        const draftKey = loggedInUser && loggedInUser.email ? `tripPlanner_draft_${loggedInUser.email}` : 'tripPlanner_draft_guest';
+                        const draftKey =
+                            loggedInUser && loggedInUser.email
+                                ? `tripPlanner_draft_${loggedInUser.email}`
+                                : 'tripPlanner_draft_guest';
                         const draft = localStorage.getItem(draftKey);
                         if (draft) {
                             const parsedDraft = JSON.parse(draft);
@@ -381,11 +550,11 @@
                         currentPlanId: this.state.currentPlanId,
                     };
                     const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
-                    const draftKey = loggedInUser && loggedInUser.email ? `tripPlanner_draft_${loggedInUser.email}` : 'tripPlanner_draft_guest';
-                    localStorage.setItem(
-                        draftKey,
-                        JSON.stringify(draftData),
-                    );
+                    const draftKey =
+                        loggedInUser && loggedInUser.email
+                            ? `tripPlanner_draft_${loggedInUser.email}`
+                            : 'tripPlanner_draft_guest';
+                    localStorage.setItem(draftKey, JSON.stringify(draftData));
 
                     App.render();
                 },
@@ -396,15 +565,9 @@
                         const end = new Date(this.state.endDate);
                         const days = [];
 
-                        for (
-                            let d = new Date(start);
-                            d <= end;
-                            d.setDate(d.getDate() + 1)
-                        ) {
-                            const dateStr = d.toISOString().split("T")[0];
-                            const existing = this.state.schedule.find(
-                                (s) => s.date === dateStr,
-                            );
+                        for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+                            const dateStr = d.toISOString().split('T')[0];
+                            const existing = this.state.schedule.find((s) => s.date === dateStr);
                             days.push(existing || { date: dateStr, items: [] });
                         }
                         this.state.schedule = days;
@@ -486,28 +649,23 @@
                                 </div>
                             </header>
                         `;
-                            },
-                            
-                        };
+                },
+            };
 
             const AddScheduleModal = {
                 render() {
-                    if (!Store.state.showAddModal) return "";
+                    if (!Store.state.showAddModal) return '';
 
                     // 수정 모드인지 확인
                     const editItem = Store.state.editingItem || null;
                     const isEditMode = !!editItem;
 
                     // 기본값 혹은 수정할 값 설정
-                    const titleVal = isEditMode ? editItem.place.name : "";
-                    const memoVal = isEditMode ? editItem.memo : "";
-                    const startTimeVal = isEditMode
-                        ? editItem.startTime
-                        : "14:00";
-                    const endTimeVal = isEditMode ? editItem.endTime : "16:00";
-                    const locationVal = isEditMode
-                        ? editItem.place.country
-                        : "";
+                    const titleVal = isEditMode ? editItem.place.name : '';
+                    const memoVal = isEditMode ? editItem.memo : '';
+                    const startTimeVal = isEditMode ? editItem.startTime : '14:00';
+                    const endTimeVal = isEditMode ? editItem.endTime : '16:00';
+                    const locationVal = isEditMode ? editItem.place.country : '';
 
                     return `
                     <div class="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6" role="dialog">
@@ -573,8 +731,8 @@
                                     취소
                                 </button>
                                 <button onclick="App.addManualSchedule()" class="px-5 py-2.5 rounded-xl text-sm font-bold text-white bg-primary hover:bg-primary-dark shadow-lg shadow-primary/25 hover:shadow-primary/40 active:scale-95 transition-all flex items-center gap-2">
-                                    <span class="material-symbols-outlined text-lg">${isEditMode ? "edit_square" : "add_circle"}</span>
-                                    ${isEditMode ? "수정 완료" : "일정에 추가"}
+                                    <span class="material-symbols-outlined text-lg">${isEditMode ? 'edit_square' : 'add_circle'}</span>
+                                    ${isEditMode ? '수정 완료' : '일정에 추가'}
                                 </button>
                             </div>
                         </div>
@@ -585,12 +743,7 @@
 
             const Header = {
                 render() {
-                    const {
-                        tripName,
-                        savedPlans,
-                        currentPlanId,
-                        showPlanList,
-                    } = Store.state;
+                    const { tripName, savedPlans, currentPlanId, showPlanList } = Store.state;
                     return `
                     <div class="bg-white border-b border-gray-200 px-6 py-4 shadow-sm z-30">
                         <div class="flex items-center justify-between">
@@ -598,7 +751,7 @@
                                 <input type="text" value="${tripName}" 
                                     onchange="Store.setState({ tripName: this.value })"
                                     class="text-2xl font-semibold text-gray-800 border-none outline-none focus:text-indigo-600 bg-transparent" placeholder="여행 이름 입력" />
-                                ${currentPlanId ? `<span class="px-3 py-1 bg-green-100 text-green-700 text-sm rounded-full">저장됨</span>` : ""}
+                                ${currentPlanId ? `<span class="px-3 py-1 bg-green-100 text-green-700 text-sm rounded-full">저장됨</span>` : ''}
                             </div>
                             <div class="flex gap-3">
                                 <button onclick="Store.setState({ showPlanList: !Store.state.showPlanList })" class="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">
@@ -615,7 +768,7 @@
                                 </button>
                             </div>
                         </div>
-                        ${showPlanList ? this.renderPlanList(savedPlans, currentPlanId) : ""}
+                        ${showPlanList ? this.renderPlanList(savedPlans, currentPlanId) : ''}
                     </div>
                 `;
                 },
@@ -630,7 +783,7 @@
                                 ${savedPlans
                                     .map(
                                         (plan) => `
-                                    <div class="border ${currentPlanId === plan.id ? "border-indigo-600 bg-indigo-50" : "border-gray-200"} rounded-lg p-4 hover:border-indigo-500 transition-colors">
+                                    <div class="border ${currentPlanId === plan.id ? 'border-indigo-600 bg-indigo-50' : 'border-gray-200'} rounded-lg p-4 hover:border-indigo-500 transition-colors">
                                         <div class="flex items-start justify-between mb-2">
                                             <h4 class="font-medium text-gray-800 flex-1">${plan.name}</h4>
                                             <div class="flex gap-1">
@@ -644,7 +797,7 @@
                                     </div>
                                 `,
                                     )
-                                    .join("")}
+                                    .join('')}
                               </div>`
                         }
                     </div>`;
@@ -655,28 +808,21 @@
 
             const TripSetting = {
                 render() {
-                    const {
-                        isCollapsed,
-                        startDate,
-                        endDate,
-                        departure,
-                        destination,
-                        selectedDay,
-                    } = Store.state;
+                    const { isCollapsed, startDate, endDate, departure, destination, selectedDay } = Store.state;
                     const totalDays = Store.getDays();
 
                     const formatDate = (dateStr) => {
-                        if (!dateStr) return "";
+                        if (!dateStr) return '';
                         const d = new Date(dateStr);
                         const year = d.getFullYear();
-                        const month = String(d.getMonth() + 1).padStart(2, "0");
-                        const day = String(d.getDate()).padStart(2, "0");
+                        const month = String(d.getMonth() + 1).padStart(2, '0');
+                        const day = String(d.getDate()).padStart(2, '0');
                         return `${year}. ${month}. ${day}`;
                     };
                     const dateRangeStr =
                         startDate && endDate
                             ? `${formatDate(startDate)} - ${formatDate(endDate)}`
-                            : "날짜를 선택하세요";
+                            : '날짜를 선택하세요';
 
                     if (isCollapsed) {
                         return `
@@ -687,31 +833,28 @@
                 </div>`;
                     }
 
-                    const dayButtons = Array.from(
-                        { length: totalDays },
-                        (_, i) => {
-                            const isSelected = selectedDay === i;
-                            let label = `Day ${i + 1}`;
-                            if (i === 0) label = "Arrival";
-                            else if (i === totalDays - 1) label = "Departure";
-                            let dateLabel = "";
-                            if (startDate) {
-                                const d = new Date(startDate);
-                                d.setDate(d.getDate() + i);
-                                dateLabel = `${String(d.getMonth() + 1).padStart(2, "0")}/${String(d.getDate()).padStart(2, "0")}`;
-                            }
-                            return `
+                    const dayButtons = Array.from({ length: totalDays }, (_, i) => {
+                        const isSelected = selectedDay === i;
+                        let label = `Day ${i + 1}`;
+                        if (i === 0) label = 'Arrival';
+                        else if (i === totalDays - 1) label = 'Departure';
+                        let dateLabel = '';
+                        if (startDate) {
+                            const d = new Date(startDate);
+                            d.setDate(d.getDate() + i);
+                            dateLabel = `${String(d.getMonth() + 1).padStart(2, '0')}/${String(d.getDate()).padStart(2, '0')}`;
+                        }
+                        return `
                 <button onclick="Store.setState({ selectedDay: ${i} })" 
-                    class="w-full text-left px-4 py-3 rounded-xl transition-all flex items-center justify-between group ${isSelected ? "bg-indigo-600 text-white shadow-md shadow-indigo-200" : "bg-gray-50 text-gray-700 hover:bg-gray-100"}">
+                    class="w-full text-left px-4 py-3 rounded-xl transition-all flex items-center justify-between group ${isSelected ? 'bg-indigo-600 text-white shadow-md shadow-indigo-200' : 'bg-gray-50 text-gray-700 hover:bg-gray-100'}">
                     <div>
-                        <div class="text-[10px] font-bold uppercase tracking-wider mb-0.5 ${isSelected ? "text-indigo-200" : "text-gray-400 group-hover:text-indigo-500"}">${dateLabel}</div>
+                        <div class="text-[10px] font-bold uppercase tracking-wider mb-0.5 ${isSelected ? 'text-indigo-200' : 'text-gray-400 group-hover:text-indigo-500'}">${dateLabel}</div>
                         <div class="font-bold text-sm">${label}</div>
                     </div>
-                    ${isSelected ? '<span class="material-symbols-outlined text-sm">chevron_right</span>' : ""}
+                    ${isSelected ? '<span class="material-symbols-outlined text-sm">chevron_right</span>' : ''}
                 </button>
             `;
-                        },
-                    ).join("");
+                    }).join('');
 
                     return `
             <div class="w-80 bg-white border-r border-gray-200 flex-shrink-0 transition-all duration-300 relative flex flex-col h-full z-20">
@@ -728,11 +871,11 @@
                     <div class="space-y-3 mb-6">
                         <div class="flex items-center gap-3 px-4 py-3 bg-white border border-gray-200 rounded-full shadow-sm hover:border-primary transition-colors cursor-default group">
                             <span class="material-symbols-outlined text-gray-400 group-hover:text-primary transition-colors">flight_takeoff</span>
-                            <span class="font-bold text-gray-800 text-sm truncate">${departure || "출발지를 선택하세요"}</span>
+                            <span class="font-bold text-gray-800 text-sm truncate">${departure || '출발지를 선택하세요'}</span>
                         </div>
                         <div class="flex items-center gap-3 px-4 py-3 bg-white border border-gray-200 rounded-full shadow-sm hover:border-primary transition-colors cursor-default group">
                             <span class="material-symbols-outlined text-gray-400 group-hover:text-primary transition-colors">location_on</span>
-                            <span class="font-bold text-gray-800 text-sm truncate">${destination || "도착지를 선택하세요"}</span>
+                            <span class="font-bold text-gray-800 text-sm truncate">${destination || '도착지를 선택하세요'}</span>
                         </div>
                         <div class="flex items-center gap-3 px-4 py-3 bg-white border border-gray-200 rounded-full shadow-sm hover:border-primary transition-colors cursor-default group">
                             <span class="material-symbols-outlined text-gray-400 group-hover:text-primary transition-colors">date_range</span>
@@ -796,21 +939,19 @@
 
                     // 시간순 정렬
                     const sortedItems = [...items].sort((a, b) => {
-                        const timeA = a.startTime || "00:00";
-                        const timeB = b.startTime || "00:00";
+                        const timeA = a.startTime || '00:00';
+                        const timeB = b.startTime || '00:00';
                         return timeA.localeCompare(timeB);
                     });
 
                     let blocksHtml = sortedItems
                         .map((item) => {
-                            const placeJson = encodeURIComponent(
-                                JSON.stringify(item.place),
-                            );
-                            const startTime = item.startTime || "10:00";
-                            const endTime = item.endTime || "12:00";
+                            const placeJson = encodeURIComponent(JSON.stringify(item.place));
+                            const startTime = item.startTime || '10:00';
+                            const endTime = item.endTime || '12:00';
 
                             // ★ [핵심 변경] 직접 입력한 일정인지 확인
-                            const isCustom = item.place.category === "custom";
+                            const isCustom = item.place.category === 'custom';
 
                             // 직접 입력이면 editManualItem 실행, 아니면 showDetail 실행
                             const clickAction = isCustom
@@ -825,7 +966,7 @@
                         <div class="border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm flex mb-4 relative group min-h-[200px] hover:border-indigo-400 transition-colors">
                             <div class="w-[200px] h-[200px] flex-shrink-0 p-2 relative">
                                 <img src="${item.place.image}" class="w-full h-full object-cover rounded-lg" />
-                                <button onclick="${clickAction}" class="absolute bottom-3 right-3 p-1.5 bg-white rounded-full shadow hover:bg-gray-100 text-gray-600" title="${isCustom ? "일정 수정" : "상세 정보"}">
+                                <button onclick="${clickAction}" class="absolute bottom-3 right-3 p-1.5 bg-white rounded-full shadow hover:bg-gray-100 text-gray-600" title="${isCustom ? '일정 수정' : '상세 정보'}">
                                     ${actionIcon}
                                 </button>
                             </div>
@@ -854,7 +995,7 @@
                         </div>
                     `;
                         })
-                        .join("");
+                        .join('');
 
                     blocksHtml += `
                     <div onclick="App.openAddModal()" class="drop-zone border-2 border-dashed border-gray-300 rounded-lg min-h-[140px] flex items-center justify-center text-gray-400 bg-gray-50 hover:border-indigo-500 hover:text-indigo-600 transition-colors cursor-pointer" data-day-index="${selectedDay}">
@@ -884,16 +1025,16 @@
             const PlaceMapCenterPanel = {
                 render() {
                     const place = Store.state.selectedPlace;
-                    if (!place) return "";
+                    if (!place) return '';
 
                     const nearbyPlaces = getNearbyPlaces(place);
 
                     const markerPositions = [
-                        { left: "30%", top: "30%" },
-                        { left: "70%", top: "35%" },
-                        { left: "65%", top: "65%" },
-                        { left: "35%", top: "70%" },
-                        { left: "25%", top: "60%" },
+                        { left: '30%', top: '30%' },
+                        { left: '70%', top: '35%' },
+                        { left: '65%', top: '65%' },
+                        { left: '35%', top: '70%' },
+                        { left: '25%', top: '60%' },
                     ];
 
                     return `
@@ -931,8 +1072,8 @@
                                 ${nearbyPlaces
                                     .map((nearby, index) => {
                                         const pos = markerPositions[index] || {
-                                            left: "50%",
-                                            top: "50%",
+                                            left: '50%',
+                                            top: '50%',
                                         };
                                         return `
                                         <div class="absolute" style="left: ${pos.left}; top: ${pos.top};">
@@ -942,7 +1083,7 @@
                                         </div>
                                     `;
                                     })
-                                    .join("")}
+                                    .join('')}
 
                                 <div class="absolute bottom-4 right-4 bg-white/90 backdrop-blur px-4 py-2 rounded-lg shadow text-xs text-gray-600">
                                     🗺️ 실제 서비스에서는 Google Maps 연동
@@ -963,13 +1104,10 @@
                                                 name: nearby.name,
                                                 country: place.country,
                                                 category: nearby.category,
-                                                image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=200&q=80",
+                                                image: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=200&q=80',
                                                 description: `${nearby.category} - ${nearby.distance} 거리`,
                                             };
-                                            const placeJson =
-                                                encodeURIComponent(
-                                                    JSON.stringify(placeObj),
-                                                );
+                                            const placeJson = encodeURIComponent(JSON.stringify(placeObj));
 
                                             return `
                                             <div class="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border border-gray-100">
@@ -1003,7 +1141,7 @@
                                             </div>
                                         `;
                                         })
-                                        .join("")}
+                                        .join('')}
                                 </div>
                             </div>
                         </div>
@@ -1028,9 +1166,7 @@
                         </div>
                         <div class="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar">
                             ${INITIAL_PLACES.map((place) => {
-                                const placeJson = encodeURIComponent(
-                                    JSON.stringify(place),
-                                );
+                                const placeJson = encodeURIComponent(JSON.stringify(place));
                                 return `
                                     <div draggable="true" data-place="${placeJson}" class="draggable-source place-item bg-white border border-gray-200 rounded-lg p-3 cursor-move hover:shadow-lg transition-all group" data-text="${place.name} ${place.country}">
                                         <div class="flex gap-3 relative">
@@ -1047,7 +1183,7 @@
                                         </div>
                                     </div>
                                 `;
-                            }).join("")}
+                            }).join('')}
                         </div>
                     </div>
                 `;
@@ -1057,7 +1193,7 @@
             const PlaceDetails = {
                 render() {
                     const place = Store.state.selectedPlace;
-                    if (!place) return "";
+                    if (!place) return '';
 
                     const details = {
                         ...BASE_PLACE_DETAILS,
@@ -1106,13 +1242,13 @@
                             </div>
                             
                             <div class="flex flex-wrap gap-2 mb-8">
-                                ${details.tags.map((tag) => `<span class="px-3 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">#${tag}</span>`).join("")}
+                                ${details.tags.map((tag) => `<span class="px-3 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">#${tag}</span>`).join('')}
                             </div>
 
                             <div class="mb-8">
                                 <h3 class="font-bold text-gray-800 mb-3 text-sm uppercase">편의 시설</h3>
                                 <ul class="grid grid-cols-2 gap-2">
-                                    ${details.facilities.map((f) => `<li class="flex items-center gap-2 text-sm text-gray-600"><span class="w-1.5 h-1.5 bg-indigo-500 rounded-full"></span>${f}</li>`).join("")}
+                                    ${details.facilities.map((f) => `<li class="flex items-center gap-2 text-sm text-gray-600"><span class="w-1.5 h-1.5 bg-indigo-500 rounded-full"></span>${f}</li>`).join('')}
                                 </ul>
                             </div>
 
@@ -1128,13 +1264,13 @@
                                                 <div class="text-xs text-gray-400">${review.date}</div>
                                             </div>
                                             <div class="flex text-orange-400 gap-0.5 mb-2 scale-75 origin-left">
-                                                ${Array(review.rating).fill(Icons.Star).join("")}
+                                                ${Array(review.rating).fill(Icons.Star).join('')}
                                             </div>
                                             <p class="text-sm text-gray-600 leading-relaxed">${review.content}</p>
                                         </div>
                                     `,
                                         )
-                                        .join("")}
+                                        .join('')}
                                 </div>
                             </div>
                         </div>
@@ -1145,9 +1281,7 @@
 
             const CenterPanel = {
                 render() {
-                    return Store.state.selectedPlace
-                        ? PlaceMapCenterPanel.render()
-                        : TimelineSchedule.render();
+                    return Store.state.selectedPlace ? PlaceMapCenterPanel.render() : TimelineSchedule.render();
                 },
             };
 
@@ -1173,50 +1307,42 @@
 
                 // ★ [추가] 항공권 페이지로 이동 전 상태 전달
                 goToFlightSearch() {
-                    const {
-                        startDate,
-                        endDate,
-                        departure,
-                        destination,
-                        savedFlights,
-                    } = Store.state;
+                    const { startDate, endDate, departure, destination, savedFlights } = Store.state;
 
                     const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
-                    const draftKey = loggedInUser && loggedInUser.email ? `tripPlanner_draft_${loggedInUser.email}` : 'tripPlanner_draft_guest';
+                    const draftKey =
+                        loggedInUser && loggedInUser.email
+                            ? `tripPlanner_draft_${loggedInUser.email}`
+                            : 'tripPlanner_draft_guest';
 
-                    localStorage.setItem(
-                        draftKey,
-                        JSON.stringify(Store.state),
-                    );
+                    localStorage.setItem(draftKey, JSON.stringify(Store.state));
 
                     const flightRequest = {
-                        mode: !startDate || !endDate ? "NEW" : "EDIT",
-                        origin: departure || "",
-                        destination: destination || "",
-                        startDate: startDate || "",
-                        endDate: endDate || "",
+                        mode: !startDate || !endDate ? 'NEW' : 'EDIT',
+                        origin: departure || '',
+                        destination: destination || '',
+                        startDate: startDate || '',
+                        endDate: endDate || '',
                         // ★ [추가] 기존에 선택된 항공권이 있다면 같이 보냄
                         selectedFlights: savedFlights || null,
                     };
 
-                    sessionStorage.setItem(
-                        "planner_request",
-                        JSON.stringify(flightRequest),
-                    );
-                    location.href = "flight.html";
+                    sessionStorage.setItem('planner_request', JSON.stringify(flightRequest));
+                    location.href = 'flight.html';
                 },
 
                 // ★ [추가] 항공권 페이지에서 돌아왔을 때 데이터 처리
                 checkIncomingFlightData() {
-                    const flightInfoStr = localStorage.getItem(
-                        "tripPlanner_flightInfo",
-                    );
+                    const flightInfoStr = localStorage.getItem('tripPlanner_flightInfo');
 
                     if (flightInfoStr) {
                         const flightInfo = JSON.parse(flightInfoStr);
 
                         const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
-                        const draftKey = loggedInUser && loggedInUser.email ? `tripPlanner_draft_${loggedInUser.email}` : 'tripPlanner_draft_guest';
+                        const draftKey =
+                            loggedInUser && loggedInUser.email
+                                ? `tripPlanner_draft_${loggedInUser.email}`
+                                : 'tripPlanner_draft_guest';
 
                         // 기존 Draft 복구
                         const draftStr = localStorage.getItem(draftKey);
@@ -1255,7 +1381,7 @@
 
                         Store.setState(nextState, false);
 
-                        localStorage.removeItem("tripPlanner_flightInfo");
+                        localStorage.removeItem('tripPlanner_flightInfo');
                         localStorage.setItem(
                             draftKey, // Use user-specific draft key
                             JSON.stringify(Store.state),
@@ -1263,7 +1389,10 @@
                     } else {
                         // 취소 시
                         const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
-                        const draftKey = loggedInUser && loggedInUser.email ? `tripPlanner_draft_${loggedInUser.email}` : 'tripPlanner_draft_guest';
+                        const draftKey =
+                            loggedInUser && loggedInUser.email
+                                ? `tripPlanner_draft_${loggedInUser.email}`
+                                : 'tripPlanner_draft_guest';
                         const draftStr = localStorage.getItem(draftKey);
                         if (draftStr) {
                             Store.setState(JSON.parse(draftStr), false);
@@ -1272,7 +1401,7 @@
                 },
 
                 render() {
-                    const app = document.getElementById("app");
+                    const app = document.getElementById('app');
                     app.innerHTML = `
                     ${MainNavbar.render()}
                     ${Header.render()}
@@ -1296,51 +1425,36 @@
                 attachEvents() {
                     this.handleSearch = (query) => {
                         const term = query.toLowerCase();
-                        document
-                            .querySelectorAll(".place-item")
-                            .forEach((item) => {
-                                const text = item.dataset.text.toLowerCase();
-                                item.style.display = text.includes(term)
-                                    ? "block"
-                                    : "none";
-                            });
+                        document.querySelectorAll('.place-item').forEach((item) => {
+                            const text = item.dataset.text.toLowerCase();
+                            item.style.display = text.includes(term) ? 'block' : 'none';
+                        });
                     };
 
-                    const draggables =
-                        document.querySelectorAll(".draggable-source");
+                    const draggables = document.querySelectorAll('.draggable-source');
                     draggables.forEach((el) => {
-                        el.addEventListener("dragstart", (e) => {
-                            e.dataTransfer.setData(
-                                "text/plain",
-                                el.dataset.place,
-                            );
-                            e.dataTransfer.effectAllowed = "copy";
-                            el.classList.add("dragging");
+                        el.addEventListener('dragstart', (e) => {
+                            e.dataTransfer.setData('text/plain', el.dataset.place);
+                            e.dataTransfer.effectAllowed = 'copy';
+                            el.classList.add('dragging');
                         });
-                        el.addEventListener("dragend", () =>
-                            el.classList.remove("dragging"),
-                        );
+                        el.addEventListener('dragend', () => el.classList.remove('dragging'));
                     });
 
-                    const dropZone = document.querySelector(".drop-zone");
+                    const dropZone = document.querySelector('.drop-zone');
                     if (dropZone) {
-                        dropZone.addEventListener("dragover", (e) => {
+                        dropZone.addEventListener('dragover', (e) => {
                             e.preventDefault();
-                            dropZone.classList.add("drag-over");
+                            dropZone.classList.add('drag-over');
                         });
-                        dropZone.addEventListener("dragleave", () =>
-                            dropZone.classList.remove("drag-over"),
-                        );
-                        dropZone.addEventListener("drop", (e) => {
+                        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+                        dropZone.addEventListener('drop', (e) => {
                             e.preventDefault();
-                            dropZone.classList.remove("drag-over");
-                            const rawData =
-                                e.dataTransfer.getData("text/plain");
+                            dropZone.classList.remove('drag-over');
+                            const rawData = e.dataTransfer.getData('text/plain');
                             if (!rawData) return;
                             try {
-                                const place = JSON.parse(
-                                    decodeURIComponent(rawData),
-                                );
+                                const place = JSON.parse(decodeURIComponent(rawData));
                                 this.addItemToSchedule(place);
                             } catch (err) {
                                 console.error(err);
@@ -1362,9 +1476,7 @@
                 editManualItem(itemId) {
                     const { schedule, selectedDay } = Store.state;
                     const currentDayItems = schedule[selectedDay].items;
-                    const itemToEdit = currentDayItems.find(
-                        (item) => item.id === itemId,
-                    );
+                    const itemToEdit = currentDayItems.find((item) => item.id === itemId);
 
                     if (itemToEdit) {
                         Store.setState({
@@ -1376,27 +1488,20 @@
 
                 // ★ [수정] 팝업에서 저장 (신규 추가 OR 수정)
                 addManualSchedule() {
-                    const titleInput = document.getElementById("modal-title");
-                    const memoInput = document.getElementById("modal-memo");
-                    const startTimeInput =
-                        document.getElementById("modal-start-time");
-                    const endTimeInput =
-                        document.getElementById("modal-end-time");
-                    const locationInput =
-                        document.getElementById("modal-location");
+                    const titleInput = document.getElementById('modal-title');
+                    const memoInput = document.getElementById('modal-memo');
+                    const startTimeInput = document.getElementById('modal-start-time');
+                    const endTimeInput = document.getElementById('modal-end-time');
+                    const locationInput = document.getElementById('modal-location');
 
-                    const title = titleInput ? titleInput.value.trim() : "";
-                    const startTime = startTimeInput
-                        ? startTimeInput.value
-                        : "";
-                    const endTime = endTimeInput ? endTimeInput.value : "";
-                    const memo = memoInput ? memoInput.value.trim() : "";
-                    const location = locationInput
-                        ? locationInput.value.trim()
-                        : "";
+                    const title = titleInput ? titleInput.value.trim() : '';
+                    const startTime = startTimeInput ? startTimeInput.value : '';
+                    const endTime = endTimeInput ? endTimeInput.value : '';
+                    const memo = memoInput ? memoInput.value.trim() : '';
+                    const location = locationInput ? locationInput.value.trim() : '';
 
                     if (!title || !startTime || !endTime) {
-                        alert("일정 제목과 시간은 필수 입력 항목입니다.");
+                        alert('일정 제목과 시간은 필수 입력 항목입니다.');
                         return;
                     }
 
@@ -1407,9 +1512,7 @@
                         const { schedule, selectedDay } = Store.state;
                         const newSchedule = [...schedule];
                         const items = newSchedule[selectedDay].items;
-                        const targetIndex = items.findIndex(
-                            (i) => i.id === editingItem.id,
-                        );
+                        const targetIndex = items.findIndex((i) => i.id === editingItem.id);
 
                         if (targetIndex !== -1) {
                             // 기존 데이터 업데이트
@@ -1430,11 +1533,11 @@
                     // ★ CASE 2: 신규 추가 (New)
                     else {
                         const newPlace = {
-                            id: "custom-" + Date.now(),
+                            id: 'custom-' + Date.now(),
                             name: title,
-                            country: location || "",
-                            image: "https://placehold.co/400x300?text=No+Image",
-                            category: "custom",
+                            country: location || '',
+                            image: 'https://placehold.co/400x300?text=No+Image',
+                            category: 'custom',
                             description: memo,
                         };
 
@@ -1455,9 +1558,7 @@
                         if (Store.state.schedule.length === 0) {
                             Store.state.schedule = [
                                 {
-                                    date: new Date()
-                                        .toISOString()
-                                        .split("T")[0],
+                                    date: new Date().toISOString().split('T')[0],
                                     items: [],
                                 },
                             ];
@@ -1467,9 +1568,9 @@
                     const newItem = {
                         id: Date.now().toString(),
                         place: place,
-                        startTime: options.startTime || "10:00",
-                        endTime: options.endTime || "12:00",
-                        memo: options.memo || "",
+                        startTime: options.startTime || '10:00',
+                        endTime: options.endTime || '12:00',
+                        memo: options.memo || '',
                     };
 
                     const newSchedule = [...Store.state.schedule];
@@ -1479,21 +1580,15 @@
 
                 addNearbyToSchedule(placeJson) {
                     const place = JSON.parse(decodeURIComponent(placeJson));
-                    if (
-                        confirm(
-                            `'${place.name}'을(를) 일정에 추가하시겠습니까?`,
-                        )
-                    ) {
+                    if (confirm(`'${place.name}'을(를) 일정에 추가하시겠습니까?`)) {
                         this.addItemToSchedule(place);
-                        alert(
-                            "추가되었습니다. 뒤로가기를 눌러 일정을 확인하세요.",
-                        );
+                        alert('추가되었습니다. 뒤로가기를 눌러 일정을 확인하세요.');
                     }
                 },
 
                 showDetail(placeJsonOrObj) {
                     let place;
-                    if (typeof placeJsonOrObj === "string") {
+                    if (typeof placeJsonOrObj === 'string') {
                         place = JSON.parse(decodeURIComponent(placeJsonOrObj));
                     } else {
                         place = placeJsonOrObj;
@@ -1506,21 +1601,17 @@
                 },
 
                 removeItem(itemId) {
-                    if (!confirm("삭제하시겠습니까?")) return;
+                    if (!confirm('삭제하시겠습니까?')) return;
                     const { schedule, selectedDay } = Store.state;
                     const newSchedule = [...schedule];
-                    newSchedule[selectedDay].items = newSchedule[
-                        selectedDay
-                    ].items.filter((i) => i.id !== itemId);
+                    newSchedule[selectedDay].items = newSchedule[selectedDay].items.filter((i) => i.id !== itemId);
                     Store.setState({ schedule: newSchedule });
                 },
 
                 updateItem(itemId, field, value) {
                     const { schedule, selectedDay } = Store.state;
                     const newSchedule = [...schedule];
-                    const item = newSchedule[selectedDay].items.find(
-                        (i) => i.id === itemId,
-                    );
+                    const item = newSchedule[selectedDay].items.find((i) => i.id === itemId);
 
                     if (item) {
                         item[field] = value;
@@ -1548,7 +1639,7 @@
                     } = Store.state;
 
                     if (!tripName || schedule.length === 0) {
-                        alert("여행 제목과 일정을 입력해주세요.");
+                        alert('여행 제목과 일정을 입력해주세요.');
                         return;
                     }
 
@@ -1602,21 +1693,19 @@
                     const userPlansKey = `tripPlans_${loggedInUser.email}`;
                     localStorage.setItem(userPlansKey, JSON.stringify(newPlans));
                     Store.setState({ savedPlans: newPlans }); // currentPlanId는 유지
-                    alert("저장되었습니다!");
+                    alert('저장되었습니다!');
                 },
 
                 loadPlan(planId) {
-                    const plan = Store.state.savedPlans.find(
-                        (p) => p.id === planId,
-                    );
+                    const plan = Store.state.savedPlans.find((p) => p.id === planId);
                     if (plan) {
                         Store.setState({
                             currentPlanId: plan.id,
                             tripName: plan.name,
                             startDate: plan.startDate,
                             endDate: plan.endDate,
-                            departure: plan.departure || "",
-                            destination: plan.destination || "",
+                            departure: plan.departure || '',
+                            destination: plan.destination || '',
                             schedule: plan.schedule || [],
                             selectedDay: 0,
                             showPlanList: false,
@@ -1632,15 +1721,10 @@
                         return;
                     }
 
-                    if (confirm("정말 이 계획을 삭제하시겠습니까?")) {
-                        const newPlans = Store.state.savedPlans.filter(
-                            (p) => p.id !== planId,
-                        );
+                    if (confirm('정말 이 계획을 삭제하시겠습니까?')) {
+                        const newPlans = Store.state.savedPlans.filter((p) => p.id !== planId);
                         const userPlansKey = `tripPlans_${loggedInUser.email}`;
-                        localStorage.setItem(
-                            userPlansKey,
-                            JSON.stringify(newPlans),
-                        );
+                        localStorage.setItem(userPlansKey, JSON.stringify(newPlans));
 
                         let nextState = { savedPlans: newPlans };
                         if (Store.state.currentPlanId === planId) {
@@ -1650,11 +1734,11 @@
                             nextState = {
                                 ...nextState,
                                 currentPlanId: null,
-                                tripName: "새로운 여행 계획",
-                                startDate: "",
-                                endDate: "",
-                                departure: "",
-                                destination: "",
+                                tripName: '새로운 여행 계획',
+                                startDate: '',
+                                endDate: '',
+                                departure: '',
+                                destination: '',
                                 schedule: [],
                                 selectedDay: 0,
                                 showPlanList: false,
@@ -1673,17 +1757,20 @@
                         return;
                     }
 
-                    if (confirm("현재 작업을 초기화하시겠습니까?")) {
+                    if (confirm('현재 작업을 초기화하시겠습니까?')) {
                         const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
-                        const draftKey = loggedInUser && loggedInUser.email ? `tripPlanner_draft_${loggedInUser.email}` : 'tripPlanner_draft_guest';
+                        const draftKey =
+                            loggedInUser && loggedInUser.email
+                                ? `tripPlanner_draft_${loggedInUser.email}`
+                                : 'tripPlanner_draft_guest';
                         localStorage.removeItem(draftKey);
                         Store.setState({
                             currentPlanId: null,
-                            tripName: "새로운 여행 계획",
-                            startDate: "",
-                            endDate: "",
-                            departure: "",
-                            destination: "",
+                            tripName: '새로운 여행 계획',
+                            startDate: '',
+                            endDate: '',
+                            departure: '',
+                            destination: '',
                             schedule: [],
                             selectedDay: 0,
                             showPlanList: false,
