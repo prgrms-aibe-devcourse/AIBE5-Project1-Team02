@@ -1,5 +1,5 @@
 <!doctype html>
-<html class="light" lang="ko">
+<html lang="ko">
     <head>
         <meta charset="utf-8" />
         <meta content="width=device-width, initial-scale=1.0" name="viewport" />
@@ -13,15 +13,14 @@
             href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
             rel="stylesheet"
         />
+        <link rel="stylesheet" href="../../styles.css" />
         <script>
             tailwind.config = {
-                darkMode: "class",
                 theme: {
                     extend: {
                         colors: {
                             primary: "#00897b",
                             "background-light": "#F8F9FA",
-                            "background-dark": "#111827",
                         },
                         fontFamily: {
                             display: ["Noto Sans KR", "sans-serif"],
@@ -48,39 +47,63 @@
     </head>
 
     <body
-        class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 transition-colors duration-300 min-h-screen"
+        class="bg-background-light text-slate-900 transition-colors duration-300 min-h-screen"
     >
-        <!-- Header placeholder -->
         <header
-            class="w-full p-4 flex justify-between items-center bg-white dark:bg-slate-900 shadow-sm sticky top-0 z-50"
+            class="sticky top-0 z-50 w-full border-b border-border/40 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60"
         >
-            <div class="flex items-center space-x-2">
-                <span class="material-symbols-outlined text-primary text-3xl"
-                    >explore</span
-                >
-                <span class="text-2xl font-bold text-slate-900 dark:text-white"
-                    >여백</span
-                >
-            </div>
-            <button
-                class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:scale-110 transition-transform"
-                onclick="document.documentElement.classList.toggle('dark')"
+            <div
+                class="w-full px-8 relative flex h-20 items-center justify-between"
             >
-                <span class="material-symbols-outlined dark:hidden"
-                    >dark_mode</span
+                <a class="flex items-center space-x-2" href="../main/Main.html">
+                    <img
+                        src="../../images/Logo.png"
+                        alt="여백 로고"
+                        class="h-9 w-9 rounded-full object-cover"
+                    />
+                    <span
+                        class="font-serif text-foreground font-bold ml-2 text-xl"
+                        >여백</span
+                    >
+                </a>
+
+                <nav
+                    class="flex items-center justify-center text-slate-500 gap-6 text-lg font-medium"
+                    style="
+                        position: absolute;
+                        left: 50%;
+                        transform: translateX(-50%);
+                    "
                 >
-                <span class="material-symbols-outlined hidden dark:block"
-                    >light_mode</span
-                >
-            </button>
+                    <a class="hover:text-primary transition-colors" href=""
+                        >플래너</a
+                    >
+                    <a class="hover:text-primary transition-colors" href=""
+                        >숙소</a
+                    >
+                    <a class="hover:text-primary transition-colors" href=""
+                        >여행기록</a
+                    >
+                </nav>
+
+                <div id="auth-links" class="flex items-center gap-4">
+                    <a href="../auth/SignIn.html" class="text-sm font-medium"
+                        >로그인</a
+                    >
+                    <a
+                        href="../auth/SignUp.html"
+                        class="text-sm font-medium bg-primary text-white px-4 py-2 rounded-md hover:bg-teal-700 transition-colors"
+                        >회원가입</a
+                    >
+                </div>
+            </div>
         </header>
 
         <main class="container mx-auto max-w-6xl px-4 py-8 pb-24">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-                <!-- Left Column: Profile Info -->
                 <div class="lg:col-span-2">
                     <section
-                        class="bg-white dark:bg-slate-800 rounded-3xl shadow-xl overflow-hidden mb-8 transition-colors duration-300 h-full"
+                        class="bg-white rounded-3xl shadow-xl overflow-hidden mb-8 transition-colors duration-300 h-full"
                     >
                         <div
                             class="relative h-32 bg-gradient-to-r from-teal-400 to-primary"
@@ -93,11 +116,11 @@
                                     <img
                                         src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix"
                                         alt="Profile"
-                                        class="w-24 h-24 rounded-2xl border-4 border-white dark:border-slate-800 shadow-md bg-white dark:bg-slate-700"
+                                        class="w-24 h-24 rounded-2xl border-4 border-white shadow-md bg-white"
                                     />
                                     <div
                                         onclick="togglePremiumModal()"
-                                        class="absolute -bottom-2 -right-2 bg-white dark:bg-slate-800 p-1.5 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 cursor-pointer hover:scale-110 transition-transform"
+                                        class="absolute -bottom-2 -right-2 bg-white p-1.5 rounded-xl shadow-sm border border-slate-100 cursor-pointer hover:scale-110 transition-transform"
                                     >
                                         <span
                                             class="material-symbols-outlined text-yellow-500 text-xl"
@@ -106,8 +129,9 @@
                                     </div>
                                 </div>
                                 <button
-                                    onclick="requestEditProfile()"
-                                    class="px-4 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 text-sm font-medium rounded-xl transition-colors flex items-center"
+                                    id="requestEditProfileBtn"
+                                    onclick="openPasswordCheckModal()"
+                                    class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-medium rounded-xl transition-colors flex items-center"
                                 >
                                     <span
                                         class="material-symbols-outlined text-lg mr-1.5"
@@ -119,7 +143,8 @@
 
                             <div class="mb-6">
                                 <h1
-                                    class="text-2xl font-bold text-slate-900 dark:text-white mb-1 flex items-center"
+                                    id="profile-display-name"
+                                    class="text-2xl font-bold text-slate-900 mb-1 flex items-center"
                                 >
                                     김여백
                                     <span
@@ -128,54 +153,50 @@
                                     >
                                 </h1>
                                 <p
-                                    class="text-sm text-slate-500 dark:text-slate-400 flex items-center mb-4"
+                                    id="profile-display-details"
+                                    class="text-sm text-slate-500 flex items-center mb-4"
                                 >
                                     남성 · 1995.05.20
                                 </p>
                                 <p
                                     id="profileBio"
-                                    class="text-slate-600 dark:text-slate-300 leading-relaxed bg-slate-50 dark:bg-slate-700/50 p-4 rounded-2xl text-sm"
-                                >
-                                    "새로운 곳에서의 설렘을 즐기는 여행자입니다.
-                                    주로 휴양지보다는 도심 속 숨겨진 명소를 찾는
-                                    것을 좋아해요!"
-                                </p>
+                                    class="text-slate-600 leading-relaxed bg-slate-50 p-4 rounded-2xl text-sm"
+                                ></p>
                             </div>
 
-                            <!-- Personality Card Badge -->
                             <div
                                 onclick="showPersonalityInfo()"
-                                class="cursor-pointer hover:scale-[1.02] transition-transform bg-gradient-to-br from-indigo-50 to-blue-50 dark:from-slate-700 dark:to-slate-700/50 p-4 rounded-2xl border border-indigo-100 dark:border-slate-600"
+                                class="cursor-pointer hover:scale-[1.02] transition-transform bg-gradient-to-br from-indigo-50 to-blue-50 p-4 rounded-2xl border border-indigo-100"
                             >
                                 <div
                                     class="flex justify-between items-start mb-2"
                                 >
                                     <div class="flex items-center space-x-2">
                                         <span
-                                            class="bg-white dark:bg-slate-800 p-1.5 rounded-lg shadow-sm text-indigo-500 material-symbols-outlined text-lg"
+                                            class="bg-white p-1.5 rounded-lg shadow-sm text-indigo-500 material-symbols-outlined text-lg"
                                             >psychology</span
                                         >
                                         <span
-                                            class="font-bold text-indigo-900 dark:text-indigo-100 text-sm"
+                                            class="font-bold text-indigo-900 text-sm"
                                             >나의 여행 성향</span
                                         >
                                     </div>
                                     <span
-                                        class="text-xs font-medium text-indigo-400 bg-white dark:bg-slate-800 px-2 py-1 rounded-lg"
+                                        class="text-xs font-medium text-indigo-400 bg-white px-2 py-1 rounded-lg"
                                         >분석가형</span
                                     >
                                 </div>
                                 <div class="flex space-x-2">
                                     <span
-                                        class="px-2 py-1 bg-white/60 dark:bg-black/20 rounded-lg text-xs font-medium text-indigo-700 dark:text-indigo-200"
+                                        class="px-2 py-1 bg-white/60 rounded-lg text-xs font-medium text-indigo-700"
                                         >#계획적</span
                                     >
                                     <span
-                                        class="px-2 py-1 bg-white/60 dark:bg-black/20 rounded-lg text-xs font-medium text-indigo-700 dark:text-indigo-200"
+                                        class="px-2 py-1 bg-white/60 rounded-lg text-xs font-medium text-indigo-700"
                                         >#가성비</span
                                     >
                                     <span
-                                        class="px-2 py-1 bg-white/60 dark:bg-black/20 rounded-lg text-xs font-medium text-indigo-700 dark:text-indigo-200"
+                                        class="px-2 py-1 bg-white/60 rounded-lg text-xs font-medium text-indigo-700"
                                         >#맛집탐방</span
                                     >
                                 </div>
@@ -184,24 +205,22 @@
                     </section>
                 </div>
 
-                <!-- Right Column: Widgets -->
                 <div class="space-y-6">
-                    <!-- Upcoming Trip Widget -->
                     <section
-                        class="bg-white dark:bg-slate-800 rounded-3xl shadow-lg p-6 animate-slide-up"
+                        class="bg-white rounded-3xl shadow-lg p-6 animate-slide-up"
                         style="animation-delay: 0.1s"
                     >
                         <h3
-                            class="font-bold text-slate-900 dark:text-white mb-4 flex items-center"
+                            class="font-bold text-slate-900 mb-4 flex items-center"
                         >
                             <span
-                                class="material-symbols-outlined text-brand mr-2"
+                                class="material-symbols-outlined text-primary mr-2"
                                 >flight_takeoff</span
                             >
                             다가오는 여행
                         </h3>
                         <div
-                            class="bg-slate-50 dark:bg-slate-700/50 rounded-2xl p-4 border border-slate-100 dark:border-slate-600"
+                            class="bg-slate-50 rounded-2xl p-4 border border-slate-100"
                         >
                             <div class="flex justify-between items-start mb-2">
                                 <span
@@ -212,31 +231,26 @@
                                     >2026.02.07</span
                                 >
                             </div>
-                            <div
-                                class="font-bold text-lg text-slate-900 dark:text-white mb-1"
-                            >
+                            <div class="font-bold text-lg text-slate-900 mb-1">
                                 🇯🇵 도쿄 벚꽃 여행
                             </div>
-                            <p
-                                class="text-xs text-slate-500 dark:text-slate-400 mb-3"
-                            >
+                            <p class="text-xs text-slate-500 mb-3">
                                 숙소 예약 완료, 환전 필요
                             </p>
                             <button
-                                class="w-full py-2 bg-white dark:bg-slate-600 border border-slate-200 dark:border-slate-500 rounded-xl text-xs font-bold hover:bg-slate-50 dark:hover:bg-slate-500 transition-colors"
+                                class="w-full py-2 bg-white border border-slate-200 rounded-xl text-xs font-bold hover:bg-slate-50 transition-colors"
                             >
                                 일정 확인하기
                             </button>
                         </div>
                     </section>
 
-                    <!-- Wishlist Widget -->
                     <section
-                        class="bg-white dark:bg-slate-800 rounded-3xl shadow-lg p-6 animate-slide-up"
+                        class="bg-white rounded-3xl shadow-lg p-6 animate-slide-up"
                         style="animation-delay: 0.2s"
                     >
                         <h3
-                            class="font-bold text-slate-900 dark:text-white mb-4 flex items-center"
+                            class="font-bold text-slate-900 mb-4 flex items-center"
                         >
                             <span
                                 class="material-symbols-outlined text-pink-500 mr-2"
@@ -246,12 +260,12 @@
                         </h3>
                         <ul class="space-y-3">
                             <li
-                                class="flex items-center justify-between p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors cursor-pointer group"
+                                class="flex items-center justify-between p-3 rounded-xl hover:bg-slate-50 transition-colors cursor-pointer group"
                             >
                                 <div class="flex items-center">
                                     <span class="text-xl mr-3">🇨🇭</span>
                                     <span
-                                        class="text-sm font-medium text-slate-700 dark:text-slate-200 text-sm font-medium text-slate-700 dark:text-slate-200 group-hover:text-primary transition-colors"
+                                        class="text-sm font-medium text-slate-700 group-hover:text-primary transition-colors"
                                         >스위스 융프라우</span
                                     >
                                 </div>
@@ -261,12 +275,12 @@
                                 >
                             </li>
                             <li
-                                class="flex items-center justify-between p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors cursor-pointer group"
+                                class="flex items-center justify-between p-3 rounded-xl hover:bg-slate-50 transition-colors cursor-pointer group"
                             >
                                 <div class="flex items-center">
                                     <span class="text-xl mr-3">🇪🇸</span>
                                     <span
-                                        class="text-sm font-medium text-slate-700 dark:text-slate-200 group-hover:text-primary transition-colors"
+                                        class="text-sm font-medium text-slate-700 group-hover:text-primary transition-colors"
                                         >스페인 바르셀로나</span
                                     >
                                 </div>
@@ -276,11 +290,11 @@
                                 >
                             </li>
                             <li
-                                class="flex items-center justify-between p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors cursor-pointer group"
+                                class="flex items-center justify-between p-3 rounded-xl hover:bg-slate-50 transition-colors cursor-pointer group"
                             >
                                 <div class="flex items-center">
                                     <div
-                                        class="w-6 h-6 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center mr-3"
+                                        class="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center mr-3"
                                     >
                                         <span
                                             class="material-symbols-outlined text-slate-400 text-sm"
@@ -297,7 +311,6 @@
                 </div>
             </div>
 
-            <!-- Mid Section: Tabs -->
             <section class="mb-8">
                 <div class="flex space-x-4 mb-4 overflow-x-auto pb-2">
                     <button
@@ -310,27 +323,25 @@
                     <button
                         onclick="switchTab('posts')"
                         id="tab-posts"
-                        class="flex-shrink-0 px-4 py-2 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-xl text-sm font-medium border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all"
+                        class="flex-shrink-0 px-4 py-2 bg-white text-slate-600 rounded-xl text-sm font-medium border border-slate-200 hover:bg-slate-50 transition-all"
                     >
                         커뮤니티 글 (5)
                     </button>
                     <button
                         onclick="switchTab('reviews')"
                         id="tab-reviews"
-                        class="flex-shrink-0 px-4 py-2 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-xl text-sm font-medium border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all"
+                        class="flex-shrink-0 px-4 py-2 bg-white text-slate-600 rounded-xl text-sm font-medium border border-slate-200 hover:bg-slate-50 transition-all"
                     >
                         리뷰 (12)
                     </button>
                 </div>
 
-                <!-- Content List (Placeholder for now) -->
-                <!-- Tab Contents -->
                 <div id="content-plans" class="space-y-4 animate-fade-in">
                     <button
                         onclick="
                             alert('새 여행 계획 작성 페이지로 이동합니다.')
                         "
-                        class="w-full py-3 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-700 text-slate-500 dark:text-slate-400 font-bold hover:border-primary hover:text-primary transition-colors flex items-center justify-center"
+                        class="w-full py-3 rounded-xl border-2 border-dashed border-slate-300 text-slate-500 font-bold hover:border-primary hover:text-primary transition-colors flex items-center justify-center"
                     >
                         <span class="material-symbols-outlined mr-2"
                             >add_circle</span
@@ -338,19 +349,17 @@
                         새 여행 계획 만들기
                     </button>
                     <div
-                        class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 flex items-center justify-between hover:scale-[1.02] transition-transform cursor-pointer"
+                        class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between hover:scale-[1.02] transition-transform cursor-pointer"
                         onclick="alert('여행 계획 상세 페이지로 이동합니다.')"
                     >
                         <div class="flex items-center space-x-4">
                             <div
-                                class="w-12 h-12 bg-orange-100 dark:bg-orange-900/30 rounded-xl flex items-center justify-center text-2xl"
+                                class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center text-2xl"
                             >
                                 🇯🇵
                             </div>
                             <div>
-                                <h3
-                                    class="font-bold text-slate-900 dark:text-white"
-                                >
+                                <h3 class="font-bold text-slate-900">
                                     오사카 먹방 여행
                                 </h3>
                                 <p class="text-xs text-slate-500 mt-1">
@@ -363,19 +372,17 @@
                         >
                     </div>
                     <div
-                        class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 flex items-center justify-between hover:scale-[1.02] transition-transform cursor-pointer"
+                        class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between hover:scale-[1.02] transition-transform cursor-pointer"
                         onclick="alert('여행 계획 상세 페이지로 이동합니다.')"
                     >
                         <div class="flex items-center space-x-4">
                             <div
-                                class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center text-2xl"
+                                class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center text-2xl"
                             >
                                 🇫🇷
                             </div>
                             <div>
-                                <h3
-                                    class="font-bold text-slate-900 dark:text-white"
-                                >
+                                <h3 class="font-bold text-slate-900">
                                     파리 예술 기행
                                 </h3>
                                 <p class="text-xs text-slate-500 mt-1">
@@ -395,7 +402,7 @@
                 >
                     <button
                         onclick="alert('새 글 작성 페이지로 이동합니다.')"
-                        class="w-full py-3 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-700 text-slate-500 dark:text-slate-400 font-bold hover:border-primary hover:text-primary transition-colors flex items-center justify-center"
+                        class="w-full py-3 rounded-xl border-2 border-dashed border-slate-300 text-slate-500 font-bold hover:border-primary hover:text-primary transition-colors flex items-center justify-center"
                     >
                         <span class="material-symbols-outlined mr-2"
                             >edit_square</span
@@ -403,76 +410,15 @@
                         새 글 작성하기
                     </button>
                     <div
-                        class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors"
-                        onclick="alert('게시글 상세 페이지로 이동합니다.')"
+                        class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 cursor-pointer hover:bg-slate-50 transition-colors"
                     >
-                        <h3
-                            class="font-bold text-slate-900 dark:text-white mb-2"
-                        >
+                        <h3 class="font-bold text-slate-900 mb-2">
                             혼자 가는 오사카 여행 꿀팁 공유해요! 🍱
                         </h3>
-                        <p
-                            class="text-sm text-slate-500 dark:text-slate-400 line-clamp-2"
-                        >
+                        <p class="text-sm text-slate-500 line-clamp-2">
                             처음 혼자 해외여행을 가시는 분들을 위해 제가 겪었던
-                            시행착오와 맛집 리스트를 정리해봤습니다. 특히 난바역
-                            근처 숙소 추천...
+                            시행착오...
                         </p>
-                        <div
-                            class="flex items-center mt-3 text-xs text-slate-400 space-x-3"
-                        >
-                            <span class="flex items-center"
-                                ><span
-                                    class="material-symbols-outlined text-sm mr-1"
-                                    >favorite</span
-                                >
-                                24</span
-                            >
-                            <span class="flex items-center"
-                                ><span
-                                    class="material-symbols-outlined text-sm mr-1"
-                                    >chat_bubble</span
-                                >
-                                8</span
-                            >
-                            <span>2026.01.20</span>
-                        </div>
-                    </div>
-                    <div
-                        class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors"
-                        onclick="alert('게시글 상세 페이지로 이동합니다.')"
-                    >
-                        <h3
-                            class="font-bold text-slate-900 dark:text-white mb-2"
-                        >
-                            프랑스 미술관 투어 동행 구합니다 🎨
-                        </h3>
-                        <p
-                            class="text-sm text-slate-500 dark:text-slate-400 line-clamp-2"
-                        >
-                            5월 초에 파리 가시는 분 계신가요? 루브르랑 오르세
-                            같이 가실 분 구해요! 사진도 서로 찍어주면 좋을 것
-                            같아요.
-                        </p>
-                        <div
-                            class="flex items-center mt-3 text-xs text-slate-400 space-x-3"
-                        >
-                            <span class="flex items-center"
-                                ><span
-                                    class="material-symbols-outlined text-sm mr-1"
-                                    >favorite</span
-                                >
-                                15</span
-                            >
-                            <span class="flex items-center"
-                                ><span
-                                    class="material-symbols-outlined text-sm mr-1"
-                                    >chat_bubble</span
-                                >
-                                12</span
-                            >
-                            <span>2026.01.18</span>
-                        </div>
                     </div>
                 </div>
 
@@ -482,7 +428,7 @@
                 >
                     <button
                         onclick="alert('새 리뷰 작성 페이지로 이동합니다.')"
-                        class="w-full py-3 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-700 text-slate-500 dark:text-slate-400 font-bold hover:border-primary hover:text-primary transition-colors flex items-center justify-center"
+                        class="w-full py-3 rounded-xl border-2 border-dashed border-slate-300 text-slate-500 font-bold hover:border-primary hover:text-primary transition-colors flex items-center justify-center"
                     >
                         <span class="material-symbols-outlined mr-2"
                             >rate_review</span
@@ -490,13 +436,11 @@
                         새 리뷰 작성하기
                     </button>
                     <div
-                        class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700"
+                        class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100"
                     >
                         <div class="flex justify-between items-start mb-2">
                             <div>
-                                <h3
-                                    class="font-bold text-slate-900 dark:text-white"
-                                >
+                                <h3 class="font-bold text-slate-900">
                                     다낭 힐링 리조트
                                 </h3>
                                 <div
@@ -507,64 +451,35 @@
                             </div>
                             <span class="text-xs text-slate-400">3일 전</span>
                         </div>
-                        <p class="text-sm text-slate-600 dark:text-slate-300">
+                        <p class="text-sm text-slate-600">
                             직원분들이 너무 친절하고 조식이 정말 맛있었어요!
-                            수영장도 넓어서 하루 종일 놀기 좋았습니다.
-                        </p>
-                    </div>
-                    <div
-                        class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700"
-                    >
-                        <div class="flex justify-between items-start mb-2">
-                            <div>
-                                <h3
-                                    class="font-bold text-slate-900 dark:text-white"
-                                >
-                                    교토 블루보틀
-                                </h3>
-                                <div
-                                    class="flex text-yellow-400 text-sm mt-0.5"
-                                >
-                                    ★★★★☆
-                                </div>
-                            </div>
-                            <span class="text-xs text-slate-400">1주 전</span>
-                        </div>
-                        <p class="text-sm text-slate-600 dark:text-slate-300">
-                            분위기는 정말 좋은데 사람이 너무 많아서 자리 잡기가
-                            힘들었어요. 커피 맛은 명불허전!
                         </p>
                     </div>
                 </div>
             </section>
 
-            <!-- Bottom Section: Passport Collection -->
             <section
-                class="bg-white dark:bg-slate-800 rounded-3xl shadow-xl overflow-hidden p-6 transition-colors duration-300"
+                class="bg-white rounded-3xl shadow-xl overflow-hidden p-6 transition-colors duration-300"
             >
                 <div class="flex items-center justify-between mb-8">
                     <div class="flex items-center gap-3">
                         <div
-                            class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-400"
+                            class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600"
                         >
                             <span class="material-symbols-outlined"
                                 >menu_book</span
                             >
                         </div>
-                        <h2
-                            class="text-xl font-bold text-slate-900 dark:text-white"
-                        >
+                        <h2 class="text-xl font-bold text-slate-900">
                             여행 여권
                         </h2>
                     </div>
-                    <div
-                        class="text-slate-500 dark:text-slate-400 text-sm font-medium"
-                    >
+                    <div class="text-slate-500 text-sm font-medium">
                         전체
                         <span
                             id="passportCountBadge"
                             class="text-primary font-bold"
-                            >21</span
+                            >0</span
                         >개
                     </div>
                 </div>
@@ -572,49 +487,24 @@
                 <div
                     id="mainPassportPreview"
                     class="grid grid-cols-2 sm:grid-cols-4 gap-6 mb-6"
-                >
-                    <!-- Dynamically populated -->
-                </div>
+                ></div>
 
                 <button
                     id="expandPassportBtn"
                     onclick="togglePassportExpansion()"
-                    class="w-full text-center text-sm font-bold text-blue-500 hover:text-blue-600 dark:text-blue-400 py-2 transition-colors"
+                    class="w-full text-center text-sm font-bold text-blue-500 hover:text-blue-600 py-2 transition-colors"
                 >
                     모두 보기
                 </button>
             </section>
         </main>
 
-        <!-- Bottom Navigation Placeholder (Mobile style often used in travel apps) -->
-        <nav
-            class="fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 p-3 lg:hidden z-50"
-        >
-            <div class="flex justify-around items-center">
-                <button
-                    onclick="alert('홈 화면으로 이동합니다.')"
-                    class="flex flex-col items-center text-slate-400 hover:text-primary transition-colors"
-                >
-                    <span class="material-symbols-outlined">home</span>
-                    <span class="text-xs mt-1">홈</span>
-                </button>
-                <button
-                    onclick="alert('여행 지도 화면으로 이동합니다.')"
-                    class="flex flex-col items-center text-slate-400 hover:text-primary transition-colors"
-                >
-                    <span class="material-symbols-outlined">map</span>
-                    <span class="text-xs mt-1">여행</span>
-                </button>
-                <button
-                    class="flex flex-col items-center text-primary transition-colors"
-                >
-                    <span class="material-symbols-outlined">person</span>
-                    <span class="text-xs mt-1">마이</span>
-                </button>
+        <footer class="bg-slate-100 py-8 border-t border-slate-200 mt-8">
+            <div class="container mx-auto text-center text-slate-400 text-sm">
+                © 2026 여백. All rights reserved.
             </div>
-        </nav>
+        </footer>
 
-        <!-- Password Check Modal -->
         <div
             id="passwordCheckModal"
             class="fixed inset-0 z-[110] hidden"
@@ -631,53 +521,45 @@
                     class="flex min-h-full items-center justify-center p-4 text-center sm:p-0"
                 >
                     <div
-                        class="relative transform overflow-hidden bg-white dark:bg-slate-900 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm rounded-2xl opacity-0 scale-95"
+                        class="relative transform overflow-hidden bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm rounded-2xl opacity-0 scale-95"
                         id="passwordCheckPanel"
                     >
                         <div class="px-4 pb-4 pt-5 sm:p-6 text-center">
                             <div
-                                class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/30 mb-4"
+                                class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 mb-4"
                             >
                                 <span
-                                    class="material-symbols-outlined text-blue-600 dark:text-blue-400"
+                                    class="material-symbols-outlined text-blue-600"
                                     >lock</span
                                 >
                             </div>
-                            <h3
-                                class="text-lg font-bold text-slate-900 dark:text-white mb-2"
-                            >
+                            <h3 class="text-lg font-bold text-slate-900 mb-2">
                                 비밀번호 확인
                             </h3>
-                            <p
-                                class="text-sm text-slate-500 dark:text-slate-400 mb-4"
-                            >
+                            <p class="text-sm text-slate-500 mb-4">
                                 개인정보 보호를 위해 비밀번호를 입력해주세요.
                             </p>
                             <input
                                 type="password"
                                 id="passwordCheckInput"
                                 placeholder="비밀번호 입력"
-                                class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-center focus:ring-2 focus:ring-primary outline-none dark:text-white"
-                                onkeypress="
-                                    if (event.key === 'Enter')
-                                        verifyPasswordAndEdit();
-                                "
+                                class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-center focus:ring-2 focus:ring-primary outline-none"
                             />
                         </div>
                         <div
-                            class="px-4 py-3 sm:px-6 border-t border-slate-100 dark:border-slate-800 grid grid-cols-2 gap-3"
+                            class="px-4 py-3 sm:px-6 border-t border-slate-100 grid grid-cols-2 gap-3"
                         >
                             <button
                                 type="button"
-                                class="w-full justify-center rounded-xl bg-slate-100 dark:bg-slate-800 px-3 py-2 text-sm font-semibold text-slate-900 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700"
+                                class="w-full justify-center rounded-xl bg-slate-100 px-3 py-2 text-sm font-semibold text-slate-900 hover:bg-slate-200"
                                 onclick="closePasswordCheckModal()"
                             >
                                 취소
                             </button>
                             <button
                                 type="button"
+                                id="verifyPasswordAndEditBtn"
                                 class="w-full justify-center rounded-xl bg-primary px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-teal-700"
-                                onclick="verifyPasswordAndEdit()"
                             >
                                 확인
                             </button>
@@ -687,7 +569,302 @@
             </div>
         </div>
 
-        <!-- Personality Modal -->
+        <div
+            id="editModal"
+            class="fixed inset-0 z-[100] hidden"
+            aria-labelledby="modal-title"
+            role="dialog"
+            aria-modal="true"
+        >
+            <div
+                class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm transition-opacity opacity-0"
+                id="modalBackdrop"
+            ></div>
+
+            <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+                <div
+                    class="flex min-h-full items-end justify-center p-0 text-center sm:items-center sm:p-0"
+                >
+                    <div
+                        class="relative transform overflow-hidden bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg rounded-t-2xl sm:rounded-2xl translate-y-full sm:translate-y-0 opacity-0"
+                        id="modalPanel"
+                    >
+                        <div class="px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                            <div class="flex justify-between items-center mb-5">
+                                <h3
+                                    class="text-xl font-bold text-slate-900"
+                                    id="modal-title"
+                                >
+                                    프로필 수정
+                                </h3>
+                                <button
+                                    onclick="toggleEditModal()"
+                                    class="text-slate-400 hover:text-slate-500"
+                                >
+                                    <span class="material-symbols-outlined"
+                                        >close</span
+                                    >
+                                </button>
+                            </div>
+                            <form
+                                id="profile-edit-form"
+                                onsubmit="handleProfileUpdate(event)"
+                                class="space-y-4"
+                            >
+                                <div>
+                                    <label
+                                        class="block text-sm font-medium text-slate-700 mb-1"
+                                        >이메일</label
+                                    >
+                                    <input
+                                        type="email"
+                                        id="edit-email"
+                                        value="yeobaek@example.com"
+                                        disabled
+                                        class="w-full px-4 py-2 bg-slate-100 border border-slate-200 rounded-xl text-slate-500"
+                                    />
+                                    <p class="text-xs text-slate-400 mt-1">
+                                        이메일은 변경할 수 없습니다.
+                                    </p>
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label
+                                            class="block text-sm font-medium text-slate-700 mb-1"
+                                            >이름</label
+                                        >
+                                        <input
+                                            type="text"
+                                            id="edit-name"
+                                            value="김여백"
+                                            class="w-full px-4 py-2 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary outline-none"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label
+                                            class="block text-sm font-medium text-slate-700 mb-1"
+                                            >생년월일</label
+                                        >
+                                        <input
+                                            type="date"
+                                            id="edit-birthdate"
+                                            value="1995-05-20"
+                                            class="w-full px-4 py-2 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary outline-none"
+                                        />
+                                    </div>
+                                </div>
+                                <div>
+                                    <label
+                                        class="block text-sm font-medium text-slate-700 mb-1"
+                                        >성별</label
+                                    >
+                                    <select
+                                        id="edit-gender"
+                                        class="w-full px-4 py-2 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary outline-none"
+                                    >
+                                        <option value="male" selected>
+                                            남성
+                                        </option>
+                                        <option value="female">여성</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label
+                                        class="block text-sm font-medium text-slate-700 mb-1"
+                                        >자기소개</label
+                                    >
+                                    <textarea
+                                        id="editBioInput"
+                                        rows="3"
+                                        class="w-full px-4 py-2 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary outline-none resize-none"
+                                    ></textarea>
+                                </div>
+
+                                <div class="pt-4 border-t border-slate-100">
+                                    <h4
+                                        class="text-sm font-bold text-slate-900 mb-4 flex items-center"
+                                    >
+                                        <span
+                                            class="material-symbols-outlined text-sm mr-1"
+                                            >lock</span
+                                        >
+                                        비밀번호 변경
+                                    </h4>
+                                    <div class="space-y-4">
+                                        <div>
+                                            <label
+                                                class="block text-xs font-medium text-slate-500 mb-1"
+                                                >현재 비밀번호</label
+                                            >
+                                            <input
+                                                type="password"
+                                                id="currentPasswordInput"
+                                                placeholder="현재 비밀번호 입력"
+                                                class="w-full px-4 py-2 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary outline-none"
+                                            />
+                                        </div>
+                                        <div class="grid grid-cols-2 gap-4">
+                                            <div>
+                                                <label
+                                                    class="block text-xs font-medium text-slate-500 mb-1"
+                                                    >새 비밀번호</label
+                                                >
+                                                <input
+                                                    type="password"
+                                                    id="newPasswordInput"
+                                                    placeholder="새 비밀번호"
+                                                    class="w-full px-4 py-2 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary outline-none"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label
+                                                    class="block text-xs font-medium text-slate-500 mb-1"
+                                                    >새 비밀번호 확인</label
+                                                >
+                                                <input
+                                                    type="password"
+                                                    id="confirmPasswordInput"
+                                                    placeholder="비밀번호 확인"
+                                                    class="w-full px-4 py-2 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary outline-none"
+                                                />
+                                            </div>
+                                        </div>
+                                        <p class="text-[10px] text-slate-400">
+                                            비밀번호 변경을 원하지 않으시면
+                                            빈칸으로 두세요.
+                                        </p>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div
+                            class="px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6 border-t border-slate-100"
+                        >
+                            <button
+                                type="submit"
+                                form="profile-edit-form"
+                                class="inline-flex w-full justify-center rounded-xl bg-primary px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-teal-700 sm:ml-3 sm:w-auto"
+                            >
+                                저장하기
+                            </button>
+                            <button
+                                type="button"
+                                class="mt-3 inline-flex w-full justify-center rounded-xl bg-white px-3 py-2 text-sm font-semibold text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 hover:bg-slate-50 sm:mt-0 sm:w-auto"
+                                onclick="toggleEditModal()"
+                            >
+                                취소
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div
+            id="addCountryModal"
+            class="fixed inset-0 z-[110] hidden"
+            aria-labelledby="add-country-modal-title"
+            role="dialog"
+            aria-modal="true"
+        >
+            <div
+                class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm transition-opacity opacity-0"
+                id="addCountryBackdrop"
+            ></div>
+
+            <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+                <div
+                    class="flex min-h-full items-end justify-center p-0 text-center sm:items-center sm:p-0"
+                >
+                    <div
+                        class="relative transform overflow-hidden bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-md rounded-t-2xl sm:rounded-2xl translate-y-full sm:translate-y-0 opacity-0"
+                        id="addCountryPanel"
+                    >
+                        <div class="px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                            <div class="flex justify-between items-center mb-5">
+                                <h3
+                                    class="text-xl font-bold text-slate-900"
+                                    id="add-country-modal-title"
+                                >
+                                    여행지 추가
+                                </h3>
+                                <button
+                                    onclick="toggleAddCountryModal()"
+                                    class="text-slate-400 hover:text-slate-500"
+                                >
+                                    <span class="material-symbols-outlined"
+                                        >close</span
+                                    >
+                                </button>
+                            </div>
+                            <p class="text-sm text-slate-500 mb-4">
+                                다녀오신 여행지를 선택하여 여권에 도장을
+                                찍어보세요!
+                            </p>
+
+                            <div class="mb-4">
+                                <label
+                                    class="block text-sm font-medium text-slate-700 mb-1"
+                                    >여행 시기</label
+                                >
+                                <div class="flex space-x-2">
+                                    <select
+                                        id="travelYearInput"
+                                        class="w-1/2 px-4 py-2 bg-slate-50 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary outline-none cursor-pointer appearance-none"
+                                    >
+                                        <option value="2026">2026년</option>
+                                        <option value="2025">2025년</option>
+                                        <option value="2024">2024년</option>
+                                        <option value="2023">2023년</option>
+                                        <option value="2022">2022년</option>
+                                        <option value="2021">2021년</option>
+                                        <option value="2020">2020년</option>
+                                    </select>
+                                    <select
+                                        id="travelMonthInput"
+                                        class="w-1/2 px-4 py-2 bg-slate-50 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary outline-none cursor-pointer appearance-none"
+                                    >
+                                        <option value="01">1월</option>
+                                        <option value="02">2월</option>
+                                        <option value="03">3월</option>
+                                        <option value="04">4월</option>
+                                        <option value="05">5월</option>
+                                        <option value="06">6월</option>
+                                        <option value="07">7월</option>
+                                        <option value="08">8월</option>
+                                        <option value="09">9월</option>
+                                        <option value="10">10월</option>
+                                        <option value="11">11월</option>
+                                        <option value="12">12월</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="mb-4 relative">
+                                <span
+                                    class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+                                    >search</span
+                                >
+                                <input
+                                    type="text"
+                                    id="countrySearchInput"
+                                    placeholder="나라 이름을 검색해보세요..."
+                                    class="w-full pl-10 pr-4 py-3 bg-slate-50 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary outline-none"
+                                    onkeyup="filterCountries()"
+                                />
+                            </div>
+
+                            <div
+                                id="countryListGrid"
+                                class="grid grid-cols-3 gap-3 max-h-[40vh] overflow-y-auto pr-1"
+                            ></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div
             id="personalityModal"
             class="fixed inset-0 z-[100] hidden"
@@ -704,7 +881,7 @@
                     class="flex min-h-full items-center justify-center p-4 text-center sm:p-0"
                 >
                     <div
-                        class="relative transform overflow-hidden bg-white dark:bg-slate-900 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-md rounded-2xl opacity-0 scale-95"
+                        class="relative transform overflow-hidden bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-md rounded-2xl opacity-0 scale-95"
                         id="personalityPanel"
                     >
                         <div
@@ -732,10 +909,10 @@
                         <div class="p-6">
                             <div class="space-y-4">
                                 <div
-                                    class="bg-indigo-50 dark:bg-indigo-900/20 p-4 rounded-xl border border-indigo-100 dark:border-indigo-800/50"
+                                    class="bg-indigo-50 p-4 rounded-xl border border-indigo-100"
                                 >
                                     <h4
-                                        class="font-bold text-indigo-900 dark:text-indigo-100 mb-2 flex items-center"
+                                        class="font-bold text-indigo-900 mb-2 flex items-center"
                                     >
                                         <span
                                             class="material-symbols-outlined text-sm mr-1"
@@ -744,7 +921,7 @@
                                         이런 여행을 선호해요
                                     </h4>
                                     <ul
-                                        class="text-sm text-indigo-800 dark:text-indigo-200 space-y-1 list-disc list-inside"
+                                        class="text-sm text-indigo-800 space-y-1 list-disc list-inside"
                                     >
                                         <li>분 단위로 쪼개진 엑셀 계획표</li>
                                         <li>가성비와 효율성을 극대화한 동선</li>
@@ -754,7 +931,7 @@
 
                                 <div>
                                     <h4
-                                        class="font-bold text-slate-900 dark:text-white mb-2 text-sm"
+                                        class="font-bold text-slate-900 mb-2 text-sm"
                                     >
                                         상세 지표
                                     </h4>
@@ -767,7 +944,7 @@
                                                 <span>즉흥적</span>
                                             </div>
                                             <div
-                                                class="h-2 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden"
+                                                class="h-2 bg-slate-100 rounded-full overflow-hidden"
                                             >
                                                 <div
                                                     class="h-full bg-indigo-500 w-[90%] rounded-full"
@@ -782,7 +959,7 @@
                                                 <span>럭셔리</span>
                                             </div>
                                             <div
-                                                class="h-2 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden"
+                                                class="h-2 bg-slate-100 rounded-full overflow-hidden"
                                             >
                                                 <div
                                                     class="h-full bg-indigo-500 w-[80%] rounded-full"
@@ -797,851 +974,73 @@
                 </div>
             </div>
         </div>
-        <!-- Edit Profile Modal -->
+
         <div
-            id="editModal"
+            id="premiumModal"
             class="fixed inset-0 z-[100] hidden"
             aria-labelledby="modal-title"
             role="dialog"
             aria-modal="true"
         >
-            <!-- Backdrop -->
             <div
                 class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm transition-opacity opacity-0"
-                id="modalBackdrop"
+                id="premiumBackdrop"
             ></div>
-
             <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
-                <div
-                    class="flex min-h-full items-end justify-center p-0 text-center sm:items-center sm:p-0"
-                >
+                <div class="flex min-h-full items-center justify-center p-4">
                     <div
-                        class="relative transform overflow-hidden bg-white dark:bg-slate-900 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg rounded-t-2xl sm:rounded-2xl translate-y-full sm:translate-y-0 opacity-0"
-                        id="modalPanel"
+                        id="premiumPanel"
+                        class="bg-white rounded-2xl p-6 shadow-xl opacity-0 scale-95 transition-all max-w-sm w-full relative"
                     >
-                        <div class="px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
-                            <div class="flex justify-between items-center mb-5">
-                                <h3
-                                    class="text-xl font-bold text-slate-900 dark:text-white"
-                                    id="modal-title"
-                                >
-                                    프로필 수정
-                                </h3>
-                                <button
-                                    onclick="toggleEditModal()"
-                                    class="text-slate-400 hover:text-slate-500"
-                                >
-                                    <span class="material-symbols-outlined"
-                                        >close</span
-                                    >
-                                </button>
-                            </div>
-                            <form class="space-y-4">
-                                <div>
-                                    <label
-                                        class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1"
-                                        >이메일</label
-                                    >
-                                    <input
-                                        type="email"
-                                        value="yeobaek@example.com"
-                                        disabled
-                                        class="w-full px-4 py-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-500 dark:text-slate-400"
-                                    />
-                                    <p class="text-xs text-slate-400 mt-1">
-                                        이메일은 변경할 수 없습니다.
-                                    </p>
-                                </div>
-                                <div class="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <label
-                                            class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1"
-                                            >이름</label
-                                        >
-                                        <input
-                                            type="text"
-                                            value="김여백"
-                                            class="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary outline-none dark:text-white"
-                                        />
-                                    </div>
-                                    <div>
-                                        <label
-                                            class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1"
-                                            >생년월일</label
-                                        >
-                                        <input
-                                            type="date"
-                                            value="1995-05-20"
-                                            class="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary outline-none dark:text-white"
-                                        />
-                                    </div>
-                                </div>
-                                <div>
-                                    <label
-                                        class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1"
-                                        >성별</label
-                                    >
-                                    <select
-                                        class="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary outline-none dark:text-white"
-                                    >
-                                        <option value="male" selected>
-                                            남성
-                                        </option>
-                                        <option value="female">여성</option>
-                                    </select>
-                                </div>
-
-                                <div>
-                                    <label
-                                        class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1"
-                                        >자기소개</label
-                                    >
-                                    <textarea
-                                        id="editBioInput"
-                                        rows="3"
-                                        class="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary outline-none dark:text-white resize-none"
-                                    ></textarea>
-                                </div>
-
-                                <div
-                                    class="pt-4 border-t border-slate-100 dark:border-slate-700"
-                                >
-                                    <h4
-                                        class="text-sm font-bold text-slate-900 dark:text-white mb-4 flex items-center"
-                                    >
-                                        <span
-                                            class="material-symbols-outlined text-sm mr-1"
-                                            >lock</span
-                                        >
-                                        비밀번호 변경
-                                    </h4>
-                                    <div class="space-y-4">
-                                        <div>
-                                            <label
-                                                class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1"
-                                                >현재 비밀번호</label
-                                            >
-                                            <input
-                                                type="password"
-                                                id="currentPasswordInput"
-                                                placeholder="현재 비밀번호 입력"
-                                                class="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary outline-none dark:text-white"
-                                            />
-                                        </div>
-                                        <div class="grid grid-cols-2 gap-4">
-                                            <div>
-                                                <label
-                                                    class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1"
-                                                    >새 비밀번호</label
-                                                >
-                                                <input
-                                                    type="password"
-                                                    id="newPasswordInput"
-                                                    placeholder="새 비밀번호"
-                                                    class="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary outline-none dark:text-white"
-                                                />
-                                            </div>
-                                            <div>
-                                                <label
-                                                    class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1"
-                                                    >새 비밀번호 확인</label
-                                                >
-                                                <input
-                                                    type="password"
-                                                    id="confirmPasswordInput"
-                                                    placeholder="비밀번호 확인"
-                                                    class="w-full px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary outline-none dark:text-white"
-                                                />
-                                            </div>
-                                        </div>
-                                        <p class="text-[10px] text-slate-400">
-                                            비밀번호 변경을 원하지 않으시면
-                                            빈칸으로 두세요.
-                                        </p>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                        <div
-                            class="px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6 border-t border-slate-100 dark:border-slate-800"
+                        <button
+                            onclick="togglePremiumModal()"
+                            class="absolute top-4 right-4 text-slate-400 hover:text-slate-600"
                         >
-                            <button
-                                type="button"
-                                class="inline-flex w-full justify-center rounded-xl bg-primary px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-teal-700 sm:ml-3 sm:w-auto"
-                                onclick="saveProfile()"
+                            <span class="material-symbols-outlined">close</span>
+                        </button>
+                        <div class="text-center">
+                            <span
+                                class="material-symbols-outlined text-yellow-500 text-5xl mb-4"
+                                >workspace_premium</span
                             >
-                                저장하기
-                            </button>
-                            <button
-                                type="button"
-                                class="mt-3 inline-flex w-full justify-center rounded-xl bg-white dark:bg-slate-700 px-3 py-2 text-sm font-semibold text-slate-900 dark:text-slate-200 shadow-sm ring-1 ring-inset ring-slate-300 dark:ring-slate-600 hover:bg-slate-50 dark:hover:bg-slate-600 sm:mt-0 sm:w-auto"
-                                onclick="toggleEditModal()"
-                            >
-                                취소
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Add Country Modal -->
-        <div
-            id="addCountryModal"
-            class="fixed inset-0 z-[110] hidden"
-            aria-labelledby="add-country-modal-title"
-            role="dialog"
-            aria-modal="true"
-        >
-            <!-- Backdrop -->
-            <div
-                class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm transition-opacity opacity-0"
-                id="addCountryBackdrop"
-            ></div>
-
-            <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
-                <div
-                    class="flex min-h-full items-end justify-center p-0 text-center sm:items-center sm:p-0"
-                >
-                    <div
-                        class="relative transform overflow-hidden bg-white dark:bg-slate-900 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-md rounded-t-2xl sm:rounded-2xl translate-y-full sm:translate-y-0 opacity-0"
-                        id="addCountryPanel"
-                    >
-                        <div class="px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
-                            <div class="flex justify-between items-center mb-5">
-                                <h3
-                                    class="text-xl font-bold text-slate-900 dark:text-white"
-                                    id="add-country-modal-title"
-                                >
-                                    여행지 추가
-                                </h3>
-                                <button
-                                    onclick="toggleAddCountryModal()"
-                                    class="text-slate-400 hover:text-slate-500"
-                                >
-                                    <span class="material-symbols-outlined"
-                                        >close</span
-                                    >
-                                </button>
-                            </div>
-                            <p
-                                class="text-sm text-slate-500 dark:text-slate-400 mb-4"
-                            >
-                                다녀오신 여행지를 선택하여 여권에 도장을
-                                찍어보세요!
+                            <h3 class="text-xl font-bold mb-2">
+                                프리미엄 멤버십
+                            </h3>
+                            <p class="text-slate-500 text-sm mb-4">
+                                더 많은 여행 기록 기능과 통계를<br />이용해보세요!
                             </p>
-
-                            <div class="mb-4">
-                                <label
-                                    class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1"
-                                    >여행 시기</label
-                                >
-                                <div class="flex space-x-2">
-                                    <select
-                                        id="travelYearInput"
-                                        class="w-1/2 px-4 py-2 bg-slate-50 dark:bg-slate-800 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary outline-none dark:text-white cursor-pointer appearance-none"
-                                    >
-                                        <option value="2026">2026년</option>
-                                        <option value="2025">2025년</option>
-                                        <option value="2024">2024년</option>
-                                        <option value="2023">2023년</option>
-                                        <option value="2022">2022년</option>
-                                        <option value="2021">2021년</option>
-                                        <option value="2020">2020년</option>
-                                    </select>
-                                    <select
-                                        id="travelMonthInput"
-                                        class="w-1/2 px-4 py-2 bg-slate-50 dark:bg-slate-800 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary outline-none dark:text-white cursor-pointer appearance-none"
-                                    >
-                                        <option value="01">1월</option>
-                                        <option value="02">2월</option>
-                                        <option value="03">3월</option>
-                                        <option value="04">4월</option>
-                                        <option value="05">5월</option>
-                                        <option value="06">6월</option>
-                                        <option value="07">7월</option>
-                                        <option value="08">8월</option>
-                                        <option value="09">9월</option>
-                                        <option value="10">10월</option>
-                                        <option value="11">11월</option>
-                                        <option value="12">12월</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="mb-4 relative">
-                                <span
-                                    class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
-                                    >search</span
-                                >
-                                <input
-                                    type="text"
-                                    id="countrySearchInput"
-                                    placeholder="나라 이름을 검색해보세요..."
-                                    class="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary outline-none dark:text-white"
-                                    onkeyup="filterCountries()"
-                                />
-                            </div>
-
-                            <div
-                                id="countryListGrid"
-                                class="grid grid-cols-3 gap-3 max-h-[40vh] overflow-y-auto pr-1"
+                            <button
+                                class="w-full bg-primary text-white py-2 rounded-xl font-bold hover:bg-teal-700 transition-colors"
                             >
-                                <!-- Countries will be populated by JS -->
-                            </div>
+                                자세히 보기
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
+        <script src="../../js/auth.js"></script>
+        <script src="../../js/profile-functions.js"></script>
         <script>
-            function switchTab(tabName) {
-                // Hide all contents
-                ["plans", "posts", "reviews"].forEach((name) => {
-                    const el = document.getElementById(`content-${name}`);
-                    if (el) el.classList.add("hidden");
-                });
-                // Show selected content
-                const content = document.getElementById(`content-${tabName}`);
-                if (content) content.classList.remove("hidden");
-
-                // Reset all buttons
-                ["plans", "posts", "reviews"].forEach((name) => {
-                    const btn = document.getElementById(`tab-${name}`);
-                    if (btn)
-                        btn.className =
-                            "flex-shrink-0 px-4 py-2 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-xl text-sm font-medium border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all";
-                });
-
-                // Highlight active button
-                const activeBtn = document.getElementById(`tab-${tabName}`);
-                if (activeBtn)
-                    activeBtn.className =
-                        "flex-shrink-0 px-4 py-2 bg-primary text-white rounded-xl text-sm font-bold shadow-md shadow-teal-500/20 transition-all";
-            }
-
-            // Destination Data (Based on ../../images/profile - 21 cities)
-            const allCountries = [
-                {
-                    name: "방콕",
-                    location: "Thailand",
-                    img: "../../images/profile/BANGKOK.png",
-                },
-                {
-                    name: "바르셀로나",
-                    location: "Spain",
-                    img: "../../images/profile/BARCELONA.png",
-                },
-                {
-                    name: "베이징",
-                    location: "China",
-                    img: "../../images/profile/BEIJING.png",
-                },
-                {
-                    name: "베를린",
-                    location: "Germany",
-                    img: "../../images/profile/BERLIN.png",
-                },
-                {
-                    name: "다낭",
-                    location: "Vietnam",
-                    img: "../../images/profile/DANANG.png",
-                },
-                {
-                    name: "하노이",
-                    location: "Vietnam",
-                    img: "../../images/profile/HANOI.png",
-                },
-                {
-                    name: "홍콩",
-                    location: "Hong Kong",
-                    img: "../../images/profile/HONG KONG ISLAND.png",
-                },
-                {
-                    name: "지우펀",
-                    location: "Taiwan",
-                    img: "../../images/profile/JIUFEN.png",
-                },
-                {
-                    name: "라스베이거스",
-                    location: "USA",
-                    img: "../../images/profile/LASVEGAS.png",
-                },
-                {
-                    name: "런던",
-                    location: "UK",
-                    img: "../../images/profile/LONDON.png",
-                },
-                {
-                    name: "마드리드",
-                    location: "Spain",
-                    img: "../../images/profile/MADRID.png",
-                },
-                {
-                    name: "마리나 베이",
-                    location: "Singapore",
-                    img: "../../images/profile/MARINA BAY.png",
-                },
-                {
-                    name: "멜버른",
-                    location: "Australia",
-                    img: "../../images/profile/MELBOURNE.png",
-                },
-                {
-                    name: "뮌헨",
-                    location: "Germany",
-                    img: "../../images/profile/MUNICH.png",
-                },
-                {
-                    name: "뉴욕",
-                    location: "USA",
-                    img: "../../images/profile/NEW YORK.png",
-                },
-                {
-                    name: "오사카",
-                    location: "Japan",
-                    img: "../../images/profile/OSAKA.png",
-                },
-                {
-                    name: "파리",
-                    location: "France",
-                    img: "../../images/profile/PARIS.png",
-                },
-                {
-                    name: "상하이",
-                    location: "China",
-                    img: "../../images/profile/SHANGHAI.png",
-                },
-                {
-                    name: "시드니",
-                    location: "Australia",
-                    img: "../../images/profile/SYDNEY.png",
-                },
-                {
-                    name: "타이베이",
-                    location: "Taiwan",
-                    img: "../../images/profile/TAIPEI.png",
-                },
-                {
-                    name: "도쿄",
-                    location: "Japan",
-                    img: "../../images/profile/TOKYO.png",
-                },
-            ];
-
-            function toggleAddCountryModal() {
-                const modal = document.getElementById("addCountryModal");
-                const backdrop = document.getElementById("addCountryBackdrop");
-                const panel = document.getElementById("addCountryPanel");
-
-                if (modal.classList.contains("hidden")) {
-                    // Open
-                    modal.classList.remove("hidden");
-                    setTimeout(() => {
-                        backdrop.classList.remove("opacity-0");
-                        panel.classList.remove(
-                            "opacity-0",
-                            "translate-y-full",
-                            "sm:translate-y-0",
-                        );
-                    }, 10);
-
-                    // Initialize List
-                    document.getElementById("countrySearchInput").value = "";
-
-                    // Set default date to today
-                    const now = new Date();
-                    const yyyy = now.getFullYear();
-                    const mm = String(now.getMonth() + 1).padStart(2, "0");
-
-                    // Set values if options exist
-                    const yearSelect =
-                        document.getElementById("travelYearInput");
-                    if (yearSelect.querySelector(`option[value="${yyyy}"]`)) {
-                        yearSelect.value = yyyy;
-                    }
-                    const monthSelect =
-                        document.getElementById("travelMonthInput");
-                    monthSelect.value = mm;
-
-                    renderCountries(allCountries);
-                } else {
-                    // Close
-                    backdrop.classList.add("opacity-0");
-                    panel.classList.add(
-                        "opacity-0",
-                        "translate-y-full",
-                        "sm:translate-y-0",
-                    );
-
-                    setTimeout(() => {
-                        modal.classList.add("hidden");
-                    }, 300);
-                }
-            }
-
-            function toggleEditModal() {
-                const modal = document.getElementById("editModal");
-                const backdrop = document.getElementById("modalBackdrop");
-                const panel = document.getElementById("modalPanel");
-
-                if (modal.classList.contains("hidden")) {
-                    // Open
-                    modal.classList.remove("hidden");
-
-                    // Populate Bio
-                    const currentBio = document
-                        .getElementById("profileBio")
-                        .innerText.replace(/^"|"$/g, ""); // Remove quotes for editing
-                    document.getElementById("editBioInput").value = currentBio;
-
-                    setTimeout(() => {
-                        backdrop.classList.remove("opacity-0");
-                        panel.classList.remove(
-                            "opacity-0",
-                            "translate-y-full",
-                            "sm:translate-y-0",
-                        );
-                    }, 10);
-                } else {
-                    // Close
-                    backdrop.classList.add("opacity-0");
-                    panel.classList.add(
-                        "opacity-0",
-                        "translate-y-full",
-                        "sm:translate-y-0",
-                    );
-
-                    // Clear Password fields
-                    const cp = document.getElementById("currentPasswordInput");
-                    const np = document.getElementById("newPasswordInput");
-                    const cnp = document.getElementById("confirmPasswordInput");
-                    if (cp) cp.value = "";
-                    if (np) np.value = "";
-                    if (cnp) cnp.value = "";
-
-                    setTimeout(() => {
-                        modal.classList.add("hidden");
-                    }, 300);
-                }
-            }
-
-            function saveProfile() {
-                const newBio = document.getElementById("editBioInput").value;
-                const currentPw = document.getElementById(
-                    "currentPasswordInput",
-                ).value;
-                const newPw = document.getElementById("newPasswordInput").value;
-                const confirmPw = document.getElementById(
-                    "confirmPasswordInput",
-                ).value;
-
-                // Password Change Logic (Demo)
-                if (currentPw || newPw || confirmPw) {
-                    if (!currentPw) {
-                        showToast("현재 비밀번호를 입력해주세요.");
-                        return;
-                    }
-                    if (newPw !== confirmPw) {
-                        showToast("새 비밀번호가 일치하지 않습니다.");
-                        return;
-                    }
-                    if (newPw.length < 4) {
-                        showToast("새 비밀번호는 4자 이상이어야 합니다.");
-                        return;
-                    }
-                    showToast("비밀번호가 성공적으로 변경되었습니다.");
-                }
-
-                // Update Bio
-                document.getElementById("profileBio").innerText = `"${newBio}"`;
-
-                showToast("프로필 정보가 저장되었습니다.");
-                toggleEditModal();
-            }
-
-            function requestEditProfile() {
-                const modal = document.getElementById("passwordCheckModal");
-                const backdrop = document.getElementById(
-                    "passwordCheckBackdrop",
-                );
-                const panel = document.getElementById("passwordCheckPanel");
-                const input = document.getElementById("passwordCheckInput");
-
-                input.value = ""; // Reset
-                modal.classList.remove("hidden");
-
-                setTimeout(() => {
-                    backdrop.classList.remove("opacity-0");
-                    panel.classList.remove("opacity-0", "scale-95");
-                    panel.classList.add("scale-100");
-                    input.focus();
-                }, 10);
-            }
-
-            function closePasswordCheckModal() {
-                const modal = document.getElementById("passwordCheckModal");
-                const backdrop = document.getElementById(
-                    "passwordCheckBackdrop",
-                );
-                const panel = document.getElementById("passwordCheckPanel");
-
-                backdrop.classList.add("opacity-0");
-                panel.classList.add("opacity-0", "scale-95");
-                panel.classList.remove("scale-100");
-
-                setTimeout(() => {
-                    modal.classList.add("hidden");
-                }, 300);
-            }
-
-            function verifyPasswordAndEdit() {
-                const input = document.getElementById("passwordCheckInput");
-                if (input.value.length > 0) {
-                    // Any password works for demo
-                    closePasswordCheckModal();
-                    setTimeout(() => {
-                        toggleEditModal();
-                    }, 300);
-                } else {
-                    showToast("비밀번호를 입력해주세요.");
-                    input.focus();
-                }
-            }
-
-            function togglePersonalityModal() {
-                const modal = document.getElementById("personalityModal");
-                const backdrop = document.getElementById("personalityBackdrop");
-                const panel = document.getElementById("personalityPanel");
-
-                if (modal.classList.contains("hidden")) {
-                    modal.classList.remove("hidden");
-                    setTimeout(() => {
-                        backdrop.classList.remove("opacity-0");
-                        panel.classList.remove("opacity-0", "scale-95");
-                        panel.classList.add("scale-100");
-                    }, 10);
-                } else {
-                    backdrop.classList.add("opacity-0");
-                    panel.classList.add("opacity-0", "scale-95");
-                    panel.classList.remove("scale-100");
-                    setTimeout(() => {
-                        modal.classList.add("hidden");
-                    }, 300);
-                }
-            }
-
-            function showPersonalityInfo() {
-                togglePersonalityModal();
-            }
-
-            function togglePassportExpansion() {
-                const hiddenItems =
-                    document.querySelectorAll(".passport-hidden");
-                const btn = document.getElementById("expandPassportBtn");
-                const isExpanded = btn.innerText === "접기";
-
-                hiddenItems.forEach((item) => {
-                    if (isExpanded) {
-                        item.classList.add("hidden");
-                        item.classList.remove("flex");
-                    } else {
-                        item.classList.remove("hidden");
-                        item.classList.add("flex");
-                    }
-                });
-
-                btn.innerText = isExpanded ? "모두 보기" : "접기";
-            }
-
-            function togglePremiumModal() {
-                const modal = document.getElementById("premiumModal");
-                const backdrop = document.getElementById("premiumBackdrop");
-                const panel = document.getElementById("premiumPanel");
-
-                if (modal.classList.contains("hidden")) {
-                    modal.classList.remove("hidden");
-                    setTimeout(() => {
-                        backdrop.classList.remove("opacity-0");
-                        panel.classList.remove("opacity-0", "scale-95");
-                        panel.classList.add("scale-100");
-                    }, 10);
-                } else {
-                    backdrop.classList.add("opacity-0");
-                    panel.classList.add("opacity-0", "scale-95");
-                    panel.classList.remove("scale-100");
-                    setTimeout(() => {
-                        modal.classList.add("hidden");
-                    }, 300);
-                }
-            }
-
-            function filterCountries() {
-                const query = document
-                    .getElementById("countrySearchInput")
-                    .value.toLowerCase();
-                const filtered = allCountries.filter((c) =>
-                    c.name.toLowerCase().includes(query),
-                );
-                renderCountries(filtered);
-            }
-
-            function renderCountries(list) {
-                const grid = document.getElementById("countryListGrid");
-                if (!grid) return;
-                grid.innerHTML = "";
-
-                list.forEach((item) => {
-                    const btn = document.createElement("button");
-                    btn.className =
-                        "flex flex-col items-center justify-center p-3 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-primary hover:bg-slate-50 dark:hover:bg-slate-800 transition-all group";
-                    btn.onclick = () =>
-                        addCountry(item.name, item.img, item.location);
-                    btn.innerHTML = `
-                    <div class="w-12 h-12 rounded-full mb-2 overflow-hidden border border-slate-100 dark:border-slate-600 group-hover:scale-110 transition-transform">
-                        <img src="${item.img}" alt="${item.name}" class="w-full h-full object-cover">
-                    </div>
-                    <span class="text-[11px] font-bold text-slate-700 dark:text-slate-300">${item.name}</span>
-                    <span class="text-[9px] text-slate-400">${item.location}</span>
-                `;
-                    grid.appendChild(btn);
-                });
-
-                if (list.length === 0) {
-                    grid.innerHTML =
-                        '<p class="col-span-3 text-center text-slate-400 py-4">검색 결과가 없습니다.</p>';
-                }
-            }
-
-            function addCountry(name, img, location) {
-                // 1. Get Date from Selects
-                const year = document.getElementById("travelYearInput").value;
-                const month = document.getElementById("travelMonthInput").value;
-                const dateStr = `${year}.${month}`;
-
-                // ADDED: Actually add to myPassport and refresh grid
-                const selectedCountry = allCountries.find(
-                    (c) => c.name === name,
-                );
-                if (selectedCountry) {
-                    // Check if already exists to prevent duplicates (optional, but good UX)
-                    if (
-                        !myPassport.some((p) => p.name === selectedCountry.name)
-                    ) {
-                        myPassport.unshift({
-                            ...selectedCountry,
-                            date: dateStr, // Use selected date
-                        });
-
-                        // Preservation of expansion state
-                        const btn =
-                            document.getElementById("expandPassportBtn");
-                        const wasExpanded = btn && btn.innerText === "접기";
-
-                        initPassportGrid(wasExpanded);
-                        updatePassportCounts();
-                    } else {
-                        alert("이미 여권에 추가된 도시입니다!");
-                        return;
-                    }
-                }
-
-                toggleAddCountryModal();
-                setTimeout(() => {
-                    alert(`${name} (${dateStr}) 여행이 여권에 추가되었습니다!`);
-                }, 300);
-            }
-
-            // Initialize User's Passport with 6 demo items
-            let myPassport = allCountries.slice(0, 6).map((item, index) => {
-                const years = ["2023", "2022", "2021"];
-                const months = ["01", "05", "08", "12"];
-                return {
-                    ...item,
-                    date: `${years[index % 3]}.${months[index % 4]}`,
-                };
-            });
-
-            function updatePassportCounts() {
-                const count = myPassport.length;
-                const countSpan = document.getElementById("passportCount");
-                const countBadge =
-                    document.getElementById("passportCountBadge");
-
-                if (countSpan) countSpan.innerText = `${count}개국`;
-                if (countBadge) countBadge.innerText = count;
-            }
-
-            // Initialize Passport Grid with 3 initial items + show/hide logic
-            function initPassportGrid(forceExpanded = false) {
-                const grid = document.getElementById("mainPassportPreview");
-                if (!grid) return;
-
-                grid.innerHTML = "";
-
-                // Render based on myPassport
-                myPassport.forEach((item, index) => {
-                    const badge = document.createElement("div");
-                    // Hide items beyond initial 3 unless forced expanded
-                    const isHidden = !forceExpanded && index >= 3;
-                    badge.className = `flex flex-col items-center transition-all duration-300 ${isHidden ? "hidden passport-extra" : "passport-extra-visible"}`;
-                    if (index >= 3) badge.classList.add("passport-extra"); // Mark extras for toggling
-
-                    badge.innerHTML = `
-                    <div class="w-20 h-20 rounded-full bg-white dark:bg-slate-700 border-2 border-slate-100 dark:border-slate-600 shadow-sm flex items-center justify-center mb-3 overflow-hidden group-hover:scale-110 transition-transform">
-                        <img src="${item.img}" alt="${item.name}" class="w-full h-full object-cover">
-                    </div>
-                    <span class="text-sm font-bold text-slate-900 dark:text-white mb-0.5">${item.name}</span>
-                    <span class="text-xs text-slate-400">${item.date}</span>
-                `;
-                    grid.appendChild(badge);
-                });
-
-                // Add [Add Button]
-                const addBtn = document.createElement("div");
-                addBtn.className =
-                    "flex flex-col items-center cursor-pointer hover:scale-105 transition-transform order-last";
-                addBtn.onclick = () => toggleAddCountryModal();
-                addBtn.innerHTML = `
-                <div class="w-20 h-20 rounded-full bg-slate-50 dark:bg-slate-800 border-4 border-dashed border-slate-300 dark:border-slate-600 flex items-center justify-center mb-3 text-slate-400 hover:text-primary hover:border-primary transition-colors">
-                    <span class="material-symbols-outlined text-3xl">add</span>
-                </div>
-                <span class="text-sm font-bold text-slate-900 dark:text-white mb-0.5">추가하기</span>
-                <span class="text-xs text-slate-400">New</span>
-            `;
-                grid.appendChild(addBtn);
-
-                // Sync Button Text if forced expanded
-                const btn = document.getElementById("expandPassportBtn");
-                if (btn && forceExpanded) {
-                    btn.innerText = "접기";
-                }
-            }
-
-            // Expanded/Collapsed state for Passport
-            function togglePassportExpansion() {
-                const extras = document.querySelectorAll(".passport-extra");
-                const btn = document.getElementById("expandPassportBtn");
-                const isExpanded = btn.innerText === "접기";
-
-                extras.forEach((el) => {
-                    if (isExpanded) {
-                        el.classList.add("hidden");
-                    } else {
-                        el.classList.remove("hidden");
-                        el.classList.add("animate-fade-in");
-                    }
-                });
-
-                btn.innerText = isExpanded ? "모두 보기" : "접기";
-            }
-
-            // Initialize on load
             document.addEventListener("DOMContentLoaded", () => {
-                updatePassportCounts(); // Set initial counts
-                initPassportGrid();
-                // ... (other inits if any)
+                // Check login status, defined in auth.js
+                if (typeof checkLoginStatus === "function") {
+                    checkLoginStatus();
+                }
+
+                // Populate profile details, defined in auth.js
+                if (typeof populateProfile === "function") {
+                    populateProfile();
+                }
+
+                // Initialize passport grid, defined in profile-functions.js
+                if (typeof updatePassportCounts === "function") {
+                    updatePassportCounts();
+                }
+                if (typeof initPassportGrid === "function") {
+                    initPassportGrid();
+                }
             });
         </script>
     </body>

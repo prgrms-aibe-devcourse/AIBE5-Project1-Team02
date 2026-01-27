@@ -936,7 +936,7 @@
                 >
                     <a
                         class="transition-colors hover:text-foreground/80 text-foreground/60 hover:text-foreground transition-colors"
-                        href=""
+                        href="../plan/planner.html"
                         >플래너</a
                     >
                     <a
@@ -951,7 +951,7 @@
                     >
                 </nav>
 
-                <div class="flex items-center gap-4">
+                <div id="auth-links" class="flex items-center gap-4">
                     <a href="../auth/SignIn.html" class="text-sm font-medium"
                         >로그인</a
                     >
@@ -1083,9 +1083,7 @@
                             <span class="fire-icon">🔥</span>
                             HOT TREND
                         </div>
-                        <h2 class="section-title">
-                            🔥실시간 인기 여행지 순위
-                        </h2>
+                        <h2 class="section-title">🔥실시간 인기 여행지 순위</h2>
                         <p class="section-subtitle">
                             지금 가장 많은 사람들이 찾는 여행지를 확인하세요
                         </p>
@@ -1468,5 +1466,9 @@
             }
         </script>
         <script src="../../js/main.js"></script>
+        <script src="../../js/auth.js"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", checkLoginStatus);
+        </script>
     </body>
 </html>

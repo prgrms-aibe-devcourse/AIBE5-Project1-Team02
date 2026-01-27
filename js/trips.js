@@ -776,15 +776,12 @@ function viewMoreFlights() {
         // 접기
         displayedFlightsCount = 3; // 초기값으로 복원
         renderFlights();
-        showAlert("항공권을 접었습니다 ✈️", "info");
+
     } else {
         // 펼치기
         displayedFlightsCount = flightDealsData.length; // 전체 개수로 설정
         renderFlights();
-        showAlert(
-            `전체 ${flightDealsData.length}개의 항공권을 표시 중입니다 ✈️`,
-            "info",
-        );
+
     }
 }
 
@@ -1243,7 +1240,7 @@ function viewMoreDestinations() {
     // 토글 기능
     if (displayedDestinationsCount >= popularDestinationsData.length) {
         // 현재 전체 보기 상태 → 접기
-        displayedDestinationsCount = 6;
+        displayedDestinationsCount = 3;
         if (moreBtn) {
             moreBtn.innerHTML = `
                 전체 순위 보기 (TOP 20)
