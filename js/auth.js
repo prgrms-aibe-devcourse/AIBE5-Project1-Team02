@@ -18,6 +18,13 @@ function handleSignUp(event) {
         return;
     }
 
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+
+    if (users.find(user => user.email === email)) {
+        alert('이미 가입된 이메일입니다.');
+        return;
+    }
+
     const user = {
         name,
         gender: gender.value,
@@ -26,7 +33,8 @@ function handleSignUp(event) {
         password, // In a real app, you must hash the password!
     };
 
-    localStorage.setItem('user', JSON.stringify(user));
+    users.push(user);
+    localStorage.setItem('users', JSON.stringify(users));
 
     alert('회원가입이 완료되었습니다! 로그인 페이지로 이동합니다.');
     window.location.href = './SignIn.html';
@@ -38,18 +46,13 @@ function handleSignIn(event) {
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
 
-    const storedUser = localStorage.getItem('user');
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+    const user = users.find(u => u.email === email && u.password === password);
 
-    if (!storedUser) {
-        alert('등록된 사용자 정보가 없습니다. 먼저 회원가입을 진행해주세요.');
-        return;
-    }
-
-    const user = JSON.parse(storedUser);
-
-    if (email === user.email && password === user.password) {
+    if (user) {
         alert('로그인 성공!');
         localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('loggedInUser', JSON.stringify(user));
         window.location.href = '../main/Main.html';
     } else {
         alert('이메일 또는 비밀번호가 올바르지 않습니다.');
@@ -58,7 +61,7 @@ function handleSignIn(event) {
 
 function checkLoginStatus() {
     const isLoggedIn = localStorage.getItem('isLoggedIn');
-    const user = JSON.parse(localStorage.getItem('user'));
+    const user = JSON.parse(localStorage.getItem('loggedInUser'));
     const authLinksContainer = document.getElementById('auth-links');
 
     if (isLoggedIn === 'true' && user && authLinksContainer) {
@@ -72,8 +75,7 @@ function checkLoginStatus() {
 
 function handleLogout() {
     localStorage.removeItem('isLoggedIn');
-    // Keep user data for potential re-login
-    // localStorage.removeItem('user'); 
+    localStorage.removeItem('loggedInUser'); 
     alert('로그아웃되었습니다.');
     window.location.href = '../main/Main.html';
 }
@@ -86,7 +88,7 @@ function populateProfile() {
         return;
     }
 
-    const user = JSON.parse(localStorage.getItem('user'));
+    const user = JSON.parse(localStorage.getItem('loggedInUser'));
     if (!user) {
         alert('사용자 정보를 찾을 수 없습니다.');
         localStorage.removeItem('isLoggedIn');
@@ -140,14 +142,12 @@ function handleProfileUpdate(event) {
     const updatedSelfIntroduction = document.getElementById('editBioInput').value;
 
 
-    const user = JSON.parse(localStorage.getItem('user'));
+    const user = JSON.parse(localStorage.getItem('loggedInUser'));
     
     user.name = updatedName;
     user.birthdate = updatedBirthdate;
     user.gender = updatedGender;
     user.selfIntroduction = updatedSelfIntroduction;
-
-    localStorage.setItem('user', JSON.stringify(user));
 
     // Also update password if fields are filled
     const currentPw = document.getElementById('currentPasswordInput').value;
@@ -168,8 +168,6 @@ function handleProfileUpdate(event) {
             return;
         }
         user.password = newPw;
-        localStorage.setItem('user', JSON.stringify(user));
-        alert('비밀번호가 성공적으로 변경되었습니다.');
         
         // Clear password fields
         document.getElementById('currentPasswordInput').value = '';
@@ -177,9 +175,21 @@ function handleProfileUpdate(event) {
         document.getElementById('confirmPasswordInput').value = '';
     }
 
+    localStorage.setItem('loggedInUser', JSON.stringify(user));
+
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+    const userIndex = users.findIndex(u => u.email === user.email);
+    if (userIndex > -1) {
+        users[userIndex] = user;
+        localStorage.setItem('users', JSON.stringify(users));
+    }
+
+
     alert('프로필 정보가 저장되었습니다.');
     // Repopulate fields to show updated info
     populateProfile(); 
     // Close the modal
-    toggleEditModal(); 
+    if (typeof toggleEditModal === 'function') {
+        toggleEditModal(); 
+    }
 }

@@ -6,7 +6,7 @@
         <title>AI 여행 성향 테스트</title>
         <script src="https://cdn.lordicon.com/lordicon.js"></script>
         <style>
-            @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700;800&display=swap');
+            @import url("https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700;800&display=swap");
 
             /* CSS 변수 정의 */
             :root {
@@ -27,7 +27,7 @@
 
             /* body 기본 스타일: 폰트, 배경색, 텍스트 색상, 레이아웃 설정 */
             body {
-                font-family: 'Pretendard', sans-serif;
+                font-family: "Pretendard", sans-serif;
                 background-color: var(--bg-light);
                 color: var(--text-dark);
                 display: flex;
@@ -113,7 +113,11 @@
                 display: inline-flex;
                 align-items: center;
                 gap: 0.5rem;
-                background-image: linear-gradient(to right, rgba(0, 196, 180, 0.1), rgba(255, 140, 66, 0.1));
+                background-image: linear-gradient(
+                    to right,
+                    rgba(0, 196, 180, 0.1),
+                    rgba(255, 140, 66, 0.1)
+                );
                 padding: 0.75rem 1.5rem;
                 border-radius: 9999px;
                 border: 2px solid rgba(0, 196, 180, 0.2);
@@ -180,7 +184,10 @@
                 display: inline-flex;
                 align-items: center;
                 justify-content: center;
-                background-image: linear-gradient(to right, var(--primary-color));
+                background-image: linear-gradient(
+                    to right,
+                    var(--primary-color)
+                );
                 color: white;
                 padding: 1rem 3rem;
                 border-radius: 9999px;
@@ -225,7 +232,11 @@
             /* 진행률 바의 실제 채워지는 부분 */
             .progress-bar-inner {
                 height: 100%;
-                background-image: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+                background-image: linear-gradient(
+                    to right,
+                    var(--primary-color),
+                    var(--secondary-color)
+                );
                 transition: width 0.3s ease-in-out;
             }
 
@@ -411,7 +422,11 @@
 
             /* 카드 공개 버튼 스타일 */
             .reveal-button {
-                background-image: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+                background-image: linear-gradient(
+                    to right,
+                    var(--primary-color),
+                    var(--secondary-color)
+                );
                 color: white;
                 padding: 1rem 2rem;
                 border-radius: 9999px;
@@ -494,7 +509,8 @@
                 transform-style: preserve-3d; /* 3D 변형 유지 */
                 transition: transform 0.8s cubic-bezier(0.25, 0.8, 0.25, 1); /* 변형 애니메이션 */
                 --flip-rotation: 0deg; /* 기본 뒤집기 회전 값 */
-                transform: rotateX(var(--rotate-x, 0deg)) rotateY(calc(var(--rotate-y, 0deg) + var(--flip-rotation)));
+                transform: rotateX(var(--rotate-x, 0deg))
+                    rotateY(calc(var(--rotate-y, 0deg) + var(--flip-rotation)));
                 transform-origin: center center;
             }
 
@@ -761,7 +777,7 @@
                 margin-bottom: 0.25rem;
             }
             .strengths-list li::before {
-                content: '✨';
+                content: "✨";
                 margin-right: 0.5rem;
             }
 
@@ -848,7 +864,11 @@
             .recommendation-number {
                 width: 1.5rem;
                 height: 1.5rem;
-                background-image: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+                background-image: linear-gradient(
+                    to right,
+                    var(--primary-color),
+                    var(--secondary-color)
+                );
                 border-radius: 0.5rem;
                 display: flex;
                 align-items: center;
@@ -868,7 +888,11 @@
             /* 공유 버튼 스타일 */
             .share-button {
                 width: 100%;
-                background-image: linear-gradient(to right, var(--primary-color), #00a89a);
+                background-image: linear-gradient(
+                    to right,
+                    var(--primary-color),
+                    #00a89a
+                );
                 color: white;
                 padding: 0.75rem 1rem;
                 border-radius: 0.75rem;
@@ -900,7 +924,11 @@
                 display: inline-flex;
                 align-items: center;
                 gap: 0.75rem;
-                background-image: linear-gradient(to right, rgba(0, 196, 180, 0.1), rgba(255, 140, 66, 0.1));
+                background-image: linear-gradient(
+                    to right,
+                    rgba(0, 196, 180, 0.1),
+                    rgba(255, 140, 66, 0.1)
+                );
                 padding: 0.75rem 1.5rem;
                 border-radius: 0.75rem;
                 border: 2px solid rgba(0, 196, 180, 0.2);
@@ -921,7 +949,11 @@
             .share-type {
                 font-size: 1.5rem;
                 font-weight: 700;
-                background-image: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+                background-image: linear-gradient(
+                    to right,
+                    var(--primary-color),
+                    var(--secondary-color)
+                );
                 -webkit-background-clip: text;
                 -webkit-text-fill-color: transparent;
                 background-clip: text;
@@ -937,7 +969,11 @@
             /* 추천받기 버튼 스타일 */
             .get-recommendations-button {
                 width: 100%;
-                background-image: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+                background-image: linear-gradient(
+                    to right,
+                    var(--primary-color),
+                    var(--secondary-color)
+                );
                 color: white;
                 padding: 1.5rem;
                 border-radius: 9999px;
@@ -960,39 +996,84 @@
             /* --- 그라디언트 배경 --- */
             /* 빨강-장미-핑크 그라디언트 */
             .from-red-600-via-rose-600-to-pink-600-bg {
-                background-image: linear-gradient(to bottom right, #dc2626, #e11d48, #db2777);
+                background-image: linear-gradient(
+                    to bottom right,
+                    #dc2626,
+                    #e11d48,
+                    #db2777
+                );
             }
             /* 주황-앰버-노랑 그라디언트 */
             .from-orange-600-via-amber-600-to-yellow-600-bg {
-                background-image: linear-gradient(to bottom right, #ea580c, #f59e0b, #eab308);
+                background-image: linear-gradient(
+                    to bottom right,
+                    #ea580c,
+                    #f59e0b,
+                    #eab308
+                );
             }
             /* 노랑-앰버-주황 그라디언트 */
             .from-yellow-600-via-amber-600-to-orange-600-bg {
-                background-image: linear-gradient(to bottom right, #eab308, #f59e0b, #ea580c);
+                background-image: linear-gradient(
+                    to bottom right,
+                    #eab308,
+                    #f59e0b,
+                    #ea580c
+                );
             }
             /* 보라-바이올렛-푸시아 그라디언트 */
             .from-purple-600-via-violet-600-to-fuchsia-600-bg {
-                background-image: linear-gradient(to bottom right, #9333ea, #8b5cf6, #d946ef);
+                background-image: linear-gradient(
+                    to bottom right,
+                    #9333ea,
+                    #8b5cf6,
+                    #d946ef
+                );
             }
             /* 시안-파랑-인디고 그라디언트 */
             .from-cyan-600-via-blue-600-to-indigo-600-bg {
-                background-image: linear-gradient(to bottom right, #0891b2, #2563eb, #4f46e5);
+                background-image: linear-gradient(
+                    to bottom right,
+                    #0891b2,
+                    #2563eb,
+                    #4f46e5
+                );
             }
             /* 에메랄드-녹색-틸 그라디언트 */
             .from-emerald-600-via-green-600-to-teal-600-bg {
-                background-image: linear-gradient(to bottom right, #059669, #16a34a, #0d9488);
+                background-image: linear-gradient(
+                    to bottom right,
+                    #059669,
+                    #16a34a,
+                    #0d9488
+                );
             }
             /* 앰버-노랑-라임 그라디언트 */
             .from-amber-600-via-yellow-600-to-lime-600-bg {
-                background-image: linear-gradient(to bottom right, #f59e0b, #eab308, #84cc16);
+                background-image: linear-gradient(
+                    to bottom right,
+                    #f59e0b,
+                    #eab308,
+                    #84cc16
+                );
             }
             /* 빨강-주황-앰버 그라디언트 */
             .from-red-600-via-orange-600-to-amber-600-bg {
-                background-image: linear-gradient(to bottom right, #dc2626, #ea580c, #f59e0b);
+                background-image: linear-gradient(
+                    to bottom right,
+                    #dc2626,
+                    #ea580c,
+                    #f59e0b
+                );
             }
             /* 틸-시안-스카이 그라디언트 */
             .from-teal-600-via-cyan-600-to-sky-600-bg {
-                background-image: linear-gradient(to bottom right, #0d9488, #0891b2, #0284c7);
+                background-image: linear-gradient(
+                    to bottom right,
+                    #0d9488,
+                    #0891b2,
+                    #0284c7
+                );
             }
             /* --- 질문 옵션: 카드 그리드 UI (깔끔 버전) --- */
             .options-container {
@@ -1072,7 +1153,7 @@
             }
             /* 마지막 질문 CTA 버튼 */
             .final-cta-wrap {
-                margin-top: 18px;
+                margin-top: 100px;
             }
 
             .final-cta-btn {
@@ -1082,33 +1163,45 @@
                 border-radius: 9999px;
                 cursor: pointer;
 
-                background: #4b8578; /* 이미지 느낌의 그린톤 */
-                color: #fff;
-                font-weight: 800;
+                /* [변경] 테스트 시작하기 버튼과 동일한 디자인 적용 */
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+
+                /* 시작 버튼과 동일한 테마 컬러 */
+                background-image: linear-gradient(
+                    to right,
+                    var(--primary-color),
+                    var(--primary-color)
+                );
+                color: white;
+                font-weight: 700; /* 폰트 굵기 통일 */
                 font-size: 1.25rem;
                 letter-spacing: -0.02em;
 
-                box-shadow: 0 12px 22px rgba(0, 0, 0, 0.14);
-                transition:
-                    transform 0.15s ease,
-                    box-shadow 0.15s ease,
-                    opacity 0.15s ease;
+                /* 시작 버튼과 동일한 그림자(Teal color shadow) */
+                box-shadow: 0 10px 20px -5px rgba(0, 196, 180, 0.4);
+
+                /* 시작 버튼과 동일한 전환 효과 */
+                transition: all 0.3s;
             }
 
+            /* [변경] 호버 효과도 시작 버튼과 동일하게 적용 (확대 및 그림자 강화) */
             .final-cta-btn:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 22px 36px rgba(0, 0, 0, 0.18);
+                transform: scale(1.05);
+                box-shadow: 0 15px 25px -5px rgba(0, 196, 180, 0.5);
             }
 
             .final-cta-btn:active {
-                transform: translateY(0px);
+                transform: scale(1); /* 클릭 시 살짝 원래대로 */
             }
 
             .final-cta-btn:disabled {
-                opacity: 0.45;
+                opacity: 0.35;
                 cursor: not-allowed;
                 transform: none;
-                box-shadow: 0 12px 22px rgba(0, 0, 0, 0.12);
+                box-shadow: none;
+                background: #ccc; /* 비활성화 시 회색 처리 */
             }
         </style>
     </head>
@@ -1130,9 +1223,15 @@
                         <span>AI 맞춤 여행 계획</span>
                     </div>
                     <h1>여행 AI가 알아서 추천해줄게요!</h1>
-                    <p>간단한 선택으로 AI가 <br />맞춤 여행지를 알아서 정해드릴게요!</p>
+                    <p>
+                        간단한 선택으로 AI가 <br />맞춤 여행지를 알아서
+                        정해드릴게요!
+                    </p>
 
-                    <div id="personality-preview" class="personality-preview-grid"></div>
+                    <div
+                        id="personality-preview"
+                        class="personality-preview-grid"
+                    ></div>
                     <button id="start-btn" class="start-button">
                         테스트 시작하기
                         <lord-icon
@@ -1153,7 +1252,10 @@
                         <span id="progress-percentage">14%</span>
                     </div>
                     <div class="progress-bar">
-                        <div id="progress-bar-inner" class="progress-bar-inner"></div>
+                        <div
+                            id="progress-bar-inner"
+                            class="progress-bar-inner"
+                        ></div>
                     </div>
                 </div>
                 <div id="question-container" class="question-container">
@@ -1167,12 +1269,21 @@
                             trigger="hover"
                             target="button"
                             colors="primary:#00c4b4"
-                            style="width: 20px; height: 20px; transform: rotate(180deg)"
+                            style="
+                                width: 20px;
+                                height: 20px;
+                                transform: rotate(180deg);
+                            "
                         ></lord-icon>
                         이전 질문
                     </button>
 
-                    <button id="next-btn" class="next-button" type="button" disabled>
+                    <button
+                        id="next-btn"
+                        class="next-button"
+                        type="button"
+                        disabled
+                    >
                         다음 질문
                         <lord-icon
                             src="https://cdn.lordicon.com/dqrpfjei.json"
@@ -1184,8 +1295,17 @@
                     </button>
                 </div>
                 <!-- 마지막 질문 전용: 메인으로 가는 CTA 버튼 -->
-                <div id="final-cta-wrap" class="final-cta-wrap" style="display: none">
-                    <button id="final-cta-btn" class="final-cta-btn" type="button" disabled>
+                <div
+                    id="final-cta-wrap"
+                    class="final-cta-wrap"
+                    style="display: none"
+                >
+                    <button
+                        id="final-cta-btn"
+                        class="final-cta-btn"
+                        type="button"
+                        disabled
+                    >
                         이제 여백을 채운 여행을 시작해 봅시다 →
                     </button>
                 </div>
@@ -1200,249 +1320,249 @@
             const questions = [
                 {
                     id: 1,
-                    title: '여행 기간',
-                    subtitle: '얼마나 여행하실 예정인가요?',
+                    title: "여행 기간",
+                    subtitle: "얼마나 여행하실 예정인가요?",
                     options: [
                         {
-                            icon: '📅',
-                            label: '당일치기',
-                            desc: '가볍게 다녀오기',
+                            icon: "📅",
+                            label: "당일치기",
+                            desc: "가볍게 다녀오기",
                             score: { 7: 1, 9: 1, 3: 1 },
                         },
                         {
-                            icon: '🗓️',
-                            label: '1박 2일',
-                            desc: '핵심만 알차게',
+                            icon: "🗓️",
+                            label: "1박 2일",
+                            desc: "핵심만 알차게",
                             score: { 3: 1, 1: 1, 7: 1 },
                         },
                         {
-                            icon: '🧳',
-                            label: '2박 3일',
-                            desc: '여유+핫플',
+                            icon: "🧳",
+                            label: "2박 3일",
+                            desc: "여유+핫플",
                             score: { 7: 2, 3: 1, 4: 1 },
                         },
                         {
-                            icon: '🏕️',
-                            label: '3박 4일',
-                            desc: '일정+휴식 밸런스',
+                            icon: "🏕️",
+                            label: "3박 4일",
+                            desc: "일정+휴식 밸런스",
                             score: { 1: 1, 9: 1, 2: 1 },
                         },
                         {
-                            icon: '🌿',
-                            label: '5일 이상',
-                            desc: '느긋하게 체류',
+                            icon: "🌿",
+                            label: "5일 이상",
+                            desc: "느긋하게 체류",
                             score: { 9: 2, 4: 1, 5: 1 },
                         },
                     ],
                 },
                 {
                     id: 2,
-                    title: '동행',
-                    subtitle: '누구와 함께 떠나시나요?',
+                    title: "동행",
+                    subtitle: "누구와 함께 떠나시나요?",
                     options: [
                         {
-                            icon: '🧑‍🦱',
-                            label: '혼자',
-                            desc: '나만의 시간',
+                            icon: "🧑‍🦱",
+                            label: "혼자",
+                            desc: "나만의 시간",
                             score: { 5: 2, 4: 1, 9: 1 },
                         },
                         {
-                            icon: '💑',
-                            label: '연인',
-                            desc: '로맨틱 여행',
+                            icon: "💑",
+                            label: "연인",
+                            desc: "로맨틱 여행",
                             score: { 2: 2, 4: 1, 9: 1 },
                         },
                         {
-                            icon: '🧑‍🤝‍🧑',
-                            label: '친구',
-                            desc: '우정 여행',
+                            icon: "🧑‍🤝‍🧑",
+                            label: "친구",
+                            desc: "우정 여행",
                             score: { 7: 2, 3: 1, 8: 1 },
                         },
                         {
-                            icon: '👨‍👩‍👧‍👦',
-                            label: '가족',
-                            desc: '가족 나들이',
+                            icon: "👨‍👩‍👧‍👦",
+                            label: "가족",
+                            desc: "가족 나들이",
                             score: { 6: 2, 2: 1, 9: 1 },
                         },
                         {
-                            icon: '👥',
-                            label: '단체',
-                            desc: '5인 이상',
+                            icon: "👥",
+                            label: "단체",
+                            desc: "5인 이상",
                             score: { 2: 2, 6: 1, 1: 1 },
                         },
                     ],
                 },
                 {
                     id: 3,
-                    title: '테마',
-                    subtitle: '어떤 여행을 원하시나요?',
+                    title: "테마",
+                    subtitle: "어떤 여행을 원하시나요?",
                     /* 원래 이미지에 (복수 선택 가능)처럼 하고 싶으면 아래에서 멀티선택도 가능하게 확장 가능 */
                     multi: true,
                     options: [
                         {
-                            icon: '🧘',
-                            label: '힐링',
-                            desc: '휴식과 재충전',
+                            icon: "🧘",
+                            label: "힐링",
+                            desc: "휴식과 재충전",
                             score: { 9: 2, 6: 1, 4: 1 },
                         },
                         {
-                            icon: '🍜',
-                            label: '맛집',
-                            desc: '미식 탐방',
+                            icon: "🍜",
+                            label: "맛집",
+                            desc: "미식 탐방",
                             score: { 7: 2, 3: 1, 2: 1 },
                         },
                         {
-                            icon: '🌳',
-                            label: '자연',
-                            desc: '자연 속으로',
+                            icon: "🌳",
+                            label: "자연",
+                            desc: "자연 속으로",
                             score: { 9: 1, 4: 1, 6: 1 },
                         },
                         {
-                            icon: '🏛️',
-                            label: '문화/역사',
-                            desc: '배움의 여행',
+                            icon: "🏛️",
+                            label: "문화/역사",
+                            desc: "배움의 여행",
                             score: { 5: 2, 1: 1, 6: 1 },
                         },
                         {
-                            icon: '🏄',
-                            label: '액티비티',
-                            desc: '활동적인 여행',
+                            icon: "🏄",
+                            label: "액티비티",
+                            desc: "활동적인 여행",
                             score: { 7: 1, 8: 2, 3: 1 },
                         },
                         {
-                            icon: '📸',
-                            label: '사진',
-                            desc: '인생샷 명소',
+                            icon: "📸",
+                            label: "사진",
+                            desc: "인생샷 명소",
                             score: { 3: 2, 4: 1, 7: 1 },
                         },
                     ],
                 },
                 {
                     id: 4,
-                    title: '예산',
-                    subtitle: '1인 기준 예상 예산은 얼마인가요?',
+                    title: "예산",
+                    subtitle: "1인 기준 예상 예산은 얼마인가요?",
                     options: [
                         {
-                            icon: '👛',
-                            label: '30만원 이하',
-                            desc: '가성비 위주',
+                            icon: "👛",
+                            label: "30만원 이하",
+                            desc: "가성비 위주",
                             score: { 6: 2, 1: 1, 5: 1 },
                         },
                         {
-                            icon: '💳',
-                            label: '30~50만원',
-                            desc: '합리적으로',
+                            icon: "💳",
+                            label: "30~50만원",
+                            desc: "합리적으로",
                             score: { 1: 1, 6: 1, 2: 1 },
                         },
                         {
-                            icon: '🧾',
-                            label: '50~80만원',
-                            desc: '경험에 투자',
+                            icon: "🧾",
+                            label: "50~80만원",
+                            desc: "경험에 투자",
                             score: { 3: 2, 7: 1, 2: 1 },
                         },
                         {
-                            icon: '💎',
-                            label: '80만원 이상',
-                            desc: '퀄리티/럭셔리',
+                            icon: "💎",
+                            label: "80만원 이상",
+                            desc: "퀄리티/럭셔리",
                             score: { 3: 2, 8: 1, 4: 1 },
                         },
                     ],
                 },
                 {
                     id: 5,
-                    title: '이동 수단',
-                    subtitle: '주로 어떻게 이동하실 예정인가요?',
+                    title: "이동 수단",
+                    subtitle: "주로 어떻게 이동하실 예정인가요?",
                     options: [
                         {
-                            icon: '🚆',
-                            label: '대중교통',
-                            desc: '버스, 지하철',
+                            icon: "🚆",
+                            label: "대중교통",
+                            desc: "버스, 지하철",
                             score: { 5: 1, 6: 1, 1: 1 },
                         },
                         {
-                            icon: '🚗',
-                            label: '자차/렌트',
-                            desc: '자유로운 이동',
+                            icon: "🚗",
+                            label: "자차/렌트",
+                            desc: "자유로운 이동",
                             score: { 7: 1, 8: 1, 3: 1 },
                         },
                         {
-                            icon: '🚶',
-                            label: '도보 위주',
-                            desc: '느리게 걷기',
+                            icon: "🚶",
+                            label: "도보 위주",
+                            desc: "느리게 걷기",
                             score: { 9: 2, 4: 1, 5: 1 },
                         },
                         {
-                            icon: '🧭',
-                            label: '혼합',
-                            desc: '상황에 따라',
+                            icon: "🧭",
+                            label: "혼합",
+                            desc: "상황에 따라",
                             score: { 1: 1, 6: 1, 7: 1 },
                         },
                     ],
                 },
                 {
                     id: 6,
-                    title: '일정 강도',
-                    subtitle: '얼마나 빡빡한 일정을 원하시나요?',
+                    title: "일정 강도",
+                    subtitle: "얼마나 빡빡한 일정을 원하시나요?",
                     options: [
                         {
-                            icon: '🌙',
-                            label: '여유롭게',
-                            desc: '하루 2~3곳',
+                            icon: "🌙",
+                            label: "여유롭게",
+                            desc: "하루 2~3곳",
                             score: { 9: 2, 4: 1, 6: 1 },
                         },
                         {
-                            icon: '⛅',
-                            label: '적당히',
-                            desc: '하루 4~5곳',
+                            icon: "⛅",
+                            label: "적당히",
+                            desc: "하루 4~5곳",
                             score: { 1: 1, 2: 1, 7: 1 },
                         },
                         {
-                            icon: '⚡',
-                            label: '알차게',
-                            desc: '하루 6곳 이상',
+                            icon: "⚡",
+                            label: "알차게",
+                            desc: "하루 6곳 이상",
                             score: { 3: 2, 1: 1, 8: 1 },
                         },
                     ],
                 },
                 {
                     id: 7,
-                    title: '가장 중요한 것',
-                    subtitle: '여행에서 제일 중요하게 생각하는 것은?',
+                    title: "가장 중요한 것",
+                    subtitle: "여행에서 제일 중요하게 생각하는 것은?",
                     options: [
                         {
-                            icon: '✅',
-                            label: '완벽한 계획',
-                            desc: '실수 없는 동선',
+                            icon: "✅",
+                            label: "완벽한 계획",
+                            desc: "실수 없는 동선",
                             score: { 1: 3, 6: 1 },
                         },
                         {
-                            icon: '💞',
-                            label: '사람과 추억',
-                            desc: '함께가 중요',
+                            icon: "💞",
+                            label: "사람과 추억",
+                            desc: "함께가 중요",
                             score: { 2: 3, 9: 1 },
                         },
                         {
-                            icon: '🏆',
-                            label: '성취와 결과',
-                            desc: '해냈다는 느낌',
+                            icon: "🏆",
+                            label: "성취와 결과",
+                            desc: "해냈다는 느낌",
                             score: { 3: 2, 8: 2 },
                         },
                         {
-                            icon: '🎨',
-                            label: '감성과 분위기',
-                            desc: '나만의 순간',
+                            icon: "🎨",
+                            label: "감성과 분위기",
+                            desc: "나만의 순간",
                             score: { 4: 3, 9: 1 },
                         },
                         {
-                            icon: '📚',
-                            label: '배움과 탐구',
-                            desc: '지식/리서치',
+                            icon: "📚",
+                            label: "배움과 탐구",
+                            desc: "지식/리서치",
                             score: { 5: 3, 1: 1 },
                         },
                         {
-                            icon: '🎢',
-                            label: '재미와 자극',
-                            desc: '새로운 경험',
+                            icon: "🎢",
+                            label: "재미와 자극",
+                            desc: "새로운 경험",
                             score: { 7: 3, 8: 1 },
                         },
                     ],
@@ -1454,55 +1574,69 @@
             const enneagramTypes = {
                 1: {
                     type: 1,
-                    nickname: '베이징',
-                    subtitle: 'The Perfect Route Designer',
+                    nickname: "베이징",
+                    subtitle: "The Perfect Route Designer",
                     character: `
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><g data-name="Forbidden City"><path style="fill:#a84400" d="M85.333 106.667h341.333v64H85.333z"/><path style="fill:#851f00" d="M320 106.667h106.667v64H320z"/><path style="fill:#a84400" d="M64 213.333h384V320H64z"/><path style="fill:#851f00" d="M277.333 213.333H448V320H277.333z"/><path style="fill:#9d3100" d="M42.667 213.333h426.667V256H42.667z"/><path d="M426.667 170.667H85.333c0 21.333-42.666 42.666-64 42.666v21.334h469.334v-21.334c-21.334 0-64-21.333-64-42.666z" style="fill:#b37900"/><path d="M426.667 170.667H384V192h-42.667v21.333h149.334c-21.334 0-64-21.333-64-42.666z" style="fill:#9e6611"/><path d="M405.333 42.667s0-21.334-21.333-21.334c0 0 0 21.334-21.333 21.334H149.333C128 42.667 128 21.333 128 21.333c-21.333 0-21.333 21.334-21.333 21.334q0 64-64 64V128h426.666v-21.333q-64 0-64-64z" style="fill:#cb8c01"/><path d="M405.333 42.667s0-21.334-21.333-21.334c0 0 0 21.334-21.333 21.334V64h-21.334v21.333H384v21.334h85.333q-64 0-64-64z" style="fill:#b37900"/><path style="fill:#2f2038" d="M85.333 256h21.333v21.333H85.333z"/><path style="fill:#ba6b33" d="M106.667 256H128v42.667h-21.333zM64 256h21.333v85.333H64zM149.333 256h21.333v42.667h-21.333z"/><path style="fill:#a84400" d="M341.333 256h21.333v42.667h-21.333zM384 256h21.333v42.667H384zM426.667 256H448v85.333h-21.333z"/><path style="fill:#2f2038" d="M128 256h21.333v21.333H128zM192 256h21.333v21.333H192zM234.667 256h42.667v64h-42.667zM298.667 256H320v21.333h-21.333z"/><path style="fill:#25152e" d="M405.333 256h21.333v21.333h-21.333zM362.667 256H384v21.333h-21.333z"/><path style="fill:#701600" d="M234.667 149.333h42.667v21.333h-42.667zM341.333 149.333H384v21.333h-42.667zM128 149.333h42.667v21.333H128z"/><path style="fill:#93a3af" d="M21.333 320h469.333v21.333H21.333z"/><path d="M42.667 298.667H64S64 320 85.333 320s21.334-21.333 21.334-21.333H128v42.666H42.667zM149.333 298.667h21.334S170.667 320 192 320s21.333-21.333 21.333-21.333h21.334v42.666h-85.334zM277.333 298.667h21.334S298.667 320 320 320s21.333-21.333 21.333-21.333h21.334v42.666h-85.334zM384 298.667h21.333s0 21.333 21.334 21.333S448 298.667 448 298.667h21.333v42.666H384z" style="fill:#b8c3cb"/><path style="fill:#851f00" d="M21.333 341.333h469.333v149.333H21.333z"/><path style="fill:#701600" d="M490.667 490.667h-85.334v-64h-42.666v-21.334h42.666V384H384v-21.333h106.667v128zM320 384v21.333H213.333v21.334h128V384H320z"/><path style="fill:#9d3100" d="M128 405.333h42.667v21.333H128zM170.667 341.333h42.667v21.333h-42.667zM192 448h42.667v21.333H192zM64 405.333h42.667v21.333H64z"/><path d="M320 490.667h-21.333v-21.334A42.709 42.709 0 0 0 256 426.667v-21.334a64.07 64.07 0 0 1 64 64z" style="fill:#a84400"/><path d="M256 426.667a42.667 42.667 0 0 1 42.667 42.666v21.334h-85.334v-21.334A42.667 42.667 0 0 1 256 426.667z" style="fill:#2f2038"/><path d="M170.667 490.667h-21.334v-21.334a42.709 42.709 0 0 0-42.666-42.666v-21.334a64.07 64.07 0 0 1 64 64z" style="fill:#a84400"/><path d="M106.667 426.667a42.667 42.667 0 0 1 42.666 42.666v21.334H64v-21.334a42.667 42.667 0 0 1 42.667-42.666z" style="fill:#2f2038"/><path d="M85.333 490.667H64v-21.334a42.709 42.709 0 0 1 42.667-42.666V448a21.361 21.361 0 0 0-21.334 21.333zM234.667 490.667h-21.334v-21.334A42.709 42.709 0 0 1 256 426.667V448a21.361 21.361 0 0 0-21.333 21.333z" style="fill:#25152e"/><path d="M469.333 490.667H448v-21.334a42.709 42.709 0 0 0-42.667-42.666v-21.334a64.07 64.07 0 0 1 64 64z" style="fill:#851f00"/><path d="M405.333 426.667A42.667 42.667 0 0 1 448 469.333v21.334h-85.333v-21.334a42.667 42.667 0 0 1 42.666-42.666z" style="fill:#2f2038"/><path style="fill:#dfe4e7" d="M192 362.667h128v42.667H192z"/><path style="fill:#b37900" d="M42.667 106.667h426.667V128H42.667z"/><path style="fill:#9e6611" d="M298.667 106.667h170.667V128H298.667zM21.333 213.333h469.333v21.333H21.333z"/><path style="fill:#885400" d="M298.667 213.333h192v21.333h-192z"/><path style="fill:#d6a436" d="M128 42.667h42.667V64H128z"/><path style="fill:#cb8c01" d="M128 170.667h42.667V192H128zM192 192h42.667v21.333H192zM277.333 192H320v21.333h-42.667zM85.333 192h21.333v21.333H85.333zM234.667 170.667h42.667V192h-42.667z"/><path style="fill:#d6a436" d="M192 42.667h42.667V64H192zM256 42.667h42.667V64H256zM320 42.667h42.667V64H320zM362.667 85.333h42.667v21.333h-42.667zM298.667 85.333h42.667v21.333h-42.667zM234.667 85.333h42.667v21.333h-42.667zM170.667 85.333h42.667v21.333h-42.667z"/><path style="fill:#b37900" d="M149.333 64H192v21.333h-42.667z"/><path style="fill:#d6a436" d="M106.667 85.333h42.667v21.333h-42.667z"/><path style="fill:#b37900" d="M277.333 64H320v21.333h-42.667z"/><path style="fill:#9d3100" d="M64 128h384v21.333H64z"/><path style="fill:#ba6b33" d="M170.667 149.333H192v21.333h-21.333zM277.333 149.333h21.333v21.333h-21.333z"/><path style="fill:#a84400" d="M384 149.333h21.333v21.333H384z"/><path style="fill:#ba6b33" d="M277.333 256h21.333v42.667h-21.333z"/><path style="fill:#556e81" d="M128 320h21.333v21.333H128zM234.667 320H256v21.333h-21.333zM362.667 320H384v21.333h-21.333zM469.333 320h21.333v21.333h-21.333z"/><path d="M384 490.667h-21.333v-21.334a42.709 42.709 0 0 1 42.666-42.666V448A21.361 21.361 0 0 0 384 469.333zM277.333 256h-42.666v64H256v-42.667h21.333V256z" style="fill:#25152e"/><path style="fill:#9d3100" d="M21.333 362.667H64V384H21.333zM85.333 362.667H128V384H85.333z"/><path style="fill:#851f00" d="M405.333 362.667H448V384h-42.667z"/><path style="fill:#9d3100" d="M341.333 362.667H384V384h-42.667zM320 448h42.667v21.333H320z"/><path style="fill:#851f00" d="M469.333 405.333h21.333v21.333h-21.333z"/><path style="fill:#9d3100" d="M21.333 448H64v21.333H21.333z"/></g></svg>
           `,
-                    description: '모든 것이 완벽해야 직성이 풀리는 당신! 일정부터 숙소까지 완벽하게 계획합니다.',
-                    traits: ['완벽주의', '체계적', '책임감 강함', '정의로움'],
-                    strengths: ['철저한 계획', '높은 기준', '안전한 여행'],
-                    weaknesses: ['융통성 부족', '과도한 걱정', '스트레스'],
-                    travelMotivation: '완벽하게 계획된 여행으로 모든 것을 경험하고 싶어요',
-                    recommendations: ['유럽 문화 투어', '역사 유적지', '박물관 탐방'],
-                    color: '#DC2626',
-                    gradient: 'from-red-600-via-rose-600-to-pink-600',
+                    description:
+                        "모든 것이 완벽해야 직성이 풀리는 당신! 일정부터 숙소까지 완벽하게 계획합니다.",
+                    traits: ["완벽주의", "체계적", "책임감 강함", "정의로움"],
+                    strengths: ["철저한 계획", "높은 기준", "안전한 여행"],
+                    weaknesses: ["융통성 부족", "과도한 걱정", "스트레스"],
+                    travelMotivation:
+                        "완벽하게 계획된 여행으로 모든 것을 경험하고 싶어요",
+                    recommendations: [
+                        "유럽 문화 투어",
+                        "역사 유적지",
+                        "박물관 탐방",
+                    ],
+                    color: "#DC2626",
+                    gradient: "from-red-600-via-rose-600-to-pink-600",
                 },
                 2: {
                     type: 2,
-                    nickname: '파리',
-                    subtitle: 'The Travel Mate Angel',
+                    nickname: "파리",
+                    subtitle: "The Travel Mate Angel",
                     character: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><circle cx="170.667" cy="234.667"
              r="128" style="fill:#c1bcc3"/><ellipse cx="128" cy="192" rx="48.269" ry="36.202" transform="rotate(-45 128 192)" 
              style="fill:#928a97"/><ellipse cx="117.333" cy="245.333" rx="37.65" ry="25.1" transform="rotate(-45 117.333 245.333)" style="fill:#928a97"/><path d="M75.625 287.042c-13.73-13.73-15.333-35.594-4.656-56.052-13.396-23.355-7.063-56.26 16.344-79.677C102.124 136.5 121.322 128 139.978 128v21.333c-13.042 0-26.74 6.22-37.583 17.063-17.594 17.604-22.209 42.885-10.5 57.542l4.833 6.052-4.26 6.468c-8.844 13.438-9.552 27.709-1.76 35.5z" style="fill:#d5d2d7"/><path d="M162.132 157.868c-14.138-14.138-40.88-10.317-59.731 8.533s-22.67 45.592-8.533 59.73a27.195 27.195 0 0 0 4.192 3.198c-13.353 14.5-16.777 33.198-7.35 42.627 9.803 9.802 29.669 5.83 44.372-8.874 12.737-12.738 17.381-29.325 12.034-39.913a63.874 63.874 0 0 0 6.483-5.571c18.85-18.85 22.67-45.591 8.533-59.73z" style="fill:#928a97"/><path d="M90.708 271.958c-9.312-9.312-6.083-28.03 7.355-42.625l15.687 14.459c-6.323 6.864-7.344 13.062-7 14.552zM97.48 228.948a22.382 22.382 0 0 1-3.595-2.792c-14.145-14.156-10.302-40.937 8.51-59.76 18.095-18.083 46.084-22.146 59.73-8.542l-15.063 15.104c-1.895-1.896-4.895-2.291-7.083-2.291-7.208 0-15.833 4.145-22.5 10.812-10.541 10.552-13.302 24.792-8.562 29.542z" style="fill:#7a7081"/><ellipse cx="192" cy="234.667" rx="26.979" ry="13.489" transform="rotate(-45 192 234.667)" style="fill:#7a7081"/><path d="M182.46 246.46a50.449 50.449 0 0 0-6.806 8.442c6.148 2.457 16.729-1.541 25.885-10.698a50.441 50.441 0 0 0 6.807-8.44c-6.148-2.457-16.729 1.54-25.885 10.697z" style="fill:#928a97"/><path d="M170.667 362.604a127.627 127.627 0 0 1-90.51-37.427l30.166-30.167A85.339 85.339 0 0 0 231.01 174.323l30.167-30.167a127.938 127.938 0 0 1-90.51 218.448z" style="fill:#928a97"/><ellipse cx="192" cy="138.667" rx="22.127" ry="8.893" transform="rotate(-16.899 192 138.667)" style="fill:#7a7081"/><path style="fill:#d29e79" d="M256 21.333h21.333v32H256z"/><path d="m126.552 485.375-18.437-10.75C109.594 472.094 256 219.125 256 53.333h21.333c0 171.573-144.625 421.49-150.78 432.042z" style="fill:#a84400"/><path transform="rotate(-45 277.333 234.667)" style="fill:#851f00" d="M266.668 189.412h21.331v90.51h-21.331z"/><path d="M406.781 485.375C400.625 474.823 256 224.906 256 53.333h21.333c0 165.865 146.407 418.76 147.886 421.292z" style="fill:#a84400"/><path transform="rotate(-45 256 234.667)" style="fill:#851f00" d="M210.745 224.001h90.51v21.331h-90.51z"/><path style="fill:#851f00" d="M202.667 298.667h42.667V320h-42.667zM288 298.667h42.667V320H288zM256 352h21.333v42.667H256z"/><path d="m169.542 484.77-19.084-9.54 24.313-48.636c26.156-52.302 50.479-106.459 72.281-160.938l1.177-2.948 19.813 7.917-1.177 2.948c-22.032 55.042-46.594 109.73-73.01 162.562z" style="fill:#a84400"/><path d="m363.792 484.77-24.313-48.635c-26.416-52.833-50.979-107.52-73.01-162.562l-1.177-2.948 19.812-7.917 1.177 2.948c21.802 54.48 46.125 108.636 72.281 160.938l24.313 48.635z" style="fill:#a84400"/><path style="fill:#851f00" d="M245.333 170.667H288V192h-42.667zM341.333 428h51.333v21.333h-51.333z"/><path style="fill:#ba6b33" d="M192 256h149.333v21.333H192zM234.667 42.667h64V64h-64z"/><path style="fill:#d9ad8e" d="M192 256h21.333v21.333H192zM234.667 42.667H256V64h-21.333z"/><path style="fill:#851f00" d="M160 384h213.333v21.333H160zM140.667 426.667h49.271V448h-49.271z"/><path style="fill:#ba6b33" d="M149.333 341.333H384v21.333H149.333z"/><path d="M362.667 480h-21.334A74.667 74.667 0 1 0 192 480h-21.333a96 96 0 0 1 192 0z" style="fill:#851f00"/><path style="fill:#ba6b33" d="M85.333 469.333h128v21.333h-128zM320 469.333h128v21.333H320z"/><path style="fill:#d9ad8e" d="M149.333 341.333h21.333v21.333h-21.333z"/><path style="fill:#851f00" d="M256 64h21.333v21.333H256z"/></svg>`,
-                    description: '동행자의 행복이 곧 나의 행복! 모두를 챙기는 따뜻한 여행 동반자.',
-                    traits: ['배려심 가득', '친절함', '감정 이입', '관계 중시'],
-                    strengths: ['분위기 조율', '갈등 해결', '팀워크'],
-                    weaknesses: ['자기 희생', '인정 욕구', '경계 설정 어려움'],
-                    travelMotivation: '함께하는 사람들과 좋은 추억을 만들고 싶어요',
-                    recommendations: ['단체 패키지 투어', '봉사 여행', '현지 교류'],
-                    color: '#EA580C',
-                    gradient: 'from-orange-600-via-amber-600-to-yellow-600',
+                    description:
+                        "동행자의 행복이 곧 나의 행복! 모두를 챙기는 따뜻한 여행 동반자.",
+                    traits: ["배려심 가득", "친절함", "감정 이입", "관계 중시"],
+                    strengths: ["분위기 조율", "갈등 해결", "팀워크"],
+                    weaknesses: ["자기 희생", "인정 욕구", "경계 설정 어려움"],
+                    travelMotivation:
+                        "함께하는 사람들과 좋은 추억을 만들고 싶어요",
+                    recommendations: [
+                        "단체 패키지 투어",
+                        "봉사 여행",
+                        "현지 교류",
+                    ],
+                    color: "#EA580C",
+                    gradient: "from-orange-600-via-amber-600-to-yellow-600",
                 },
                 3: {
                     type: 3,
-                    nickname: '뉴욕',
-                    subtitle: 'The Proof-Shot Producer',
+                    nickname: "뉴욕",
+                    subtitle: "The Proof-Shot Producer",
                     character: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M213.333 320v-85.333H320v43.402a20.598 20.598 0 0 0 20.598 20.598l.735 21.333z" style="fill:#2c2e2b"/><path d="M213.333 234.667 234.667 256v21.333L256 298.667h21.333l21.334-21.334V256L320 234.667V224a53.333 53.333 0 0 0-53.333-53.333A53.333 53.333 0 0 0 213.333 224z" style="fill:#555754"/><path style="fill:#3d3f3c" d="m277.333 298.667 21.334-21.334V256h-21.334v42.667zM277.333 171.742v41.591h21.334V256L320 234.667V224a53.343 53.343 0 0 0-42.667-52.258z"/><path style="fill:#555754" d="m448 490.667 21.333-64-22.129-21.334h-41.871L384 320H213.333v-42.667h-42.666l-21.334-42.666L128 128H85.333V405.333L64 448l42.667 42.667H448z"/><path style="fill:#656764" d="M234.667 320h64v21.333h-64z"/><path style="fill:#3d3f3c" d="M170.667 405.333v-128l-21.334-42.666L128 128H93.091L128 320v85.333h42.667z"/><path style="fill:#777976" d="M128 384h-21.333v-74.667L85.396 118.51l21.208-2.354 21.334 192L128 384z"/><path style="fill:#2c2e2b" d="M192 298.667h-34.521l-28.781-58.417-18.177-90.917H96V128h32l21.333 106.667 21.334 42.666H192v21.334z"/><path style="fill:#656764" d="M206.81 490.667h22.191l26.593-93.073L256 320h-21.333v73.177l-27.857 97.49z"/><path style="fill:#9a9c99" d="M85.333 42.667h21.333v128H85.333z"/><path style="fill:#3d3f3c" d="M64 42.667h64v42.667H64z"/><path style="fill:#666865" d="M42.667 21.333h106.667V64H42.667z"/><path style="fill:#555754" d="M128 21.333h21.333V64H128z"/><path style="fill:#878986" d="M42.667 21.333h106.667v21.333H42.667z"/><path style="fill:#9a9c99" d="M42.667 21.333H64v21.333H42.667z"/><path style="fill:#878986" d="M64 85.333h42.667v21.333H64z"/><path style="fill:#777976" d="M64 106.667h42.667V128H64z"/><path style="fill:#878986" d="M64 128h21.333v21.333H64z"/><path style="fill:#828481" d="M42.667 64H64v21.333H42.667z"/><path style="fill:#555754" d="M106.667 85.333H128V128h-21.333z"/><path style="fill:#777976" d="m213.333 490.667 64-64L320 320h64l21.333 85.333h41.871l22.129 21.334-21.333 64H213.333z"/><path style="fill:#9a9c99" d="m372.324 490.667 33.009-85.334h41.871l22.129 21.334-21.333 64h-75.676z"/><path style="fill:#b4b6b3" d="m452.365 410.309-27.243 80.358H448l21.333-64-16.968-16.358z"/><path style="fill:#3d3f3c" d="M256 128h21.333v64H256z"/><path transform="rotate(-30 234.667 168.574)" style="fill:#3d3f3c" d="M224 136.574h21.333v64H224z"/><path transform="rotate(-60 211.241 192)" style="fill:#3d3f3c" d="M200.574 160h21.333v64h-21.333z"/><path transform="rotate(-90 213.333 224)" style="fill:#3d3f3c" d="M202.667 202.667H224v42.667h-21.333z"/><path transform="rotate(-90 320 224)" style="fill:#3d3f3c" d="M309.333 202.667h21.333v42.667h-21.333z"/><path transform="rotate(-120 322.092 192)" style="fill:#3d3f3c" d="M311.426 160h21.333v64h-21.333z"/><path transform="rotate(-150 298.667 168.574)" style="fill:#3d3f3c" d="M288 136.574h21.333v64H288z"/><path d="M298.667 224h-21.334A10.667 10.667 0 1 0 256 224h-21.333a32 32 0 0 1 64 0z" style="fill:#777976"/><path style="fill:#2c2e2b" d="M168.333 469.333h-55.416l-24.459-24.458 15.084-15.083L121.75 448h29.917l19-75.979v-94.688H192l-.323 98.584-23.344 93.416z"/><path style="fill:#3d3f3c" d="m207.668 490.667 26.592-93.073.262-77.594h-21.189v73.177l-27.856 97.49h22.191z"/><path style="fill:#2c2e2b" d="m213.333 490.667 62.448-62.448L319.949 320h-22.924l-37.879 94.688-75.979 75.979h30.166zM85.333 368.917v30.166l27.584 27.584h57.75v-64h-21.334v42.666H121.75l-36.417-36.416z"/><path style="fill:#878986" d="M192 277.333h21.333v64H192zM234.667 320H256v21.333h-21.333z"/><path style="fill:#3d3f3c" d="m313.315 490.667 48.487-113.136-19.604-8.396-52.085 121.532h23.202z"/><path style="fill:#9a9c99" d="m334.648 490.667 48.487-113.136-19.604-8.396-52.084 121.532h23.201zM362.667 320H384v21.333h-21.333z"/></svg>`,
-                    description: '여행도 성공적이어야 해! 핫플만 골라가는 트렌디한 성취자.',
-                    traits: ['목표 지향', '효율적', '이미지 중시', '경쟁심'],
-                    strengths: ['빠른 실행력', '정보 수집', 'SNS 마스터'],
-                    weaknesses: ['진정성 부족', '과로', '비교 의식'],
-                    travelMotivation: '멋진 여행으로 성공적인 경험을 만들고 싶어요',
-                    recommendations: ['핫플 투어', 'SNS 명소', '럭셔리 여행'],
-                    color: '#EAB308',
-                    gradient: 'from-yellow-600-via-amber-600-to-orange-600',
+                    description:
+                        "여행도 성공적이어야 해! 핫플만 골라가는 트렌디한 성취자.",
+                    traits: ["목표 지향", "효율적", "이미지 중시", "경쟁심"],
+                    strengths: ["빠른 실행력", "정보 수집", "SNS 마스터"],
+                    weaknesses: ["진정성 부족", "과로", "비교 의식"],
+                    travelMotivation:
+                        "멋진 여행으로 성공적인 경험을 만들고 싶어요",
+                    recommendations: ["핫플 투어", "SNS 명소", "럭셔리 여행"],
+                    color: "#EAB308",
+                    gradient: "from-yellow-600-via-amber-600-to-orange-600",
                 },
             };
 
             // ------------------ STATE ------------------
             // 현재 앱의 단계를 나타냅니다 ('intro', 'test', 'result').
-            let currentStep = 'intro';
+            let currentStep = "intro";
             // 현재 보여지는 질문의 인덱스를 나타냅니다.
             let currentQuestion = 0;
             // 사용자의 답변들을 저장하는 배열입니다.
@@ -1524,36 +1658,42 @@
 
             // ------------------ DOM ELEMENTS ------------------
             // 인트로 화면 섹션 DOM 엘리먼트
-            const introSection = document.getElementById('intro-section');
+            const introSection = document.getElementById("intro-section");
             // 테스트 화면 섹션 DOM 엘리먼트
-            const testSection = document.getElementById('test-section');
+            const testSection = document.getElementById("test-section");
             // 결과 화면 섹션 DOM 엘리먼트
-            const resultSection = document.getElementById('result-section');
+            const resultSection = document.getElementById("result-section");
 
             // 테스트 시작 버튼 DOM 엘리먼트
-            const startBtn = document.getElementById('start-btn');
+            const startBtn = document.getElementById("start-btn");
             // 이전 질문 버튼 DOM 엘리먼트
-            const prevBtn = document.getElementById('prev-btn');
+            const prevBtn = document.getElementById("prev-btn");
             // 다음 질문 버튼 DOM 엘리먼트
-            const nextBtn = document.getElementById('next-btn');
-            const navButtons = document.querySelector('.nav-buttons');
+            const nextBtn = document.getElementById("next-btn");
+            const navButtons = document.querySelector(".nav-buttons");
 
             // 성격 유형 미리보기 컨테이너 DOM 엘리먼트
-            const personalityPreview = document.getElementById('personality-preview');
+            const personalityPreview = document.getElementById(
+                "personality-preview",
+            );
             // 진행률 레이블 (예: "질문 1 / 7") DOM 엘리먼트
-            const progressLabel = document.getElementById('progress-label');
+            const progressLabel = document.getElementById("progress-label");
             // 진행률 백분율 (예: "11%") DOM 엘리먼트
-            const progressPercentage = document.getElementById('progress-percentage');
+            const progressPercentage = document.getElementById(
+                "progress-percentage",
+            );
             // 진행률 바의 내부 엘리먼트 (너비 조절로 진행률 시각화) DOM 엘리먼트
-            const progressBarInner = document.getElementById('progress-bar-inner');
+            const progressBarInner =
+                document.getElementById("progress-bar-inner");
             // 질문 제목 DOM 엘리먼트
-            const questionTitle = document.getElementById('question-title');
+            const questionTitle = document.getElementById("question-title");
             // 질문 옵션(선택지) 컨테이너 DOM 엘리먼트
-            const optionsContainer = document.getElementById('options-container');
+            const optionsContainer =
+                document.getElementById("options-container");
 
             // 마지막 버튼
-            const finalCtaWrap = document.getElementById('final-cta-wrap');
-            const finalCtaBtn = document.getElementById('final-cta-btn');
+            const finalCtaWrap = document.getElementById("final-cta-wrap");
+            const finalCtaBtn = document.getElementById("final-cta-btn");
 
             // ------------------ FUNCTIONS ------------------
 
@@ -1561,16 +1701,18 @@
             // 'intro', 'test', 'result' 세 가지 단계 중 하나를 인자로 받습니다.
             function showStep(step) {
                 currentStep = step;
-                [introSection, testSection, resultSection].forEach((section) => {
-                    section.classList.remove('active');
-                });
+                [introSection, testSection, resultSection].forEach(
+                    (section) => {
+                        section.classList.remove("active");
+                    },
+                );
 
-                if (step === 'intro') {
-                    introSection.classList.add('active');
-                } else if (step === 'test') {
-                    testSection.classList.add('active');
-                } else if (step === 'result') {
-                    resultSection.classList.add('active');
+                if (step === "intro") {
+                    introSection.classList.add("active");
+                } else if (step === "test") {
+                    testSection.classList.add("active");
+                } else if (step === "result") {
+                    resultSection.classList.add("active");
                 }
             }
 
@@ -1588,7 +1730,7 @@
                 currentQuestion = 0;
 
                 if (nextBtn) nextBtn.disabled = true;
-                if (prevBtn) prevBtn.style.display = 'none';
+                if (prevBtn) prevBtn.style.display = "none";
 
                 // 진행률 UI 초기화 (0% 시작)
                 progressLabel.textContent = `질문 1 / ${questions.length}`;
@@ -1599,10 +1741,10 @@
             // 인트로 화면의 성향 미리보기 섹션을 렌더링하는 함수입니다.
             // enneagramTypes 객체의 데이터를 사용하여 각 성향별 이모지와 별명을 표시합니다.
             function renderIntro() {
-                personalityPreview.innerHTML = '';
+                personalityPreview.innerHTML = "";
                 Object.values(enneagramTypes).forEach((type) => {
-                    const previewItem = document.createElement('div');
-                    previewItem.className = 'personality-preview-item';
+                    const previewItem = document.createElement("div");
+                    previewItem.className = "personality-preview-item";
                     previewItem.innerHTML = `
       <div class="emoji">${type.character}</div>
       <div class="name">${type.nickname}</div>
@@ -1615,15 +1757,21 @@
             function renderQuestion() {
                 const q = questions[currentQuestion];
 
-                const committed = committedScoreByQuestion[currentQuestion] != null;
+                const committed =
+                    committedScoreByQuestion[currentQuestion] != null;
                 const pending = pendingByQuestion[currentQuestion] || null;
 
                 // 멀티/싱글 공통: 화면에 표시할 선택 상태 만들기
                 let displaySet = new Set();
                 if (q.multi) {
-                    if (pending && pending.optionIndexes) displaySet = new Set(pending.optionIndexes);
-                    else if (Array.isArray(selectedOptionIndex[currentQuestion]))
-                        displaySet = new Set(selectedOptionIndex[currentQuestion]);
+                    if (pending && pending.optionIndexes)
+                        displaySet = new Set(pending.optionIndexes);
+                    else if (
+                        Array.isArray(selectedOptionIndex[currentQuestion])
+                    )
+                        displaySet = new Set(
+                            selectedOptionIndex[currentQuestion],
+                        );
                 } else {
                     let displayIndex = null;
                     if (pending) displayIndex = pending.optionIndex;
@@ -1636,15 +1784,17 @@
                 questionTitle.innerHTML = `
     <div style="font-size:2.25rem;font-weight:800;margin-bottom:0.35rem;">${q.title}</div>
     <div style="font-size:1.25rem;color:var(--text-light);font-weight:600;">
-      ${q.subtitle} ${q.multi ? '<span style="font-size:0.95rem;color:#999;">(복수 선택 가능)</span>' : ''}
+      ${q.subtitle} ${q.multi ? '<span style="font-size:0.95rem;color:#999;">(복수 선택 가능)</span>' : ""}
     </div>
   `;
 
-                optionsContainer.innerHTML = '';
+                optionsContainer.innerHTML = "";
                 q.options.forEach((opt, optIndex) => {
-                    const btn = document.createElement('button');
-                    btn.type = 'button';
-                    btn.className = displaySet.has(optIndex) ? 'option-button is-selected' : 'option-button';
+                    const btn = document.createElement("button");
+                    btn.type = "button";
+                    btn.className = displaySet.has(optIndex)
+                        ? "option-button is-selected"
+                        : "option-button";
 
                     btn.innerHTML = `
       <div class="option-icon"><span>${opt.icon}</span></div>
@@ -1652,17 +1802,23 @@
       <div class="option-subtitle">${opt.desc}</div>
     `;
 
-                    btn.addEventListener('click', () => selectOption(opt.score, optIndex));
+                    btn.addEventListener("click", () =>
+                        selectOption(opt.score, optIndex),
+                    );
                     optionsContainer.appendChild(btn);
                 });
 
-                prevBtn.style.display = currentQuestion > 0 ? 'flex' : 'none';
-                if (currentQuestion === 0) navButtons.classList.add('only-next');
-                else navButtons.classList.remove('only-next');
+                prevBtn.style.display = currentQuestion > 0 ? "flex" : "none";
+                if (currentQuestion === 0)
+                    navButtons.classList.add("only-next");
+                else navButtons.classList.remove("only-next");
 
                 // Next 활성화 규칙
                 if (q.multi) {
-                    const hasPending = pending && pending.optionIndexes && pending.optionIndexes.length > 0;
+                    const hasPending =
+                        pending &&
+                        pending.optionIndexes &&
+                        pending.optionIndexes.length > 0;
                     const hasCommitted =
                         committed &&
                         Array.isArray(selectedOptionIndex[currentQuestion]) &&
@@ -1682,28 +1838,34 @@
 
                 // ---- 마지막 질문 CTA 노출/활성화 ----
                 const isLast = currentQuestion === questions.length - 1;
-                if (finalCtaWrap) finalCtaWrap.style.display = isLast ? 'block' : 'none';
+                if (finalCtaWrap)
+                    finalCtaWrap.style.display = isLast ? "block" : "none";
 
                 if (isLast) {
-                    nextBtn.style.display = 'none';
-                    navButtons.classList.add('only-prev');
-                    navButtons.classList.remove('only-next');
+                    nextBtn.style.display = "none";
+                    navButtons.classList.add("only-prev");
+                    navButtons.classList.remove("only-next");
                 } else {
-                    nextBtn.style.display = 'inline-flex';
-                    navButtons.classList.remove('only-prev');
+                    nextBtn.style.display = "inline-flex";
+                    navButtons.classList.remove("only-prev");
                 }
 
                 // CTA 버튼 활성화 조건 = 마지막 질문에서 선택(임시 or 확정) 존재
                 if (isLast && finalCtaBtn) {
                     const hasPending = !!pendingByQuestion[currentQuestion];
-                    const hasCommitted = committedScoreByQuestion[currentQuestion] != null;
+                    const hasCommitted =
+                        committedScoreByQuestion[currentQuestion] != null;
 
                     // 멀티면 선택 개수 체크, 싱글이면 존재 여부 체크
                     let ok = false;
                     if (q.multi) {
-                        const pendingSel = pendingByQuestion[currentQuestion]?.optionIndexes?.length > 0;
+                        const pendingSel =
+                            pendingByQuestion[currentQuestion]?.optionIndexes
+                                ?.length > 0;
                         const committedSel =
-                            Array.isArray(selectedOptionIndex[currentQuestion]) &&
+                            Array.isArray(
+                                selectedOptionIndex[currentQuestion],
+                            ) &&
                             selectedOptionIndex[currentQuestion].length > 0;
                         ok = pendingSel || (hasCommitted && committedSel);
                     } else {
@@ -1750,8 +1912,11 @@
                     };
 
                     // UI 반영
-                    const buttons = optionsContainer.querySelectorAll('.option-button');
-                    buttons.forEach((b, i) => b.classList.toggle('is-selected', set.has(i)));
+                    const buttons =
+                        optionsContainer.querySelectorAll(".option-button");
+                    buttons.forEach((b, i) =>
+                        b.classList.toggle("is-selected", set.has(i)),
+                    );
 
                     nextBtn.disabled = set.size === 0;
                     const isLast = currentQuestion === questions.length - 1;
@@ -1764,9 +1929,11 @@
                 // 싱글 선택(기존 로직)
                 pendingByQuestion[currentQuestion] = { scoreObj, optionIndex };
 
-                const buttons = optionsContainer.querySelectorAll('.option-button');
-                buttons.forEach((b) => b.classList.remove('is-selected'));
-                if (buttons[optionIndex]) buttons[optionIndex].classList.add('is-selected');
+                const buttons =
+                    optionsContainer.querySelectorAll(".option-button");
+                buttons.forEach((b) => b.classList.remove("is-selected"));
+                if (buttons[optionIndex])
+                    buttons[optionIndex].classList.add("is-selected");
 
                 nextBtn.disabled = false;
 
@@ -1777,14 +1944,16 @@
             }
 
             function handleNext() {
-                const alreadyCommitted = committedScoreByQuestion[currentQuestion] != null;
+                const alreadyCommitted =
+                    committedScoreByQuestion[currentQuestion] != null;
                 const pending = pendingByQuestion[currentQuestion];
 
                 if (!pending && !alreadyCommitted) return;
 
                 // 교체인 경우: 기존 점수 빼기
                 if (alreadyCommitted && pending) {
-                    const oldScoreObj = committedScoreByQuestion[currentQuestion];
+                    const oldScoreObj =
+                        committedScoreByQuestion[currentQuestion];
                     if (oldScoreObj) {
                         Object.entries(oldScoreObj).forEach(([type, value]) => {
                             scoreBoard[type] = (scoreBoard[type] || 0) - value;
@@ -1799,7 +1968,8 @@
 
                     committedScoreByQuestion[currentQuestion] = scoreObj;
                     // 멀티면 배열 저장, 싱글이면 숫자 저장
-                    selectedOptionIndex[currentQuestion] = optionIndexes ?? optionIndex;
+                    selectedOptionIndex[currentQuestion] =
+                        optionIndexes ?? optionIndex;
 
                     Object.entries(scoreObj).forEach(([type, value]) => {
                         scoreBoard[type] = (scoreBoard[type] || 0) + value;
@@ -1815,13 +1985,14 @@
                     renderQuestion();
                 } else {
                     calculateResult();
-                    showStep('result');
+                    showStep("result");
                     renderResult();
                 }
             }
 
             function commitCurrentQuestionIfNeeded() {
-                const alreadyCommitted = committedScoreByQuestion[currentQuestion] != null;
+                const alreadyCommitted =
+                    committedScoreByQuestion[currentQuestion] != null;
                 const pending = pendingByQuestion[currentQuestion];
 
                 // 아무 선택도 없으면 종료
@@ -1829,7 +2000,8 @@
 
                 // 교체인 경우: 기존 점수 빼기
                 if (alreadyCommitted && pending) {
-                    const oldScoreObj = committedScoreByQuestion[currentQuestion];
+                    const oldScoreObj =
+                        committedScoreByQuestion[currentQuestion];
                     if (oldScoreObj) {
                         Object.entries(oldScoreObj).forEach(([type, value]) => {
                             scoreBoard[type] = (scoreBoard[type] || 0) - value;
@@ -1843,7 +2015,8 @@
                     const { scoreObj, optionIndex, optionIndexes } = pending;
 
                     committedScoreByQuestion[currentQuestion] = scoreObj;
-                    selectedOptionIndex[currentQuestion] = optionIndexes ?? optionIndex;
+                    selectedOptionIndex[currentQuestion] =
+                        optionIndexes ?? optionIndex;
 
                     Object.entries(scoreObj).forEach(([type, value]) => {
                         scoreBoard[type] = (scoreBoard[type] || 0) + value;
@@ -1868,10 +2041,13 @@
                     savedAt: new Date().toISOString(),
                 };
 
-                localStorage.setItem('yeobaek_test_result', JSON.stringify(payload));
+                localStorage.setItem(
+                    "yeobaek_test_result",
+                    JSON.stringify(payload),
+                );
 
                 // 메인으로 이동
-                window.location.href = 'Main.html';
+                window.location.href = "Main.html";
             }
 
             // 이전 질문으로 돌아가는 함수입니다.
@@ -1920,17 +2096,17 @@
                 currentQuestion = 0;
                 resultType = null;
                 resetScoreBoard();
-                showStep('intro');
+                showStep("intro");
             }
 
             // 최종 결과를 렌더링하는 함수입니다.
             // 먼저 카드 획득 화면을 보여준 후, 사용자가 버튼을 클릭하면 상세 결과 카드와 추천, 공유 옵션을 표시합니다.
             function renderResult() {
                 const resultData = enneagramTypes[resultType];
-                resultSection.innerHTML = '';
+                resultSection.innerHTML = "";
 
-                const acquisitionScreen = document.createElement('div');
-                acquisitionScreen.className = 'acquisition-screen';
+                const acquisitionScreen = document.createElement("div");
+                acquisitionScreen.className = "acquisition-screen";
                 acquisitionScreen.innerHTML = `
     <div class="acquisition-content">
       <div class="floating-card-container">
@@ -1947,19 +2123,20 @@
   `;
                 resultSection.appendChild(acquisitionScreen);
 
-                const cardVisual = acquisitionScreen.querySelector('.card-visual');
+                const cardVisual =
+                    acquisitionScreen.querySelector(".card-visual");
                 cardVisual.animate(
                     [
-                        { transform: 'scale(0) rotateY(0)', opacity: 0 },
-                        { transform: 'scale(1.2) rotateY(180deg)', opacity: 1 },
-                        { transform: 'scale(1) rotateY(360deg)', opacity: 1 },
+                        { transform: "scale(0) rotateY(0)", opacity: 0 },
+                        { transform: "scale(1.2) rotateY(180deg)", opacity: 1 },
+                        { transform: "scale(1) rotateY(360deg)", opacity: 1 },
                     ],
-                    { duration: 1500, easing: 'ease-in-out' },
+                    { duration: 1500, easing: "ease-in-out" },
                 );
 
-                const resultView = document.createElement('div');
-                resultView.className = 'result-view';
-                resultView.style.display = 'none';
+                const resultView = document.createElement("div");
+                resultView.className = "result-view";
+                resultView.style.display = "none";
                 resultView.innerHTML = `
     <div class="result-header">
       <h1 class="result-title">당신의 여행 성향을 찾았어요!</h1>
@@ -1981,7 +2158,7 @@
                 </div>
               `,
               )
-              .join('')}
+              .join("")}
         </div>
       </div>
 
@@ -2016,39 +2193,49 @@
   `;
                 resultSection.appendChild(resultView);
 
-                acquisitionScreen.querySelector('.reveal-button').addEventListener('click', () => {
-                    acquisitionScreen.style.display = 'none';
-                    resultView.style.display = 'block';
-                    renderFlippableCard(resultData);
-                });
+                acquisitionScreen
+                    .querySelector(".reveal-button")
+                    .addEventListener("click", () => {
+                        acquisitionScreen.style.display = "none";
+                        resultView.style.display = "block";
+                        renderFlippableCard(resultData);
+                    });
 
-                document.querySelector('.share-button').addEventListener('click', async () => {
-                    const shareText = `나의 여행 성향은 유형 ${resultData.type} (${resultData.nickname})!`;
-                    try {
-                        if (navigator.share) {
-                            await navigator.share({
-                                title: 'AI 여행 성향 테스트',
-                                text: shareText,
-                            });
-                        } else {
-                            await navigator.clipboard.writeText(shareText);
-                            alert('공유 문구를 클립보드에 복사했어요!');
+                document
+                    .querySelector(".share-button")
+                    .addEventListener("click", async () => {
+                        const shareText = `나의 여행 성향은 유형 ${resultData.type} (${resultData.nickname})!`;
+                        try {
+                            if (navigator.share) {
+                                await navigator.share({
+                                    title: "AI 여행 성향 테스트",
+                                    text: shareText,
+                                });
+                            } else {
+                                await navigator.clipboard.writeText(shareText);
+                                alert("공유 문구를 클립보드에 복사했어요!");
+                            }
+                        } catch (e) {
+                            // 사용자가 공유 취소한 경우 등은 조용히 무시
                         }
-                    } catch (e) {
-                        // 사용자가 공유 취소한 경우 등은 조용히 무시
-                    }
-                });
+                    });
 
-                document.getElementById('get-recommendations-btn').addEventListener('click', () => {
-                    alert('맞춤 여행 추천받기 기능은 아직 개발 중입니다!');
-                });
-                document.getElementById('restart-btn').addEventListener('click', handleRestart);
+                document
+                    .getElementById("get-recommendations-btn")
+                    .addEventListener("click", () => {
+                        alert("맞춤 여행 추천받기 기능은 아직 개발 중입니다!");
+                    });
+                document
+                    .getElementById("restart-btn")
+                    .addEventListener("click", handleRestart);
             }
 
             // 인터랙티브한 뒤집기 가능한 3D 결과 카드를 렌더링하고 관리하는 함수입니다.
             // 스파클 및 틸트 효과를 포함하여 카드의 앞면(요약)과 뒷면(상세 정보)을 표시합니다.
             function renderFlippableCard(data) {
-                const container = document.querySelector('.interactive-card-container');
+                const container = document.querySelector(
+                    ".interactive-card-container",
+                );
                 container.innerHTML = `
     <div class="card-scene">
       <div class="card-object">
@@ -2081,21 +2268,21 @@
             <div class="back-section">
               <h4 class="back-section-title">주요 특징</h4>
               <div class="traits-grid">
-                ${data.traits.map((trait) => `<div class="trait-item">${trait}</div>`).join('')}
+                ${data.traits.map((trait) => `<div class="trait-item">${trait}</div>`).join("")}
               </div>
             </div>
 
             <div class="back-section">
               <h4 class="back-section-title">여행 강점</h4>
               <ul class="strengths-list">
-                ${data.strengths.map((s) => `<li>${s}</li>`).join('')}
+                ${data.strengths.map((s) => `<li>${s}</li>`).join("")}
               </ul>
             </div>
 
             <div class="back-section">
               <h4 class="back-section-title">추천 여행 스타일</h4>
               <div class="recommendations-list">
-                ${data.recommendations.map((r) => `<span>#${r}</span>`).join(' ')}
+                ${data.recommendations.map((r) => `<span>#${r}</span>`).join(" ")}
               </div>
             </div>
           </div>
@@ -2104,27 +2291,28 @@
     </div>
   `;
 
-                const cardObject = container.querySelector('.card-object');
-                const sparkleOverlay = container.querySelector('.sparkle-overlay');
+                const cardObject = container.querySelector(".card-object");
+                const sparkleOverlay =
+                    container.querySelector(".sparkle-overlay");
 
                 for (let i = 0; i < 30; i++) {
-                    const sparkle = document.createElement('div');
-                    sparkle.className = 'card-sparkle';
+                    const sparkle = document.createElement("div");
+                    sparkle.className = "card-sparkle";
                     sparkle.style.left = `${Math.random() * 100}%`;
                     sparkle.style.top = `${Math.random() * 100}%`;
                     sparkle.style.animationDelay = `${Math.random() * 2}s`;
                     sparkleOverlay.appendChild(sparkle);
                 }
 
-                cardObject.addEventListener('click', () => {
-                    cardObject.classList.toggle('is-flipped');
-                    cardObject.style.setProperty('--rotate-x', '0deg');
-                    cardObject.style.setProperty('--rotate-y', '0deg');
+                cardObject.addEventListener("click", () => {
+                    cardObject.classList.toggle("is-flipped");
+                    cardObject.style.setProperty("--rotate-x", "0deg");
+                    cardObject.style.setProperty("--rotate-y", "0deg");
                 });
 
-                const cardScene = container.querySelector('.card-scene');
-                cardScene.addEventListener('mousemove', (e) => {
-                    if (cardObject.classList.contains('is-flipped')) return;
+                const cardScene = container.querySelector(".card-scene");
+                cardScene.addEventListener("mousemove", (e) => {
+                    if (cardObject.classList.contains("is-flipped")) return;
 
                     const rect = cardScene.getBoundingClientRect();
                     const centerX = rect.left + rect.width / 2;
@@ -2135,33 +2323,33 @@
                     const rotateX = (mouseY / rect.height) * -30;
                     const rotateY = (mouseX / rect.width) * 30;
 
-                    cardObject.style.setProperty('--rotate-x', `${rotateX}deg`);
-                    cardObject.style.setProperty('--rotate-y', `${rotateY}deg`);
+                    cardObject.style.setProperty("--rotate-x", `${rotateX}deg`);
+                    cardObject.style.setProperty("--rotate-y", `${rotateY}deg`);
                 });
 
-                cardScene.addEventListener('mouseleave', () => {
-                    cardObject.style.setProperty('--rotate-x', '0deg');
-                    cardObject.style.setProperty('--rotate-y', '0deg');
+                cardScene.addEventListener("mouseleave", () => {
+                    cardObject.style.setProperty("--rotate-x", "0deg");
+                    cardObject.style.setProperty("--rotate-y", "0deg");
                 });
             }
 
             // ------------------ INITIALIZATION ------------------
 
             // 시작 버튼 클릭 시 테스트 섹션으로 이동하고 첫 질문을 렌더링합니다.
-            startBtn.addEventListener('click', () => {
+            startBtn.addEventListener("click", () => {
                 resetScoreBoard();
                 currentQuestion = 0;
-                showStep('test');
+                showStep("test");
                 renderQuestion();
             });
 
             // 이전 버튼 클릭 시 이전 질문으로 돌아갑니다.
-            prevBtn.addEventListener('click', handlePrevious);
+            prevBtn.addEventListener("click", handlePrevious);
 
             // 다음 버튼
-            nextBtn.addEventListener('click', handleNext);
+            nextBtn.addEventListener("click", handleNext);
 
-            finalCtaBtn?.addEventListener('click', () => {
+            finalCtaBtn?.addEventListener("click", () => {
                 // 마지막 질문에서만 동작하도록 안전장치
                 if (currentQuestion !== questions.length - 1) return;
                 saveWeightsAndGoMain();
@@ -2169,8 +2357,12 @@
 
             // 페이지 로드 시 인트로 화면을 렌더링하고 표시합니다.
             renderIntro();
-            showStep('intro');
+            showStep("intro");
             resetScoreBoard();
+            // 마지막 질문 CTA 버튼 클릭 시 이동
+            finalCtaBtn.addEventListener("click", () => {
+                window.location.href = "AI_Travel_planner_list.html";
+            });
         </script>
     </body>
 </html>
