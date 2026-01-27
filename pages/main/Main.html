@@ -847,6 +847,33 @@
                 gap: 0.25rem;
             }
 
+            /* Favorite Button (에니어그램 카드용) */
+            .favorite-btn {
+                position: absolute;
+                top: 1rem;
+                right: 1rem;
+                background: rgba(255, 255, 255, 0.3);
+                backdrop-filter: blur(10px);
+                color: white;
+                padding: 0.5rem;
+                border-radius: 50%;
+                border: none;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                z-index: 10;
+            }
+
+            .favorite-btn:hover {
+                background: white;
+                color: #ef4444;
+                transform: scale(1.1);
+            }
+
+            .favorite-btn svg {
+                width: 20px;
+                height: 20px;
+            }
+
             /* Header Buttons */
             .btnIcon1 {
                 background-color: #008774 !important;
@@ -1112,7 +1139,8 @@
                             "
                         >
                             <a
-                                href="AI_Personality_test.html"
+                                href="#"
+                                id="personality-test-btn"
                                 class="btnIcon1"
                                 style="
                                     width: 265px;
@@ -1125,7 +1153,6 @@
                                     font-size: 16px;
                                     gap: 10px;
                                 "
-                                class="hover:opacity-90 transition-opacity font-medium text-base"
                             >
                                 <img
                                     src="../../images/main/ButtonIcon.png"
@@ -1823,5 +1850,38 @@
         </script>
 
         <script src="../../js/enneagram-recommendations.js"></script>
+
+        <!-- 🎯 AI 여행 성향 테스트 로그인 체크 -->
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const personalityTestBtn = document.getElementById(
+                    "personality-test-btn",
+                );
+
+                if (personalityTestBtn) {
+                    personalityTestBtn.addEventListener("click", function (e) {
+                        e.preventDefault(); // 기본 링크 동작 방지
+
+                        // 로그인 상태 확인
+                        const isLoggedIn =
+                            localStorage.getItem("isLoggedIn") === "true";
+                        const currentUser = JSON.parse(
+                            localStorage.getItem("loggedInUser") || "null",
+                        );
+
+                        if (isLoggedIn && currentUser) {
+                            // 로그인 되어 있으면 테스트 페이지로 이동
+                            window.location.href = "AI_Personality_test.html";
+                        } else {
+                            // 로그인 안 되어 있으면 알림 후 로그인 페이지로 이동
+                            alert(
+                                "AI 여행 성향 테스트는 로그인 후 이용하실 수 있습니다. 🔐\n\n로그인 페이지로 이동합니다!",
+                            );
+                            window.location.href = "../auth/SignIn.html";
+                        }
+                    });
+                }
+            });
+        </script>
     </body>
 </html>
