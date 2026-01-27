@@ -355,6 +355,10 @@
                 justify-content: flex-end;
             }
 
+            .nav-buttons.only-prev {
+                justify-content: flex-start;
+            }
+
             /* --- 결과 섹션 --- */
 
             /* 카드 획득 화면 (최초 결과 화면) */
@@ -1147,6 +1151,58 @@
             .option-button.is-selected .option-icon {
                 background: rgba(0, 196, 180, 0.18);
             }
+            /* 마지막 질문 CTA 버튼 */
+            .final-cta-wrap {
+                margin-top: 100px;
+            }
+
+            .final-cta-btn {
+                width: 100%;
+                height: 64px;
+                border: none;
+                border-radius: 9999px;
+                cursor: pointer;
+
+                /* [변경] 테스트 시작하기 버튼과 동일한 디자인 적용 */
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+
+                /* 시작 버튼과 동일한 테마 컬러 */
+                background-image: linear-gradient(
+                    to right,
+                    var(--primary-color),
+                    var(--primary-color)
+                );
+                color: white;
+                font-weight: 700; /* 폰트 굵기 통일 */
+                font-size: 1.25rem;
+                letter-spacing: -0.02em;
+
+                /* 시작 버튼과 동일한 그림자(Teal color shadow) */
+                box-shadow: 0 10px 20px -5px rgba(0, 196, 180, 0.4);
+
+                /* 시작 버튼과 동일한 전환 효과 */
+                transition: all 0.3s;
+            }
+
+            /* [변경] 호버 효과도 시작 버튼과 동일하게 적용 (확대 및 그림자 강화) */
+            .final-cta-btn:hover {
+                transform: scale(1.05);
+                box-shadow: 0 15px 25px -5px rgba(0, 196, 180, 0.5);
+            }
+
+            .final-cta-btn:active {
+                transform: scale(1); /* 클릭 시 살짝 원래대로 */
+            }
+
+            .final-cta-btn:disabled {
+                opacity: 0.35;
+                cursor: not-allowed;
+                transform: none;
+                box-shadow: none;
+                background: #ccc; /* 비활성화 시 회색 처리 */
+            }
         </style>
     </head>
     <body>
@@ -1236,6 +1292,21 @@
                             colors="primary:#00c4b4"
                             style="width: 20px; height: 20px"
                         ></lord-icon>
+                    </button>
+                </div>
+                <!-- 마지막 질문 전용: 메인으로 가는 CTA 버튼 -->
+                <div
+                    id="final-cta-wrap"
+                    class="final-cta-wrap"
+                    style="display: none"
+                >
+                    <button
+                        id="final-cta-btn"
+                        class="final-cta-btn"
+                        type="button"
+                        disabled
+                    >
+                        이제 여백을 채운 여행을 시작해 봅시다 →
                     </button>
                 </div>
             </section>
@@ -1620,6 +1691,10 @@
             const optionsContainer =
                 document.getElementById("options-container");
 
+            // 마지막 버튼
+            const finalCtaWrap = document.getElementById("final-cta-wrap");
+            const finalCtaBtn = document.getElementById("final-cta-btn");
+
             // ------------------ FUNCTIONS ------------------
 
             // 현재 단계를 보여주고 다른 단계는 숨기는 함수입니다.
@@ -1760,6 +1835,45 @@
                 const percent = Math.round((completed / total) * 100);
                 progressPercentage.textContent = `${percent}%`;
                 progressBarInner.style.width = `${percent}%`;
+
+                // ---- 마지막 질문 CTA 노출/활성화 ----
+                const isLast = currentQuestion === questions.length - 1;
+                if (finalCtaWrap)
+                    finalCtaWrap.style.display = isLast ? "block" : "none";
+
+                if (isLast) {
+                    nextBtn.style.display = "none";
+                    navButtons.classList.add("only-prev");
+                    navButtons.classList.remove("only-next");
+                } else {
+                    nextBtn.style.display = "inline-flex";
+                    navButtons.classList.remove("only-prev");
+                }
+
+                // CTA 버튼 활성화 조건 = 마지막 질문에서 선택(임시 or 확정) 존재
+                if (isLast && finalCtaBtn) {
+                    const hasPending = !!pendingByQuestion[currentQuestion];
+                    const hasCommitted =
+                        committedScoreByQuestion[currentQuestion] != null;
+
+                    // 멀티면 선택 개수 체크, 싱글이면 존재 여부 체크
+                    let ok = false;
+                    if (q.multi) {
+                        const pendingSel =
+                            pendingByQuestion[currentQuestion]?.optionIndexes
+                                ?.length > 0;
+                        const committedSel =
+                            Array.isArray(
+                                selectedOptionIndex[currentQuestion],
+                            ) &&
+                            selectedOptionIndex[currentQuestion].length > 0;
+                        ok = pendingSel || (hasCommitted && committedSel);
+                    } else {
+                        ok = hasPending || hasCommitted;
+                    }
+
+                    finalCtaBtn.disabled = !ok;
+                }
             }
 
             // 사용자가 질문에 답변을 선택했을 때 호출되는 함수입니다.
@@ -1805,6 +1919,10 @@
                     );
 
                     nextBtn.disabled = set.size === 0;
+                    const isLast = currentQuestion === questions.length - 1;
+                    if (isLast && finalCtaBtn) {
+                        finalCtaBtn.disabled = set.size === 0;
+                    }
                     return;
                 }
 
@@ -1818,6 +1936,11 @@
                     buttons[optionIndex].classList.add("is-selected");
 
                 nextBtn.disabled = false;
+
+                const isLast = currentQuestion === questions.length - 1;
+                if (isLast && finalCtaBtn) {
+                    finalCtaBtn.disabled = false;
+                }
             }
 
             function handleNext() {
@@ -1865,6 +1988,66 @@
                     showStep("result");
                     renderResult();
                 }
+            }
+
+            function commitCurrentQuestionIfNeeded() {
+                const alreadyCommitted =
+                    committedScoreByQuestion[currentQuestion] != null;
+                const pending = pendingByQuestion[currentQuestion];
+
+                // 아무 선택도 없으면 종료
+                if (!pending && !alreadyCommitted) return false;
+
+                // 교체인 경우: 기존 점수 빼기
+                if (alreadyCommitted && pending) {
+                    const oldScoreObj =
+                        committedScoreByQuestion[currentQuestion];
+                    if (oldScoreObj) {
+                        Object.entries(oldScoreObj).forEach(([type, value]) => {
+                            scoreBoard[type] = (scoreBoard[type] || 0) - value;
+                            if (scoreBoard[type] < 0) scoreBoard[type] = 0;
+                        });
+                    }
+                }
+
+                // pending 있으면 확정 반영
+                if (pending) {
+                    const { scoreObj, optionIndex, optionIndexes } = pending;
+
+                    committedScoreByQuestion[currentQuestion] = scoreObj;
+                    selectedOptionIndex[currentQuestion] =
+                        optionIndexes ?? optionIndex;
+
+                    Object.entries(scoreObj).forEach(([type, value]) => {
+                        scoreBoard[type] = (scoreBoard[type] || 0) + value;
+                    });
+
+                    pendingByQuestion[currentQuestion] = null;
+                }
+
+                return true;
+            }
+
+            function saveWeightsAndGoMain() {
+                // 마지막 질문에서 선택을 확정(점수 반영)
+                const committedOk = commitCurrentQuestionIfNeeded();
+                if (!committedOk) return;
+
+                // 저장(가중치 + 선택 정보)
+                const payload = {
+                    scoreBoard, // 최종 가중치 합산값
+                    selectedOptionIndex, // 각 질문 선택 인덱스(멀티는 배열)
+                    committedScoreByQuestion, // 질문별 확정 점수 객체
+                    savedAt: new Date().toISOString(),
+                };
+
+                localStorage.setItem(
+                    "yeobaek_test_result",
+                    JSON.stringify(payload),
+                );
+
+                // 메인으로 이동
+                window.location.href = "Main.html";
             }
 
             // 이전 질문으로 돌아가는 함수입니다.
@@ -2165,6 +2348,12 @@
 
             // 다음 버튼
             nextBtn.addEventListener("click", handleNext);
+
+            finalCtaBtn?.addEventListener("click", () => {
+                // 마지막 질문에서만 동작하도록 안전장치
+                if (currentQuestion !== questions.length - 1) return;
+                saveWeightsAndGoMain();
+            });
 
             // 페이지 로드 시 인트로 화면을 렌더링하고 표시합니다.
             renderIntro();
