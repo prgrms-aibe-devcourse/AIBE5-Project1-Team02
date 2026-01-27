@@ -893,14 +893,15 @@
                             departure: flightInfo.departure,
                             destination: flightInfo.destination,
                             savedFlights: {
-                                outbound: flightInfo.outbound,
-                                inbound: flightInfo.inbound,
-                            },
-                        };
-                        if (isLocationChanged || isDateChanged)
-                            nextState.schedule = [];
-                        Store.setState(nextState, false);
-                        localStorage.removeItem("tripPlanner_flightInfo");
+                                                                        outbound: flightInfo.outbound,
+                                                                        inbound: flightInfo.inbound,
+                                                                        passengers: flightInfo.passengers, // 추가
+                                                                        totalPrice: flightInfo.totalPrice, // 추가
+                                                                    },
+                                                                };
+                                                                if (isLocationChanged || isDateChanged)
+                                                                    nextState.schedule = [];
+                                                                Store.setState(nextState, false);                        localStorage.removeItem("tripPlanner_flightInfo");
                         localStorage.setItem(
                             draftKey,
                             JSON.stringify(Store.state),
@@ -1195,6 +1196,7 @@
                                 endDate,
                                 departure,
                                 destination,
+                                flightInfo: Store.state.savedFlights,
                                 updatedAt: new Date().toISOString(),
                             };
                         } else {
@@ -1207,6 +1209,7 @@
                                 departure,
                                 destination,
                                 schedule,
+                                flightInfo: Store.state.savedFlights,
                                 createdAt: new Date().toISOString(),
                             });
                         }
@@ -1220,6 +1223,7 @@
                             departure,
                             destination,
                             schedule,
+                            flightInfo: Store.state.savedFlights,
                             createdAt: new Date().toISOString(),
                         });
                     }
