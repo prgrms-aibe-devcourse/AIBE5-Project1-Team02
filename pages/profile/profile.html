@@ -49,13 +49,14 @@
     <body
         class="bg-background-light text-slate-900 transition-colors duration-300 min-h-screen"
     >
+
         <header
-            class="sticky top-0 z-50 w-full border-b border-border/40 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60"
+            class="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
         >
             <div
                 class="w-full px-8 relative flex h-20 items-center justify-between"
             >
-                <a class="flex items-center space-x-2" href="../main/Main.html">
+                <a class="flex items-center space-x-2" href="/AIBE5-Project1-Team02/pages/main/Main.html">
                     <img
                         src="../../images/Logo.png"
                         alt="여백 로고"
@@ -68,20 +69,26 @@
                 </a>
 
                 <nav
-                    class="flex items-center justify-center text-slate-500 gap-6 text-lg font-medium"
+                    class="flex items-center justify-center text-muted-foreground gap-6 text-lg font-medium"
                     style="
                         position: absolute;
                         left: 50%;
                         transform: translateX(-50%);
                     "
                 >
-                    <a class="hover:text-primary transition-colors" href=""
+                    <a
+                        class="transition-colors hover:text-foreground/80 text-foreground/60 hover:text-foreground transition-colors"
+                        href="../plan/planner.html"
                         >플래너</a
                     >
-                    <a class="hover:text-primary transition-colors" href=""
+                    <a
+                        class="transition-colors hover:text-foreground/80 text-foreground/60 hover:text-foreground transition-colors"
+                        href=""
                         >숙소</a
                     >
-                    <a class="hover:text-primary transition-colors" href=""
+                    <a
+                        class="transition-colors hover:text-foreground/80 text-foreground/60 hover:text-foreground transition-colors"
+                        href=""
                         >여행기록</a
                     >
                 </nav>
@@ -92,13 +99,12 @@
                     >
                     <a
                         href="../auth/SignUp.html"
-                        class="text-sm font-medium bg-primary text-white px-4 py-2 rounded-md hover:bg-teal-700 transition-colors"
+                        class="text-sm font-medium bg-primary text-primary-foreground px-4 py-2 rounded-md"
                         >회원가입</a
                     >
                 </div>
             </div>
         </header>
-
         <main class="container mx-auto max-w-6xl px-4 py-8 pb-24">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
                 <div class="lg:col-span-2">
@@ -885,14 +891,14 @@
                         id="personalityPanel"
                     >
                         <div
-                            class="relative h-32 bg-gradient-to-br from-indigo-500 to-purple-600 p-6 flex flex-col justify-center text-white"
+                            class="relative h-32 bg-gradient-to-br from-indigo-500 to-purple-600 p-6 flex flex-col justify-center text-black"
                         >
                             <button
                                 onclick="togglePersonalityModal()"
                                 class="absolute top-4 right-4 p-1 hover:bg-white/20 rounded-full transition-colors"
                             >
                                 <span
-                                    class="material-symbols-outlined text-white"
+                                    class="material-symbols-outlined text-gray-200"
                                     >close</span
                                 >
                             </button>
@@ -904,7 +910,7 @@
                                     >여행 성향 분석</span
                                 >
                             </div>
-                            <h2 class="text-2xl font-bold">확실한 분석가형</h2>
+                            <h2 class="text-3xl font-bold">확실한 분석가형</h2>
                         </div>
                         <div class="p-6">
                             <div class="space-y-4">
