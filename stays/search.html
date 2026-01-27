@@ -236,7 +236,7 @@
 
             <!--
   1. 드롭다운 컴포넌트 전체를 감싸는 이 div에 너비(w-full)와 중앙 정렬(mx-auto)을 부여
-     이후 필요하면 `max-w-xs`나 `max-w-sm` 등으로 최대 너비를 제한해도 됨!
+     필요하면 `max-w-xs`나 `max-w-sm` 등으로 최대 너비를 제한해도 됨
 -->
             <div class="relative z-40 w-full max-w-[340px] mx-auto">
               <!-- max-w-[340px]와 mx-auto 추가 -->
@@ -250,7 +250,7 @@
                     >auto_awesome</span
                   >
 
-                  <!-- 여기에 text-center, w-full을 추가하여 텍스트를 이 div 안에서 중앙 정렬 -->
+                  <!-- 텍스트를 이 div 안에서 중앙 정렬 -->
                   <div class="flex flex-col flex-1 items-center justify-center">
                     <span
                       id="selectedMainTitle"
@@ -275,28 +275,8 @@
                 id="dropdownContent"
                 class="absolute top-[calc(100%+8px)] left-1/2 -translate-x-1/2 w-full max-w-[340px] bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/10 rounded-2xl shadow-xl overflow-hidden py-2 ring-1 ring-slate-900/5 animate-in fade-in slide-in-from-top-2 duration-200 hidden"
               >
-                <!-- 드롭다운 아이템들: data-title, data-date, data-location, data-travelers 추가! -->
+                <!-- 드롭다운 -->
 
-                <!-- <button
-                  class="dropdown-item w-full flex items-center gap-3 px-6 py-3 hover:bg-slate-50 dark:hover:bg-white/5 text-left transition-colors"
-                  data-title="2026 오사카 여름 여행"
-                  data-date="2026년 8월 1일 - 8월 7일"
-                  data-location="일본, 오사카"
-                  data-travelers="2명"
-                >
-                  <span class="material-symbols-outlined text-slate-400"
-                    >calendar_today</span
-                  >
-                  <div class="flex flex-col">
-                    <span
-                      class="text-sm font-bold text-slate-700 dark:text-slate-200"
-                      >2026 오사카 여름 여행</span
-                    >
-                    <span class="text-[10px] text-slate-400 font-medium"
-                      >2026년 8월 1일 - 8월 7일</span
-                    >
-                  </div>
-                </button> -->
                 <button
                   class="dropdown-item w-full flex items-center gap-3 px-6 py-3 hover:bg-slate-50 dark:hover:bg-white/5 text-left transition-colors"
                   data-title="삿포로 겨울 휴가"
@@ -643,37 +623,7 @@
                 class="flex items-center gap-6"
                 id="station-insights-container"
               >
-                <!-- <div class="flex items-center gap-2">
-                  <span class="text-xs font-bold text-slate-500">Umeda is</span>
-                  <span
-                    class="text-xs font-black text-red-500 bg-red-50 px-2 py-0.5 rounded-full"
-                    >+15%</span
-                  >
-                </div>
-                <div
-                  class="w-px h-4 bg-slate-200 dark:bg-white/10 hidden md:block"
-                ></div>
-                <div class="flex items-center gap-2">
-                  <span class="text-xs font-bold text-slate-500"
-                    >Shin-Osaka is</span
-                  >
-                  <span
-                    class="text-xs font-black text-emerald-500 bg-emerald-50 px-2 py-0.5 rounded-full"
-                    >-10%</span
-                  >
-                </div>
-                <div
-                  class="w-px h-4 bg-slate-200 dark:bg-white/10 hidden md:block"
-                ></div>
-                <div class="flex items-center gap-2">
-                  <span class="text-xs font-bold text-slate-500"
-                    >Tennoji is</span
-                  >
-                  <span
-                    class="text-xs font-black text-emerald-500 bg-emerald-50 px-2 py-0.5 rounded-full"
-                    >-22%</span
-                  >
-                </div> -->
+              
               </div>
             </div>
 
@@ -967,6 +917,7 @@
                         >
                         비교함 담기
                       </button>
+
                       <button
                         class="bg-primary hover:bg-primary/90 text-white font-extrabold py-2.5 px-6 rounded-xl text-sm transition-all shadow-md shadow-primary/20"
                       >
@@ -1388,82 +1339,82 @@
               amenities: ["레스토랑", "리버 뷰"],
             },
             {
-              name: "유니버셜 스튜디오 재팬 리슬 호텔", // 이름 한글화
+              name: "유니버셜 스튜디오 재팬 리슬 호텔", 
               image:
                 "https://github.com/lei-3m/AIBE5/blob/main/img/team1-2/room/osaka/The%20Park%20Front%20Hotel%20at%20Universal%20Studios%20Japan2.jpg?raw=true",
               ratingStar: "★★★★",
               ratingNum: "4.5",
               개: "(2500 개)",
-              locationDetail: "오사카역 · 도보 1분", // 한글화
+              locationDetail: "오사카역 · 도보 1분",
               price: "₩195,000",
               checkIn: "체크인 15:00",
               checkOut: "체크아웃 11:00",
-              roomType: "컴포트 트윈룸", // 한글화
+              roomType: "컴포트 트윈룸",
               smoking: "금연실",
               amenities: [
-                "유니버셜 스튜디오 이용 가능", // 한글화
-                "편의점", // 한글화
-                "레스토랑", // 한글화
+                "유니버셜 스튜디오 이용 가능",
+                "편의점",
+                "레스토랑",
               ],
             },
             {
-              name: "오사카 그랑비아 호텔", // 이름 한글화
+              name: "오사카 그랑비아 호텔", 
               image:
                 "https://github.com/lei-3m/AIBE5/blob/main/img/team1-2/room/osaka/Hotel%20Granvia%20Osaka2.jpg?raw=true",
               ratingStar: "★★★★",
               ratingNum: "4.3",
               개: "(1800 개)",
-              locationDetail: "JR 오사카역 · 역과 직접 연결됨", // 한글화
+              locationDetail: "JR 오사카역 · 역과 직접 연결됨",
               price: "₩220,000",
               checkIn: "체크인 14:00",
               checkOut: "체크아웃 12:00",
-              roomType: "컴포트 트윈룸", // 한글화
-              smoking: "흡연 가능", // 한글화
+              roomType: "컴포트 트윈룸",
+              smoking: "흡연 가능",
               amenities: [
-                "역과 연결", // 한글화
-                "레스토랑 다수", // 한글화
-                "피트니스 센터", // 한글화
+                "역과 연결",
+                "레스토랑 다수",
+                "피트니스 센터",
               ],
             },
             {
               //  오사카 3번째 호텔 추가
-              name: "오사카 크로스 호텔", // 이름 한글화
+              name: "오사카 크로스 호텔", 
               image:
                 "https://github.com/lei-3m/AIBE5/blob/main/img/team1-2/room/osaka/Cross%20Hotel%20Osaka2.jpg?raw=true",
               ratingStar: "★★★★",
               ratingNum: "4.4",
               개: "(2100 개)",
-              locationDetail: "도톤보리 · 도보 3분", // 한글화
+              locationDetail: "도톤보리 · 도보 3분",
               price: "₩260,000",
               checkIn: "체크인 15:00",
               checkOut: "체크아웃 11:00",
-              roomType: "컴포트 트윈룸", // 한글화
+              roomType: "컴포트 트윈룸",
               smoking: "금연실",
               amenities: [
-                "도톤보리 접근성 우수", // 한글화
-                "컨시어지 서비스", // 한글화
-                "무료 Wi-Fi", // 한글화
+                "도톤보리 접근성 우수",
+                "컨시어지 서비스",
+                "무료 Wi-Fi",
               ],
             },
             {
               //  오사카 4번째 호텔 추가
-              name: "오사카 센타라 그랜드 호텔", // 이름 한글화
+              name: "오사카 센타라 그랜드 호텔", 
               image:
                 "https://github.com/lei-3m/AIBE5/blob/main/img/team1-2/room/osaka/Centara%20Grand%20Hotel%20Osaka2.jpg?raw=true",
               ratingStar: "★★★★★",
               ratingNum: "4.6",
               개: "(1500 개)",
-              locationDetail: "난바 · 도보 5분", // 한글화
+              locationDetail: "난바 · 도보 5분",
               price: "₩320,000",
               checkIn: "체크인 15:00",
               checkOut: "체크아웃 12:00",
-              roomType: "디럭스 킹룸", // 한글화
+              roomType: "디럭스 킹룸",
               smoking: "금연실",
               amenities: [
-                "루프탑 바", // 한글화
-                "스파", // 한글화
-                "피트니스 센터", // 한글화
-                "난바 접근성 우수", // 한글화
+                "루프탑 바",
+                "스파",
+                "피트니스 센터",
+                "난바 접근성 우수",
               ],
             },
           ],
@@ -2002,7 +1953,6 @@
           stationCheckboxesContainer.innerHTML = checkboxesHTML;
 
           // 모든 체크박스의 첫 번째는 기본적으로 체크된 상태로
-          // (원하는 대로 조정하면 됨. 이 코드를 지우면 전부 uncheck 상태로 시작)
           const firstCheckbox = stationCheckboxesContainer.querySelector(
             'input[type="checkbox"]',
           );
@@ -2071,7 +2021,7 @@
                 oldItemHTML,
               );
             } else {
-              // 이럴 일은 거의 없겠지만, 만약 createNewPlannerDiv도 없으면 컨테이너 맨 뒤에 추가
+              
               dropdownContent.insertAdjacentHTML("beforeend", oldItemHTML);
             }
 
