@@ -330,8 +330,8 @@ function renderFlightInfoTab(flight) {
                 <div class="flight-duration">
                     <div style="margin-bottom: 0.25rem;">${flight.outbound.flightTime}</div>
                     <svg width="100" height="20" viewBox="0 0 100 20" fill="none">
-                        <line x1="0" y1="10" x2="100" y2="10" stroke="#d1d5db" stroke-width="2"/>
-                        <circle cx="100" cy="10" r="4" fill="#3b82f6"/>
+                        <line x1="0" y1="10" x2="95" y2="10" stroke="#d1d5db" stroke-width="2"/>
+                        <circle cx="95" cy="10" r="4" fill="#3b82f6"/>
                     </svg>
                     <div style="margin-top: 0.25rem; color: var(--color-gray-500);">대한항공</div>
                 </div>
@@ -356,8 +356,8 @@ function renderFlightInfoTab(flight) {
                 <div class="flight-duration">
                     <div style="margin-bottom: 0.25rem;">${flight.inbound.flightTime}</div>
                     <svg width="100" height="20" viewBox="0 0 100 20" fill="none">
-                        <line x1="0" y1="10" x2="100" y2="10" stroke="#d1d5db" stroke-width="2"/>
-                        <circle cx="100" cy="10" r="4" fill="#3b82f6"/>
+                        <line x1="0" y1="10" x2="95" y2="10" stroke="#d1d5db" stroke-width="2"/>
+                        <circle cx="95" cy="10" r="4" fill="#3b82f6"/>
                     </svg>
                     <div style="margin-top: 0.25rem; color: var(--color-gray-500);">대한항공</div>
                 </div>
@@ -776,15 +776,12 @@ function viewMoreFlights() {
         // 접기
         displayedFlightsCount = 3; // 초기값으로 복원
         renderFlights();
-        showAlert("항공권을 접었습니다 ✈️", "info");
+
     } else {
         // 펼치기
         displayedFlightsCount = flightDealsData.length; // 전체 개수로 설정
         renderFlights();
-        showAlert(
-            `전체 ${flightDealsData.length}개의 항공권을 표시 중입니다 ✈️`,
-            "info",
-        );
+
     }
 }
 
@@ -865,8 +862,11 @@ function renderFlightCard(flight) {
                     <div class="flight-current-price">${formatCurrency(flight.price)}</div>
                 </div>
                 
-                <button class="flight-book-btn" onclick="bookFlight('${flight.id}')">
+                <button class="popular-detail-btn" onclick="bookFlight('${flight.id}')">
                     항공권 보기
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="9 18 15 12 9 6"/>
+                    </svg>
                 </button>
             </div>
         </div>
@@ -1238,7 +1238,7 @@ function viewMoreDestinations() {
     // 토글 기능
     if (displayedDestinationsCount >= popularDestinationsData.length) {
         // 현재 전체 보기 상태 → 접기
-        displayedDestinationsCount = 6;
+        displayedDestinationsCount = 3;
         if (moreBtn) {
             moreBtn.innerHTML = `
                 전체 순위 보기 (TOP 20)

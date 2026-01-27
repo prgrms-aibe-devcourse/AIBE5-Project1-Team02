@@ -174,7 +174,7 @@
                             >
                         </div>
                     </div>
-                    <form action="#" class="space-y-5">
+                    <form id="signinForm" onsubmit="handleSignIn(event)" class="space-y-5">
                         <div>
                             <label
                                 class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5"
@@ -191,6 +191,7 @@
                                     id="email"
                                     placeholder="이메일을 입력하세요"
                                     type="email"
+                                    required
                                 />
                             </div>
                         </div>
@@ -210,6 +211,7 @@
                                     id="password"
                                     placeholder="••••••••"
                                     type="password"
+                                    required
                                 />
                             </div>
                         </div>
@@ -246,7 +248,7 @@
                                 >비밀번호를 잊으셨나요?</a
                             >
                         </div>
-                        <!-- <button
+                        <button
                             class="w-full py-4 bg-primary text-white font-bold rounded-xl shadow-lg shadow-teal-600/20 hover:bg-teal-700 transform transition-all active:scale-[0.98] flex items-center justify-center"
                             type="submit"
                         >
@@ -254,18 +256,7 @@
                             <span class="material-symbols-outlined text-lg ml-2"
                                 >arrow_forward</span
                             >
-                        </button> -->
-                        <a
-                            href="../main/Main.html"
-                            class="w-full py-4 bg-primary text-white font-bold rounded-xl shadow-lg shadow-teal-600/20 hover:bg-teal-700 transform transition-all active:scale-[0.98] flex items-center justify-center cursor-pointer no-underline"
-                        >
-                            로그인
-                            <span
-                                class="material-symbols-outlined text-lg ml-2"
-                            >
-                                arrow_forward
-                            </span>
-                        </a>
+                        </button>
                     </form>
                     <p
                         class="mt-10 text-center text-sm text-slate-600 dark:text-slate-400"
@@ -292,6 +283,7 @@
                 >light_mode</span
             >
         </button>
+        <script src="../../js/auth.js" defer></script>
         <script>
             // New script for background image cross-fade
             const bgImage1 = document.getElementById("background-image-1");
@@ -329,5 +321,3 @@
                 }, 5000);
             }
         </script>
-    </body>
-</html>
