@@ -344,6 +344,10 @@
                 justify-content: flex-end;
             }
 
+            .nav-buttons.only-prev {
+                justify-content: flex-start;
+            }
+
             /* --- 결과 섹션 --- */
 
             /* 카드 획득 화면 (최초 결과 화면) */
@@ -1679,6 +1683,15 @@
                 // ---- 마지막 질문 CTA 노출/활성화 ----
                 const isLast = currentQuestion === questions.length - 1;
                 if (finalCtaWrap) finalCtaWrap.style.display = isLast ? 'block' : 'none';
+
+                if (isLast) {
+                    nextBtn.style.display = 'none';
+                    navButtons.classList.add('only-prev');
+                    navButtons.classList.remove('only-next');
+                } else {
+                    nextBtn.style.display = 'inline-flex';
+                    navButtons.classList.remove('only-prev');
+                }
 
                 // CTA 버튼 활성화 조건 = 마지막 질문에서 선택(임시 or 확정) 존재
                 if (isLast && finalCtaBtn) {
