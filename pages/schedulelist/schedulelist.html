@@ -28,7 +28,7 @@
         }
     </script>
     <style>
-        /* Custom range slider styling */
+        /* 커스텀 범위 슬라이더 스타일링 */
         input[type=range]::-webkit-slider-thumb {
             -webkit-appearance: none;
             height: 20px;
@@ -53,7 +53,7 @@
 
 <body class="bg-[#f3f4f6] text-slate-800 min-h-screen font-sans">
 
-    <!-- Header -->
+    <!-- 헤더 -->
     <header
         class="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div class="w-full px-8 relative flex h-20 items-center justify-between">
@@ -84,22 +84,22 @@
     </header>
 
 
-    <!-- Main Content -->
+    <!-- 메인 콘텐츠 -->
     <div class="max-w-7xl mx-auto px-4 py-8 flex flex-col md:flex-row gap-8">
 
-        <!-- Sidebar Filter -->
+        <!-- 사이드바 필터 -->
         <aside class="w-full md:w-64 flex-shrink-0 space-y-8">
             <div class="flex items-center gap-2 pb-4 border-b border-stone-200">
                 <span class="material-symbols-outlined text-stone-700">filter_list</span>
                 <h2 class="font-bold text-lg">필터</h2>
             </div>
 
-            <!-- Budget Filter -->
+            <!-- 예산 필터 -->
             <div class="space-y-3">
                 <div class="flex justify-between items-center">
                     <label class="font-bold text-sm">예산 범위</label>
                 </div>
-                <!-- Range Slider Placeholder -->
+                <!-- 범위 슬라이더 플레이스홀더 -->
                 <div class="relative pt-1">
                     <input type="range"
                         class="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer range-sm" min="0"
@@ -111,7 +111,7 @@
                 </div>
             </div>
 
-            <!-- Density Filter -->
+            <!-- 밀도 필터 -->
             <div class="space-y-3">
                 <label class="font-bold text-sm block">일정 밀도</label>
                 <div class="flex flex-wrap gap-2" id="density-filters">
@@ -124,7 +124,7 @@
                 </div>
             </div>
 
-            <!-- Movement Filter -->
+            <!-- 이동량 필터 -->
             <div class="space-y-3">
                 <label class="font-bold text-sm block">이동량</label>
                 <div class="flex flex-wrap gap-2" id="movement-filters">
@@ -138,9 +138,9 @@
             </div>
         </aside>
 
-        <!-- Main Grid Area -->
+        <!-- 메인 그리드 영역 -->
         <main class="flex-1">
-            <!-- Top Bar -->
+            <!-- 상단 바 -->
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
                 <div class="flex items-center gap-3">
                     <span class="text-teal-600 text-sm font-extrabold tracking-tight">AI 추천</span>
@@ -157,7 +157,7 @@
                         <span class="material-symbols-outlined text-base transition-transform duration-200"
                             id="sortIcon">expand_more</span>
                     </button>
-                    <!-- Dropdown Menu -->
+                    <!-- 드롭다운 메뉴 -->
                     <div id="sortDropdown"
                         class="absolute right-0 mt-2 w-32 bg-white rounded-xl shadow-lg border border-stone-100 py-1 hidden z-50 origin-top-right transition-all">
                         <button onclick="sortItineraries('popularity')"
@@ -173,26 +173,26 @@
                 </div>
             </div>
 
-            <!-- Itinerary Grid -->
+            <!-- 여행 일정 그리드 -->
             <div id="itineraryGrid" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-                <!-- Card 1 -->
+                <!-- 카드 1 -->
                 <article
                     class="bg-white rounded-2xl border border-stone-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow group flex flex-col h-full">
-                    <!-- Image Area -->
+                    <!-- 이미지 영역 -->
                     <div class="relative aspect-[16/9] bg-stone-200 overflow-hidden">
                         <div class="absolute inset-0 bg-stone-100 flex items-center justify-center text-stone-300">
                             <span class="material-symbols-outlined text-4xl">location_on</span>
                         </div>
 
-                        <!-- Badges -->
+                        <!-- 뱃지 -->
                         <div class="absolute top-3 left-3 flex gap-2">
                             <span
                                 class="px-2 py-1 bg-white/90 backdrop-blur text-[10px] font-bold text-blue-600 rounded-full flex items-center gap-1 border border-blue-100 shadow-sm">
                                 <span class="material-symbols-outlined text-[10px]">route</span> 동선 최적화
                             </span>
                         </div>
-                        <!-- Validated Heart -->
+                        <!-- 하트 아이콘 -->
                         <button onclick="toggleHeart(this)"
                             class="absolute top-3 right-3 p-1.5 bg-white/50 backdrop-blur rounded-full hover:bg-white text-stone-500 transition-all">
                             <span
@@ -200,7 +200,7 @@
                         </button>
                     </div>
 
-                    <!-- Content -->
+                    <!-- 콘텐츠 -->
                     <div class="p-5 flex flex-col flex-1">
                         <div class="flex justify-between items-start mb-2">
                             <h3 class="font-bold text-lg text-stone-800 group-hover:text-primary transition-colors">제주
@@ -249,7 +249,7 @@
                     </div>
                 </article>
 
-                <!-- Card 2 -->
+                <!-- 카드 2 -->
                 <article
                     class="bg-white rounded-2xl border border-stone-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow group flex flex-col h-full">
                     <div class="relative aspect-[16/9] bg-stone-200 overflow-hidden">
@@ -318,7 +318,7 @@
                     </div>
                 </article>
 
-                <!-- Card 3 -->
+                <!-- 카드 3 -->
                 <article
                     class="bg-white rounded-2xl border border-stone-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow group flex flex-col h-full">
                     <div class="relative aspect-[16/9] bg-stone-200 overflow-hidden">
@@ -391,7 +391,7 @@
                     </div>
                 </article>
 
-                <!-- Card 4 -->
+                <!-- 카드 4 -->
                 <article
                     class="bg-white rounded-2xl border border-stone-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow group flex flex-col h-full">
                     <div class="relative aspect-[16/9] bg-stone-200 overflow-hidden">
@@ -461,7 +461,7 @@
                     </div>
                 </article>
 
-                <!-- Card 5 -->
+                <!-- 카드 5 -->
                 <article
                     class="bg-white rounded-2xl border border-stone-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow group flex flex-col h-full">
                     <div class="relative aspect-[16/9] bg-stone-200 overflow-hidden">
@@ -531,7 +531,7 @@
                     </div>
                 </article>
 
-                <!-- Card 6 -->
+                <!-- 카드 6 -->
                 <article
                     class="bg-white rounded-2xl border border-stone-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow group flex flex-col h-full">
                     <div class="relative aspect-[16/9] bg-stone-200 overflow-hidden">
@@ -611,7 +611,7 @@
         </div>
     </footer>
 
-    <!-- Details Modal -->
+    <!-- 상세 모달 -->
     <div id="detailsModal" class="fixed inset-0 z-[100] hidden" aria-labelledby="modal-title" role="dialog"
         aria-modal="true">
         <div class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm transition-opacity opacity-0"
@@ -661,20 +661,20 @@
 
     <script>
         function addToPlanner(btn) {
-            // Check if already animating to prevent double clicks
+            // 중복 클릭 방지를 위해 애니메이션 중인지 확인
             if (btn.dataset.isAnimating === 'true') return;
 
             btn.dataset.isAnimating = 'true';
 
-            // Save original state
+            // 원래 상태 저장
             const originalContent = btn.innerHTML;
 
-            // Change to "Added" state
+            // "담김" 상태로 변경
             btn.classList.remove('bg-primary', 'hover:bg-teal-700');
-            btn.classList.add('bg-slate-600', 'scale-95'); // Add slight press effect
+            btn.classList.add('bg-slate-600', 'scale-95'); // 약간의 눌림 효과 추가
             btn.innerHTML = '<span class="material-symbols-outlined text-sm">check</span> 담김';
 
-            // Revert after delay
+            // 지연 후 복귀
             setTimeout(() => {
                 btn.classList.remove('bg-slate-600', 'scale-95');
                 btn.classList.add('bg-primary', 'hover:bg-teal-700');
@@ -695,7 +695,7 @@
             const panel = document.getElementById('detailsModalPanel');
 
             modal.classList.remove('hidden');
-            // Small delay to allow display:block to apply before opacity transition
+            // opacity 트랜지션 전에 display:block이 적용되도록 약간의 지연
             setTimeout(() => {
                 backdrop.classList.remove('opacity-0');
                 panel.classList.remove('opacity-0', 'scale-95');
@@ -720,13 +720,13 @@
             const container = document.getElementById(containerId);
             const buttons = container.getElementsByTagName('button');
 
-            // Reset all buttons in the group
+            // 그룹 내 모든 버튼 초기화
             for (let b of buttons) {
                 b.classList.remove('bg-stone-100', 'text-stone-800', 'font-medium', 'selected');
                 b.classList.add('bg-white', 'text-stone-600', 'hover:border-primary', 'hover:text-primary');
             }
 
-            // Activate the clicked button
+            // 클릭된 버튼 활성화
             btn.classList.remove('bg-white', 'text-stone-600', 'hover:border-primary', 'hover:text-primary');
             btn.classList.add('bg-stone-100', 'text-stone-800', 'font-medium', 'selected');
         }
@@ -735,17 +735,17 @@
             const icon = btn.querySelector('.material-symbols-outlined');
 
             if (btn.classList.contains('text-pink-500')) {
-                // Unliked state
+                // 좋아요 취소 상태
                 btn.classList.remove('text-pink-500', 'bg-white');
                 btn.classList.add('text-stone-500', 'bg-white/50');
                 icon.style.fontVariationSettings = "'FILL' 0";
             } else {
-                // Liked state
+                // 좋아요 상태
                 btn.classList.remove('text-stone-500', 'bg-white/50');
                 btn.classList.add('text-pink-500', 'bg-white');
                 icon.style.fontVariationSettings = "'FILL' 1";
 
-                // Pop animation
+                // 팝 애니메이션
                 icon.classList.add('scale-125');
                 setTimeout(() => icon.classList.remove('scale-125'), 200);
             }
@@ -772,7 +772,7 @@
             }
         }
 
-        // Close dropdown when clicking outside
+        // 외부 클릭 시 드롭다운 닫기
         document.addEventListener('click', function (event) {
             const dropdown = document.getElementById('sortDropdown');
             const button = document.getElementById('sortButton');
@@ -787,7 +787,7 @@
             const items = Array.from(grid.children);
             const label = document.getElementById('sortLabel');
 
-            // Update Label
+            // 라벨 업데이트
             const countMap = {
                 'popularity': '인기순',
                 'reviews': '리뷰순',
@@ -795,38 +795,38 @@
                 'latest': '최신순'
             };
             label.textContent = countMap[criteria];
-            toggleSortDropdown(); // Close menu
+            toggleSortDropdown(); // 메뉴 닫기
 
             items.sort((a, b) => {
                 let valA, valB;
 
                 if (criteria === 'popularity') {
-                    // Extract numerical rating (e.g., "4.8" -> 4.8)
+                    // 숫자 평점 추출 (예: "4.8" -> 4.8)
                     valA = parseFloat(a.querySelector('.text-orange-400').innerText.match(/[\d.]+/)[0]);
                     valB = parseFloat(b.querySelector('.text-orange-400').innerText.match(/[\d.]+/)[0]);
-                    return valB - valA; // Descending
+                    return valB - valA; // 내림차순
                 } else if (criteria === 'reviews') {
-                    // Extract review count (e.g., "(128)" -> 128)
+                    // 리뷰 수 추출 (예: "(128)" -> 128)
                     valA = parseInt(a.querySelector('.text-stone-300').innerText.replace(/[()]/g, ''));
                     valB = parseInt(b.querySelector('.text-stone-300').innerText.replace(/[()]/g, ''));
-                    return valB - valA; // Descending
+                    return valB - valA; // 내림차순
                 } else if (criteria === 'price') {
-                    // Extract price (e.g., "35만원" -> 35)
-                    valA = parseInt(a.querySelector('.material-symbols-outlined + span:last-child')?.innerText?.replace(/[^0-9]/g, '') || 0); // Need robust selector
-                    // Let's use a more specific search since DOM structure varies slightly
+                    // 가격 추출 (예: "35만원" -> 35)
+                    valA = parseInt(a.querySelector('.material-symbols-outlined + span:last-child')?.innerText?.replace(/[^0-9]/g, '') || 0); // 견고한 선택자가 필요함
+                    // DOM 구조가 약간 다르므로 더 구체적인 검색 사용
                     const priceNodeA = Array.from(a.querySelectorAll('span')).find(s => s.innerText.includes('만원'));
                     const priceNodeB = Array.from(b.querySelectorAll('span')).find(s => s.innerText.includes('만원'));
                     valA = parseInt(priceNodeA.innerText.replace(/[^0-9]/g, ''));
                     valB = parseInt(priceNodeB.innerText.replace(/[^0-9]/g, ''));
 
-                    return valA - valB; // Ascending (Cheaper first)
+                    return valA - valB; // 오름차순 (저렴한 순)
                 } else if (criteria === 'latest') {
-                    // Simulate random chronological order for demo since no dates are visible
+                    // 날짜가 보이지 않으므로 데모를 위해 임의의 시간 순서 시뮬레이션
                     return Math.random() - 0.5;
                 }
             });
 
-            // Re-append items
+            // 항목 다시 추가
             grid.innerHTML = '';
             items.forEach(item => grid.appendChild(item));
         }
