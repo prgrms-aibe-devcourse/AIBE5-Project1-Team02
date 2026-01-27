@@ -288,6 +288,41 @@
         text-decoration: underline;
       }
 
+      /* 다음 질문 스타일 */
+      .next-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: none;
+        border: none;
+        color: var(--primary-color);
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        padding: 0;
+      }
+
+      .next-button:hover {
+        text-decoration: underline;
+      }
+
+      .next-button:disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
+        text-decoration: none;
+      }
+
+      /* 좌우 배치용 컨테이너 */
+      .nav-buttons {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 16px;
+      }
+
+      .nav-buttons.only-next {
+        justify-content: flex-end;
+      }
+
       /* --- 결과 섹션 --- */
 
       /* 카드 획득 화면 (최초 결과 화면) */
@@ -1080,94 +1115,6 @@
       .option-button.is-selected .option-icon {
         background: rgba(0, 196, 180, 0.18);
       }
-
-      /* 아래 네비게이션 버튼 줄 */
-      .nav-buttons {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 14px;
-        margin-top: 18px;
-      }
-
-      /* 스샷처럼: 배경 거의 흰색 + 라운드 + 그라데이션 텍스트 */
-      .nav-link-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 12px;
-        padding: 10px 14px;
-        border: 0;
-        background: rgba(255, 255, 255, 0.9);
-        border-radius: 14px;
-        cursor: pointer;
-        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
-        transition:
-          transform 0.15s ease,
-          box-shadow 0.15s ease,
-          opacity 0.15s ease;
-        user-select: none;
-      }
-
-      /* 오른쪽 Next는 살짝 넓게(원하면 제거 가능) */
-      .nav-link-btn--right {
-        margin-left: auto;
-      }
-
-      /* 아이콘 영역(스샷처럼 살짝 네모/라운드) */
-      .nav-icon {
-        width: 34px;
-        height: 34px;
-        border-radius: 11px;
-        display: grid;
-        place-items: center;
-        background: linear-gradient(
-          135deg,
-          rgba(0, 196, 180, 0.1),
-          rgba(139, 92, 246, 0.1)
-        );
-      }
-
-      /* 텍스트 그라데이션 */
-      .nav-text {
-        font-size: 1.25rem;
-        font-weight: 800;
-        letter-spacing: -0.02em;
-        background: linear-gradient(90deg, #00c4b4, #8b5cf6);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        color: transparent;
-      }
-
-      /* hover */
-      .nav-link-btn:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 16px 32px rgba(0, 0, 0, 0.1);
-      }
-
-      /* disabled(선택 안 했을 때 Next) */
-      .nav-link-btn:disabled {
-        opacity: 0.45;
-        cursor: not-allowed;
-        transform: none;
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.06);
-      }
-
-      /* 모바일에서 글씨 너무 크면 줄이기 */
-      @media (max-width: 520px) {
-        .nav-text {
-          font-size: 1.4rem;
-        }
-        .nav-icon {
-          width: 40px;
-          height: 40px;
-          border-radius: 12px;
-        }
-        .nav-link-btn {
-          padding: 12px 14px;
-          border-radius: 16px;
-        }
-      }
     </style>
   </head>
   <body>
@@ -1186,7 +1133,8 @@
             <span>AI 맞춤 여행 계획</span>
           </div>
           <h1>여행 AI가 알아서 추천해줄게요!</h1>
-          <p>간단한 테스트를 AI기반으로 <br />맞춤 여행지를 알아서!</p>
+          <p>간단한 선택으로 AI가 <br />맞춤 여행지를 알아서 정해드릴게요!</p>
+          </p>
           <div id="personality-preview" class="personality-preview-grid"></div>
           <button id="start-btn" class="start-button">
             테스트 시작하기
@@ -1216,64 +1164,28 @@
           <div id="options-container" class="options-container"></div>
         </div>
         <div class="nav-buttons">
-          <button id="prev-btn" class="nav-link-btn" type="button">
-            <span class="nav-icon" aria-hidden="true">
-              <!-- 왼쪽 아이콘(스샷 느낌의 박스/가방) -->
-              <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
-                <defs>
-                  <linearGradient id="navGrad" x1="0" y1="0" x2="24" y2="24">
-                    <stop stop-color="#00c4b4" />
-                    <stop offset="1" stop-color="#8b5cf6" />
-                  </linearGradient>
-                </defs>
-                <path
-                  d="M8 7V6.2C8 5.54 8.54 5 9.2 5H14.8C15.46 5 16 5.54 16 6.2V7"
-                  stroke="url(#navGrad)"
-                  stroke-width="1.8"
-                  stroke-linecap="round"
-                />
-                <path
-                  d="M6.5 8H17.5C18.33 8 19 8.67 19 9.5V18C19 18.83 18.33 19.5 17.5 19.5H6.5C5.67 19.5 5 18.83 5 18V9.5C5 8.67 5.67 8 6.5 8Z"
-                  stroke="url(#navGrad)"
-                  stroke-width="1.8"
-                  stroke-linejoin="round"
-                />
-                <path
-                  d="M9 12H15"
-                  stroke="url(#navGrad)"
-                  stroke-width="1.8"
-                  stroke-linecap="round"
-                />
-              </svg>
-            </span>
-            <span class="nav-text">이전 질문</span>
+          <!-- 이전 질문 -->
+          <button id="prev-btn" class="prev-button" type="button">
+            <lord-icon
+              src="https://cdn.lordicon.com/dqrpfjei.json"
+              trigger="hover"
+              target="button"
+              colors="primary:#00c4b4"
+              style="width: 20px; height: 20px; transform: rotate(180deg)"
+            ></lord-icon>
+            이전 질문
           </button>
 
-          <button
-            id="next-btn"
-            class="nav-link-btn nav-link-btn--right"
-            type="button"
-            disabled
-          >
-            <span class="nav-text">다음 질문</span>
-            <span class="nav-icon" aria-hidden="true">
-              <!-- 오른쪽 화살표 아이콘 -->
-              <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
-                <defs>
-                  <linearGradient id="navGrad2" x1="0" y1="0" x2="24" y2="24">
-                    <stop stop-color="#00c4b4" />
-                    <stop offset="1" stop-color="#8b5cf6" />
-                  </linearGradient>
-                </defs>
-                <path
-                  d="M9 6L15 12L9 18"
-                  stroke="url(#navGrad2)"
-                  stroke-width="2.2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-            </span>
+          <!-- 다음 질문 -->
+          <button id="next-btn" class="next-button" type="button" disabled>
+            다음 질문
+            <lord-icon
+              src="https://cdn.lordicon.com/dqrpfjei.json"
+              trigger="hover"
+              target="button"
+              colors="primary:#00c4b4"
+              style="width: 20px; height: 20px"
+            ></lord-icon>
           </button>
         </div>
       </section>
@@ -1539,7 +1451,7 @@
       // 각 Enneagram(애니어그램) 유형별 정보를 담고 있는 객체입니다.
       // 유형별 별명, 설명, 특징, 강점, 여행 동기, 추천 여행지 등의 상세 데이터를 포함합니다.
       const enneagramTypes = {
-        1: {
+         1: {
           type: 1,
           nickname: "베이징",
           subtitle: "The Perfect Route Designer",
@@ -1627,6 +1539,7 @@
       const prevBtn = document.getElementById("prev-btn");
       // 다음 질문 버튼 DOM 엘리먼트
       const nextBtn = document.getElementById("next-btn");
+      const navButtons = document.querySelector(".nav-buttons");
 
       // 성격 유형 미리보기 컨테이너 DOM 엘리먼트
       const personalityPreview = document.getElementById("personality-preview");
@@ -1690,9 +1603,9 @@
           const previewItem = document.createElement("div");
           previewItem.className = "personality-preview-item";
           previewItem.innerHTML = `
-            <div class="emoji">${type.character}</div>
-            <div class="name">${type.nickname}</div>
-          `;
+      <div class="emoji">${type.character}</div>
+      <div class="name">${type.nickname}</div>
+    `;
           personalityPreview.appendChild(previewItem);
         });
       }
@@ -1721,11 +1634,11 @@
 
         // 질문 타이틀(멀티면 안내 문구 추가)
         questionTitle.innerHTML = `
-          <div style="font-size:2.25rem;font-weight:800;margin-bottom:0.35rem;">${q.title}</div>
-          <div style="font-size:1.25rem;color:var(--text-light);font-weight:600;">
-            ${q.subtitle} ${q.multi ? '<span style="font-size:0.95rem;color:#999;">(복수 선택 가능)</span>' : ""}
-          </div>
-        `;
+    <div style="font-size:2.25rem;font-weight:800;margin-bottom:0.35rem;">${q.title}</div>
+    <div style="font-size:1.25rem;color:var(--text-light);font-weight:600;">
+      ${q.subtitle} ${q.multi ? '<span style="font-size:0.95rem;color:#999;">(복수 선택 가능)</span>' : ""}
+    </div>
+  `;
 
         optionsContainer.innerHTML = "";
         q.options.forEach((opt, optIndex) => {
@@ -1736,10 +1649,10 @@
             : "option-button";
 
           btn.innerHTML = `
-            <div class="option-icon"><span>${opt.icon}</span></div>
-            <div class="option-title">${opt.label}</div>
-            <div class="option-subtitle">${opt.desc}</div>
-          `;
+      <div class="option-icon"><span>${opt.icon}</span></div>
+      <div class="option-title">${opt.label}</div>
+      <div class="option-subtitle">${opt.desc}</div>
+    `;
 
           btn.addEventListener("click", () =>
             selectOption(opt.score, optIndex),
@@ -1748,6 +1661,8 @@
         });
 
         prevBtn.style.display = currentQuestion > 0 ? "flex" : "none";
+        if (currentQuestion === 0) navButtons.classList.add("only-next");
+        else navButtons.classList.remove("only-next");
 
         // Next 활성화 규칙
         if (q.multi) {
@@ -1932,19 +1847,19 @@
         const acquisitionScreen = document.createElement("div");
         acquisitionScreen.className = "acquisition-screen";
         acquisitionScreen.innerHTML = `
-          <div class="acquisition-content">
-            <div class="floating-card-container">
-              <div class="card-visual ${resultData.gradient}-bg">
-                <div class="card-character">${resultData.character}</div>
-              </div>
-            </div>
-            <h2 class="acquisition-title">카드를 획득했어요!</h2>
-            <p class="acquisition-subtitle">${resultData.nickname}</p>
-            <button class="reveal-button">
-              <span>클릭하여 카드 확인하기</span>
-            </button>
-          </div>
-        `;
+    <div class="acquisition-content">
+      <div class="floating-card-container">
+        <div class="card-visual ${resultData.gradient}-bg">
+          <div class="card-character">${resultData.character}</div>
+        </div>
+      </div>
+      <h2 class="acquisition-title">카드를 획득했어요!</h2>
+      <p class="acquisition-subtitle">${resultData.nickname}</p>
+      <button class="reveal-button">
+        <span>클릭하여 카드 확인하기</span>
+      </button>
+    </div>
+  `;
         resultSection.appendChild(acquisitionScreen);
 
         const cardVisual = acquisitionScreen.querySelector(".card-visual");
@@ -1961,59 +1876,59 @@
         resultView.className = "result-view";
         resultView.style.display = "none";
         resultView.innerHTML = `
-          <div class="result-header">
-            <h1 class="result-title">당신의 여행 성향을 찾았어요!</h1>
-            <p class="result-subtitle">카드를 클릭하거나 드래그해서 돌려보세요</p>
-          </div>
-          <div class="interactive-card-container"></div>
+    <div class="result-header">
+      <h1 class="result-title">당신의 여행 성향을 찾았어요!</h1>
+      <p class="result-subtitle">카드를 클릭하거나 드래그해서 돌려보세요</p>
+    </div>
+    <div class="interactive-card-container"></div>
 
-          <div class="result-details-grid">
-            <div class="recommendation-panel">
-              <h3 class="panel-title">AI가 이렇게 추천했어요!</h3>
-              <p class="panel-subtitle">당신의 성향에 딱 맞는 여행지</p>
-              <div class="recommendation-list">
-                ${resultData.recommendations
-                  .map(
-                    (rec, index) => `
-                      <div class="recommendation-item">
-                        <div class="recommendation-number">${index + 1}</div>
-                        <span>${rec}</span>
-                      </div>
-                    `,
-                  )
-                  .join("")}
-              </div>
-            </div>
-
-            <div class="share-panel">
-              <h3 class="panel-title">공유하기</h3>
-              <button class="share-button" type="button">
-                <lord-icon
-                  src="https://cdn.lordicon.com/bxxnzvfm.json"
-                  trigger="hover"
-                  colors="primary:#ffffff"
-                  style="width:20px;height:20px;margin-right:8px;">
-                </lord-icon>
-                결과 공유하기
-              </button>
-              <div class="share-text-area">
-                <p class="panel-subtitle">나의 여행 성향은!</p>
-                <div class="personality-share-badge">
-                  <span class="share-character">${resultData.character}</span>
-                  <div class="share-text-content">
-                    <p class="share-type">유형 ${resultData.type}</p>
-                    <p class="share-nickname">${resultData.nickname}</p>
-                  </div>
+    <div class="result-details-grid">
+      <div class="recommendation-panel">
+        <h3 class="panel-title">AI가 이렇게 추천했어요!</h3>
+        <p class="panel-subtitle">당신의 성향에 딱 맞는 여행지</p>
+        <div class="recommendation-list">
+          ${resultData.recommendations
+            .map(
+              (rec, index) => `
+                <div class="recommendation-item">
+                  <div class="recommendation-number">${index + 1}</div>
+                  <span>${rec}</span>
                 </div>
-              </div>
+              `,
+            )
+            .join("")}
+        </div>
+      </div>
+
+      <div class="share-panel">
+        <h3 class="panel-title">공유하기</h3>
+        <button class="share-button" type="button">
+          <lord-icon
+            src="https://cdn.lordicon.com/bxxnzvfm.json"
+            trigger="hover"
+            colors="primary:#ffffff"
+            style="width:20px;height:20px;margin-right:8px;">
+          </lord-icon>
+          결과 공유하기
+        </button>
+        <div class="share-text-area">
+          <p class="panel-subtitle">나의 여행 성향은!</p>
+          <div class="personality-share-badge">
+            <span class="share-character">${resultData.character}</span>
+            <div class="share-text-content">
+              <p class="share-type">유형 ${resultData.type}</p>
+              <p class="share-nickname">${resultData.nickname}</p>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
 
-          <button id="get-recommendations-btn" class="get-recommendations-button" type="button">
-            맞춤 여행 추천받기 →
-          </button>
-          <button id="restart-btn" class="start-button" type="button">다시 시작하기</button>
-        `;
+    <button id="get-recommendations-btn" class="get-recommendations-button" type="button">
+      맞춤 여행 추천받기 →
+    </button>
+    <button id="restart-btn" class="start-button" type="button">다시 시작하기</button>
+  `;
         resultSection.appendChild(resultView);
 
         acquisitionScreen
@@ -2058,59 +1973,59 @@
       function renderFlippableCard(data) {
         const container = document.querySelector(".interactive-card-container");
         container.innerHTML = `
-          <div class="card-scene">
-            <div class="card-object">
-              <div class="card-face card-face--front ${data.gradient}-bg">
-                <div class="card-border"></div>
-                <div class="card-content">
-                  <div class="card-top-ornament">✦</div>
-                  <div class="card-character-main">${data.character}</div>
-                  <div class="card-title-group">
-                    <div class="card-main-type">${data.type}</div>
-                    <h2 class="card-main-nickname">${data.nickname}</h2>
-                    <p class="card-main-subtitle">${data.subtitle}</p>
-                  </div>
-                  <div class="card-bottom-ornament">✦</div>
-                </div>
-                <div class="sparkle-overlay"></div>
-                <div class="holographic-overlay"></div>
+    <div class="card-scene">
+      <div class="card-object">
+        <div class="card-face card-face--front ${data.gradient}-bg">
+          <div class="card-border"></div>
+          <div class="card-content">
+            <div class="card-top-ornament">✦</div>
+            <div class="card-character-main">${data.character}</div>
+            <div class="card-title-group">
+              <div class="card-main-type">${data.type}</div>
+              <h2 class="card-main-nickname">${data.nickname}</h2>
+              <p class="card-main-subtitle">${data.subtitle}</p>
+            </div>
+            <div class="card-bottom-ornament">✦</div>
+          </div>
+          <div class="sparkle-overlay"></div>
+          <div class="holographic-overlay"></div>
+        </div>
+
+        <div class="card-face card-face--back">
+          <div class="card-back-content">
+            <div class="back-header">
+              <div class="back-character">${data.character}</div>
+              <div class="back-type">${data.type}</div>
+              <h3 class="back-nickname">${data.nickname}</h3>
+              <p class="back-subtitle">${data.subtitle}</p>
+            </div>
+            <p class="back-description">"${data.travelMotivation}"</p>
+
+            <div class="back-section">
+              <h4 class="back-section-title">주요 특징</h4>
+              <div class="traits-grid">
+                ${data.traits.map((trait) => `<div class="trait-item">${trait}</div>`).join("")}
               </div>
+            </div>
 
-              <div class="card-face card-face--back">
-                <div class="card-back-content">
-                  <div class="back-header">
-                    <div class="back-character">${data.character}</div>
-                    <div class="back-type">${data.type}</div>
-                    <h3 class="back-nickname">${data.nickname}</h3>
-                    <p class="back-subtitle">${data.subtitle}</p>
-                  </div>
-                  <p class="back-description">"${data.travelMotivation}"</p>
+            <div class="back-section">
+              <h4 class="back-section-title">여행 강점</h4>
+              <ul class="strengths-list">
+                ${data.strengths.map((s) => `<li>${s}</li>`).join("")}
+              </ul>
+            </div>
 
-                  <div class="back-section">
-                    <h4 class="back-section-title">주요 특징</h4>
-                    <div class="traits-grid">
-                      ${data.traits.map((trait) => `<div class="trait-item">${trait}</div>`).join("")}
-                    </div>
-                  </div>
-
-                  <div class="back-section">
-                    <h4 class="back-section-title">여행 강점</h4>
-                    <ul class="strengths-list">
-                      ${data.strengths.map((s) => `<li>${s}</li>`).join("")}
-                    </ul>
-                  </div>
-
-                  <div class="back-section">
-                    <h4 class="back-section-title">추천 여행 스타일</h4>
-                    <div class="recommendations-list">
-                      ${data.recommendations.map((r) => `<span>#${r}</span>`).join(" ")}
-                    </div>
-                  </div>
-                </div>
+            <div class="back-section">
+              <h4 class="back-section-title">추천 여행 스타일</h4>
+              <div class="recommendations-list">
+                ${data.recommendations.map((r) => `<span>#${r}</span>`).join(" ")}
               </div>
             </div>
           </div>
-        `;
+        </div>
+      </div>
+    </div>
+  `;
 
         const cardObject = container.querySelector(".card-object");
         const sparkleOverlay = container.querySelector(".sparkle-overlay");
@@ -2176,3 +2091,4 @@
     </script>
   </body>
 </html>
+
