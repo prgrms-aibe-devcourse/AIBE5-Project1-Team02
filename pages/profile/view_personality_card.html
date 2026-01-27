@@ -1,0 +1,839 @@
+<!doctype html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>나의 여행 성향 카드</title>
+        <script src="https://cdn.lordicon.com/lordicon.js"></script>
+        <style>
+            @import url("https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700;800&display=swap");
+
+            :root {
+                --primary-color: #00c4b4;
+                --secondary-color: #ff8c42;
+                --text-dark: #333333;
+                --text-light: #666666;
+                --border-color: #e5e7eb;
+            }
+
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+
+            body {
+                font-family: "Pretendard", sans-serif;
+                /* 요청하신 검은색 배경 */
+                background-color: #000000;
+                color: white;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                min-height: 100vh;
+                overflow: hidden; /* 스크롤 방지 */
+                position: relative; /* 배경 요소 배치를 위해 relative 설정 */
+            }
+
+            /* --- [추가] 별 배경 스타일 --- */
+            .star-background {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: black;
+                background-image:
+                    radial-gradient(
+                        circle at 15% 50%,
+                        rgba(255, 255, 255, 0.8) 0.5px,
+                        transparent 1px
+                    ),
+                    radial-gradient(
+                        circle at 70% 30%,
+                        rgba(255, 255, 255, 0.7) 0.5px,
+                        transparent 1px
+                    ),
+                    radial-gradient(
+                        circle at 40% 80%,
+                        rgba(255, 255, 255, 0.9) 1px,
+                        transparent 1.5px
+                    ),
+                    radial-gradient(
+                        circle at 85% 60%,
+                        rgba(255, 255, 255, 0.6) 1px,
+                        transparent 1.5px
+                    ),
+                    radial-gradient(
+                        circle at 25% 10%,
+                        rgba(255, 255, 255, 0.8) 0.8px,
+                        transparent 1.2px
+                    ),
+                    radial-gradient(
+                        circle at 5% 90%,
+                        rgba(255, 255, 255, 0.7) 0.7px,
+                        transparent 1.1px
+                    ),
+                    radial-gradient(
+                        circle at 60% 5%,
+                        rgba(255, 255, 255, 0.9) 1.2px,
+                        transparent 1.8px
+                    );
+                background-size:
+                    150px 150px,
+                    180px 180px,
+                    200px 200px,
+                    220px 220px,
+                    160px 160px,
+                    190px 190px,
+                    210px 210px;
+                background-repeat: repeat;
+                opacity: 0.8;
+                animation: star-twinkle 5s ease-in-out infinite alternate;
+                z-index: 0; /* 제일 뒤에 배치 */
+            }
+
+            @keyframes star-twinkle {
+                0%,
+                100% {
+                    opacity: 0.7;
+                }
+                50% {
+                    opacity: 1;
+                }
+            }
+
+            /* --- [추가] 유성우(별똥별) 스타일 --- */
+            .shooting-stars {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+                pointer-events: none;
+                z-index: 0; /* 별 배경 바로 위 */
+            }
+
+            .shooting-star {
+                position: absolute;
+                height: 2px;
+                background: linear-gradient(
+                    to right,
+                    transparent,
+                    rgba(255, 255, 255, 1)
+                );
+                border-radius: 50%;
+                transform: rotate(45deg);
+                opacity: 0;
+                animation: shooting-star-anim linear infinite;
+            }
+
+            @keyframes shooting-star-anim {
+                0% {
+                    opacity: 1;
+                    transform: rotate(45deg) translateX(0);
+                }
+                100% {
+                    opacity: 0;
+                    transform: rotate(45deg) translateX(150vh);
+                }
+            }
+
+            /* --- 3D 카드 관련 스타일 (기존 코드 유지) --- */
+            .interactive-card-container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position: relative;
+                z-index: 10;
+                padding: 2rem;
+            }
+
+            .card-scene {
+                width: 320px;
+                height: 560px;
+                perspective: 1500px;
+            }
+
+            .card-object {
+                width: 100%;
+                height: 100%;
+                position: relative;
+                transform-style: preserve-3d;
+                transition: transform 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+                --flip-rotation: 0deg;
+                transform: rotateX(var(--rotate-x, 0deg))
+                    rotateY(calc(var(--rotate-y, 0deg) + var(--flip-rotation)));
+                transform-origin: center center;
+                cursor: pointer;
+            }
+
+            .card-object.is-flipped {
+                --flip-rotation: 180deg;
+            }
+
+            .card-face {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                top: 0;
+                left: 0;
+                -webkit-backface-visibility: hidden;
+                backface-visibility: hidden;
+                border-radius: 1.5rem;
+                box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); /* 그림자 진하게 */
+                overflow: hidden;
+                color: white;
+            }
+
+            .card-face--front {
+                border: 4px solid rgba(255, 255, 255, 0.3);
+            }
+
+            /* 스파클 & 홀로그램 효과 */
+            .sparkle-overlay {
+                position: absolute;
+                inset: 0;
+                overflow: hidden;
+                pointer-events: none;
+            }
+
+            .card-sparkle {
+                position: absolute;
+                width: 8px;
+                height: 8px;
+                background-color: white;
+                border-radius: 50%;
+                opacity: 0;
+                transform: scale(0);
+                animation: sparkle-animation 2s infinite;
+            }
+
+            @keyframes sparkle-animation {
+                0% {
+                    opacity: 0;
+                    transform: scale(0);
+                }
+                50% {
+                    opacity: 1;
+                    transform: scale(1.5);
+                }
+                100% {
+                    opacity: 0;
+                    transform: scale(0);
+                }
+            }
+
+            .holographic-overlay {
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(
+                    to top right,
+                    transparent 0%,
+                    rgba(255, 255, 255, 0.4) 50%,
+                    transparent 100%
+                );
+                pointer-events: none;
+                mix-blend-mode: overlay;
+                opacity: 0.8;
+                transform: translateX(-100%);
+                animation: holographic-animation 3s infinite;
+                animation-delay: 1s;
+            }
+
+            @keyframes holographic-animation {
+                0% {
+                    transform: translateX(-100%);
+                }
+                100% {
+                    transform: translateX(100%);
+                }
+            }
+
+            .card-border {
+                position: absolute;
+                inset: 1rem;
+                border: 2px solid rgba(255, 255, 255, 0.4);
+                border-radius: 1rem;
+                pointer-events: none;
+            }
+
+            .card-content {
+                position: relative;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: space-between;
+                padding: 2rem;
+                text-align: center;
+                text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            }
+
+            .card-top-ornament,
+            .card-bottom-ornament {
+                font-size: 1.5rem;
+                opacity: 0.8;
+            }
+            .card-character-main {
+                font-size: 8rem;
+                filter: drop-shadow(0 0 15px rgba(0, 0, 0, 0.5));
+            }
+            .card-title-group {
+                margin-top: -1rem;
+            }
+            .card-main-type {
+                font-size: 3rem;
+                font-weight: 800;
+            }
+            .card-main-nickname {
+                font-size: 1.75rem;
+                font-weight: 700;
+                line-height: 1.2;
+            }
+            .card-main-subtitle {
+                font-size: 1rem;
+                font-weight: 400;
+                opacity: 0.8;
+                font-style: italic;
+            }
+
+            /* 카드 뒷면 */
+            .card-face--back {
+                background-color: #f8fafc;
+                color: var(--text-dark);
+                transform: rotateY(180deg);
+                padding: 1.5rem;
+                display: flex;
+                flex-direction: column;
+                overflow: hidden;
+            }
+
+            .card-back-content {
+                overflow-y: auto;
+                height: 100%;
+                padding-right: 5px;
+            }
+            /* 스크롤바 숨김 (깔끔하게) */
+            .card-back-content::-webkit-scrollbar {
+                width: 0px;
+            }
+
+            .back-header {
+                text-align: center;
+                margin-bottom: 1rem;
+                border-bottom: 1px solid var(--border-color);
+                padding-bottom: 1rem;
+            }
+            .back-character {
+                font-size: 3rem;
+                margin-bottom: 0.5rem;
+            }
+            .back-type {
+                font-size: 1.5rem;
+                font-weight: 800;
+                color: var(--primary-color);
+            }
+            .back-nickname {
+                font-size: 1.25rem;
+                font-weight: 700;
+            }
+            .back-subtitle {
+                font-size: 0.875rem;
+                color: var(--text-light);
+                font-style: italic;
+            }
+            .back-description {
+                font-size: 0.9rem;
+                text-align: center;
+                margin-bottom: 1rem;
+                color: var(--text-light);
+                font-style: italic;
+            }
+            .back-section {
+                margin-bottom: 1rem;
+            }
+            .back-section-title {
+                font-size: 0.875rem;
+                font-weight: 700;
+                text-align: center;
+                color: var(--primary-color);
+                margin-bottom: 0.75rem;
+            }
+
+            .traits-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 0.5rem;
+            }
+            .trait-item {
+                background-color: rgba(0, 196, 180, 0.1);
+                padding: 0.5rem;
+                border-radius: 0.5rem;
+                font-size: 0.8rem;
+                font-weight: 600;
+                text-align: center;
+            }
+            .strengths-list {
+                list-style: none;
+                padding: 0;
+                text-align: center;
+            }
+            .strengths-list li {
+                font-size: 0.9rem;
+                margin-bottom: 0.25rem;
+            }
+            .strengths-list li::before {
+                content: "✨";
+                margin-right: 0.5rem;
+            }
+            .recommendations-list {
+                text-align: center;
+                font-size: 0.9rem;
+                color: var(--text-light);
+                line-height: 1.5;
+            }
+            .recommendations-list span {
+                display: inline-block;
+                margin: 0 0.2rem;
+                background-color: #f1f5f9;
+                padding: 0.1rem 0.4rem;
+                border-radius: 0.25rem;
+            }
+
+            /* --- 하단 버튼 스타일 --- */
+            .confirm-button {
+                background-image: linear-gradient(
+                    to right,
+                    var(--primary-color),
+                    var(--secondary-color)
+                );
+                color: white;
+                padding: 1rem 3rem;
+                border-radius: 9999px;
+                font-weight: 700;
+                font-size: 1.125rem;
+                border: none;
+                cursor: pointer;
+                transition: all 0.3s;
+                box-shadow: 0 0 20px rgba(0, 196, 180, 0.4);
+                margin-top: 1rem;
+                z-index: 20;
+            }
+            .confirm-button:hover {
+                transform: scale(1.05);
+                box-shadow: 0 0 30px rgba(0, 196, 180, 0.6);
+            }
+
+            /* --- 배경 그라디언트 클래스 (데이터 매핑용) --- */
+            .from-red-600-via-rose-600-to-pink-600-bg {
+                background-image: linear-gradient(
+                    to bottom right,
+                    #dc2626,
+                    #e11d48,
+                    #db2777
+                );
+            }
+            .from-orange-600-via-amber-600-to-yellow-600-bg {
+                background-image: linear-gradient(
+                    to bottom right,
+                    #ea580c,
+                    #f59e0b,
+                    #eab308
+                );
+            }
+            .from-yellow-600-via-amber-600-to-orange-600-bg {
+                background-image: linear-gradient(
+                    to bottom right,
+                    #eab308,
+                    #f59e0b,
+                    #ea580c
+                );
+            }
+            .from-purple-600-via-violet-600-to-fuchsia-600-bg {
+                background-image: linear-gradient(
+                    to bottom right,
+                    #9333ea,
+                    #8b5cf6,
+                    #d946ef
+                );
+            }
+            .from-cyan-600-via-blue-600-to-indigo-600-bg {
+                background-image: linear-gradient(
+                    to bottom right,
+                    #0891b2,
+                    #2563eb,
+                    #4f46e5
+                );
+            }
+            .from-emerald-600-via-green-600-to-teal-600-bg {
+                background-image: linear-gradient(
+                    to bottom right,
+                    #059669,
+                    #16a34a,
+                    #0d9488
+                );
+            }
+            .from-amber-600-via-yellow-600-to-lime-600-bg {
+                background-image: linear-gradient(
+                    to bottom right,
+                    #f59e0b,
+                    #eab308,
+                    #84cc16
+                );
+            }
+            .from-red-600-via-orange-600-to-amber-600-bg {
+                background-image: linear-gradient(
+                    to bottom right,
+                    #dc2626,
+                    #ea580c,
+                    #f59e0b
+                );
+            }
+            .from-teal-600-via-cyan-600-to-sky-600-bg {
+                background-image: linear-gradient(
+                    to bottom right,
+                    #0d9488,
+                    #0891b2,
+                    #0284c7
+                );
+            }
+        </style>
+    </head>
+    <body>
+        <div class="star-background"></div>
+        <div class="shooting-stars"></div>
+
+        <div id="card-viewer" class="interactive-card-container"></div>
+
+        <button id="close-btn" class="confirm-button">확인</button>
+
+        <script>
+            // 1. 유성우(Shooting Stars) 생성 로직 추가
+            function createShootingStars() {
+                const shootingStarsContainer =
+                    document.querySelector(".shooting-stars");
+                const numberOfStars = 8; // 적절한 개수 설정
+
+                for (let i = 0; i < numberOfStars; i++) {
+                    const star = document.createElement("div");
+                    star.className = "shooting-star";
+
+                    // 화면 상단(-20% ~ 30%) 및 전체 좌우 폭(-10% ~ 110%)에서 랜덤 시작
+                    const top = Math.random() * 50 - 20;
+                    const left = Math.random() * 200 - 100;
+
+                    const duration = Math.random() * 5 + 5; // 5~10초 (천천히 떨어짐)
+                    const delay = Math.random() * 15; // 0~15초 랜덤 딜레이
+                    const width = Math.random() * 100 + 80; // 길이 랜덤
+
+                    star.style.top = `${top}%`;
+                    star.style.left = `${left}%`;
+                    star.style.width = `${width}px`;
+                    star.style.animationDuration = `${duration}s`;
+                    star.style.animationDelay = `${delay}s`;
+
+                    shootingStarsContainer.appendChild(star);
+                }
+            }
+
+            // 페이지 로드 시 유성우 생성 실행
+            createShootingStars();
+
+            // --- 기존 로직 (데이터 및 카드 렌더링) ---
+            const enneagramTypes = {
+                1: {
+                    type: 1,
+                    nickname: "완벽 루트 설계자",
+                    subtitle: "The Perfect Route Designer",
+                    character: "📐",
+                    description:
+                        "모든 것이 완벽해야 직성이 풀리는 당신! 일정부터 숙소까지 완벽하게 계획합니다.",
+                    traits: ["완벽주의", "체계적", "책임감 강함", "정의로움"],
+                    strengths: ["철저한 계획", "높은 기준", "안전한 여행"],
+                    travelMotivation:
+                        "완벽하게 계획된 여행으로 모든 것을 경험하고 싶어요",
+                    recommendations: [
+                        "유럽 문화 투어",
+                        "역사 유적지",
+                        "박물관 탐방",
+                    ],
+                    gradient: "from-red-600-via-rose-600-to-pink-600",
+                },
+                2: {
+                    type: 2,
+                    nickname: "여행 메이트 천사",
+                    subtitle: "The Travel Mate Angel",
+                    character: "💝",
+                    description:
+                        "동행자의 행복이 곧 나의 행복! 모두를 챙기는 따뜻한 여행 동반자.",
+                    traits: ["배려심 가득", "친절함", "감정 이입", "관계 중시"],
+                    strengths: ["분위기 조율", "갈등 해결", "팀워크"],
+                    travelMotivation:
+                        "함께하는 사람들과 좋은 추억을 만들고 싶어요",
+                    recommendations: [
+                        "단체 패키지 투어",
+                        "봉사 여행",
+                        "현지 교류",
+                    ],
+                    gradient: "from-orange-600-via-amber-600-to-yellow-600",
+                },
+                3: {
+                    type: 3,
+                    nickname: "인증샷 프로듀서",
+                    subtitle: "The Proof-Shot Producer",
+                    character: "🏆",
+                    description:
+                        "여행도 성공적이어야 해! 핫플만 골라가는 트렌디한 성취자.",
+                    traits: ["목표 지향", "효율적", "이미지 중시", "경쟁심"],
+                    strengths: ["빠른 실행력", "정보 수집", "SNS 마스터"],
+                    travelMotivation:
+                        "멋진 여행으로 성공적인 경험을 만들고 싶어요",
+                    recommendations: ["핫플 투어", "SNS 명소", "럭셔리 여행"],
+                    gradient: "from-yellow-600-via-amber-600-to-orange-600",
+                },
+                4: {
+                    type: 4,
+                    nickname: "감성 아티스트",
+                    subtitle: "The Emotional Artist",
+                    character: "🎭",
+                    description:
+                        "평범한 건 NO! 나만의 특별한 여행으로 영감을 찾는 예술가.",
+                    traits: ["개성 강함", "감성적", "창의적", "깊이 있음"],
+                    strengths: ["독특한 발견", "예술적 감각", "진정성"],
+                    travelMotivation:
+                        "나만의 특별하고 의미있는 순간을 찾고 싶어요",
+                    recommendations: ["예술 투어", "감성 카페", "독특한 숙소"],
+                    gradient: "from-purple-600-via-violet-600-to-fuchsia-600",
+                },
+                5: {
+                    type: 5,
+                    nickname: "정보 수집 덕후",
+                    subtitle: "The Information Collector",
+                    character: "🔍",
+                    description:
+                        "여행 전 리서치는 필수! 모든 것을 알고 가는 지식 탐구자.",
+                    traits: ["관찰력 뛰어남", "분석적", "독립적", "호기심"],
+                    strengths: ["깊은 이해", "전문 지식", "효율적 계획"],
+                    travelMotivation:
+                        "새로운 지식과 경험으로 세상을 이해하고 싶어요",
+                    recommendations: ["박물관 투어", "과학관", "도서관 여행"],
+                    gradient: "from-cyan-600-via-blue-600-to-indigo-600",
+                },
+                6: {
+                    type: 6,
+                    nickname: "안전 제일주의자",
+                    subtitle: "The Safety First Traveler",
+                    character: "🛡️",
+                    description:
+                        "안전이 최우선! 철저한 준비로 불안을 없애는 신중파.",
+                    traits: ["충성심", "책임감", "경계심", "준비성"],
+                    strengths: ["위험 관리", "신뢰성", "팀워크"],
+                    travelMotivation:
+                        "안전하고 믿을 수 있는 여행을 하고 싶어요",
+                    recommendations: [
+                        "패키지 투어",
+                        "안전한 국가",
+                        "보험 완비",
+                    ],
+                    gradient: "from-emerald-600-via-green-600-to-teal-600",
+                },
+                7: {
+                    type: 7,
+                    nickname: "모험 콜렉터",
+                    subtitle: "The Adventure Collector",
+                    character: "🎢",
+                    description:
+                        "이것도 저것도 다 하고 싶어! 끝없는 에너지의 즐거움 추구자.",
+                    traits: ["낙천적", "열정적", "다재다능", "자유로움"],
+                    strengths: ["긍정 에너지", "적응력", "재미 창출"],
+                    travelMotivation:
+                        "재미있고 신나는 모든 것을 경험하고 싶어요",
+                    recommendations: ["액티비티 투어", "축제", "테마파크"],
+                    gradient: "from-amber-600-via-yellow-600-to-lime-600",
+                },
+                8: {
+                    type: 8,
+                    nickname: "무한 도전러",
+                    subtitle: "The Infinite Challenger",
+                    character: "⚡",
+                    description:
+                        "두려움은 없다! 강렬한 경험을 추구하는 파워풀한 도전자.",
+                    traits: ["자신감", "리더십", "직선적", "강인함"],
+                    strengths: ["결단력", "추진력", "보호 본능"],
+                    travelMotivation:
+                        "강렬하고 도전적인 경험으로 한계를 넘고 싶어요",
+                    recommendations: [
+                        "익스트림 스포츠",
+                        "오지 탐험",
+                        "모험 여행",
+                    ],
+                    gradient: "from-red-600-via-orange-600-to-amber-600",
+                },
+                9: {
+                    type: 9,
+                    nickname: "평화 수호자",
+                    subtitle: "The Peace Keeper",
+                    character: "🕊️",
+                    description:
+                        "느긋하게 흐름대로! 평화롭고 조화로운 여행을 즐기는 힐러.",
+                    traits: ["평화로움", "수용적", "느긋함", "중재자"],
+                    strengths: ["갈등 해결", "적응력", "포용력"],
+                    travelMotivation:
+                        "편안하고 평화로운 휴식으로 재충전하고 싶어요",
+                    recommendations: [
+                        "힐링 여행",
+                        "자연 속 휴양",
+                        "요가 리트릿",
+                    ],
+                    gradient: "from-teal-600-via-cyan-600-to-sky-600",
+                },
+            };
+
+            // URL 파라미터에서 카드 타입 가져오기
+            function getCardTypeFromUrl() {
+                // 1. localStorage에서 먼저 결과 타입 확인
+                const storedType = localStorage.getItem("myTravelType");
+                if (storedType && enneagramTypes[storedType]) {
+                    return storedType;
+                }
+
+                // 2. localStorage에 없으면 URL 파라미터에서 확인 (기존 로직)
+                const params = new URLSearchParams(window.location.search);
+                const type = params.get("type");
+                if (type && enneagramTypes[type]) {
+                    return type;
+                }
+
+                // 3. 둘 다 없으면 기본값 1로 설정
+                return 1;
+            }
+
+            // 카드 렌더링 함수
+            function renderCard(typeId) {
+                const data = enneagramTypes[typeId];
+                const container = document.getElementById("card-viewer");
+
+                container.innerHTML = `
+            <div class="card-scene">
+                <div class="card-object">
+                    <div class="card-face card-face--front ${data.gradient}-bg">
+                        <div class="card-border"></div>
+                        <div class="card-content">
+                            <div class="card-top-ornament">✦</div>
+                            <div class="card-character-main">${data.character}</div>
+                            <div class="card-title-group">
+                                <div class="card-main-type">${data.type}</div>
+                                <h2 class="card-main-nickname">${data.nickname}</h2>
+                                <p class="card-main-subtitle">${data.subtitle}</p>
+                            </div>
+                            <div class="card-bottom-ornament">✦</div>
+                        </div>
+                        <div class="sparkle-overlay"></div>
+                        <div class="holographic-overlay"></div>
+                    </div>
+                    <div class="card-face card-face--back">
+                         <div class="card-back-content">
+                            <div class="back-header">
+                                <div class="back-character">${data.character}</div>
+                                <div class="back-type">${data.type}</div>
+                                <h3 class="back-nickname">${data.nickname}</h3>
+                                <p class="back-subtitle">${data.subtitle}</p>
+                            </div>
+                            <p class="back-description">"${data.travelMotivation}"</p>
+                            <div class="back-section">
+                                <h4 class="back-section-title">주요 특징</h4>
+                                <div class="traits-grid">
+                                    ${data.traits.map((trait) => `<div class="trait-item">${trait}</div>`).join("")}
+                                </div>
+                            </div>
+                            <div class="back-section">
+                                <h4 class="back-section-title">여행 강점</h4>
+                                <ul class="strengths-list">
+                                    ${data.strengths.map((s) => `<li>${s}</li>`).join("")}
+                                </ul>
+                            </div>
+                             <div class="back-section">
+                                <h4 class="back-section-title">추천 여행 스타일</h4>
+                                 <div class="recommendations-list">
+                                    ${data.recommendations.map((r) => `<span>#${r}</span>`).join(" ")}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+                const cardObject = container.querySelector(".card-object");
+                const sparkleOverlay =
+                    container.querySelector(".sparkle-overlay");
+                const cardScene = container.querySelector(".card-scene");
+
+                // 스파클 효과 생성
+                for (let i = 0; i < 30; i++) {
+                    const sparkle = document.createElement("div");
+                    sparkle.className = "card-sparkle";
+                    sparkle.style.left = `${Math.random() * 100}%`;
+                    sparkle.style.top = `${Math.random() * 100}%`;
+                    sparkle.style.animationDelay = `${Math.random() * 2}s`;
+                    sparkleOverlay.appendChild(sparkle);
+                }
+
+                // 클릭 이벤트 (뒤집기)
+                cardObject.addEventListener("click", () => {
+                    cardObject.classList.toggle("is-flipped");
+                    // 뒤집혔을 때는 기울기 효과 초기화 (가독성 위해)
+                    cardObject.style.setProperty("--rotate-x", "0deg");
+                    cardObject.style.setProperty("--rotate-y", "0deg");
+                });
+
+                // 마우스 무브 이벤트 (3D 틸트 효과)
+                cardScene.addEventListener("mousemove", (e) => {
+                    if (cardObject.classList.contains("is-flipped")) return;
+
+                    const rect = cardScene.getBoundingClientRect();
+                    const centerX = rect.left + rect.width / 2;
+                    const centerY = rect.top + rect.height / 2;
+                    const mouseX = e.clientX - centerX;
+                    const mouseY = e.clientY - centerY;
+
+                    const rotateX = (mouseY / rect.height) * -30;
+                    const rotateY = (mouseX / rect.width) * 30;
+
+                    cardObject.style.setProperty("--rotate-x", `${rotateX}deg`);
+                    cardObject.style.setProperty("--rotate-y", `${rotateY}deg`);
+                });
+
+                // 마우스가 떠나면 평평하게 복귀
+                cardScene.addEventListener("mouseleave", () => {
+                    cardObject.style.setProperty("--rotate-x", "0deg");
+                    cardObject.style.setProperty("--rotate-y", "0deg");
+                });
+            }
+
+            // 초기화 실행
+            const currentType = getCardTypeFromUrl();
+            renderCard(currentType);
+
+            // 닫기 버튼 이벤트 (이전 페이지로 돌아가기)
+            document
+                .getElementById("close-btn")
+                .addEventListener("click", () => {
+                    // history.back()을 사용하여 이전 페이지로 돌아갑니다.
+                    // 만약 새 창으로 열었다면 window.close()를 사용해야 할 수도 있습니다.
+                    if (history.length > 1) {
+                        history.back();
+                    } else {
+                        // 히스토리가 없는 경우 (링크를 직접 열었을 때) 창 닫기 시도
+                        window.close();
+                        // 닫기가 막힌 경우 알림
+                        alert("이전 페이지가 없습니다.");
+                    }
+                });
+        </script>
+    </body>
+</html>
+_P
