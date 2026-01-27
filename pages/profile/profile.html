@@ -1163,6 +1163,7 @@
                     userPlansContainer.innerHTML +=
                         '<p class="text-center text-slate-500 py-4">아직 저장된 여행 계획이 없습니다.</p>';
                 } else {
+                    savedPlans.sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
                     savedPlans.forEach((plan) => {
                         const startDate = new Date(plan.startDate);
                         const endDate = new Date(plan.endDate);
