@@ -49,14 +49,13 @@
     <body
         class="bg-background-light text-slate-900 transition-colors duration-300 min-h-screen"
     >
-
         <header
             class="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
         >
             <div
                 class="w-full px-8 relative flex h-20 items-center justify-between"
             >
-                <a class="flex items-center space-x-2" href="/AIBE5-Project1-Team02/pages/main/Main.html">
+                <a class="flex items-center space-x-2" href="../main/Main.html">
                     <img
                         src="../../images/Logo.png"
                         alt="여백 로고"
@@ -111,7 +110,13 @@
                     <section
                         class="bg-white rounded-3xl shadow-xl overflow-hidden mb-8 transition-colors duration-300 h-full"
                     >
-                <div style="position: relative; height: 128px; background-color: #008774;"></div>
+                        <div
+                            style="
+                                position: relative;
+                                height: 128px;
+                                background-color: #008774;
+                            "
+                        ></div>
                         <div class="px-6 pb-6 relative">
                             <div
                                 class="flex justify-between items-end -mt-12 mb-4"
@@ -955,8 +960,18 @@
                                             <div
                                                 class="flex justify-between text-xs text-slate-500 mb-1"
                                             >
-                                                <span>계획적 <span id="planfulness-label"></span></span>
-                                                <span>즉흥적 <span id="impulsivity-label"></span></span>
+                                                <span
+                                                    >계획적
+                                                    <span
+                                                        id="planfulness-label"
+                                                    ></span
+                                                ></span>
+                                                <span
+                                                    >즉흥적
+                                                    <span
+                                                        id="impulsivity-label"
+                                                    ></span
+                                                ></span>
                                             </div>
                                             <div
                                                 class="h-2 bg-slate-100 rounded-full overflow-hidden"
@@ -971,8 +986,18 @@
                                             <div
                                                 class="flex justify-between text-xs text-slate-500 mb-1"
                                             >
-                                                <span>알뜰함 <span id="frugality-label"></span></span>
-                                                <span>럭셔리 <span id="luxury-label"></span></span>
+                                                <span
+                                                    >알뜰함
+                                                    <span
+                                                        id="frugality-label"
+                                                    ></span
+                                                ></span>
+                                                <span
+                                                    >럭셔리
+                                                    <span
+                                                        id="luxury-label"
+                                                    ></span
+                                                ></span>
                                             </div>
                                             <div
                                                 class="h-2 bg-slate-100 rounded-full overflow-hidden"
@@ -1063,32 +1088,44 @@
                     const resultData = enneagramTypes[myTravelType];
 
                     // "나의 여행 성향" 섹션 업데이트
-                    const personalityTypeDisplay = document.getElementById("personality-type-display");
+                    const personalityTypeDisplay = document.getElementById(
+                        "personality-type-display",
+                    );
                     if (personalityTypeDisplay) {
-                        personalityTypeDisplay.textContent = resultData.nickname;
+                        personalityTypeDisplay.textContent =
+                            resultData.nickname;
                     }
 
-                    const personalityStrengthsContainer = document.getElementById("personality-strengths-container");
+                    const personalityStrengthsContainer =
+                        document.getElementById(
+                            "personality-strengths-container",
+                        );
                     if (personalityStrengthsContainer) {
                         personalityStrengthsContainer.innerHTML = ""; // 기존 내용 삭제
-                        resultData.strengths.forEach(strength => {
+                        resultData.strengths.forEach((strength) => {
                             const span = document.createElement("span");
-                            span.className = "px-2 py-1 bg-white/60 rounded-lg text-xs font-medium text-indigo-700";
+                            span.className =
+                                "px-2 py-1 bg-white/60 rounded-lg text-xs font-medium text-indigo-700";
                             span.textContent = `#${strength}`;
                             personalityStrengthsContainer.appendChild(span);
                         });
                     }
 
                     // "여행 성향 분석" 모달 섹션 업데이트
-                    const personalityModalTitle = document.getElementById("personality-modal-title");
+                    const personalityModalTitle = document.getElementById(
+                        "personality-modal-title",
+                    );
                     if (personalityModalTitle) {
                         personalityModalTitle.textContent = `${resultData.nickname}`;
                     }
 
-                    const personalityModalRecommendationsList = document.getElementById("personality-modal-recommendations-list");
+                    const personalityModalRecommendationsList =
+                        document.getElementById(
+                            "personality-modal-recommendations-list",
+                        );
                     if (personalityModalRecommendationsList) {
                         personalityModalRecommendationsList.innerHTML = ""; // 기존 내용 삭제
-                        resultData.recommendations.forEach(rec => {
+                        resultData.recommendations.forEach((rec) => {
                             const li = document.createElement("li");
                             li.textContent = rec;
                             personalityModalRecommendationsList.appendChild(li);
@@ -1096,25 +1133,34 @@
                     }
 
                     // 상세 지표 (진행률 바) 업데이트
-                    const planfulnessBar = document.getElementById("planfulness-bar");
+                    const planfulnessBar =
+                        document.getElementById("planfulness-bar");
                     if (planfulnessBar && resultData.metrics) {
                         planfulnessBar.style.width = `${resultData.metrics.planfulness}%`;
                     }
 
-                    const frugalityBar = document.getElementById("frugality-bar");
+                    const frugalityBar =
+                        document.getElementById("frugality-bar");
                     if (frugalityBar && resultData.metrics) {
                         frugalityBar.style.width = `${resultData.metrics.frugality}%`;
                     }
 
                     // 상세 지표 텍스트 레이블 업데이트
-                    const planfulnessLabel = document.getElementById("planfulness-label");
-                    const impulsivityLabel = document.getElementById("impulsivity-label");
-                    if (planfulnessLabel && impulsivityLabel && resultData.metrics) {
+                    const planfulnessLabel =
+                        document.getElementById("planfulness-label");
+                    const impulsivityLabel =
+                        document.getElementById("impulsivity-label");
+                    if (
+                        planfulnessLabel &&
+                        impulsivityLabel &&
+                        resultData.metrics
+                    ) {
                         planfulnessLabel.textContent = `(${resultData.metrics.planfulness}%)`;
                         impulsivityLabel.textContent = `(${100 - resultData.metrics.planfulness}%)`;
                     }
 
-                    const frugalityLabel = document.getElementById("frugality-label");
+                    const frugalityLabel =
+                        document.getElementById("frugality-label");
                     const luxuryLabel = document.getElementById("luxury-label");
                     if (frugalityLabel && luxuryLabel && resultData.metrics) {
                         frugalityLabel.textContent = `(${resultData.metrics.frugality}%)`;
