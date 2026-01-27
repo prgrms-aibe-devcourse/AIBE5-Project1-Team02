@@ -29,7 +29,7 @@
                 theme: {
                     extend: {
                         colors: {
-                            primary: "#00897b", // 코드 1의 테마색 (Teal) 유지
+                            primary: "#00897b",
                             "primary-dark": "#00897b",
                             "background-light": "#f3f4f6",
                             "background-dark": "#1f262e",
@@ -131,7 +131,7 @@
                 GripVertical: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="12" r="1"></circle><circle cx="9" cy="5" r="1"></circle><circle cx="9" cy="19" r="1"></circle><circle cx="15" cy="12" r="1"></circle><circle cx="15" cy="5" r="1"></circle><circle cx="15" cy="19" r="1"></circle></svg>`,
                 Search: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>`,
                 Info: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>`,
-                Phone: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>`,
+                Phone: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2-18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>`,
                 Star: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="orange" stroke="orange" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`,
                 ArrowLeft: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>`,
                 Navigation: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>`,
@@ -202,6 +202,182 @@
                     image: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=400&q=80",
                     category: "landmark",
                     description: "현대적인 도시 경관",
+                },
+                {
+                    id: "9",
+                    name: "빅벤",
+                    country: "영국 런던",
+                    image: "https://images.unsplash.com/photo-1529655683826-aba9b3e77383?w=400&q=80",
+                    category: "landmark",
+                    description: "런던의 대표 랜드마크",
+                },
+                {
+                    id: "10",
+                    name: "자유의 여신상",
+                    country: "미국 뉴욕",
+                    image: "https://images.unsplash.com/photo-1503572327579-b5c6afe5c5c5?q=80&w=1484&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    category: "landmark",
+                    description: "뉴욕을 상징하는 관광지",
+                },
+                {
+                    id: "11",
+                    name: "방콕 왕궁",
+                    country: "태국 방콕",
+                    image: "https://images.unsplash.com/photo-1728017237938-8829b36c1850?q=80&w=1631&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    category: "landmark",
+                    description: "태국 전통 건축과 문화의 중심",
+                },
+                {
+                    id: "12",
+                    name: "다낭 미케비치",
+                    country: "베트남 다낭",
+                    image: "https://images.unsplash.com/photo-1723142282970-1fd415eec1ad?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    category: "nature",
+                    description: "휴양에 좋은 해변",
+                },
+                {
+                    id: "13",
+                    name: "시드니 오페라하우스",
+                    country: "호주 시드니",
+                    image: "https://images.unsplash.com/photo-1523059623039-a9ed027e7fad?q=80&w=1664&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    category: "landmark",
+                    description: "호주의 대표 랜드마크",
+                },
+                {
+                    id: "14",
+                    name: "프라하 구시가지",
+                    country: "체코 프라하",
+                    image: "https://images.unsplash.com/photo-1673272294301-c9d959edc6d4?q=80&w=1587&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    category: "city",
+                    description: "동유럽 감성 도시",
+                },
+                {
+                    id: "15",
+                    name: "인터라켄",
+                    country: "스위스",
+                    image: "https://images.unsplash.com/photo-1605825856823-cabe105ab0af?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    category: "nature",
+                    description: "알프스 액티비티 중심지",
+                },
+                {
+                    id: "16",
+                    name: "하와이 와이키키",
+                    country: "미국 하와이",
+                    image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&q=80",
+                    category: "nature",
+                    description: "대표적인 휴양 해변",
+                },
+                {
+                    id: "17",
+                    name: "이스탄불 블루모스크",
+                    country: "터키 이스탄불",
+                    image: "https://images.unsplash.com/photo-1673586796931-7c2232e81db8?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    category: "landmark",
+                    description: "이슬람 건축 명소",
+                },
+                {
+                    id: "18",
+                    name: "마추픽추",
+                    country: "페루",
+                    image: "https://images.unsplash.com/photo-1587595431973-160d0d94add1?q=80&w=1476&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    category: "landmark",
+                    description: "잉카 문명의 유적",
+                },
+                {
+                    id: "19",
+                    name: "바르셀로나 해변",
+                    country: "스페인",
+                    image: "https://images.unsplash.com/photo-1464790719320-516ecd75af6c?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    category: "nature",
+                    description: "도시 속 휴양지",
+                },
+                {
+                    id: "20",
+                    name: "베네치아 곤돌라",
+                    country: "이탈리아 베네치아",
+                    image: "https://images.unsplash.com/photo-1736252333436-9f0234de7dbd?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    category: "city",
+                    description: "물의 도시 로맨스",
+                },
+                {
+                    id: "21",
+                    name: "상하이 와이탄",
+                    country: "중국 상하이",
+                    image: "https://images.unsplash.com/photo-1723949140609-064a06e52db2?q=80&w=1587&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    category: "city",
+                    description: "야경 명소",
+                },
+                {
+                    id: "22",
+                    name: "런던 타워브릿지",
+                    country: "영국 런던",
+                    image: "https://images.unsplash.com/photo-1533929736458-ca588d08c8be?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    category: "landmark",
+                    description: "영국 대표 다리",
+                },
+                {
+                    id: "23",
+                    name: "부다페스트 국회의사당",
+                    country: "헝가리",
+                    image: "https://images.unsplash.com/photo-1617034592886-5c36bb6de0d1?q=80&w=1632&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    category: "landmark",
+                    description: "야경 명소",
+                },
+                {
+                    id: "24",
+                    name: "하노이 호안끼엠 호수",
+                    country: "베트남 하노이",
+                    image: "https://images.unsplash.com/photo-1651384360692-2de84bdb84c1?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    category: "city",
+                    description: "도심 속 호수",
+                },
+                {
+                    id: "25",
+                    name: "오사카 도톤보리",
+                    country: "일본 오사카",
+                    image: "https://images.unsplash.com/photo-1713925104997-2786602b1313?q=80&w=1548&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    category: "city",
+                    description: "먹거리 천국",
+                },
+                {
+                    id: "26",
+                    name: "코펜하겐 뉘하운",
+                    country: "덴마크",
+                    image: "https://images.unsplash.com/photo-1659379820723-6d695a163ecf?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    category: "city",
+                    description: "알록달록 항구",
+                },
+                {
+                    id: "27",
+                    name: "케이프타운 테이블마운틴",
+                    country: "남아프리카공화국",
+                    image: "https://images.unsplash.com/photo-1712850244310-5765b9373353?q=80&w=1587&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    category: "nature",
+                    description: "대자연 전망",
+                },
+                {
+                    id: "28",
+                    name: "리우 코르코바도",
+                    country: "브라질",
+                    image: "https://images.unsplash.com/photo-1700677866588-95226be09b39?q=80&w=1548&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    category: "landmark",
+                    description: "예수상 전망대",
+                },
+                {
+                    id: "29",
+                    name: "로포텐 제도",
+                    country: "노르웨이",
+                    image: "https://images.unsplash.com/photo-1710762635726-531b4a22d4ca?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    category: "nature",
+                    description: "북유럽 자연 풍경",
+                },
+                {
+                    id: "30",
+                    name: "세부 오슬롭",
+                    country: "필리핀 세부",
+                    image: "https://images.unsplash.com/photo-1718560171948-08d6ac9ee837?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    category: "nature",
+                    description: "에메랄드 바다",
                 },
             ];
 
@@ -316,6 +492,7 @@
                     isCollapsed: false,
                     selectedPlace: null,
                     showAddModal: false,
+                    savedFlights: null, // ★ [수정됨] 항공권 데이터 상태 초기화
 
                     // ★ 코드 2에서 가져온 부분 (미리보기 상태)
                     showPreviewModal: false,
@@ -375,6 +552,7 @@
                         schedule: this.state.schedule,
                         selectedDay: this.state.selectedDay,
                         currentPlanId: this.state.currentPlanId,
+                        savedFlights: this.state.savedFlights, // ★ [수정됨] 항공권 정보도 임시 저장에 포함
                     };
                     const loggedInUser = JSON.parse(
                         localStorage.getItem("loggedInUser"),
@@ -792,7 +970,20 @@
             const App = {
                 init() {
                     Store.init();
-                    this.checkIncomingFlightData();
+
+                    const urlParams = new URLSearchParams(
+                        window.location.search,
+                    );
+                    const planId = urlParams.get("id");
+
+                    if (planId) {
+                        // id가 있으면 해당 plan을 로드합니다.
+                        this.loadPlan(planId);
+                    } else {
+                        // id가 없으면 기존 로직(임시저장 또는 항공권 정보)을 따릅니다.
+                        this.checkIncomingFlightData();
+                    }
+
                     this.render();
                 },
 
@@ -862,15 +1053,16 @@
                             departure: flightInfo.departure,
                             destination: flightInfo.destination,
                             savedFlights: {
-                                                                        outbound: flightInfo.outbound,
-                                                                        inbound: flightInfo.inbound,
-                                                                        passengers: flightInfo.passengers, // 추가
-                                                                        totalPrice: flightInfo.totalPrice, // 추가
-                                                                    },
-                                                                };
-                                                                if (isLocationChanged || isDateChanged)
-                                                                    nextState.schedule = [];
-                                                                Store.setState(nextState, false);                        localStorage.removeItem("tripPlanner_flightInfo");
+                                outbound: flightInfo.outbound,
+                                inbound: flightInfo.inbound,
+                                passengers: flightInfo.passengers, // 추가
+                                totalPrice: flightInfo.totalPrice, // 추가
+                            },
+                        };
+                        if (isLocationChanged || isDateChanged)
+                            nextState.schedule = [];
+                        Store.setState(nextState, false);
+                        localStorage.removeItem("tripPlanner_flightInfo");
                         localStorage.setItem(
                             draftKey,
                             JSON.stringify(Store.state),
@@ -1118,16 +1310,11 @@
                     }
                 },
 
-                // ★ [수정됨] savePlan: 저장 후 팝업 띄우도록 변경
+                // ★ [수정됨] savePlan: 저장 후 팝업 띄우도록 변경 + 항공권 정보 보존 로직 강화
                 savePlan() {
-                    // [수정 1] loggedInUser를 가장 먼저 가져옵니다.
                     const loggedInUser = JSON.parse(
                         localStorage.getItem("loggedInUser"),
                     );
-
-                    // [수정 2] 이제 변수가 선언되었으므로 에러 없이 로그를 출력할 수 있습니다.
-                    console.log("Logged in user:", loggedInUser);
-                    console.log("User email:", loggedInUser?.email);
 
                     if (!loggedInUser || !loggedInUser.email) {
                         alert("로그인 후 계획을 저장할 수 있습니다.");
@@ -1139,16 +1326,28 @@
                         tripName,
                         schedule,
                         savedPlans,
-                        currentPlanId,
                         startDate,
                         endDate,
                         departure,
                         destination,
+                        savedFlights,
                     } = Store.state;
+
+                    let currentPlanId = Store.state.currentPlanId;
 
                     if (!tripName || schedule.length === 0) {
                         alert("여행 제목과 일정을 입력해주세요.");
                         return;
+                    }
+
+                    if (currentPlanId) {
+                        if (
+                            !confirm(
+                                "현재 계획을 수정하시겠습니까?\n취소를 누르면 새 계획으로 저장됩니다.",
+                            )
+                        ) {
+                            currentPlanId = null; // 사용자가 '취소'를 누르면 새 계획으로 저장
+                        }
                     }
 
                     let newPlans = [...savedPlans];
@@ -1165,10 +1364,12 @@
                                 endDate,
                                 departure,
                                 destination,
-                                flightInfo: Store.state.savedFlights,
+                                flightInfo:
+                                    savedFlights || newPlans[idx].flightInfo,
                                 updatedAt: new Date().toISOString(),
                             };
                         } else {
+                            // This case should ideally not happen if state is consistent
                             saveId = Date.now().toString();
                             newPlans.push({
                                 id: saveId,
@@ -1178,7 +1379,7 @@
                                 departure,
                                 destination,
                                 schedule,
-                                flightInfo: Store.state.savedFlights,
+                                flightInfo: savedFlights,
                                 createdAt: new Date().toISOString(),
                             });
                         }
@@ -1192,14 +1393,10 @@
                             departure,
                             destination,
                             schedule,
-                            flightInfo: Store.state.savedFlights,
+                            flightInfo: savedFlights,
                             createdAt: new Date().toISOString(),
                         });
                     }
-                    Store.setState({
-                        currentPlanId: saveId,
-                        savedPlans: newPlans,
-                    });
 
                     const userPlansKey = `tripPlans_${loggedInUser.email}`;
                     localStorage.setItem(
@@ -1207,9 +1404,12 @@
                         JSON.stringify(newPlans),
                     );
 
+                    Store.setState({
+                        currentPlanId: saveId,
+                        savedPlans: newPlans,
+                    });
+
                     const previewUrl = `schedule.html?id=${saveId}`;
-                    console.log("Generated saveId:", saveId);
-                    console.log("Preview URL:", previewUrl);
                     this.openPreviewModal(previewUrl);
                 },
 
@@ -1226,6 +1426,7 @@
                             departure: plan.departure || "",
                             destination: plan.destination || "",
                             schedule: plan.schedule || [],
+                            savedFlights: plan.flightInfo || null, // ★ [수정됨] 불러올 때 항공권 정보 복구
                             selectedDay: 0,
                             showPlanList: false,
                         });
@@ -1265,6 +1466,7 @@
                                 selectedDay: 0,
                                 showPlanList: false,
                                 selectedPlace: null,
+                                savedFlights: null, // 초기화 시 항공권 정보도 날림
                             };
                         }
                         Store.setState(nextState);
@@ -1299,6 +1501,7 @@
                             selectedDay: 0,
                             showPlanList: false,
                             selectedPlace: null,
+                            savedFlights: null, // 초기화
                         });
                     }
                 },

@@ -232,7 +232,9 @@
                 const urlParams = new URLSearchParams(window.location.search);
                 const planId = urlParams.get("id");
                 console.log("Received planId in schedule.html:", planId);
-                const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+                const loggedInUser = JSON.parse(
+                    localStorage.getItem("loggedInUser"),
+                );
                 if (!loggedInUser || !loggedInUser.email) {
                     document.body.innerHTML = `<div class="flex items-center justify-center h-full text-slate-500">로그인이 필요합니다.</div>`;
                     return;
@@ -279,7 +281,7 @@
             function renderBasicInfo() {
                 document.getElementById("trip-title").textContent =
                     currentPlan.name || currentPlan.tripName;
-                
+
                 if (currentPlan.startDate && currentPlan.endDate) {
                     const startDate = new Date(currentPlan.startDate);
                     const endDate = new Date(currentPlan.endDate);
@@ -288,10 +290,14 @@
                     const nights = Math.max(0, Math.round(dayDiff));
                     const days = nights + 1;
                     const dateText = `${currentPlan.startDate} - ${currentPlan.endDate} · ${nights}박 ${days}일`;
-                    document.getElementById("trip-dates").textContent = dateText;
+                    document.getElementById("trip-dates").textContent =
+                        dateText;
                 } else {
-                    const count = currentPlan.schedule ? currentPlan.schedule.length : 0;
-                    document.getElementById("trip-dates").textContent = `총 ${count}일간의 여행`;
+                    const count = currentPlan.schedule
+                        ? currentPlan.schedule.length
+                        : 0;
+                    document.getElementById("trip-dates").textContent =
+                        `총 ${count}일간의 여행`;
                 }
             }
 
