@@ -47,41 +47,70 @@
         </style>
     </head>
 
-    <body
-        class=" text-slate-900 transition-colors duration-300 min-h-screen"
-    >
-                <header class="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-            <div class="w-full px-8 relative flex h-20 items-center justify-between">
-                
-                <a class="flex items-center space-x-2 transition-transform duration-300 hover:scale-105" href="Main.html">
+    <body class="text-slate-900 transition-colors duration-300 min-h-screen">
+        <header
+            class="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+        >
+            <div
+                class="w-full px-8 relative flex h-20 items-center justify-between"
+            >
+                <a
+                    class="flex items-center space-x-2 transition-transform duration-300 hover:scale-105"
+                    href="../main/Main.html"
+                >
                     <img
                         src="../../images/Logo.png"
                         alt="여백 로고"
                         class="h-9 w-9 rounded-full object-cover"
                     />
-                    <span class="font-serif text-foreground font-bold ml-2 text-xl">여백</span>
+                    <span
+                        class="font-serif text-foreground font-bold ml-2 text-xl"
+                        >여백</span
+                    >
                 </a>
 
                 <nav
                     class="flex items-center justify-center text-muted-foreground gap-8 text-lg font-medium"
-                    style="position: absolute; left: 50%; transform: translateX(-50%);"
+                    style="
+                        position: absolute;
+                        left: 50%;
+                        transform: translateX(-50%);
+                    "
                 >
-                    <a href="../plan/planner.html" class="group relative py-1 transition-colors hover:text-foreground">
+                    <a
+                        href="../plan/planner.html"
+                        class="group relative py-1 transition-colors hover:text-foreground"
+                    >
                         플래너
-                        <span class="absolute left-0 bottom-0 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full"></span>
+                        <span
+                            class="absolute left-0 bottom-0 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full"
+                        ></span>
                     </a>
-                    <a href="" class="group relative py-1 transition-colors hover:text-foreground">
+                    <a
+                        href=""
+                        class="group relative py-1 transition-colors hover:text-foreground"
+                    >
                         숙소
-                        <span class="absolute left-0 bottom-0 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full"></span>
+                        <span
+                            class="absolute left-0 bottom-0 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full"
+                        ></span>
                     </a>
-                    <a href="" class="group relative py-1 transition-colors hover:text-foreground">
+                    <a
+                        href=""
+                        class="group relative py-1 transition-colors hover:text-foreground"
+                    >
                         여행기록
-                        <span class="absolute left-0 bottom-0 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full"></span>
+                        <span
+                            class="absolute left-0 bottom-0 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full"
+                        ></span>
                     </a>
                 </nav>
 
                 <div id="auth-links" class="flex items-center gap-6">
-                    <a href="../auth/SignIn.html" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                    <a
+                        href="../auth/SignIn.html"
+                        class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                    >
                         로그인
                     </a>
                     <a
@@ -218,28 +247,10 @@
                             다가오는 여행
                         </h3>
                         <div
+                            id="upcoming-trip-container"
                             class="bg-slate-50 rounded-2xl p-4 border border-slate-100"
                         >
-                            <div class="flex justify-between items-start mb-2">
-                                <span
-                                    class="text-xs font-bold bg-primary/10 text-primary px-2 py-1 rounded-lg"
-                                    >D-12</span
-                                >
-                                <span class="text-xs text-slate-400"
-                                    >2026.02.07</span
-                                >
-                            </div>
-                            <div class="font-bold text-lg text-slate-900 mb-1">
-                                🇯🇵 도쿄 벚꽃 여행
-                            </div>
-                            <p class="text-xs text-slate-500 mb-3">
-                                숙소 예약 완료, 환전 필요
-                            </p>
-                            <button
-                                class="w-full py-2 bg-white border border-slate-200 rounded-xl text-xs font-bold hover:bg-slate-50 transition-colors"
-                            >
-                                일정 확인하기
-                            </button>
+                            <!-- Dynamic content will go here -->
                         </div>
                     </section>
 
@@ -316,7 +327,7 @@
                         id="tab-plans"
                         class="flex-shrink-0 px-4 py-2 bg-primary text-white rounded-xl text-sm font-bold shadow-md shadow-teal-500/20 transition-all"
                     >
-                        여행 기록 (2)
+                        여행 계획 (2)
                     </button>
                     <button
                         onclick="switchTab('posts')"
@@ -336,9 +347,7 @@
 
                 <div id="content-plans" class="space-y-4 animate-fade-in">
                     <button
-                        onclick="
-                            alert('새 여행 계획 작성 페이지로 이동합니다.')
-                        "
+                        onclick="window.location.href = '../plan/planner.html'"
                         class="w-full py-3 rounded-xl border-2 border-dashed border-slate-300 text-slate-500 font-bold hover:border-primary hover:text-primary transition-colors flex items-center justify-center"
                     >
                         <span class="material-symbols-outlined mr-2"
@@ -346,52 +355,6 @@
                         >
                         새 여행 계획 만들기
                     </button>
-                    <div
-                        class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between hover:scale-[1.02] transition-transform cursor-pointer"
-                        onclick="alert('여행 계획 상세 페이지로 이동합니다.')"
-                    >
-                        <div class="flex items-center space-x-4">
-                            <div
-                                class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center text-2xl"
-                            >
-                                🇯🇵
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-slate-900">
-                                    오사카 먹방 여행
-                                </h3>
-                                <p class="text-xs text-slate-500 mt-1">
-                                    2026.02.10 - 2026.02.14 · 4박 5일
-                                </p>
-                            </div>
-                        </div>
-                        <span class="material-symbols-outlined text-slate-400"
-                            >chevron_right</span
-                        >
-                    </div>
-                    <div
-                        class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between hover:scale-[1.02] transition-transform cursor-pointer"
-                        onclick="alert('여행 계획 상세 페이지로 이동합니다.')"
-                    >
-                        <div class="flex items-center space-x-4">
-                            <div
-                                class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center text-2xl"
-                            >
-                                🇫🇷
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-slate-900">
-                                    파리 예술 기행
-                                </h3>
-                                <p class="text-xs text-slate-500 mt-1">
-                                    2026.05.01 - 2026.05.10 · 9박 10일
-                                </p>
-                            </div>
-                        </div>
-                        <span class="material-symbols-outlined text-slate-400"
-                            >chevron_right</span
-                        >
-                    </div>
                 </div>
 
                 <div
@@ -504,8 +467,6 @@
                 © 2026 여백. All rights reserved.
             </div>
         </footer>
-
-        
 
         <div
             id="passwordCheckModal"
@@ -888,8 +849,15 @@
                     >
                         <div
                             class="relative h-32 p-6 flex flex-col justify-center text-white"
-                            style="background: linear-gradient(to bottom right, #6366F1, #9333EA); color: white;"
-                            >
+                            style="
+                                background: linear-gradient(
+                                    to bottom right,
+                                    #6366f1,
+                                    #9333ea
+                                );
+                                color: white;
+                            "
+                        >
                             <button
                                 onclick="togglePersonalityModal()"
                                 class="absolute top-4 right-4 p-1 hover:bg-white/20 rounded-full transition-colors"
@@ -1068,9 +1036,7 @@
                 if (typeof initPassportGrid === "function") {
                     initPassportGrid();
                 }
-            });
 
-            document.addEventListener("DOMContentLoaded", () => {
                 const myTravelType = localStorage.getItem("myTravelType");
 
                 if (myTravelType && enneagramTypes[myTravelType]) {
@@ -1156,7 +1122,212 @@
                         luxuryLabel.textContent = `(${100 - resultData.metrics.frugality}%)`;
                     }
                 }
+
+                // Call renderUserPlans and renderUpcomingTrip here
+                renderUserPlans();
+                renderUpcomingTrip();
             });
+            function renderUserPlans() {
+                const loggedInUser = JSON.parse(
+                    localStorage.getItem("loggedInUser"),
+                );
+                const userPlansContainer =
+                    document.getElementById("content-plans");
+                const tabPlansButton = document.getElementById("tab-plans"); // Get the button here
+
+                const newPlanButton =
+                    userPlansContainer.querySelector("button");
+                userPlansContainer.innerHTML = "";
+                if (newPlanButton) {
+                    userPlansContainer.appendChild(newPlanButton);
+                }
+
+                if (!loggedInUser || !loggedInUser.email) {
+                    if (tabPlansButton)
+                        tabPlansButton.innerText = `여행 계획 (0)`; // Update count for logged out
+                    userPlansContainer.innerHTML +=
+                        '<p class="text-center text-slate-500 py-4">로그인 후 저장된 여행 계획을 볼 수 있습니다.</p>';
+                    return;
+                }
+
+                const userPlansKey = `tripPlans_${loggedInUser.email}`;
+                const savedPlans =
+                    JSON.parse(localStorage.getItem(userPlansKey)) || [];
+
+                // Update the plan count on the tab button
+                if (tabPlansButton) {
+                    tabPlansButton.innerText = `여행 계획 (${savedPlans.length})`;
+                }
+
+                if (savedPlans.length === 0) {
+                    userPlansContainer.innerHTML +=
+                        '<p class="text-center text-slate-500 py-4">아직 저장된 여행 계획이 없습니다.</p>';
+                } else {
+                    savedPlans.forEach((plan) => {
+                        const startDate = new Date(plan.startDate);
+                        const endDate = new Date(plan.endDate);
+                        const timeDiff =
+                            endDate.getTime() - startDate.getTime();
+                        const dayDiff = timeDiff / (1000 * 3600 * 24);
+                        const nights = Math.max(0, Math.round(dayDiff));
+                        const days = nights + 1;
+
+                        const departureEmoji = getCountryEmoji(plan.departure);
+                        const imageHtml = plan.departure
+                            ? `
+                            <div class="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center text-2xl">
+                                ${departureEmoji}
+                            </div>
+                        `
+                            : `
+                            <div class="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center text-2xl">
+                                ✈️
+                            </div>
+                        `;
+
+                        const planHtml = `
+                            <div
+                                class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between hover:scale-[1.02] transition-transform cursor-pointer"
+                                onclick="alert('여행 계획 상세 페이지로 이동합니다. (ID: ${plan.id})')"
+                            >
+                                <div class="flex items-center space-x-4">
+                                    ${imageHtml}
+                                    <div>
+                                        <h3 class="font-bold text-slate-900">
+                                            ${plan.name}
+                                        </h3>
+                                        <p class="text-xs text-slate-500 mt-1">
+                                            ${plan.startDate} - ${plan.endDate} · ${nights}박 ${days}일
+                                        </p>
+                                    </div>
+                                </div>
+                                <span class="material-symbols-outlined text-slate-400">chevron_right</span>
+                            </div>
+                        `;
+                        userPlansContainer.innerHTML += planHtml;
+                    });
+                }
+            }
+
+            function getCountryEmoji(countryName) {
+                if (!countryName) return "✈️";
+                const countryMap = {
+                    일본: "🇯🇵",
+                    프랑스: "🇫🇷",
+                    한국: "🇰🇷",
+                    미국: "🇺🇸",
+                    영국: "🇬🇧",
+                    스페인: "🇪🇸",
+                    이탈리아: "🇮🇹",
+                    독일: "🇩🇪",
+                    태국: "🇹🇭",
+                    베트남: "🇻🇳",
+                    싱가포르: "🇸🇬",
+                    호주: "🇦🇺",
+                    대만: "🇹🇼",
+                    중국: "🇨🇳",
+                    그리스: "🇬🇷",
+                    몰디브: "🇲🇻",
+                    스위스: "🇨🇭",
+                    UAE: "🇦🇪", // Added for Dubai
+                    // Add more as needed
+                };
+                const mainCountry = countryName.split(" ")[0];
+                return countryMap[mainCountry] || "✈️";
+            }
+
+            function renderUpcomingTrip() {
+                const upcomingTripContainer = document.getElementById(
+                    "upcoming-trip-container",
+                );
+                const loggedInUser = JSON.parse(
+                    localStorage.getItem("loggedInUser"),
+                );
+
+                if (!loggedInUser || !loggedInUser.email) {
+                    upcomingTripContainer.innerHTML = `
+                        <p class="text-center text-slate-500 py-4">로그인 후 다가오는 여행을 확인할 수 있습니다.</p>
+                    `;
+                    return;
+                }
+
+                const userPlansKey = `tripPlans_${loggedInUser.email}`;
+                const savedPlans =
+                    JSON.parse(localStorage.getItem(userPlansKey)) || [];
+
+                const today = new Date();
+                today.setHours(0, 0, 0, 0); // Normalize to start of day
+
+                const upcomingTrips = savedPlans
+                    .filter((plan) => {
+                        if (!plan.startDate) return false;
+                        const startDate = new Date(plan.startDate);
+                        startDate.setHours(0, 0, 0, 0);
+                        return startDate >= today;
+                    })
+                    .sort((a, b) => {
+                        return (
+                            new Date(a.startDate).getTime() -
+                            new Date(b.startDate).getTime()
+                        );
+                    });
+
+                if (upcomingTrips.length === 0) {
+                    upcomingTripContainer.innerHTML = `
+                        <p class="text-center text-slate-500 py-4">일정이 없습니다.</p>
+                    `;
+                    return;
+                }
+
+                const soonestTrip = upcomingTrips[0];
+                const startDateObj = new Date(soonestTrip.startDate);
+                const endDateObj = new Date(soonestTrip.endDate);
+
+                // Calculate D-day
+                const timeDiff = startDateObj.getTime() - today.getTime();
+                const daysRemaining = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                const dDayText =
+                    daysRemaining === 0 ? "D-Day" : `D-${daysRemaining}`;
+                const dDayClass =
+                    daysRemaining <= 7
+                        ? "bg-red-100 text-red-700"
+                        : "bg-primary/10 text-primary";
+
+                // Calculate nights and days
+                const tripDurationTimeDiff =
+                    endDateObj.getTime() - startDateObj.getTime();
+                const tripDurationDays =
+                    tripDurationTimeDiff / (1000 * 3600 * 24);
+                const nights = Math.max(0, Math.round(tripDurationDays));
+                const days = nights + 1;
+
+                // Format dates
+                const formatDate = (date) =>
+                    date.toISOString().split("T")[0].replace(/-/g, ".");
+
+                upcomingTripContainer.innerHTML = `
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="text-xs font-bold px-2 py-1 rounded-lg ${dDayClass}">
+                            ${dDayText}
+                        </span>
+                        <span class="text-xs text-slate-400">
+                            ${formatDate(startDateObj)}
+                        </span>
+                    </div>
+                    <div class="font-bold text-lg text-slate-900 mb-1">
+                        ${getCountryEmoji(soonestTrip.departure)} ${soonestTrip.name}
+                    </div>
+                    <p class="text-xs text-slate-500 mb-3">
+                        ${formatDate(startDateObj)} - ${formatDate(endDateObj)} · ${nights}박 ${days}일
+                    </p>
+                    <button
+                        class="w-full py-2 bg-white border border-slate-200 rounded-xl text-xs font-bold hover:bg-slate-50 transition-colors"
+                        onclick="window.location.href = '../plan/planner.html';"
+                    >
+                        일정 확인하기
+                    </button>
+                `;
+            }
         </script>
     </body>
 </html>

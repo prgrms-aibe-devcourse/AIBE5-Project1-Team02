@@ -316,10 +316,17 @@
                 },
 
                 init() {
-                    // 1. 기존 저장된 계획 목록 불러오기
-                    const plans = localStorage.getItem("tripPlans");
-                    if (plans) {
-                        this.state.savedPlans = JSON.parse(plans);
+                    const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+                    if (loggedInUser && loggedInUser.email) {
+                        const userPlansKey = `tripPlans_${loggedInUser.email}`;
+                        const plans = localStorage.getItem(userPlansKey);
+                        if (plans) {
+                            this.state.savedPlans = JSON.parse(plans);
+                        } else {
+                            this.state.savedPlans = [];
+                        }
+                    } else {
+                        this.state.savedPlans = []; // 로그인하지 않은 경우 저장된 계획 없음
                     }
 
                     // 2. ★ [수정됨] Flight.html에서 넘어온 데이터가 있는지 확인
@@ -341,7 +348,8 @@
                     }
                     // 3. 작업 중이던 임시 데이터(Draft) 확인 (항공권 정보가 없을 때만)
                     else {
-                        const draft = localStorage.getItem("tripPlanner_draft");
+                        const draftKey = loggedInUser && loggedInUser.email ? `tripPlanner_draft_${loggedInUser.email}` : 'tripPlanner_draft_guest';
+                        const draft = localStorage.getItem(draftKey);
                         if (draft) {
                             const parsedDraft = JSON.parse(draft);
                             this.state = { ...this.state, ...parsedDraft };
@@ -372,8 +380,10 @@
                         selectedDay: this.state.selectedDay,
                         currentPlanId: this.state.currentPlanId,
                     };
+                    const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+                    const draftKey = loggedInUser && loggedInUser.email ? `tripPlanner_draft_${loggedInUser.email}` : 'tripPlanner_draft_guest';
                     localStorage.setItem(
-                        "tripPlanner_draft",
+                        draftKey,
                         JSON.stringify(draftData),
                     );
 
@@ -416,6 +426,29 @@
 
             const MainNavbar = {
                 render() {
+                    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+                    const user = JSON.parse(localStorage.getItem('loggedInUser'));
+
+                    let authContent;
+                    if (isLoggedIn && user && user.name) {
+                        authContent = `
+                            <a href="../profile/profile.html" class="text-sm font-medium">${user.name}님</a>
+                            <button onclick="handleLogout()" class="text-sm font-medium text-primary-foreground px-4 py-2 rounded-md">로그아웃</button>
+                        `;
+                    } else {
+                        authContent = `
+                            <a href="../auth/SignIn.html" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                                로그인
+                            </a>
+                            <a
+                                href="../auth/SignUp.html"
+                                class="text-sm font-bold text-white bg-primary px-5 py-2.5 rounded-full shadow-md transition-all duration-200 hover:bg-indigo-700 hover:shadow-lg hover:-translate-y-0.5 active:scale-95"
+                            >
+                                회원가입
+                            </a>
+                        `;
+                    }
+
                     return `
                             <header class="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
                                 <div class="w-full px-8 relative flex h-20 items-center justify-between">
@@ -448,15 +481,7 @@
                                     </nav>
 
                                     <div id="auth-links" class="flex items-center gap-6">
-                                        <a href="../auth/SignIn.html" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-                                            로그인
-                                        </a>
-                                        <a
-                                            href="../auth/SignUp.html"
-                                            class="text-sm font-bold text-white bg-primary px-5 py-2.5 rounded-full shadow-md transition-all duration-200 hover:bg-indigo-700 hover:shadow-lg hover:-translate-y-0.5 active:scale-95"
-                                        >
-                                            회원가입
-                                        </a>
+                                        ${authContent}
                                     </div>
                                 </div>
                             </header>
@@ -1156,8 +1181,11 @@
                         savedFlights,
                     } = Store.state;
 
+                    const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+                    const draftKey = loggedInUser && loggedInUser.email ? `tripPlanner_draft_${loggedInUser.email}` : 'tripPlanner_draft_guest';
+
                     localStorage.setItem(
-                        "tripPlanner_draft",
+                        draftKey,
                         JSON.stringify(Store.state),
                     );
 
@@ -1187,9 +1215,11 @@
                     if (flightInfoStr) {
                         const flightInfo = JSON.parse(flightInfoStr);
 
+                        const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+                        const draftKey = loggedInUser && loggedInUser.email ? `tripPlanner_draft_${loggedInUser.email}` : 'tripPlanner_draft_guest';
+
                         // 기존 Draft 복구
-                        const draftStr =
-                            localStorage.getItem("tripPlanner_draft");
+                        const draftStr = localStorage.getItem(draftKey);
                         if (draftStr) {
                             const draft = JSON.parse(draftStr);
                             Store.state = { ...Store.state, ...draft };
@@ -1227,13 +1257,14 @@
 
                         localStorage.removeItem("tripPlanner_flightInfo");
                         localStorage.setItem(
-                            "tripPlanner_draft",
+                            draftKey, // Use user-specific draft key
                             JSON.stringify(Store.state),
                         );
                     } else {
                         // 취소 시
-                        const draftStr =
-                            localStorage.getItem("tripPlanner_draft");
+                        const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+                        const draftKey = loggedInUser && loggedInUser.email ? `tripPlanner_draft_${loggedInUser.email}` : 'tripPlanner_draft_guest';
+                        const draftStr = localStorage.getItem(draftKey);
                         if (draftStr) {
                             Store.setState(JSON.parse(draftStr), false);
                         }
@@ -1498,6 +1529,13 @@
                 },
 
                 savePlan() {
+                    const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+                    if (!loggedInUser || !loggedInUser.email) {
+                        alert('로그인 후 계획을 저장할 수 있습니다.');
+                        window.location.href = '../auth/SignIn.html';
+                        return;
+                    }
+
                     const {
                         tripName,
                         schedule,
@@ -1561,7 +1599,8 @@
                         });
                     }
 
-                    localStorage.setItem("tripPlans", JSON.stringify(newPlans));
+                    const userPlansKey = `tripPlans_${loggedInUser.email}`;
+                    localStorage.setItem(userPlansKey, JSON.stringify(newPlans));
                     Store.setState({ savedPlans: newPlans }); // currentPlanId는 유지
                     alert("저장되었습니다!");
                 },
@@ -1586,18 +1625,28 @@
                 },
 
                 deletePlan(planId) {
+                    const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+                    if (!loggedInUser || !loggedInUser.email) {
+                        alert('로그인 후 계획을 삭제할 수 있습니다.');
+                        window.location.href = '../auth/SignIn.html';
+                        return;
+                    }
+
                     if (confirm("정말 이 계획을 삭제하시겠습니까?")) {
                         const newPlans = Store.state.savedPlans.filter(
                             (p) => p.id !== planId,
                         );
+                        const userPlansKey = `tripPlans_${loggedInUser.email}`;
                         localStorage.setItem(
-                            "tripPlans",
+                            userPlansKey,
                             JSON.stringify(newPlans),
                         );
 
                         let nextState = { savedPlans: newPlans };
                         if (Store.state.currentPlanId === planId) {
-                            localStorage.removeItem("tripPlanner_draft");
+                            // 현재 계획이 삭제되면 사용자별 임시 저장(draft)도 제거합니다.
+                            const draftKey = `tripPlanner_draft_${loggedInUser.email}`;
+                            localStorage.removeItem(draftKey);
                             nextState = {
                                 ...nextState,
                                 currentPlanId: null,
@@ -1608,6 +1657,7 @@
                                 destination: "",
                                 schedule: [],
                                 selectedDay: 0,
+                                showPlanList: false,
                                 selectedPlace: null,
                             };
                         }
@@ -1624,7 +1674,9 @@
                     }
 
                     if (confirm("현재 작업을 초기화하시겠습니까?")) {
-                        localStorage.removeItem("tripPlanner_draft");
+                        const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+                        const draftKey = loggedInUser && loggedInUser.email ? `tripPlanner_draft_${loggedInUser.email}` : 'tripPlanner_draft_guest';
+                        localStorage.removeItem(draftKey);
                         Store.setState({
                             currentPlanId: null,
                             tripName: "새로운 여행 계획",
@@ -1644,8 +1696,5 @@
             App.init();
         </script>
         <script src="../../js/auth.js"></script>
-        <script>
-            document.addEventListener("DOMContentLoaded", checkLoginStatus);
-        </script>
     </body>
 </html>
