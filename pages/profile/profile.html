@@ -182,15 +182,15 @@
                                         >
                                     </div>
                                     <span
+                                        id="personality-type-display"
                                         class="text-xs font-medium text-indigo-400 bg-white px-2 py-1 rounded-lg"
                                         >분석가형</span
                                     >
                                 </div>
-                                <div class="flex space-x-2">
-                                    <span
-                                        class="px-2 py-1 bg-white/60 rounded-lg text-xs font-medium text-indigo-700"
-                                        >#계획적</span
-                                    >
+                                <div
+                                    id="personality-strengths-container"
+                                    class="flex space-x-2"
+                                >
                                     <span
                                         class="px-2 py-1 bg-white/60 rounded-lg text-xs font-medium text-indigo-700"
                                         >#가성비</span
@@ -904,7 +904,12 @@
                                     >여행 성향 분석</span
                                 >
                             </div>
-                            <h2 class="text-2xl font-bold">확실한 분석가형</h2>
+                            <h2
+                                class="text-2xl font-bold"
+                                id="personality-modal-title"
+                            >
+                                확실한 분석가형
+                            </h2>
                         </div>
                         <div class="p-6">
                             <div class="space-y-4">
@@ -921,6 +926,7 @@
                                         이런 여행을 선호해요
                                     </h4>
                                     <ul
+                                        id="personality-modal-recommendations-list"
                                         class="text-sm text-indigo-800 space-y-1 list-disc list-inside"
                                     >
                                         <li>분 단위로 쪼개진 엑셀 계획표</li>
@@ -940,13 +946,14 @@
                                             <div
                                                 class="flex justify-between text-xs text-slate-500 mb-1"
                                             >
-                                                <span>계획적</span>
-                                                <span>즉흥적</span>
+                                                <span>계획적 <span id="planfulness-label"></span></span>
+                                                <span>즉흥적 <span id="impulsivity-label"></span></span>
                                             </div>
                                             <div
                                                 class="h-2 bg-slate-100 rounded-full overflow-hidden"
                                             >
                                                 <div
+                                                    id="planfulness-bar"
                                                     class="h-full bg-indigo-500 w-[90%] rounded-full"
                                                 ></div>
                                             </div>
@@ -955,13 +962,14 @@
                                             <div
                                                 class="flex justify-between text-xs text-slate-500 mb-1"
                                             >
-                                                <span>알뜰함</span>
-                                                <span>럭셔리</span>
+                                                <span>알뜰함 <span id="frugality-label"></span></span>
+                                                <span>럭셔리 <span id="luxury-label"></span></span>
                                             </div>
                                             <div
                                                 class="h-2 bg-slate-100 rounded-full overflow-hidden"
                                             >
                                                 <div
+                                                    id="frugality-bar"
                                                     class="h-full bg-indigo-500 w-[80%] rounded-full"
                                                 ></div>
                                             </div>
@@ -1016,6 +1024,7 @@
         </div>
 
         <script src="../../js/auth.js"></script>
+        <script src="../../js/data.js"></script>
         <script src="../../js/profile-functions.js"></script>
         <script>
             document.addEventListener("DOMContentLoaded", () => {
@@ -1035,6 +1044,73 @@
                 }
                 if (typeof initPassportGrid === "function") {
                     initPassportGrid();
+                }
+            });
+
+            document.addEventListener("DOMContentLoaded", () => {
+                const myTravelType = localStorage.getItem("myTravelType");
+
+                if (myTravelType && enneagramTypes[myTravelType]) {
+                    const resultData = enneagramTypes[myTravelType];
+
+                    // "나의 여행 성향" 섹션 업데이트
+                    const personalityTypeDisplay = document.getElementById("personality-type-display");
+                    if (personalityTypeDisplay) {
+                        personalityTypeDisplay.textContent = resultData.nickname;
+                    }
+
+                    const personalityStrengthsContainer = document.getElementById("personality-strengths-container");
+                    if (personalityStrengthsContainer) {
+                        personalityStrengthsContainer.innerHTML = ""; // 기존 내용 삭제
+                        resultData.strengths.forEach(strength => {
+                            const span = document.createElement("span");
+                            span.className = "px-2 py-1 bg-white/60 rounded-lg text-xs font-medium text-indigo-700";
+                            span.textContent = `#${strength}`;
+                            personalityStrengthsContainer.appendChild(span);
+                        });
+                    }
+
+                    // "여행 성향 분석" 모달 섹션 업데이트
+                    const personalityModalTitle = document.getElementById("personality-modal-title");
+                    if (personalityModalTitle) {
+                        personalityModalTitle.textContent = `${resultData.nickname}`;
+                    }
+
+                    const personalityModalRecommendationsList = document.getElementById("personality-modal-recommendations-list");
+                    if (personalityModalRecommendationsList) {
+                        personalityModalRecommendationsList.innerHTML = ""; // 기존 내용 삭제
+                        resultData.recommendations.forEach(rec => {
+                            const li = document.createElement("li");
+                            li.textContent = rec;
+                            personalityModalRecommendationsList.appendChild(li);
+                        });
+                    }
+
+                    // 상세 지표 (진행률 바) 업데이트
+                    const planfulnessBar = document.getElementById("planfulness-bar");
+                    if (planfulnessBar && resultData.metrics) {
+                        planfulnessBar.style.width = `${resultData.metrics.planfulness}%`;
+                    }
+
+                    const frugalityBar = document.getElementById("frugality-bar");
+                    if (frugalityBar && resultData.metrics) {
+                        frugalityBar.style.width = `${resultData.metrics.frugality}%`;
+                    }
+
+                    // 상세 지표 텍스트 레이블 업데이트
+                    const planfulnessLabel = document.getElementById("planfulness-label");
+                    const impulsivityLabel = document.getElementById("impulsivity-label");
+                    if (planfulnessLabel && impulsivityLabel && resultData.metrics) {
+                        planfulnessLabel.textContent = `(${resultData.metrics.planfulness}%)`;
+                        impulsivityLabel.textContent = `(${100 - resultData.metrics.planfulness}%)`;
+                    }
+
+                    const frugalityLabel = document.getElementById("frugality-label");
+                    const luxuryLabel = document.getElementById("luxury-label");
+                    if (frugalityLabel && luxuryLabel && resultData.metrics) {
+                        frugalityLabel.textContent = `(${resultData.metrics.frugality}%)`;
+                        luxuryLabel.textContent = `(${100 - resultData.metrics.frugality}%)`;
+                    }
                 }
             });
         </script>
