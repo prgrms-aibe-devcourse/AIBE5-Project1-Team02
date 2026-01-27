@@ -15,7 +15,7 @@
     />
     <style type="text/tailwindcss">
       :root {
-        /* 네가 정의한 원본 색상 변수 */
+        /* 원본 색상 변수 */
         --triplet-blue: #4c6fff; /* 호버/선택 시 글씨색 */
         --triplet-blue-light: rgba(76, 111, 255, 0.04);
         --triplet-gray-50: #f9fafb;
@@ -25,7 +25,7 @@
         --triplet-gray-600: #4b5563;
         --triplet-gray-900: #111827; /* 기본 글씨색: #111827 */
 
-        /* ⭐ 새로운 하이라이트/호버용 색상 변수 ⭐ */
+        /* 새로운 하이라이트/호버용 색상 변수 */
         --highlight-hover-bg: var(
           --triplet-gray-200
         ); /* 호버 시 배경색 #e5e7eb */
@@ -56,7 +56,7 @@
         background-color: white;
       }
       .star-rating {
-        color: #ffb800; /* ⭐ 노란색 유지! ⭐ */
+        color: #ffb800; /* 별 노란색 유지 */
         font-variation-settings: "FILL" 1;
       }
       .remove-btn {
@@ -69,12 +69,12 @@
       }
       .added-badge {
         background: var(--triplet-blue);
-        color: white; /* ⭐ 흰색 글씨 유지! ⭐ */
+        color: white; /* 흰색 글씨 유지 */
       }
 
       /* ============================================================= */
-      /* ⭐⭐⭐ 새롭게 정의되는 하이라이트 및 호버 스타일 ⭐⭐⭐ */
-      /* (JavaScript가 이 클래스들을 요소에 추가/제거합니다) */
+      /* 하이라이트 및 호버 스타일 
+      /* (JavaScript가 이 클래스들을 요소에 추가/제거) */
       /* ============================================================= */
 
       /* 1. 기본 글씨색 보장 (text-content-to-change가 붙은 텍스트는 초기 검정색 #111827) */
@@ -87,7 +87,7 @@
       .hovered-column-data {
         background-color: var(--highlight-hover-bg) !important; /* #e5e7eb */
       }
-      /* 호버 시 글씨색 변경 (⭐ `text-content-to-change` 클래스가 붙은 요소만!) */
+      /* 호버 시 글씨색 변경 (`text-content-to-change` 클래스가 붙은 요소만) */
       .hovered-column-header .text-content-to-change,
       .hovered-column-data .text-content-to-change,
       .add-hotel-button.hovered-button .text-content-to-change {
@@ -104,7 +104,7 @@
       .highlighted-column-data {
         background-color: var(--highlight-selected-bg) !important; /* #f6f8ff */
       }
-      /* 선택 시 글씨색 변경 (⭐ `text-content-to-change` 클래스가 붙은 요소만!) */
+      /* 선택 시 글씨색 변경 ( `text-content-to-change` 클래스가 붙은 요소만) */
       .highlighted-column-header .text-content-to-change,
       .highlighted-column-data .text-content-to-change,
       .add-hotel-button.highlighted-button .text-content-to-change {
@@ -262,15 +262,7 @@
                               >close</span
                             >
                           </button>
-                          <!-- <div
-                            class="absolute bottom-2 left-2 px-2 py-1 added-badge rounded text-[10px] font-bold flex items-center gap-1"
-                          >
-                            <span
-                              class="material-symbols-outlined text-[12px] font-bold"
-                              >check</span
-                            >
-                            추가됨
-                          </div> -->
+          
                         </div>
                         <div>
                           <h3
@@ -316,15 +308,7 @@
                           >
                             Top Choice
                           </div>
-                          <!-- <div
-                            class="absolute bottom-2 left-2 px-2 py-1 added-badge rounded text-[10px] font-bold flex items-center gap-1"
-                          >
-                            <span
-                              class="material-symbols-outlined text-[12px] font-bold"
-                              >check</span
-                            >
-                            추가됨
-                          </div> -->
+                    
                         </div>
                         <div>
                           <h3
@@ -362,15 +346,7 @@
                               >close</span
                             >
                           </button>
-                          <!-- <div
-                            class="absolute bottom-2 left-2 px-2 py-1 added-badge rounded text-[10px] font-bold flex items-center gap-1"
-                          >
-                            <span
-                              class="material-symbols-outlined text-[12px] font-bold"
-                              >check</span
-                            >
-                            추가됨
-                          </div> -->
+                    
                         </div>
                         <div>
                           <h3
@@ -921,7 +897,7 @@
         // --- 이벤트 리스너 ---
         comparisonTable.addEventListener("click", (event) => {
           // ===========================================
-          // 1. X 버튼 클릭 처리 (⭐ `<tbody>` 데이터 삭제 로직 강화 ⭐)
+          // 1. X 버튼 클릭 처리 ( `<tbody>` 데이터 삭제 로직 강화 )
           // ===========================================
           const clickedRemoveButton = event.target.closest(".remove-btn");
           if (clickedRemoveButton) {
@@ -951,7 +927,7 @@
             clearAllHoverHighlights(); // X 버튼 클릭 시 호버도 제거
             currentlyClickedColumnIndex = null;
 
-            // <thead>의 해당 <th>를 '숙소 추가하기' 컬럼으로 변신
+            // <thead>의 해당 <th>를 '숙소 추가하기' 컬럼으로 
             hotelColumnHeader.classList.remove(
               "hotel-column-header",
               "group",
@@ -966,7 +942,7 @@
               columnIndexToTransform,
             );
 
-            // ⭐⭐ <tbody>의 해당 <td>들을 제대로 찾아 내용을 비우고 클래스도 제거 (핵심 수정) ⭐⭐
+            // <tbody>의 해당 <td>들을 제대로 찾아 내용을 비우고 클래스도 제거 
             const dataRows = comparisonTable.querySelectorAll(
               "tbody .comparison-data-row",
             );
@@ -997,7 +973,7 @@
           // ===========================================
           const clickedAddButton = event.target.closest(".add-hotel-button");
           if (clickedAddButton) {
-            const targetPageUrl = "search.html"; // ⭐ 이 URL을 네가 이동하고 싶은 페이지 주소로 변경해 줘!
+            const targetPageUrl = "search.html"; // URL: 이동하고 싶은 페이지 주소
             console.log(
               `'숙소 추가하기' 버튼 클릭! ${targetPageUrl}로 이동합니다.`,
             );
@@ -1006,7 +982,7 @@
           }
 
           // ===========================================
-          // 3. 컬럼 클릭 하이라이트 처리 (선택) - 네 기존 스크립트 로직 기반
+          // 3. 컬럼 클릭 하이라이트 처리 
           // ===========================================
           const clickableElement = event.target.closest(
             "th.hotel-column-header, th.add-hotel-placeholder-col, td.hotel-data-cell",
@@ -1042,7 +1018,7 @@
         });
 
         // ===========================================
-        // ⭐⭐ 컬럼 호버 하이라이트 처리 (이제 이 부분도 잘 작동해야 해!) ⭐⭐
+        // 컬럼 호버 하이라이트 처리
         // ===========================================
         comparisonTable.addEventListener("mouseover", (event) => {
           const hoverableElement = event.target.closest(
