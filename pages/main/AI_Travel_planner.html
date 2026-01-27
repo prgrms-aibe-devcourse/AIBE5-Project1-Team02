@@ -2359,6 +2359,10 @@
             renderIntro();
             showStep("intro");
             resetScoreBoard();
+            // 마지막 질문 CTA 버튼 클릭 시 이동
+            finalCtaBtn.addEventListener("click", () => {
+                window.location.href = "AI_Travel_planner_list.html";
+            });
         </script>
     </body>
 </html>
