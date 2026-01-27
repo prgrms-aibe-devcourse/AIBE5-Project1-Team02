@@ -1,0 +1,2178 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI 여행 성향 테스트</title>
+    <script src="https://cdn.lordicon.com/lordicon.js"></script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700;800&display=swap");
+
+      /* CSS 변수 정의 */
+      :root {
+        --primary-color: #008774;
+        --secondary-color: #ff8c42;
+        --text-dark: #333333;
+        --text-light: #666666;
+        --bg-light: #f9fafb;
+        --border-color: #e5e7eb;
+      }
+
+      /* 모든 요소의 기본 마진, 패딩을 제거하고 box-sizing을 border-box로 설정 */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      /* body 기본 스타일: 폰트, 배경색, 텍스트 색상, 레이아웃 설정 */
+      body {
+        font-family: "Pretendard", sans-serif;
+        background-color: var(--bg-light);
+        color: var(--text-dark);
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        min-height: 100vh;
+
+        background-image: linear-gradient(
+          to bottom right,
+          rgba(0, 196, 180, 0.05),
+          #f9fafb,
+          rgba(255, 140, 66, 0.05)
+        );
+      }
+
+      /* 앱의 전체 컨테이너 스타일 */
+      .app-container {
+        width: 100%;
+        max-width: 768px; /* 최대 너비 설정 */
+        padding: 3rem 1.5rem; /* 상하좌우 패딩 */
+      }
+
+      /* 각 단계별 섹션 (초기에는 숨김) */
+      .step-section {
+        display: none;
+      }
+
+      /* 활성화된 단계 섹션 */
+      .step-section.active {
+        display: block;
+        animation: fadeIn 0.5s ease-in-out;
+      }
+
+      /* 페이드인 애니메이션 정의 */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* --- 인트로 섹션 --- */
+      /* 인트로 섹션 내용 중앙 정렬 */
+      .intro-content {
+        text-align: center;
+      }
+
+      /* 인트로 섹션 배지 스타일 */
+      .intro-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background-image: linear-gradient(
+          to right,
+          rgba(0, 196, 180, 0.1),
+          rgba(255, 140, 66, 0.1)
+        );
+        padding: 0.75rem 1.5rem;
+        border-radius: 9999px;
+        border: 2px solid rgba(0, 196, 180, 0.2);
+        margin-bottom: 2rem;
+      }
+
+      /* 인트로 배지 내 텍스트 스타일 */
+      .intro-badge span {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--primary-color);
+      }
+
+      /* 인트로 섹션 제목 (h1) 스타일 */
+      .intro-content h1 {
+        font-size: 3rem;
+        font-weight: 800;
+        margin-bottom: 1.5rem;
+      }
+
+      /* 인트로 섹션 설명 (p) 스타일 */
+      .intro-content p {
+        font-size: 1.25rem;
+        color: var(--text-light);
+        line-height: 1.6;
+        margin-bottom: 3rem;
+      }
+
+      /* 성향 미리보기 그리드 레이아웃 */
+      .personality-preview-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+        margin-bottom: 3rem;
+      }
+
+      /* 성향 미리보기 각 항목 스타일 */
+      .personality-preview-item {
+        background-color: white;
+        border-radius: 1rem;
+        padding: 1rem;
+        box-shadow:
+          0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s;
+      }
+      /* 호버 시 항목 위로 살짝 올라오는 효과 */
+      .personality-preview-item:hover {
+        transform: translateY(-5px);
+      }
+      /* 성향 이모지 스타일 */
+      .personality-preview-item .emoji {
+        font-size: 2.25rem;
+        margin-bottom: 0.5rem;
+      }
+      /* 성향 이름 스타일 */
+      .personality-preview-item .name {
+        font-size: 0.875rem;
+        font-weight: 700;
+      }
+
+      /* 시작 버튼 스타일 */
+      .start-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background-image: linear-gradient(to right, var(--primary-color));
+        color: white;
+        padding: 1rem 3rem;
+        border-radius: 9999px;
+        font-weight: 700;
+        font-size: 1.125rem;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s;
+        box-shadow: 0 10px 20px -5px rgba(0, 196, 180, 0.4);
+      }
+      /* 시작 버튼 호버 시 효과 */
+      .start-button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 15px 25px -5px rgba(0, 196, 180, 0.5);
+      }
+
+      /* --- 테스트 섹션 --- */
+      /* 진행률 바 컨테이너 */
+      .progress-bar-container {
+        margin-bottom: 2rem;
+      }
+      /* 진행률 레이블 (현재 질문/전체 질문, 백분율) */
+      .progress-bar-labels {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--text-light);
+      }
+      /* 진행률 백분율 텍스트 색상 */
+      #progress-percentage {
+        color: var(--primary-color);
+      }
+      /* 진행률 바의 배경 */
+      .progress-bar {
+        height: 0.5rem;
+        background-color: var(--border-color);
+        border-radius: 9999px;
+        overflow: hidden;
+      }
+      /* 진행률 바의 실제 채워지는 부분 */
+      .progress-bar-inner {
+        height: 100%;
+        background-image: linear-gradient(
+          to right,
+          var(--primary-color),
+          var(--secondary-color)
+        );
+        transition: width 0.3s ease-in-out;
+      }
+
+      /* 질문 컨테이너 스타일 */
+      .question-container {
+        background-color: white;
+        border-radius: 1.5rem;
+        box-shadow:
+          0 20px 25px -5px rgba(0, 0, 0, 0.1),
+          0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        padding: 2rem;
+        margin-bottom: 1.5rem;
+      }
+      /* 질문 제목 스타일 */
+      #question-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 2rem;
+        text-align: center;
+      }
+
+      /* 각 옵션 버튼 스타일 */
+      .option-button {
+        width: 100%;
+        text-align: left;
+        padding: 1.5rem;
+        border-radius: 1rem;
+        border: 2px solid var(--border-color);
+        background-color: transparent;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+      /* 옵션 버튼 호버 시 테두리 및 배경색 변경 */
+      .option-button:hover {
+        border-color: var(--primary-color);
+        background-color: rgba(0, 196, 180, 0.05);
+      }
+      /* 옵션 번호 (동그라미) 스타일 */
+      .option-number {
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 9999px;
+        background-color: #f3f4f6;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 1rem;
+        flex-shrink: 0;
+        transition: all 0.2s;
+      }
+      /* 옵션 버튼 호버 시 옵션 번호 스타일 변경 */
+      .option-button:hover .option-number {
+        background-color: var(--primary-color);
+        color: white;
+      }
+      /* 옵션 텍스트 스타일 */
+      .option-text {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: var(--text-dark);
+      }
+
+      /* 이전 버튼 스타일 (초기에는 숨김) */
+      .prev-button {
+        display: none; /* Initially hidden */
+        align-items: center;
+        gap: 0.5rem;
+        background: none;
+        border: none;
+        color: var(--primary-color);
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      /* 이전 버튼 호버 시 밑줄 */
+      .prev-button:hover {
+        text-decoration: underline;
+      }
+
+      /* --- 결과 섹션 --- */
+
+      /* 카드 획득 화면 (최초 결과 화면) */
+      .acquisition-screen {
+        position: fixed;
+        inset: 0;
+        background-color: black;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        animation: fadeIn 0.3s;
+      }
+
+      /* 카드 획득 화면의 내용 컨테이너 */
+      .acquisition-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* 떠다니는 카드 효과를 위한 컨테이너 */
+      .floating-card-container {
+        margin-bottom: 2rem;
+      }
+
+      /* 카드 이미지 시각적 스타일 */
+      .card-visual {
+        width: 12rem; /* 192px */
+        height: 16rem; /* 256px */
+        border-radius: 1rem;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        color: white;
+      }
+
+      /* 카드 내 캐릭터 이모지 스타일 */
+      .card-character {
+        font-size: 5rem;
+      }
+
+      /* 카드 획득 화면 제목 */
+      .acquisition-title {
+        font-size: 3rem;
+        font-weight: 800;
+        color: white;
+        margin-bottom: 1rem;
+      }
+
+      /* 카드 획득 화면 부제목 */
+      .acquisition-subtitle {
+        font-size: 1.5rem;
+        color: #d1d5db; /* gray-300 */
+        margin-bottom: 2rem;
+      }
+
+      /* 카드 공개 버튼 스타일 */
+      .reveal-button {
+        background-image: linear-gradient(
+          to right,
+          var(--primary-color),
+          var(--secondary-color)
+        );
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 9999px;
+        font-weight: 700;
+        font-size: 1.125rem;
+        border: none;
+        cursor: pointer;
+        box-shadow:
+          0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s;
+      }
+      /* 카드 공개 버튼 호버 시 효과 */
+      .reveal-button:hover {
+        transform: scale(1.05);
+      }
+      /* 카드 공개 버튼 내 텍스트 애니메이션 */
+      .reveal-button span {
+        animation: pulse 1.5s infinite;
+      }
+
+      /* 펄스 애니메이션 정의 */
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.7;
+        }
+      }
+
+      /* 최종 결과 화면 컨테이너 */
+      .result-view {
+        text-align: center;
+      }
+
+      /* 결과 화면 헤더 */
+      .result-header {
+        margin-bottom: 2rem;
+      }
+
+      /* 결과 화면 제목 */
+      .result-title {
+        font-size: 2.25rem;
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+      }
+
+      /* 결과 화면 부제목 */
+      .result-subtitle {
+        font-size: 1.125rem;
+        color: var(--text-light);
+      }
+
+      /* 인터랙티브 카드 컨테이너 */
+      .interactive-card-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 2rem 0;
+        min-height: 580px; /* 최소 높이 설정 */
+        position: relative;
+        z-index: 10;
+        padding-bottom: 2rem;
+      }
+
+      /* 카드 3D 씬 설정 */
+      .card-scene {
+        width: 320px;
+        height: 560px;
+        perspective: 1500px; /* 3D 원근감 */
+      }
+
+      /* 카드 객체 (앞면/뒷면 포함) */
+      .card-object {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        transform-style: preserve-3d; /* 3D 변형 유지 */
+        transition: transform 0.8s cubic-bezier(0.25, 0.8, 0.25, 1); /* 변형 애니메이션 */
+        --flip-rotation: 0deg; /* 기본 뒤집기 회전 값 */
+        transform: rotateX(var(--rotate-x, 0deg))
+          rotateY(calc(var(--rotate-y, 0deg) + var(--flip-rotation)));
+        transform-origin: center center;
+      }
+
+      /* 카드가 뒤집혔을 때의 회전 값 */
+      .card-object.is-flipped {
+        --flip-rotation: 180deg; /* 뒤집혔을 때 회전 값 설정 */
+      }
+
+      /* 카드 앞면/뒷면 공통 스타일 */
+      .card-face {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        -webkit-backface-visibility: hidden; /* 뒷면 숨김 */
+        backface-visibility: hidden; /* 뒷면 숨김 */
+        border-radius: 1.5rem;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        overflow: hidden;
+        color: white;
+      }
+
+      /* 카드 앞면 스타일 */
+      .card-face--front {
+        border: 4px solid rgba(255, 255, 255, 0.3);
+      }
+
+      /* 스파클 효과 오버레이 */
+      .sparkle-overlay {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        pointer-events: none;
+      }
+
+      /* 개별 스파클 */
+      .card-sparkle {
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        background-color: white;
+        border-radius: 50%;
+        opacity: 0;
+        transform: scale(0);
+        animation: sparkle-animation 2s infinite;
+      }
+
+      /* 스파클 애니메이션 정의 */
+      @keyframes sparkle-animation {
+        0% {
+          opacity: 0;
+          transform: scale(0);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1.5);
+        }
+        100% {
+          opacity: 0;
+          transform: scale(0);
+        }
+      }
+
+      /* 홀로그래픽 효과 오버레이 */
+      .holographic-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          to top right,
+          transparent 0%,
+          rgba(255, 255, 255, 0.4) 50%,
+          transparent 100%
+        );
+        pointer-events: none;
+        mix-blend-mode: overlay;
+        opacity: 0.8;
+        transform: translateX(-100%);
+        animation: holographic-animation 3s infinite;
+        animation-delay: 1s;
+      }
+
+      /* 홀로그래픽 애니메이션 정의 */
+      @keyframes holographic-animation {
+        0% {
+          transform: translateX(-100%);
+        }
+        100% {
+          transform: translateX(100%);
+        }
+      }
+
+      /* 카드 테두리 */
+      .card-border {
+        position: absolute;
+        inset: 1rem;
+        border: 2px solid rgba(255, 255, 255, 0.4);
+        border-radius: 1rem;
+        pointer-events: none;
+      }
+
+      /* 카드 내용 스타일 */
+      .card-content {
+        position: relative;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        padding: 2rem;
+        text-align: center;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+      }
+
+      /* 카드 상단/하단 장식 */
+      .card-top-ornament,
+      .card-bottom-ornament {
+        font-size: 1.5rem;
+        opacity: 0.8;
+      }
+
+      /* 카드 메인 캐릭터 이모지 */
+      .card-character-main {
+        font-size: 8rem;
+        filter: drop-shadow(0 0 15px rgba(0, 0, 0, 0.5));
+      }
+
+      /* 카드 제목 그룹 */
+      .card-title-group {
+        margin-top: -1rem;
+      }
+
+      /* 카드 메인 유형 */
+      .card-main-type {
+        font-size: 3rem;
+        font-weight: 800;
+      }
+
+      /* 카드 메인 별명 */
+      .card-main-nickname {
+        font-size: 1.75rem;
+        font-weight: 700;
+        line-height: 1.2;
+      }
+
+      /* 카드 메인 부제목 */
+      .card-main-subtitle {
+        font-size: 1rem;
+        font-weight: 400;
+        opacity: 0.8;
+        font-style: italic;
+      }
+
+      /* 카드 뒷면 스타일 */
+      .card-face--back {
+        background-color: #f8fafc;
+        color: var(--text-dark);
+        transform: rotateY(180deg); /* 180도 회전하여 뒷면으로 표시 */
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      /* 카드 뒷면 내용 스크롤 가능 컨테이너 */
+      .card-back-content {
+        overflow-y: auto;
+        height: 100%;
+        padding-right: 10px;
+        max-height: 100%;
+      }
+      /* 웹킷 기반 브라우저용 커스텀 스크롤바 */
+      .card-back-content::-webkit-scrollbar {
+        width: 4px;
+      }
+      .card-back-content::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 2px;
+      }
+      .card-back-content::-webkit-scrollbar-thumb {
+        background: #ccc;
+        border-radius: 2px;
+      }
+      .card-back-content::-webkit-scrollbar-thumb:hover {
+        background: #aaa;
+      }
+
+      /* 카드 뒷면 헤더 */
+      .back-header {
+        text-align: center;
+        margin-bottom: 1rem;
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 1rem;
+      }
+
+      /* 카드 뒷면 캐릭터 이모지 */
+      .back-character {
+        font-size: 3rem;
+        margin-bottom: 0.5rem;
+      }
+      /* 카드 뒷면 유형 */
+      .back-type {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: var(--primary-color);
+      }
+      /* 카드 뒷면 별명 */
+      .back-nickname {
+        font-size: 1.25rem;
+        font-weight: 700;
+      }
+      /* 카드 뒷면 부제목 */
+      .back-subtitle {
+        font-size: 0.875rem;
+        color: var(--text-light);
+        font-style: italic;
+      }
+      /* 카드 뒷면 설명 */
+      .back-description {
+        font-size: 0.9rem;
+        text-align: center;
+        margin-bottom: 1rem;
+        color: var(--text-light);
+        font-style: italic;
+      }
+
+      /* 카드 뒷면 섹션 */
+      .back-section {
+        margin-bottom: 1rem;
+      }
+      /* 카드 뒷면 섹션 제목 */
+      .back-section-title {
+        font-size: 0.875rem;
+        font-weight: 700;
+        text-align: center;
+        color: var(--primary-color);
+        margin-bottom: 0.75rem;
+      }
+
+      /* 특징 그리드 레이아웃 */
+      .traits-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+      }
+      /* 각 특징 항목 */
+      .trait-item {
+        background-color: rgba(0, 196, 180, 0.1);
+        padding: 0.5rem;
+        border-radius: 0.5rem;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-align: center;
+      }
+
+      /* 강점 목록 */
+      .strengths-list {
+        list-style: none;
+        padding: 0;
+        text-align: center;
+      }
+      .strengths-list li {
+        font-size: 0.9rem;
+        margin-bottom: 0.25rem;
+      }
+      .strengths-list li::before {
+        content: "✨";
+        margin-right: 0.5rem;
+      }
+
+      /* 추천 여행지 목록 */
+      .recommendations-list {
+        text-align: center;
+        font-size: 0.9rem;
+        color: var(--text-light);
+        line-height: 1.5;
+      }
+      .recommendations-list span {
+        display: inline-block;
+        margin: 0 0.2rem;
+        background-color: #f1f5f9;
+        padding: 0.1rem 0.4rem;
+        border-radius: 0.25rem;
+      }
+
+      /* 결과 화면 내 재시작 버튼 */
+      #restart-btn {
+        width: 100%;
+        margin-top: 2rem;
+      }
+
+      /* 새로운 결과 상세 그리드 레이아웃 */
+      .result-details-grid {
+        display: grid;
+        grid-template-columns: 1fr; /* 기본적으로 단일 컬럼 */
+        gap: 1.5rem;
+        margin-top: 2rem;
+        max-width: 768px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      /* 768px 이상 화면에서 2단 컬럼으로 변경 */
+      @media (min-width: 768px) {
+        .result-details-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      /* 추천 패널 및 공유 패널 공통 스타일 */
+      .recommendation-panel,
+      .share-panel {
+        background-color: white;
+        border-radius: 1.5rem;
+        padding: 1.5rem;
+        box-shadow:
+          0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      }
+
+      /* 패널 제목 스타일 */
+      .panel-title {
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: var(--text-dark);
+        margin-bottom: 0.5rem;
+      }
+
+      /* 패널 부제목 스타일 */
+      .panel-subtitle {
+        font-size: 0.875rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+      }
+
+      /* 추천 목록 스타일 */
+      .recommendation-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      /* 각 추천 항목 스타일 */
+      .recommendation-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      /* 추천 번호 (동그라미) 스타일 */
+      .recommendation-number {
+        width: 1.5rem;
+        height: 1.5rem;
+        background-image: linear-gradient(
+          to right,
+          var(--primary-color),
+          var(--secondary-color)
+        );
+        border-radius: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 0.75rem;
+        font-weight: 700;
+        flex-shrink: 0;
+      }
+
+      /* 추천 항목 텍스트 스타일 */
+      .recommendation-item span {
+        color: var(--text-dark);
+        font-size: 0.9rem;
+      }
+
+      /* 공유 버튼 스타일 */
+      .share-button {
+        width: 100%;
+        background-image: linear-gradient(
+          to right,
+          var(--primary-color),
+          #00a89a
+        );
+        color: white;
+        padding: 0.75rem 1rem;
+        border-radius: 0.75rem;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 5px 10px rgba(0, 196, 180, 0.2);
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+      }
+
+      /* 공유 버튼 호버 시 효과 */
+      .share-button:hover {
+        box-shadow: 0 8px 15px rgba(0, 196, 180, 0.3);
+        transform: translateY(-2px);
+      }
+
+      /* 공유 텍스트 영역 */
+      .share-text-area {
+        text-align: center;
+      }
+
+      /* 성향 공유 배지 */
+      .personality-share-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        background-image: linear-gradient(
+          to right,
+          rgba(0, 196, 180, 0.1),
+          rgba(255, 140, 66, 0.1)
+        );
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.75rem;
+        border: 2px solid rgba(0, 196, 180, 0.2);
+        margin-top: 0.75rem;
+      }
+
+      /* 공유 배지 내 캐릭터 이모지 */
+      .share-character {
+        font-size: 1.875rem;
+      }
+
+      /* 공유 배지 내 텍스트 컨텐츠 */
+      .share-text-content {
+        text-align: left;
+      }
+
+      /* 공유 배지 내 유형 텍스트 */
+      .share-type {
+        font-size: 1.5rem;
+        font-weight: 700;
+        background-image: linear-gradient(
+          to right,
+          var(--primary-color),
+          var(--secondary-color)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        color: transparent; /* text-fill-color 미지원 브라우저 대체 */
+      }
+
+      /* 공유 배지 내 별명 텍스트 */
+      .share-nickname {
+        font-size: 0.75rem;
+        color: var(--text-light);
+      }
+
+      /* 추천받기 버튼 스타일 */
+      .get-recommendations-button {
+        width: 100%;
+        background-image: linear-gradient(
+          to right,
+          var(--primary-color),
+          var(--secondary-color)
+        );
+        color: white;
+        padding: 1.5rem;
+        border-radius: 9999px;
+        font-weight: 700;
+        font-size: 1.125rem;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 10px 20px -5px rgba(0, 196, 180, 0.4);
+        transition: all 0.3s;
+        margin-top: 2.5rem;
+        margin-bottom: 1rem;
+      }
+
+      /* 추천받기 버튼 호버 시 효과 */
+      .get-recommendations-button:hover {
+        transform: scale(1.02);
+        box-shadow: 0 15px 25px -5px rgba(0, 196, 180, 0.5);
+      }
+
+      /* --- 그라디언트 배경 --- */
+      /* 빨강-장미-핑크 그라디언트 */
+      .from-red-600-via-rose-600-to-pink-600-bg {
+        background-image: linear-gradient(
+          to bottom right,
+          #dc2626,
+          #e11d48,
+          #db2777
+        );
+      }
+      /* 주황-앰버-노랑 그라디언트 */
+      .from-orange-600-via-amber-600-to-yellow-600-bg {
+        background-image: linear-gradient(
+          to bottom right,
+          #ea580c,
+          #f59e0b,
+          #eab308
+        );
+      }
+      /* 노랑-앰버-주황 그라디언트 */
+      .from-yellow-600-via-amber-600-to-orange-600-bg {
+        background-image: linear-gradient(
+          to bottom right,
+          #eab308,
+          #f59e0b,
+          #ea580c
+        );
+      }
+      /* 보라-바이올렛-푸시아 그라디언트 */
+      .from-purple-600-via-violet-600-to-fuchsia-600-bg {
+        background-image: linear-gradient(
+          to bottom right,
+          #9333ea,
+          #8b5cf6,
+          #d946ef
+        );
+      }
+      /* 시안-파랑-인디고 그라디언트 */
+      .from-cyan-600-via-blue-600-to-indigo-600-bg {
+        background-image: linear-gradient(
+          to bottom right,
+          #0891b2,
+          #2563eb,
+          #4f46e5
+        );
+      }
+      /* 에메랄드-녹색-틸 그라디언트 */
+      .from-emerald-600-via-green-600-to-teal-600-bg {
+        background-image: linear-gradient(
+          to bottom right,
+          #059669,
+          #16a34a,
+          #0d9488
+        );
+      }
+      /* 앰버-노랑-라임 그라디언트 */
+      .from-amber-600-via-yellow-600-to-lime-600-bg {
+        background-image: linear-gradient(
+          to bottom right,
+          #f59e0b,
+          #eab308,
+          #84cc16
+        );
+      }
+      /* 빨강-주황-앰버 그라디언트 */
+      .from-red-600-via-orange-600-to-amber-600-bg {
+        background-image: linear-gradient(
+          to bottom right,
+          #dc2626,
+          #ea580c,
+          #f59e0b
+        );
+      }
+      /* 틸-시안-스카이 그라디언트 */
+      .from-teal-600-via-cyan-600-to-sky-600-bg {
+        background-image: linear-gradient(
+          to bottom right,
+          #0d9488,
+          #0891b2,
+          #0284c7
+        );
+      }
+      /* --- 질문 옵션: 카드 그리드 UI (깔끔 버전) --- */
+      .options-container {
+        display: grid; /* 기존 flex-column 대신 grid */
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.25rem;
+      }
+
+      @media (max-width: 768px) {
+        .options-container {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 480px) {
+        .options-container {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .option-button {
+        width: 100%;
+        text-align: center;
+        padding: 1.75rem 1.5rem;
+        border-radius: 1.25rem;
+        border: 2px solid rgba(0, 0, 0, 0.12); /* 원래 톤 유지 */
+        background-color: rgba(255, 255, 255, 0.75);
+        cursor: pointer;
+        transition: all 0.18s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.85rem;
+        box-shadow: 0 10px 15px -10px rgba(0, 0, 0, 0.12);
+      }
+
+      .option-button:hover {
+        transform: translateY(-2px);
+        border-color: rgba(0, 196, 180, 0.55); /* primary */
+        box-shadow: 0 18px 24px -18px rgba(0, 196, 180, 0.35);
+      }
+
+      .option-icon {
+        width: 3.25rem;
+        height: 3.25rem;
+        border-radius: 1.1rem;
+        display: grid;
+        place-items: center;
+        background: rgba(0, 0, 0, 0.06);
+      }
+
+      .option-icon span {
+        font-size: 1.6rem;
+        line-height: 1;
+        opacity: 0.9;
+      }
+
+      .option-title {
+        font-size: 1.35rem;
+        font-weight: 800;
+        color: var(--text-dark);
+      }
+
+      .option-subtitle {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-light);
+      }
+
+      /* 선택된 카드(토글/선택 표시) */
+      .option-button.is-selected {
+        background-color: rgba(0, 196, 180, 0.08);
+        border-color: rgba(0, 196, 180, 0.75);
+        box-shadow: 0 18px 24px -18px rgba(0, 196, 180, 0.5);
+      }
+      .option-button.is-selected .option-icon {
+        background: rgba(0, 196, 180, 0.18);
+      }
+
+      /* 아래 네비게이션 버튼 줄 */
+      .nav-buttons {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        margin-top: 18px;
+      }
+
+      /* 스샷처럼: 배경 거의 흰색 + 라운드 + 그라데이션 텍스트 */
+      .nav-link-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 14px;
+        border: 0;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 14px;
+        cursor: pointer;
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+        transition:
+          transform 0.15s ease,
+          box-shadow 0.15s ease,
+          opacity 0.15s ease;
+        user-select: none;
+      }
+
+      /* 오른쪽 Next는 살짝 넓게(원하면 제거 가능) */
+      .nav-link-btn--right {
+        margin-left: auto;
+      }
+
+      /* 아이콘 영역(스샷처럼 살짝 네모/라운드) */
+      .nav-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 11px;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(
+          135deg,
+          rgba(0, 196, 180, 0.1),
+          rgba(139, 92, 246, 0.1)
+        );
+      }
+
+      /* 텍스트 그라데이션 */
+      .nav-text {
+        font-size: 1.25rem;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        background: linear-gradient(90deg, #00c4b4, #8b5cf6);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        color: transparent;
+      }
+
+      /* hover */
+      .nav-link-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 16px 32px rgba(0, 0, 0, 0.1);
+      }
+
+      /* disabled(선택 안 했을 때 Next) */
+      .nav-link-btn:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.06);
+      }
+
+      /* 모바일에서 글씨 너무 크면 줄이기 */
+      @media (max-width: 520px) {
+        .nav-text {
+          font-size: 1.4rem;
+        }
+        .nav-icon {
+          width: 40px;
+          height: 40px;
+          border-radius: 12px;
+        }
+        .nav-link-btn {
+          padding: 12px 14px;
+          border-radius: 16px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app" class="app-container">
+      <section id="intro-section" class="step-section active">
+        <div class="intro-content">
+          <div class="intro-badge">
+            <lord-icon
+              src="https://cdn.lordicon.com/surjmvno.json"
+              trigger="loop"
+              delay="1000"
+              colors="primary:#f59e0b,secondary:#00c4b4"
+              style="width: 32px; height: 32px"
+            >
+            </lord-icon>
+            <span>AI 맞춤 여행 계획</span>
+          </div>
+          <h1>여행 AI가 알아서 추천해줄게요!</h1>
+          <p>간단한 테스트를 AI기반으로 <br />맞춤 여행지를 알아서!</p>
+          <div id="personality-preview" class="personality-preview-grid"></div>
+          <button id="start-btn" class="start-button">
+            테스트 시작하기
+            <lord-icon
+              src="https://cdn.lordicon.com/dqrpfjei.json"
+              trigger="hover"
+              colors="primary:#ffffff"
+              style="width: 24px; height: 24px; margin-left: 8px"
+            >
+            </lord-icon>
+          </button>
+        </div>
+      </section>
+
+      <section id="test-section" class="step-section">
+        <div class="progress-bar-container">
+          <div class="progress-bar-labels">
+            <span id="progress-label">질문 1 / 7</span>
+            <span id="progress-percentage">14%</span>
+          </div>
+          <div class="progress-bar">
+            <div id="progress-bar-inner" class="progress-bar-inner"></div>
+          </div>
+        </div>
+        <div id="question-container" class="question-container">
+          <h2 id="question-title"></h2>
+          <div id="options-container" class="options-container"></div>
+        </div>
+        <div class="nav-buttons">
+          <button id="prev-btn" class="nav-link-btn" type="button">
+            <span class="nav-icon" aria-hidden="true">
+              <!-- 왼쪽 아이콘(스샷 느낌의 박스/가방) -->
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+                <defs>
+                  <linearGradient id="navGrad" x1="0" y1="0" x2="24" y2="24">
+                    <stop stop-color="#00c4b4" />
+                    <stop offset="1" stop-color="#8b5cf6" />
+                  </linearGradient>
+                </defs>
+                <path
+                  d="M8 7V6.2C8 5.54 8.54 5 9.2 5H14.8C15.46 5 16 5.54 16 6.2V7"
+                  stroke="url(#navGrad)"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                />
+                <path
+                  d="M6.5 8H17.5C18.33 8 19 8.67 19 9.5V18C19 18.83 18.33 19.5 17.5 19.5H6.5C5.67 19.5 5 18.83 5 18V9.5C5 8.67 5.67 8 6.5 8Z"
+                  stroke="url(#navGrad)"
+                  stroke-width="1.8"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M9 12H15"
+                  stroke="url(#navGrad)"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </span>
+            <span class="nav-text">이전 질문</span>
+          </button>
+
+          <button
+            id="next-btn"
+            class="nav-link-btn nav-link-btn--right"
+            type="button"
+            disabled
+          >
+            <span class="nav-text">다음 질문</span>
+            <span class="nav-icon" aria-hidden="true">
+              <!-- 오른쪽 화살표 아이콘 -->
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+                <defs>
+                  <linearGradient id="navGrad2" x1="0" y1="0" x2="24" y2="24">
+                    <stop stop-color="#00c4b4" />
+                    <stop offset="1" stop-color="#8b5cf6" />
+                  </linearGradient>
+                </defs>
+                <path
+                  d="M9 6L15 12L9 18"
+                  stroke="url(#navGrad2)"
+                  stroke-width="2.2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+          </button>
+        </div>
+      </section>
+
+      <section id="result-section" class="step-section"></section>
+    </div>
+
+    <script>
+      // ------------------ DATA ------------------
+      // 테스트 질문과 각 질문에 대한 선택지 데이터를 담고 있는 배열입니다.
+      const questions = [
+        {
+          id: 1,
+          title: "여행 기간",
+          subtitle: "얼마나 여행하실 예정인가요?",
+          options: [
+            {
+              icon: "📅",
+              label: "당일치기",
+              desc: "가볍게 다녀오기",
+              score: { 7: 1, 9: 1, 3: 1 },
+            },
+            {
+              icon: "🗓️",
+              label: "1박 2일",
+              desc: "핵심만 알차게",
+              score: { 3: 1, 1: 1, 7: 1 },
+            },
+            {
+              icon: "🧳",
+              label: "2박 3일",
+              desc: "여유+핫플",
+              score: { 7: 2, 3: 1, 4: 1 },
+            },
+            {
+              icon: "🏕️",
+              label: "3박 4일",
+              desc: "일정+휴식 밸런스",
+              score: { 1: 1, 9: 1, 2: 1 },
+            },
+            {
+              icon: "🌿",
+              label: "5일 이상",
+              desc: "느긋하게 체류",
+              score: { 9: 2, 4: 1, 5: 1 },
+            },
+          ],
+        },
+        {
+          id: 2,
+          title: "동행",
+          subtitle: "누구와 함께 떠나시나요?",
+          options: [
+            {
+              icon: "🧑‍🦱",
+              label: "혼자",
+              desc: "나만의 시간",
+              score: { 5: 2, 4: 1, 9: 1 },
+            },
+            {
+              icon: "💑",
+              label: "연인",
+              desc: "로맨틱 여행",
+              score: { 2: 2, 4: 1, 9: 1 },
+            },
+            {
+              icon: "🧑‍🤝‍🧑",
+              label: "친구",
+              desc: "우정 여행",
+              score: { 7: 2, 3: 1, 8: 1 },
+            },
+            {
+              icon: "👨‍👩‍👧‍👦",
+              label: "가족",
+              desc: "가족 나들이",
+              score: { 6: 2, 2: 1, 9: 1 },
+            },
+            {
+              icon: "👥",
+              label: "단체",
+              desc: "5인 이상",
+              score: { 2: 2, 6: 1, 1: 1 },
+            },
+          ],
+        },
+        {
+          id: 3,
+          title: "테마",
+          subtitle: "어떤 여행을 원하시나요?",
+          /* 원래 이미지에 (복수 선택 가능)처럼 하고 싶으면 아래에서 멀티선택도 가능하게 확장 가능 */
+          multi: true,
+          options: [
+            {
+              icon: "🧘",
+              label: "힐링",
+              desc: "휴식과 재충전",
+              score: { 9: 2, 6: 1, 4: 1 },
+            },
+            {
+              icon: "🍜",
+              label: "맛집",
+              desc: "미식 탐방",
+              score: { 7: 2, 3: 1, 2: 1 },
+            },
+            {
+              icon: "🌳",
+              label: "자연",
+              desc: "자연 속으로",
+              score: { 9: 1, 4: 1, 6: 1 },
+            },
+            {
+              icon: "🏛️",
+              label: "문화/역사",
+              desc: "배움의 여행",
+              score: { 5: 2, 1: 1, 6: 1 },
+            },
+            {
+              icon: "🏄",
+              label: "액티비티",
+              desc: "활동적인 여행",
+              score: { 7: 1, 8: 2, 3: 1 },
+            },
+            {
+              icon: "📸",
+              label: "사진",
+              desc: "인생샷 명소",
+              score: { 3: 2, 4: 1, 7: 1 },
+            },
+          ],
+        },
+        {
+          id: 4,
+          title: "예산",
+          subtitle: "1인 기준 예상 예산은 얼마인가요?",
+          options: [
+            {
+              icon: "👛",
+              label: "30만원 이하",
+              desc: "가성비 위주",
+              score: { 6: 2, 1: 1, 5: 1 },
+            },
+            {
+              icon: "💳",
+              label: "30~50만원",
+              desc: "합리적으로",
+              score: { 1: 1, 6: 1, 2: 1 },
+            },
+            {
+              icon: "🧾",
+              label: "50~80만원",
+              desc: "경험에 투자",
+              score: { 3: 2, 7: 1, 2: 1 },
+            },
+            {
+              icon: "💎",
+              label: "80만원 이상",
+              desc: "퀄리티/럭셔리",
+              score: { 3: 2, 8: 1, 4: 1 },
+            },
+          ],
+        },
+        {
+          id: 5,
+          title: "이동 수단",
+          subtitle: "주로 어떻게 이동하실 예정인가요?",
+          options: [
+            {
+              icon: "🚆",
+              label: "대중교통",
+              desc: "버스, 지하철",
+              score: { 5: 1, 6: 1, 1: 1 },
+            },
+            {
+              icon: "🚗",
+              label: "자차/렌트",
+              desc: "자유로운 이동",
+              score: { 7: 1, 8: 1, 3: 1 },
+            },
+            {
+              icon: "🚶",
+              label: "도보 위주",
+              desc: "느리게 걷기",
+              score: { 9: 2, 4: 1, 5: 1 },
+            },
+            {
+              icon: "🧭",
+              label: "혼합",
+              desc: "상황에 따라",
+              score: { 1: 1, 6: 1, 7: 1 },
+            },
+          ],
+        },
+        {
+          id: 6,
+          title: "일정 강도",
+          subtitle: "얼마나 빡빡한 일정을 원하시나요?",
+          options: [
+            {
+              icon: "🌙",
+              label: "여유롭게",
+              desc: "하루 2~3곳",
+              score: { 9: 2, 4: 1, 6: 1 },
+            },
+            {
+              icon: "⛅",
+              label: "적당히",
+              desc: "하루 4~5곳",
+              score: { 1: 1, 2: 1, 7: 1 },
+            },
+            {
+              icon: "⚡",
+              label: "알차게",
+              desc: "하루 6곳 이상",
+              score: { 3: 2, 1: 1, 8: 1 },
+            },
+          ],
+        },
+        {
+          id: 7,
+          title: "가장 중요한 것",
+          subtitle: "여행에서 제일 중요하게 생각하는 것은?",
+          options: [
+            {
+              icon: "✅",
+              label: "완벽한 계획",
+              desc: "실수 없는 동선",
+              score: { 1: 3, 6: 1 },
+            },
+            {
+              icon: "💞",
+              label: "사람과 추억",
+              desc: "함께가 중요",
+              score: { 2: 3, 9: 1 },
+            },
+            {
+              icon: "🏆",
+              label: "성취와 결과",
+              desc: "해냈다는 느낌",
+              score: { 3: 2, 8: 2 },
+            },
+            {
+              icon: "🎨",
+              label: "감성과 분위기",
+              desc: "나만의 순간",
+              score: { 4: 3, 9: 1 },
+            },
+            {
+              icon: "📚",
+              label: "배움과 탐구",
+              desc: "지식/리서치",
+              score: { 5: 3, 1: 1 },
+            },
+            {
+              icon: "🎢",
+              label: "재미와 자극",
+              desc: "새로운 경험",
+              score: { 7: 3, 8: 1 },
+            },
+          ],
+        },
+      ];
+
+      // 각 Enneagram(애니어그램) 유형별 정보를 담고 있는 객체입니다.
+      // 유형별 별명, 설명, 특징, 강점, 여행 동기, 추천 여행지 등의 상세 데이터를 포함합니다.
+      const enneagramTypes = {
+        1: {
+          type: 1,
+          nickname: "베이징",
+          subtitle: "The Perfect Route Designer",
+          character: `
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><g data-name="Forbidden City"><path style="fill:#a84400" d="M85.333 106.667h341.333v64H85.333z"/><path style="fill:#851f00" d="M320 106.667h106.667v64H320z"/><path style="fill:#a84400" d="M64 213.333h384V320H64z"/><path style="fill:#851f00" d="M277.333 213.333H448V320H277.333z"/><path style="fill:#9d3100" d="M42.667 213.333h426.667V256H42.667z"/><path d="M426.667 170.667H85.333c0 21.333-42.666 42.666-64 42.666v21.334h469.334v-21.334c-21.334 0-64-21.333-64-42.666z" style="fill:#b37900"/><path d="M426.667 170.667H384V192h-42.667v21.333h149.334c-21.334 0-64-21.333-64-42.666z" style="fill:#9e6611"/><path d="M405.333 42.667s0-21.334-21.333-21.334c0 0 0 21.334-21.333 21.334H149.333C128 42.667 128 21.333 128 21.333c-21.333 0-21.333 21.334-21.333 21.334q0 64-64 64V128h426.666v-21.333q-64 0-64-64z" style="fill:#cb8c01"/><path d="M405.333 42.667s0-21.334-21.333-21.334c0 0 0 21.334-21.333 21.334V64h-21.334v21.333H384v21.334h85.333q-64 0-64-64z" style="fill:#b37900"/><path style="fill:#2f2038" d="M85.333 256h21.333v21.333H85.333z"/><path style="fill:#ba6b33" d="M106.667 256H128v42.667h-21.333zM64 256h21.333v85.333H64zM149.333 256h21.333v42.667h-21.333z"/><path style="fill:#a84400" d="M341.333 256h21.333v42.667h-21.333zM384 256h21.333v42.667H384zM426.667 256H448v85.333h-21.333z"/><path style="fill:#2f2038" d="M128 256h21.333v21.333H128zM192 256h21.333v21.333H192zM234.667 256h42.667v64h-42.667zM298.667 256H320v21.333h-21.333z"/><path style="fill:#25152e" d="M405.333 256h21.333v21.333h-21.333zM362.667 256H384v21.333h-21.333z"/><path style="fill:#701600" d="M234.667 149.333h42.667v21.333h-42.667zM341.333 149.333H384v21.333h-42.667zM128 149.333h42.667v21.333H128z"/><path style="fill:#93a3af" d="M21.333 320h469.333v21.333H21.333z"/><path d="M42.667 298.667H64S64 320 85.333 320s21.334-21.333 21.334-21.333H128v42.666H42.667zM149.333 298.667h21.334S170.667 320 192 320s21.333-21.333 21.333-21.333h21.334v42.666h-85.334zM277.333 298.667h21.334S298.667 320 320 320s21.333-21.333 21.333-21.333h21.334v42.666h-85.334zM384 298.667h21.333s0 21.333 21.334 21.333S448 298.667 448 298.667h21.333v42.666H384z" style="fill:#b8c3cb"/><path style="fill:#851f00" d="M21.333 341.333h469.333v149.333H21.333z"/><path style="fill:#701600" d="M490.667 490.667h-85.334v-64h-42.666v-21.334h42.666V384H384v-21.333h106.667v128zM320 384v21.333H213.333v21.334h128V384H320z"/><path style="fill:#9d3100" d="M128 405.333h42.667v21.333H128zM170.667 341.333h42.667v21.333h-42.667zM192 448h42.667v21.333H192zM64 405.333h42.667v21.333H64z"/><path d="M320 490.667h-21.333v-21.334A42.709 42.709 0 0 0 256 426.667v-21.334a64.07 64.07 0 0 1 64 64z" style="fill:#a84400"/><path d="M256 426.667a42.667 42.667 0 0 1 42.667 42.666v21.334h-85.334v-21.334A42.667 42.667 0 0 1 256 426.667z" style="fill:#2f2038"/><path d="M170.667 490.667h-21.334v-21.334a42.709 42.709 0 0 0-42.666-42.666v-21.334a64.07 64.07 0 0 1 64 64z" style="fill:#a84400"/><path d="M106.667 426.667a42.667 42.667 0 0 1 42.666 42.666v21.334H64v-21.334a42.667 42.667 0 0 1 42.667-42.666z" style="fill:#2f2038"/><path d="M85.333 490.667H64v-21.334a42.709 42.709 0 0 1 42.667-42.666V448a21.361 21.361 0 0 0-21.334 21.333zM234.667 490.667h-21.334v-21.334A42.709 42.709 0 0 1 256 426.667V448a21.361 21.361 0 0 0-21.333 21.333z" style="fill:#25152e"/><path d="M469.333 490.667H448v-21.334a42.709 42.709 0 0 0-42.667-42.666v-21.334a64.07 64.07 0 0 1 64 64z" style="fill:#851f00"/><path d="M405.333 426.667A42.667 42.667 0 0 1 448 469.333v21.334h-85.333v-21.334a42.667 42.667 0 0 1 42.666-42.666z" style="fill:#2f2038"/><path style="fill:#dfe4e7" d="M192 362.667h128v42.667H192z"/><path style="fill:#b37900" d="M42.667 106.667h426.667V128H42.667z"/><path style="fill:#9e6611" d="M298.667 106.667h170.667V128H298.667zM21.333 213.333h469.333v21.333H21.333z"/><path style="fill:#885400" d="M298.667 213.333h192v21.333h-192z"/><path style="fill:#d6a436" d="M128 42.667h42.667V64H128z"/><path style="fill:#cb8c01" d="M128 170.667h42.667V192H128zM192 192h42.667v21.333H192zM277.333 192H320v21.333h-42.667zM85.333 192h21.333v21.333H85.333zM234.667 170.667h42.667V192h-42.667z"/><path style="fill:#d6a436" d="M192 42.667h42.667V64H192zM256 42.667h42.667V64H256zM320 42.667h42.667V64H320zM362.667 85.333h42.667v21.333h-42.667zM298.667 85.333h42.667v21.333h-42.667zM234.667 85.333h42.667v21.333h-42.667zM170.667 85.333h42.667v21.333h-42.667z"/><path style="fill:#b37900" d="M149.333 64H192v21.333h-42.667z"/><path style="fill:#d6a436" d="M106.667 85.333h42.667v21.333h-42.667z"/><path style="fill:#b37900" d="M277.333 64H320v21.333h-42.667z"/><path style="fill:#9d3100" d="M64 128h384v21.333H64z"/><path style="fill:#ba6b33" d="M170.667 149.333H192v21.333h-21.333zM277.333 149.333h21.333v21.333h-21.333z"/><path style="fill:#a84400" d="M384 149.333h21.333v21.333H384z"/><path style="fill:#ba6b33" d="M277.333 256h21.333v42.667h-21.333z"/><path style="fill:#556e81" d="M128 320h21.333v21.333H128zM234.667 320H256v21.333h-21.333zM362.667 320H384v21.333h-21.333zM469.333 320h21.333v21.333h-21.333z"/><path d="M384 490.667h-21.333v-21.334a42.709 42.709 0 0 1 42.666-42.666V448A21.361 21.361 0 0 0 384 469.333zM277.333 256h-42.666v64H256v-42.667h21.333V256z" style="fill:#25152e"/><path style="fill:#9d3100" d="M21.333 362.667H64V384H21.333zM85.333 362.667H128V384H85.333z"/><path style="fill:#851f00" d="M405.333 362.667H448V384h-42.667z"/><path style="fill:#9d3100" d="M341.333 362.667H384V384h-42.667zM320 448h42.667v21.333H320z"/><path style="fill:#851f00" d="M469.333 405.333h21.333v21.333h-21.333z"/><path style="fill:#9d3100" d="M21.333 448H64v21.333H21.333z"/></g></svg>
+          `,
+          description:
+            "모든 것이 완벽해야 직성이 풀리는 당신! 일정부터 숙소까지 완벽하게 계획합니다.",
+          traits: ["완벽주의", "체계적", "책임감 강함", "정의로움"],
+          strengths: ["철저한 계획", "높은 기준", "안전한 여행"],
+          weaknesses: ["융통성 부족", "과도한 걱정", "스트레스"],
+          travelMotivation:
+            "완벽하게 계획된 여행으로 모든 것을 경험하고 싶어요",
+          recommendations: ["유럽 문화 투어", "역사 유적지", "박물관 탐방"],
+          color: "#DC2626",
+          gradient: "from-red-600-via-rose-600-to-pink-600",
+        },
+        2: {
+          type: 2,
+          nickname: "파리",
+          subtitle: "The Travel Mate Angel",
+          character: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><circle cx="170.667" cy="234.667"
+             r="128" style="fill:#c1bcc3"/><ellipse cx="128" cy="192" rx="48.269" ry="36.202" transform="rotate(-45 128 192)" 
+             style="fill:#928a97"/><ellipse cx="117.333" cy="245.333" rx="37.65" ry="25.1" transform="rotate(-45 117.333 245.333)" style="fill:#928a97"/><path d="M75.625 287.042c-13.73-13.73-15.333-35.594-4.656-56.052-13.396-23.355-7.063-56.26 16.344-79.677C102.124 136.5 121.322 128 139.978 128v21.333c-13.042 0-26.74 6.22-37.583 17.063-17.594 17.604-22.209 42.885-10.5 57.542l4.833 6.052-4.26 6.468c-8.844 13.438-9.552 27.709-1.76 35.5z" style="fill:#d5d2d7"/><path d="M162.132 157.868c-14.138-14.138-40.88-10.317-59.731 8.533s-22.67 45.592-8.533 59.73a27.195 27.195 0 0 0 4.192 3.198c-13.353 14.5-16.777 33.198-7.35 42.627 9.803 9.802 29.669 5.83 44.372-8.874 12.737-12.738 17.381-29.325 12.034-39.913a63.874 63.874 0 0 0 6.483-5.571c18.85-18.85 22.67-45.591 8.533-59.73z" style="fill:#928a97"/><path d="M90.708 271.958c-9.312-9.312-6.083-28.03 7.355-42.625l15.687 14.459c-6.323 6.864-7.344 13.062-7 14.552zM97.48 228.948a22.382 22.382 0 0 1-3.595-2.792c-14.145-14.156-10.302-40.937 8.51-59.76 18.095-18.083 46.084-22.146 59.73-8.542l-15.063 15.104c-1.895-1.896-4.895-2.291-7.083-2.291-7.208 0-15.833 4.145-22.5 10.812-10.541 10.552-13.302 24.792-8.562 29.542z" style="fill:#7a7081"/><ellipse cx="192" cy="234.667" rx="26.979" ry="13.489" transform="rotate(-45 192 234.667)" style="fill:#7a7081"/><path d="M182.46 246.46a50.449 50.449 0 0 0-6.806 8.442c6.148 2.457 16.729-1.541 25.885-10.698a50.441 50.441 0 0 0 6.807-8.44c-6.148-2.457-16.729 1.54-25.885 10.697z" style="fill:#928a97"/><path d="M170.667 362.604a127.627 127.627 0 0 1-90.51-37.427l30.166-30.167A85.339 85.339 0 0 0 231.01 174.323l30.167-30.167a127.938 127.938 0 0 1-90.51 218.448z" style="fill:#928a97"/><ellipse cx="192" cy="138.667" rx="22.127" ry="8.893" transform="rotate(-16.899 192 138.667)" style="fill:#7a7081"/><path style="fill:#d29e79" d="M256 21.333h21.333v32H256z"/><path d="m126.552 485.375-18.437-10.75C109.594 472.094 256 219.125 256 53.333h21.333c0 171.573-144.625 421.49-150.78 432.042z" style="fill:#a84400"/><path transform="rotate(-45 277.333 234.667)" style="fill:#851f00" d="M266.668 189.412h21.331v90.51h-21.331z"/><path d="M406.781 485.375C400.625 474.823 256 224.906 256 53.333h21.333c0 165.865 146.407 418.76 147.886 421.292z" style="fill:#a84400"/><path transform="rotate(-45 256 234.667)" style="fill:#851f00" d="M210.745 224.001h90.51v21.331h-90.51z"/><path style="fill:#851f00" d="M202.667 298.667h42.667V320h-42.667zM288 298.667h42.667V320H288zM256 352h21.333v42.667H256z"/><path d="m169.542 484.77-19.084-9.54 24.313-48.636c26.156-52.302 50.479-106.459 72.281-160.938l1.177-2.948 19.813 7.917-1.177 2.948c-22.032 55.042-46.594 109.73-73.01 162.562z" style="fill:#a84400"/><path d="m363.792 484.77-24.313-48.635c-26.416-52.833-50.979-107.52-73.01-162.562l-1.177-2.948 19.812-7.917 1.177 2.948c21.802 54.48 46.125 108.636 72.281 160.938l24.313 48.635z" style="fill:#a84400"/><path style="fill:#851f00" d="M245.333 170.667H288V192h-42.667zM341.333 428h51.333v21.333h-51.333z"/><path style="fill:#ba6b33" d="M192 256h149.333v21.333H192zM234.667 42.667h64V64h-64z"/><path style="fill:#d9ad8e" d="M192 256h21.333v21.333H192zM234.667 42.667H256V64h-21.333z"/><path style="fill:#851f00" d="M160 384h213.333v21.333H160zM140.667 426.667h49.271V448h-49.271z"/><path style="fill:#ba6b33" d="M149.333 341.333H384v21.333H149.333z"/><path d="M362.667 480h-21.334A74.667 74.667 0 1 0 192 480h-21.333a96 96 0 0 1 192 0z" style="fill:#851f00"/><path style="fill:#ba6b33" d="M85.333 469.333h128v21.333h-128zM320 469.333h128v21.333H320z"/><path style="fill:#d9ad8e" d="M149.333 341.333h21.333v21.333h-21.333z"/><path style="fill:#851f00" d="M256 64h21.333v21.333H256z"/></svg>`,
+          description:
+            "동행자의 행복이 곧 나의 행복! 모두를 챙기는 따뜻한 여행 동반자.",
+          traits: ["배려심 가득", "친절함", "감정 이입", "관계 중시"],
+          strengths: ["분위기 조율", "갈등 해결", "팀워크"],
+          weaknesses: ["자기 희생", "인정 욕구", "경계 설정 어려움"],
+          travelMotivation: "함께하는 사람들과 좋은 추억을 만들고 싶어요",
+          recommendations: ["단체 패키지 투어", "봉사 여행", "현지 교류"],
+          color: "#EA580C",
+          gradient: "from-orange-600-via-amber-600-to-yellow-600",
+        },
+        3: {
+          type: 3,
+          nickname: "뉴욕",
+          subtitle: "The Proof-Shot Producer",
+          character: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M213.333 320v-85.333H320v43.402a20.598 20.598 0 0 0 20.598 20.598l.735 21.333z" style="fill:#2c2e2b"/><path d="M213.333 234.667 234.667 256v21.333L256 298.667h21.333l21.334-21.334V256L320 234.667V224a53.333 53.333 0 0 0-53.333-53.333A53.333 53.333 0 0 0 213.333 224z" style="fill:#555754"/><path style="fill:#3d3f3c" d="m277.333 298.667 21.334-21.334V256h-21.334v42.667zM277.333 171.742v41.591h21.334V256L320 234.667V224a53.343 53.343 0 0 0-42.667-52.258z"/><path style="fill:#555754" d="m448 490.667 21.333-64-22.129-21.334h-41.871L384 320H213.333v-42.667h-42.666l-21.334-42.666L128 128H85.333V405.333L64 448l42.667 42.667H448z"/><path style="fill:#656764" d="M234.667 320h64v21.333h-64z"/><path style="fill:#3d3f3c" d="M170.667 405.333v-128l-21.334-42.666L128 128H93.091L128 320v85.333h42.667z"/><path style="fill:#777976" d="M128 384h-21.333v-74.667L85.396 118.51l21.208-2.354 21.334 192L128 384z"/><path style="fill:#2c2e2b" d="M192 298.667h-34.521l-28.781-58.417-18.177-90.917H96V128h32l21.333 106.667 21.334 42.666H192v21.334z"/><path style="fill:#656764" d="M206.81 490.667h22.191l26.593-93.073L256 320h-21.333v73.177l-27.857 97.49z"/><path style="fill:#9a9c99" d="M85.333 42.667h21.333v128H85.333z"/><path style="fill:#3d3f3c" d="M64 42.667h64v42.667H64z"/><path style="fill:#666865" d="M42.667 21.333h106.667V64H42.667z"/><path style="fill:#555754" d="M128 21.333h21.333V64H128z"/><path style="fill:#878986" d="M42.667 21.333h106.667v21.333H42.667z"/><path style="fill:#9a9c99" d="M42.667 21.333H64v21.333H42.667z"/><path style="fill:#878986" d="M64 85.333h42.667v21.333H64z"/><path style="fill:#777976" d="M64 106.667h42.667V128H64z"/><path style="fill:#878986" d="M64 128h21.333v21.333H64z"/><path style="fill:#828481" d="M42.667 64H64v21.333H42.667z"/><path style="fill:#555754" d="M106.667 85.333H128V128h-21.333z"/><path style="fill:#777976" d="m213.333 490.667 64-64L320 320h64l21.333 85.333h41.871l22.129 21.334-21.333 64H213.333z"/><path style="fill:#9a9c99" d="m372.324 490.667 33.009-85.334h41.871l22.129 21.334-21.333 64h-75.676z"/><path style="fill:#b4b6b3" d="m452.365 410.309-27.243 80.358H448l21.333-64-16.968-16.358z"/><path style="fill:#3d3f3c" d="M256 128h21.333v64H256z"/><path transform="rotate(-30 234.667 168.574)" style="fill:#3d3f3c" d="M224 136.574h21.333v64H224z"/><path transform="rotate(-60 211.241 192)" style="fill:#3d3f3c" d="M200.574 160h21.333v64h-21.333z"/><path transform="rotate(-90 213.333 224)" style="fill:#3d3f3c" d="M202.667 202.667H224v42.667h-21.333z"/><path transform="rotate(-90 320 224)" style="fill:#3d3f3c" d="M309.333 202.667h21.333v42.667h-21.333z"/><path transform="rotate(-120 322.092 192)" style="fill:#3d3f3c" d="M311.426 160h21.333v64h-21.333z"/><path transform="rotate(-150 298.667 168.574)" style="fill:#3d3f3c" d="M288 136.574h21.333v64H288z"/><path d="M298.667 224h-21.334A10.667 10.667 0 1 0 256 224h-21.333a32 32 0 0 1 64 0z" style="fill:#777976"/><path style="fill:#2c2e2b" d="M168.333 469.333h-55.416l-24.459-24.458 15.084-15.083L121.75 448h29.917l19-75.979v-94.688H192l-.323 98.584-23.344 93.416z"/><path style="fill:#3d3f3c" d="m207.668 490.667 26.592-93.073.262-77.594h-21.189v73.177l-27.856 97.49h22.191z"/><path style="fill:#2c2e2b" d="m213.333 490.667 62.448-62.448L319.949 320h-22.924l-37.879 94.688-75.979 75.979h30.166zM85.333 368.917v30.166l27.584 27.584h57.75v-64h-21.334v42.666H121.75l-36.417-36.416z"/><path style="fill:#878986" d="M192 277.333h21.333v64H192zM234.667 320H256v21.333h-21.333z"/><path style="fill:#3d3f3c" d="m313.315 490.667 48.487-113.136-19.604-8.396-52.085 121.532h23.202z"/><path style="fill:#9a9c99" d="m334.648 490.667 48.487-113.136-19.604-8.396-52.084 121.532h23.201zM362.667 320H384v21.333h-21.333z"/></svg>`,
+          description:
+            "여행도 성공적이어야 해! 핫플만 골라가는 트렌디한 성취자.",
+          traits: ["목표 지향", "효율적", "이미지 중시", "경쟁심"],
+          strengths: ["빠른 실행력", "정보 수집", "SNS 마스터"],
+          weaknesses: ["진정성 부족", "과로", "비교 의식"],
+          travelMotivation: "멋진 여행으로 성공적인 경험을 만들고 싶어요",
+          recommendations: ["핫플 투어", "SNS 명소", "럭셔리 여행"],
+          color: "#EAB308",
+          gradient: "from-yellow-600-via-amber-600-to-orange-600",
+        },
+      };
+
+      // ------------------ STATE ------------------
+      // 현재 앱의 단계를 나타냅니다 ('intro', 'test', 'result').
+      let currentStep = "intro";
+      // 현재 보여지는 질문의 인덱스를 나타냅니다.
+      let currentQuestion = 0;
+      // 사용자의 답변들을 저장하는 배열입니다.
+      // let answers = [];
+      // 최종적으로 계산된 사용자의 여행 성향 유형을 나타냅니다.
+      let resultType = null;
+      // 1~9 점수판
+      let scoreBoard = {};
+      // 이전 잘문 되돌리기용 점수 기록
+      let scoreHistory = [];
+      // 각 질문에서 선택한 옵션의 index(0,1,2,...)를 저장
+      let selectedOptionIndex = [];
+      // Next 누르기 전(임시) 선택 저장
+      let pendingAnswer = null;
+      // 각 질문에서 "확정된" scoreObj 저장 (중복 더하기 방지용)
+      let committedScoreByQuestion = [];
+      // 각 질문의 임시 선택 저장
+      let pendingByQuestion = [];
+
+      // ------------------ DOM ELEMENTS ------------------
+      // 인트로 화면 섹션 DOM 엘리먼트
+      const introSection = document.getElementById("intro-section");
+      // 테스트 화면 섹션 DOM 엘리먼트
+      const testSection = document.getElementById("test-section");
+      // 결과 화면 섹션 DOM 엘리먼트
+      const resultSection = document.getElementById("result-section");
+
+      // 테스트 시작 버튼 DOM 엘리먼트
+      const startBtn = document.getElementById("start-btn");
+      // 이전 질문 버튼 DOM 엘리먼트
+      const prevBtn = document.getElementById("prev-btn");
+      // 다음 질문 버튼 DOM 엘리먼트
+      const nextBtn = document.getElementById("next-btn");
+
+      // 성격 유형 미리보기 컨테이너 DOM 엘리먼트
+      const personalityPreview = document.getElementById("personality-preview");
+      // 진행률 레이블 (예: "질문 1 / 7") DOM 엘리먼트
+      const progressLabel = document.getElementById("progress-label");
+      // 진행률 백분율 (예: "11%") DOM 엘리먼트
+      const progressPercentage = document.getElementById("progress-percentage");
+      // 진행률 바의 내부 엘리먼트 (너비 조절로 진행률 시각화) DOM 엘리먼트
+      const progressBarInner = document.getElementById("progress-bar-inner");
+      // 질문 제목 DOM 엘리먼트
+      const questionTitle = document.getElementById("question-title");
+      // 질문 옵션(선택지) 컨테이너 DOM 엘리먼트
+      const optionsContainer = document.getElementById("options-container");
+
+      // ------------------ FUNCTIONS ------------------
+
+      // 현재 단계를 보여주고 다른 단계는 숨기는 함수입니다.
+      // 'intro', 'test', 'result' 세 가지 단계 중 하나를 인자로 받습니다.
+      function showStep(step) {
+        currentStep = step;
+        [introSection, testSection, resultSection].forEach((section) => {
+          section.classList.remove("active");
+        });
+
+        if (step === "intro") {
+          introSection.classList.add("active");
+        } else if (step === "test") {
+          testSection.classList.add("active");
+        } else if (step === "result") {
+          resultSection.classList.add("active");
+        }
+      }
+
+      // score 초기화
+      function resetScoreBoard() {
+        scoreBoard = {};
+        for (let i = 1; i <= 9; i++) scoreBoard[i] = 0;
+
+        scoreHistory = [];
+        selectedOptionIndex = [];
+        committedScoreByQuestion = [];
+        pendingAnswer = null;
+        pendingByQuestion = [];
+
+        currentQuestion = 0;
+
+        if (nextBtn) nextBtn.disabled = true;
+        if (prevBtn) prevBtn.style.display = "none";
+
+        // 진행률 UI 초기화 (0% 시작)
+        progressLabel.textContent = `질문 1 / ${questions.length}`;
+        progressPercentage.textContent = `14%`;
+        progressBarInner.style.width = `14%`;
+      }
+
+      // 인트로 화면의 성향 미리보기 섹션을 렌더링하는 함수입니다.
+      // enneagramTypes 객체의 데이터를 사용하여 각 성향별 이모지와 별명을 표시합니다.
+      function renderIntro() {
+        personalityPreview.innerHTML = "";
+        Object.values(enneagramTypes).forEach((type) => {
+          const previewItem = document.createElement("div");
+          previewItem.className = "personality-preview-item";
+          previewItem.innerHTML = `
+            <div class="emoji">${type.character}</div>
+            <div class="name">${type.nickname}</div>
+          `;
+          personalityPreview.appendChild(previewItem);
+        });
+      }
+
+      // 현재 질문과 해당 질문의 선택지들을 렌더링하고 진행 상태 바를 업데이트하는 함수입니다.
+      function renderQuestion() {
+        const q = questions[currentQuestion];
+
+        const committed = committedScoreByQuestion[currentQuestion] != null;
+        const pending = pendingByQuestion[currentQuestion] || null;
+
+        // 멀티/싱글 공통: 화면에 표시할 선택 상태 만들기
+        let displaySet = new Set();
+        if (q.multi) {
+          if (pending && pending.optionIndexes)
+            displaySet = new Set(pending.optionIndexes);
+          else if (Array.isArray(selectedOptionIndex[currentQuestion]))
+            displaySet = new Set(selectedOptionIndex[currentQuestion]);
+        } else {
+          let displayIndex = null;
+          if (pending) displayIndex = pending.optionIndex;
+          else if (selectedOptionIndex[currentQuestion] != null)
+            displayIndex = selectedOptionIndex[currentQuestion];
+          if (displayIndex != null) displaySet.add(displayIndex);
+        }
+
+        // 질문 타이틀(멀티면 안내 문구 추가)
+        questionTitle.innerHTML = `
+          <div style="font-size:2.25rem;font-weight:800;margin-bottom:0.35rem;">${q.title}</div>
+          <div style="font-size:1.25rem;color:var(--text-light);font-weight:600;">
+            ${q.subtitle} ${q.multi ? '<span style="font-size:0.95rem;color:#999;">(복수 선택 가능)</span>' : ""}
+          </div>
+        `;
+
+        optionsContainer.innerHTML = "";
+        q.options.forEach((opt, optIndex) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = displaySet.has(optIndex)
+            ? "option-button is-selected"
+            : "option-button";
+
+          btn.innerHTML = `
+            <div class="option-icon"><span>${opt.icon}</span></div>
+            <div class="option-title">${opt.label}</div>
+            <div class="option-subtitle">${opt.desc}</div>
+          `;
+
+          btn.addEventListener("click", () =>
+            selectOption(opt.score, optIndex),
+          );
+          optionsContainer.appendChild(btn);
+        });
+
+        prevBtn.style.display = currentQuestion > 0 ? "flex" : "none";
+
+        // Next 활성화 규칙
+        if (q.multi) {
+          const hasPending =
+            pending &&
+            pending.optionIndexes &&
+            pending.optionIndexes.length > 0;
+          const hasCommitted =
+            committed &&
+            Array.isArray(selectedOptionIndex[currentQuestion]) &&
+            selectedOptionIndex[currentQuestion].length > 0;
+          nextBtn.disabled = !(hasPending || hasCommitted);
+        } else {
+          nextBtn.disabled = !(pending || committed);
+        }
+
+        // 진행률(네가 만든 0% 시작 방식 유지)
+        const total = questions.length;
+        const completed = currentQuestion + 1;
+        progressLabel.textContent = `질문 ${currentQuestion + 1} / ${total}`;
+        const percent = Math.round((completed / total) * 100);
+        progressPercentage.textContent = `${percent}%`;
+        progressBarInner.style.width = `${percent}%`;
+      }
+
+      // 사용자가 질문에 답변을 선택했을 때 호출되는 함수입니다.
+      // (기존 handleAnswer는 "클릭 즉시 확정" 로직이라 지금 구조에선 사용하지 않습니다.)
+      // function handleAnswer(scoreObj, optIndex) { ... }  // 사용 안 함 (중복 점수 방지)
+
+      // 선택만 하고, Next를 눌러야 확정되도록 하는 함수입니다.
+      function selectOption(scoreObj, optionIndex) {
+        const q = questions[currentQuestion];
+
+        // 멀티 선택(토글)
+        if (q.multi) {
+          const prev =
+            pendingByQuestion[currentQuestion]?.optionIndexes ??
+            (Array.isArray(selectedOptionIndex[currentQuestion])
+              ? selectedOptionIndex[currentQuestion]
+              : []);
+
+          const set = new Set(prev);
+
+          if (set.has(optionIndex)) set.delete(optionIndex);
+          else set.add(optionIndex);
+
+          // 선택된 옵션들의 score 합산
+          const combined = {};
+          [...set].forEach((idx) => {
+            const sc = q.options[idx].score;
+            Object.entries(sc).forEach(([type, value]) => {
+              combined[type] = (combined[type] || 0) + value;
+            });
+          });
+
+          pendingByQuestion[currentQuestion] = {
+            optionIndexes: [...set],
+            scoreObj: combined,
+          };
+
+          // UI 반영
+          const buttons = optionsContainer.querySelectorAll(".option-button");
+          buttons.forEach((b, i) =>
+            b.classList.toggle("is-selected", set.has(i)),
+          );
+
+          nextBtn.disabled = set.size === 0;
+          return;
+        }
+
+        // 싱글 선택(기존 로직)
+        pendingByQuestion[currentQuestion] = { scoreObj, optionIndex };
+
+        const buttons = optionsContainer.querySelectorAll(".option-button");
+        buttons.forEach((b) => b.classList.remove("is-selected"));
+        if (buttons[optionIndex])
+          buttons[optionIndex].classList.add("is-selected");
+
+        nextBtn.disabled = false;
+      }
+
+      function handleNext() {
+        const alreadyCommitted =
+          committedScoreByQuestion[currentQuestion] != null;
+        const pending = pendingByQuestion[currentQuestion];
+
+        if (!pending && !alreadyCommitted) return;
+
+        // 교체인 경우: 기존 점수 빼기
+        if (alreadyCommitted && pending) {
+          const oldScoreObj = committedScoreByQuestion[currentQuestion];
+          if (oldScoreObj) {
+            Object.entries(oldScoreObj).forEach(([type, value]) => {
+              scoreBoard[type] = (scoreBoard[type] || 0) - value;
+              if (scoreBoard[type] < 0) scoreBoard[type] = 0;
+            });
+          }
+        }
+
+        // pending이 있으면 확정 반영
+        if (pending) {
+          const { scoreObj, optionIndex, optionIndexes } = pending;
+
+          committedScoreByQuestion[currentQuestion] = scoreObj;
+          // 멀티면 배열 저장, 싱글이면 숫자 저장
+          selectedOptionIndex[currentQuestion] = optionIndexes ?? optionIndex;
+
+          Object.entries(scoreObj).forEach(([type, value]) => {
+            scoreBoard[type] = (scoreBoard[type] || 0) + value;
+          });
+
+          // 확정했으니 해당 질문의 pending 제거
+          pendingByQuestion[currentQuestion] = null;
+        }
+
+        // 다음으로 이동
+        if (currentQuestion < questions.length - 1) {
+          currentQuestion++;
+          renderQuestion();
+        } else {
+          calculateResult();
+          showStep("result");
+          renderResult();
+        }
+      }
+
+      // 이전 질문으로 돌아가는 함수입니다.
+      // "뒤로가기"에서 점수/확정도 함께 되돌립니다.
+      function handlePrevious() {
+        if (currentQuestion <= 0) return;
+
+        // 지금 질문(현재 화면)의 pending 제거
+        pendingByQuestion[currentQuestion] = null;
+
+        // 현재 질문이 "확정(committed)" 상태라면 점수 되돌리기
+        const committed = committedScoreByQuestion[currentQuestion];
+        if (committed) {
+          Object.entries(committed).forEach(([type, value]) => {
+            scoreBoard[type] = (scoreBoard[type] || 0) - value;
+            if (scoreBoard[type] < 0) scoreBoard[type] = 0;
+          });
+
+          committedScoreByQuestion[currentQuestion] = null;
+          selectedOptionIndex[currentQuestion] = null;
+        }
+
+        // 이전 질문으로 이동
+        currentQuestion--;
+        renderQuestion();
+      }
+
+      // 사용자의 답변을 기반으로 최종 성향 유형을 계산하는 함수입니다.
+      function calculateResult() {
+        let bestType = 1;
+        let bestScore = -Infinity;
+
+        for (let i = 1; i <= 9; i++) {
+          const s = scoreBoard[i] || 0;
+          if (s > bestScore) {
+            bestScore = s;
+            bestType = i;
+          }
+        }
+
+        resultType = bestType;
+      }
+
+      // 테스트를 처음부터 다시 시작하기 위해 모든 상태를 초기화하고 인트로 화면으로 돌아가는 함수입니다.
+      function handleRestart() {
+        currentQuestion = 0;
+        resultType = null;
+        resetScoreBoard();
+        showStep("intro");
+      }
+
+      // 최종 결과를 렌더링하는 함수입니다.
+      // 먼저 카드 획득 화면을 보여준 후, 사용자가 버튼을 클릭하면 상세 결과 카드와 추천, 공유 옵션을 표시합니다.
+      function renderResult() {
+        const resultData = enneagramTypes[resultType];
+        resultSection.innerHTML = "";
+
+        const acquisitionScreen = document.createElement("div");
+        acquisitionScreen.className = "acquisition-screen";
+        acquisitionScreen.innerHTML = `
+          <div class="acquisition-content">
+            <div class="floating-card-container">
+              <div class="card-visual ${resultData.gradient}-bg">
+                <div class="card-character">${resultData.character}</div>
+              </div>
+            </div>
+            <h2 class="acquisition-title">카드를 획득했어요!</h2>
+            <p class="acquisition-subtitle">${resultData.nickname}</p>
+            <button class="reveal-button">
+              <span>클릭하여 카드 확인하기</span>
+            </button>
+          </div>
+        `;
+        resultSection.appendChild(acquisitionScreen);
+
+        const cardVisual = acquisitionScreen.querySelector(".card-visual");
+        cardVisual.animate(
+          [
+            { transform: "scale(0) rotateY(0)", opacity: 0 },
+            { transform: "scale(1.2) rotateY(180deg)", opacity: 1 },
+            { transform: "scale(1) rotateY(360deg)", opacity: 1 },
+          ],
+          { duration: 1500, easing: "ease-in-out" },
+        );
+
+        const resultView = document.createElement("div");
+        resultView.className = "result-view";
+        resultView.style.display = "none";
+        resultView.innerHTML = `
+          <div class="result-header">
+            <h1 class="result-title">당신의 여행 성향을 찾았어요!</h1>
+            <p class="result-subtitle">카드를 클릭하거나 드래그해서 돌려보세요</p>
+          </div>
+          <div class="interactive-card-container"></div>
+
+          <div class="result-details-grid">
+            <div class="recommendation-panel">
+              <h3 class="panel-title">AI가 이렇게 추천했어요!</h3>
+              <p class="panel-subtitle">당신의 성향에 딱 맞는 여행지</p>
+              <div class="recommendation-list">
+                ${resultData.recommendations
+                  .map(
+                    (rec, index) => `
+                      <div class="recommendation-item">
+                        <div class="recommendation-number">${index + 1}</div>
+                        <span>${rec}</span>
+                      </div>
+                    `,
+                  )
+                  .join("")}
+              </div>
+            </div>
+
+            <div class="share-panel">
+              <h3 class="panel-title">공유하기</h3>
+              <button class="share-button" type="button">
+                <lord-icon
+                  src="https://cdn.lordicon.com/bxxnzvfm.json"
+                  trigger="hover"
+                  colors="primary:#ffffff"
+                  style="width:20px;height:20px;margin-right:8px;">
+                </lord-icon>
+                결과 공유하기
+              </button>
+              <div class="share-text-area">
+                <p class="panel-subtitle">나의 여행 성향은!</p>
+                <div class="personality-share-badge">
+                  <span class="share-character">${resultData.character}</span>
+                  <div class="share-text-content">
+                    <p class="share-type">유형 ${resultData.type}</p>
+                    <p class="share-nickname">${resultData.nickname}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button id="get-recommendations-btn" class="get-recommendations-button" type="button">
+            맞춤 여행 추천받기 →
+          </button>
+          <button id="restart-btn" class="start-button" type="button">다시 시작하기</button>
+        `;
+        resultSection.appendChild(resultView);
+
+        acquisitionScreen
+          .querySelector(".reveal-button")
+          .addEventListener("click", () => {
+            acquisitionScreen.style.display = "none";
+            resultView.style.display = "block";
+            renderFlippableCard(resultData);
+          });
+
+        document
+          .querySelector(".share-button")
+          .addEventListener("click", async () => {
+            const shareText = `나의 여행 성향은 유형 ${resultData.type} (${resultData.nickname})!`;
+            try {
+              if (navigator.share) {
+                await navigator.share({
+                  title: "AI 여행 성향 테스트",
+                  text: shareText,
+                });
+              } else {
+                await navigator.clipboard.writeText(shareText);
+                alert("공유 문구를 클립보드에 복사했어요!");
+              }
+            } catch (e) {
+              // 사용자가 공유 취소한 경우 등은 조용히 무시
+            }
+          });
+
+        document
+          .getElementById("get-recommendations-btn")
+          .addEventListener("click", () => {
+            alert("맞춤 여행 추천받기 기능은 아직 개발 중입니다!");
+          });
+        document
+          .getElementById("restart-btn")
+          .addEventListener("click", handleRestart);
+      }
+
+      // 인터랙티브한 뒤집기 가능한 3D 결과 카드를 렌더링하고 관리하는 함수입니다.
+      // 스파클 및 틸트 효과를 포함하여 카드의 앞면(요약)과 뒷면(상세 정보)을 표시합니다.
+      function renderFlippableCard(data) {
+        const container = document.querySelector(".interactive-card-container");
+        container.innerHTML = `
+          <div class="card-scene">
+            <div class="card-object">
+              <div class="card-face card-face--front ${data.gradient}-bg">
+                <div class="card-border"></div>
+                <div class="card-content">
+                  <div class="card-top-ornament">✦</div>
+                  <div class="card-character-main">${data.character}</div>
+                  <div class="card-title-group">
+                    <div class="card-main-type">${data.type}</div>
+                    <h2 class="card-main-nickname">${data.nickname}</h2>
+                    <p class="card-main-subtitle">${data.subtitle}</p>
+                  </div>
+                  <div class="card-bottom-ornament">✦</div>
+                </div>
+                <div class="sparkle-overlay"></div>
+                <div class="holographic-overlay"></div>
+              </div>
+
+              <div class="card-face card-face--back">
+                <div class="card-back-content">
+                  <div class="back-header">
+                    <div class="back-character">${data.character}</div>
+                    <div class="back-type">${data.type}</div>
+                    <h3 class="back-nickname">${data.nickname}</h3>
+                    <p class="back-subtitle">${data.subtitle}</p>
+                  </div>
+                  <p class="back-description">"${data.travelMotivation}"</p>
+
+                  <div class="back-section">
+                    <h4 class="back-section-title">주요 특징</h4>
+                    <div class="traits-grid">
+                      ${data.traits.map((trait) => `<div class="trait-item">${trait}</div>`).join("")}
+                    </div>
+                  </div>
+
+                  <div class="back-section">
+                    <h4 class="back-section-title">여행 강점</h4>
+                    <ul class="strengths-list">
+                      ${data.strengths.map((s) => `<li>${s}</li>`).join("")}
+                    </ul>
+                  </div>
+
+                  <div class="back-section">
+                    <h4 class="back-section-title">추천 여행 스타일</h4>
+                    <div class="recommendations-list">
+                      ${data.recommendations.map((r) => `<span>#${r}</span>`).join(" ")}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+
+        const cardObject = container.querySelector(".card-object");
+        const sparkleOverlay = container.querySelector(".sparkle-overlay");
+
+        for (let i = 0; i < 30; i++) {
+          const sparkle = document.createElement("div");
+          sparkle.className = "card-sparkle";
+          sparkle.style.left = `${Math.random() * 100}%`;
+          sparkle.style.top = `${Math.random() * 100}%`;
+          sparkle.style.animationDelay = `${Math.random() * 2}s`;
+          sparkleOverlay.appendChild(sparkle);
+        }
+
+        cardObject.addEventListener("click", () => {
+          cardObject.classList.toggle("is-flipped");
+          cardObject.style.setProperty("--rotate-x", "0deg");
+          cardObject.style.setProperty("--rotate-y", "0deg");
+        });
+
+        const cardScene = container.querySelector(".card-scene");
+        cardScene.addEventListener("mousemove", (e) => {
+          if (cardObject.classList.contains("is-flipped")) return;
+
+          const rect = cardScene.getBoundingClientRect();
+          const centerX = rect.left + rect.width / 2;
+          const centerY = rect.top + rect.height / 2;
+          const mouseX = e.clientX - centerX;
+          const mouseY = e.clientY - centerY;
+
+          const rotateX = (mouseY / rect.height) * -30;
+          const rotateY = (mouseX / rect.width) * 30;
+
+          cardObject.style.setProperty("--rotate-x", `${rotateX}deg`);
+          cardObject.style.setProperty("--rotate-y", `${rotateY}deg`);
+        });
+
+        cardScene.addEventListener("mouseleave", () => {
+          cardObject.style.setProperty("--rotate-x", "0deg");
+          cardObject.style.setProperty("--rotate-y", "0deg");
+        });
+      }
+
+      // ------------------ INITIALIZATION ------------------
+
+      // 시작 버튼 클릭 시 테스트 섹션으로 이동하고 첫 질문을 렌더링합니다.
+      startBtn.addEventListener("click", () => {
+        resetScoreBoard();
+        currentQuestion = 0;
+        showStep("test");
+        renderQuestion();
+      });
+
+      // 이전 버튼 클릭 시 이전 질문으로 돌아갑니다.
+      prevBtn.addEventListener("click", handlePrevious);
+
+      // 다음 버튼
+      nextBtn.addEventListener("click", handleNext);
+
+      // 페이지 로드 시 인트로 화면을 렌더링하고 표시합니다.
+      renderIntro();
+      showStep("intro");
+      resetScoreBoard();
+    </script>
+  </body>
+</html>
