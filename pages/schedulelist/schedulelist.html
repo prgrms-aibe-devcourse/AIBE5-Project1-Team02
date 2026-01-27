@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>여백 - 일정 찾기</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="../../styles.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#00897B',
+                        secondary: '#E0F2F1',
+                        accent: '#FFAB00',
+                    },
+                    fontFamily: {
+                        sans: ['Noto Sans KR', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom range slider styling */
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #00897B;
+            cursor: pointer;
+            margin-top: -8px;
+            border: 2px solid white;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #E0E0E0;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+
+<body class="bg-[#f3f4f6] text-slate-800 min-h-screen font-sans">
+
+    <!-- Header -->
+    <header
+        class="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div class="w-full px-8 relative flex h-20 items-center justify-between">
+            <a class="flex items-center space-x-2" href="../main/Main.html">
+                <img src="../../images/Logo.png" alt="여백 로고" class="h-9 w-9 rounded-full object-cover" />
+                <span class="font-serif text-foreground font-bold ml-2 text-xl">여백</span>
+            </a>
+
+            <nav class="flex items-center justify-center text-muted-foreground gap-6 text-lg font-medium" style="
+                        position: absolute;
+                        left: 50%;
+                        transform: translateX(-50%);
+                    ">
+                <a class="transition-colors hover:text-foreground/80 text-foreground/60 hover:text-foreground transition-colors"
+                    href="../plan/planner.html">플래너</a>
+                <a class="transition-colors hover:text-foreground/80 text-foreground/60 hover:text-foreground transition-colors"
+                    href="">숙소</a>
+                <a class="transition-colors hover:text-foreground/80 text-foreground/60 hover:text-foreground transition-colors"
+                    href="">여행기록</a>
+            </nav>
+
+            <div id="auth-links" class="flex items-center gap-4">
+                <a href="../auth/SignIn.html" class="text-sm font-medium">로그인</a>
+                <a href="../auth/SignUp.html"
+                    class="text-sm font-medium bg-primary text-primary-foreground px-4 py-2 rounded-md">회원가입</a>
+            </div>
+        </div>
+    </header>
+
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 py-8 flex flex-col md:flex-row gap-8">
+
+        <!-- Sidebar Filter -->
+        <aside class="w-full md:w-64 flex-shrink-0 space-y-8">
+            <div class="flex items-center gap-2 pb-4 border-b border-stone-200">
+                <span class="material-symbols-outlined text-stone-700">filter_list</span>
+                <h2 class="font-bold text-lg">필터</h2>
+            </div>
+
+            <!-- Budget Filter -->
+            <div class="space-y-3">
+                <div class="flex justify-between items-center">
+                    <label class="font-bold text-sm">예산 범위</label>
+                </div>
+                <!-- Range Slider Placeholder -->
+                <div class="relative pt-1">
+                    <input type="range"
+                        class="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer range-sm" min="0"
+                        max="50">
+                    <div class="flex justify-between text-xs text-stone-500 mt-2">
+                        <span>0만원</span>
+                        <span>50만원</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Density Filter -->
+            <div class="space-y-3">
+                <label class="font-bold text-sm block">일정 밀도</label>
+                <div class="flex flex-wrap gap-2" id="density-filters">
+                    <button onclick="selectFilter(this, 'density')"
+                        class="px-3 py-1.5 rounded-full border border-stone-200 bg-white text-xs text-stone-600 hover:border-primary hover:text-primary transition-colors">여유로움</button>
+                    <button onclick="selectFilter(this, 'density')"
+                        class="px-3 py-1.5 rounded-full border border-stone-200 bg-stone-100 text-xs text-stone-800 font-medium selected">보통</button>
+                    <button onclick="selectFilter(this, 'density')"
+                        class="px-3 py-1.5 rounded-full border border-stone-200 bg-white text-xs text-stone-600 hover:border-primary hover:text-primary transition-colors">알참</button>
+                </div>
+            </div>
+
+            <!-- Movement Filter -->
+            <div class="space-y-3">
+                <label class="font-bold text-sm block">이동량</label>
+                <div class="flex flex-wrap gap-2" id="movement-filters">
+                    <button onclick="selectFilter(this, 'movement')"
+                        class="px-3 py-1.5 rounded-full border border-stone-200 bg-white text-xs text-stone-600 hover:border-primary hover:text-primary transition-colors">적음</button>
+                    <button onclick="selectFilter(this, 'movement')"
+                        class="px-3 py-1.5 rounded-full border border-stone-200 bg-stone-100 text-xs text-stone-800 font-medium selected">중간</button>
+                    <button onclick="selectFilter(this, 'movement')"
+                        class="px-3 py-1.5 rounded-full border border-stone-200 bg-white text-xs text-stone-600 hover:border-primary hover:text-primary transition-colors">많음</button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Grid Area -->
+        <main class="flex-1">
+            <!-- Top Bar -->
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+                <div class="flex items-center gap-3">
+                    <span class="text-teal-600 text-sm font-extrabold tracking-tight">AI 추천</span>
+                    <span class="text-stone-400">|</span>
+                    <span class="text-stone-600 text-sm font-bold tracking-tight">activity</span>
+                    <span
+                        class="ml-2 px-2.5 py-0.5 bg-stone-100 text-stone-500 rounded-full text-[11px] font-medium border border-stone-200">Total
+                        6</span>
+                </div>
+                <div class="relative">
+                    <button id="sortButton" onclick="toggleSortDropdown()"
+                        class="flex items-center gap-1.5 text-xs font-bold text-stone-600 border border-stone-200/80 rounded-full px-4 py-2 bg-white hover:bg-stone-50 hover:border-stone-300 hover:shadow-sm transition-all shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
+                        <span id="sortLabel">인기순</span>
+                        <span class="material-symbols-outlined text-base transition-transform duration-200"
+                            id="sortIcon">expand_more</span>
+                    </button>
+                    <!-- Dropdown Menu -->
+                    <div id="sortDropdown"
+                        class="absolute right-0 mt-2 w-32 bg-white rounded-xl shadow-lg border border-stone-100 py-1 hidden z-50 origin-top-right transition-all">
+                        <button onclick="sortItineraries('popularity')"
+                            class="w-full text-left px-4 py-2 text-xs font-medium text-stone-700 hover:bg-teal-50 hover:text-teal-700 transition-colors">인기순</button>
+                        <button onclick="sortItineraries('reviews')"
+                            class="w-full text-left px-4 py-2 text-xs font-medium text-stone-700 hover:bg-teal-50 hover:text-teal-700 transition-colors">리뷰순</button>
+                        <button onclick="sortItineraries('price')"
+                            class="w-full text-left px-4 py-2 text-xs font-medium text-stone-700 hover:bg-teal-50 hover:text-teal-700 transition-colors">가격순
+                            (낮은순)</button>
+                        <button onclick="sortItineraries('latest')"
+                            class="w-full text-left px-4 py-2 text-xs font-medium text-stone-700 hover:bg-teal-50 hover:text-teal-700 transition-colors">최신순</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Itinerary Grid -->
+            <div id="itineraryGrid" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+                <!-- Card 1 -->
+                <article
+                    class="bg-white rounded-2xl border border-stone-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow group flex flex-col h-full">
+                    <!-- Image Area -->
+                    <div class="relative aspect-[16/9] bg-stone-200 overflow-hidden">
+                        <div class="absolute inset-0 bg-stone-100 flex items-center justify-center text-stone-300">
+                            <span class="material-symbols-outlined text-4xl">location_on</span>
+                        </div>
+
+                        <!-- Badges -->
+                        <div class="absolute top-3 left-3 flex gap-2">
+                            <span
+                                class="px-2 py-1 bg-white/90 backdrop-blur text-[10px] font-bold text-blue-600 rounded-full flex items-center gap-1 border border-blue-100 shadow-sm">
+                                <span class="material-symbols-outlined text-[10px]">route</span> 동선 최적화
+                            </span>
+                        </div>
+                        <!-- Validated Heart -->
+                        <button onclick="toggleHeart(this)"
+                            class="absolute top-3 right-3 p-1.5 bg-white/50 backdrop-blur rounded-full hover:bg-white text-stone-500 transition-all">
+                            <span
+                                class="material-symbols-outlined text-lg transition-transform duration-200">favorite</span>
+                        </button>
+                    </div>
+
+                    <!-- Content -->
+                    <div class="p-5 flex flex-col flex-1">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-bold text-lg text-stone-800 group-hover:text-primary transition-colors">제주
+                                힐링 여행 2박3일</h3>
+                            <div class="flex items-center gap-1 text-xs font-bold text-orange-400">
+                                <span class="material-symbols-outlined text-sm"
+                                    style="font-variation-settings: 'FILL' 1;">star</span>
+                                4.8 <span class="text-stone-300 font-normal">(128)</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-2 text-xs text-stone-500 mb-3">
+                            <span class="flex items-center gap-0.5"><span
+                                    class="material-symbols-outlined text-sm">location_on</span> 제주도</span>
+                            <span>·</span>
+                            <span class="flex items-center gap-0.5"><span
+                                    class="material-symbols-outlined text-sm">calendar_today</span> 2박 3일</span>
+                        </div>
+
+                        <div class="flex gap-1.5 mb-4">
+                            <span class="px-2 py-0.5 bg-stone-100 text-stone-600 rounded text-[10px]">힐링</span>
+                            <span class="px-2 py-0.5 bg-stone-100 text-stone-600 rounded text-[10px]">자연</span>
+                        </div>
+
+                        <div
+                            class="mt-auto pt-4 border-t border-stone-100 flex items-center justify-between text-xs text-stone-500 mb-4">
+                            <div class="flex gap-3">
+                                <span class="flex items-center gap-1"><span
+                                        class="material-symbols-outlined text-sm">directions_walk</span> 약 4시간</span>
+                                <span class="flex items-center gap-1"><span
+                                        class="material-symbols-outlined text-sm">payments</span> 35만원</span>
+                            </div>
+                            <span class="px-2 py-0.5 bg-cyan-50 text-cyan-600 rounded text-[10px] font-bold">여유로움</span>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2 mt-auto">
+                            <button
+                                class="py-2.5 rounded-xl border border-stone-200 text-stone-600 text-xs font-bold hover:bg-stone-50 transition-colors"
+                                onclick="showDetails('제주 힐링 여행 2박3일', '제주도', '4.8', '35만원', '약 4시간')">상세보기</button>
+                            <button
+                                class="py-2.5 rounded-xl bg-primary text-white text-xs font-bold hover:bg-teal-700 transition-colors flex items-center justify-center gap-1"
+                                onclick="addToPlanner(this)">
+                                <span class="material-symbols-outlined text-sm">add</span> 플래너에 담기
+                            </button>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 2 -->
+                <article
+                    class="bg-white rounded-2xl border border-stone-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow group flex flex-col h-full">
+                    <div class="relative aspect-[16/9] bg-stone-200 overflow-hidden">
+                        <div class="absolute inset-0 bg-stone-100 flex items-center justify-center text-stone-300">
+                            <span class="material-symbols-outlined text-4xl">location_on</span>
+                        </div>
+                        <div class="absolute top-3 left-3 flex gap-2">
+                            <span
+                                class="px-2 py-1 bg-white/90 backdrop-blur text-[10px] font-bold text-green-600 rounded-full flex items-center gap-1 border border-green-100 shadow-sm">
+                                <span class="material-symbols-outlined text-[10px]">savings</span> 가성비 최고
+                            </span>
+                        </div>
+                        <button onclick="toggleHeart(this)"
+                            class="absolute top-3 right-3 p-1.5 bg-white/50 backdrop-blur rounded-full hover:bg-white text-stone-500 transition-all">
+                            <span
+                                class="material-symbols-outlined text-lg transition-transform duration-200">favorite</span>
+                        </button>
+                    </div>
+
+                    <div class="p-5 flex flex-col flex-1">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-bold text-lg text-stone-800 group-hover:text-primary transition-colors">부산
+                                맛집 투어 1박2일</h3>
+                            <div class="flex items-center gap-1 text-xs font-bold text-orange-400">
+                                <span class="material-symbols-outlined text-sm"
+                                    style="font-variation-settings: 'FILL' 1;">star</span>
+                                4.9 <span class="text-stone-300 font-normal">(256)</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-2 text-xs text-stone-500 mb-3">
+                            <span class="flex items-center gap-0.5"><span
+                                    class="material-symbols-outlined text-sm">location_on</span> 부산</span>
+                            <span>·</span>
+                            <span class="flex items-center gap-0.5"><span
+                                    class="material-symbols-outlined text-sm">calendar_today</span> 1박 2일</span>
+                        </div>
+
+                        <div class="flex gap-1.5 mb-4">
+                            <span class="px-2 py-0.5 bg-stone-100 text-stone-600 rounded text-[10px]">맛집</span>
+                            <span class="px-2 py-0.5 bg-stone-100 text-stone-600 rounded text-[10px]">야경</span>
+                        </div>
+
+                        <div
+                            class="mt-auto pt-4 border-t border-stone-100 flex items-center justify-between text-xs text-stone-500 mb-4">
+                            <div class="flex gap-3">
+                                <span class="flex items-center gap-1"><span
+                                        class="material-symbols-outlined text-sm">directions_walk</span> 약 2시간</span>
+                                <span class="flex items-center gap-1"><span
+                                        class="material-symbols-outlined text-sm">payments</span> 18만원</span>
+                            </div>
+                            <span
+                                class="px-2 py-0.5 bg-stone-100 text-stone-600 rounded text-[10px] font-bold">보통</span>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2 mt-auto">
+                            <button
+                                class="py-2.5 rounded-xl border border-stone-200 text-stone-600 text-xs font-bold hover:bg-stone-50 transition-colors"
+                                onclick="showDetails('부산 맛집 투어 1박2일', '부산', '4.9', '18만원', '약 2시간')">상세보기</button>
+                            <button
+                                class="py-2.5 rounded-xl bg-primary text-white text-xs font-bold hover:bg-teal-700 transition-colors flex items-center justify-center gap-1"
+                                onclick="addToPlanner(this)">
+                                <span class="material-symbols-outlined text-sm">add</span> 플래너에 담기
+                            </button>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 3 -->
+                <article
+                    class="bg-white rounded-2xl border border-stone-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow group flex flex-col h-full">
+                    <div class="relative aspect-[16/9] bg-stone-200 overflow-hidden">
+                        <div class="absolute inset-0 bg-stone-100 flex items-center justify-center text-stone-300">
+                            <span class="material-symbols-outlined text-4xl">location_on</span>
+                        </div>
+                        <div class="absolute top-3 left-3 flex gap-2">
+                            <span
+                                class="px-2 py-1 bg-white/90 backdrop-blur text-[10px] font-bold text-blue-600 rounded-full flex items-center gap-1 border border-blue-100 shadow-sm">
+                                <span class="material-symbols-outlined text-[10px]">route</span> 동선 최적화
+                            </span>
+                            <span
+                                class="px-2 py-1 bg-white/90 backdrop-blur text-[10px] font-bold text-stone-600 rounded-full flex items-center gap-1 border border-stone-200 shadow-sm">
+                                <span class="material-symbols-outlined text-[10px]">photo_camera</span> 사진 맛집
+                            </span>
+                        </div>
+                        <button onclick="toggleHeart(this)"
+                            class="absolute top-3 right-3 p-1.5 bg-white/50 backdrop-blur rounded-full hover:bg-white text-stone-500 transition-all">
+                            <span
+                                class="material-symbols-outlined text-lg transition-transform duration-200">favorite</span>
+                        </button>
+                    </div>
+
+                    <div class="p-5 flex flex-col flex-1">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-bold text-lg text-stone-800 group-hover:text-primary transition-colors">강릉
+                                바다 카페 투어</h3>
+                            <div class="flex items-center gap-1 text-xs font-bold text-orange-400">
+                                <span class="material-symbols-outlined text-sm"
+                                    style="font-variation-settings: 'FILL' 1;">star</span>
+                                4.7 <span class="text-stone-300 font-normal">(89)</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-2 text-xs text-stone-500 mb-3">
+                            <span class="flex items-center gap-0.5"><span
+                                    class="material-symbols-outlined text-sm">location_on</span> 강릉</span>
+                            <span>·</span>
+                            <span class="flex items-center gap-0.5"><span
+                                    class="material-symbols-outlined text-sm">calendar_today</span> 1박 2일</span>
+                        </div>
+
+                        <div class="flex gap-1.5 mb-4">
+                            <span class="px-2 py-0.5 bg-stone-100 text-stone-600 rounded text-[10px]">카페</span>
+                            <span class="px-2 py-0.5 bg-stone-100 text-stone-600 rounded text-[10px]">바다</span>
+                            <span class="px-2 py-0.5 bg-stone-100 text-stone-600 rounded text-[10px]">힐링</span>
+                        </div>
+
+                        <div
+                            class="mt-auto pt-4 border-t border-stone-100 flex items-center justify-between text-xs text-stone-500 mb-4">
+                            <div class="flex gap-3">
+                                <span class="flex items-center gap-1"><span
+                                        class="material-symbols-outlined text-sm">directions_walk</span> 약 1.5시간</span>
+                                <span class="flex items-center gap-1"><span
+                                        class="material-symbols-outlined text-sm">payments</span> 15만원</span>
+                            </div>
+                            <span class="px-2 py-0.5 bg-cyan-50 text-cyan-600 rounded text-[10px] font-bold">여유로움</span>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2 mt-auto">
+                            <button
+                                class="py-2.5 rounded-xl border border-stone-200 text-stone-600 text-xs font-bold hover:bg-stone-50 transition-colors"
+                                onclick="showDetails('강릉 바다 카페 투어', '강릉', '4.7', '15만원', '약 1.5시간')">상세보기</button>
+                            <button
+                                class="py-2.5 rounded-xl bg-primary text-white text-xs font-bold hover:bg-teal-700 transition-colors flex items-center justify-center gap-1"
+                                onclick="addToPlanner(this)">
+                                <span class="material-symbols-outlined text-sm">add</span> 플래너에 담기
+                            </button>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 4 -->
+                <article
+                    class="bg-white rounded-2xl border border-stone-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow group flex flex-col h-full">
+                    <div class="relative aspect-[16/9] bg-stone-200 overflow-hidden">
+                        <div class="absolute inset-0 bg-stone-100 flex items-center justify-center text-stone-300">
+                            <span class="material-symbols-outlined text-4xl">location_on</span>
+                        </div>
+                        <div class="absolute top-3 left-3 flex gap-2">
+                            <span
+                                class="px-2 py-1 bg-white/90 backdrop-blur text-[10px] font-bold text-indigo-600 rounded-full flex items-center gap-1 border border-indigo-100 shadow-sm">
+                                <span class="material-symbols-outlined text-[10px]">school</span> 교육적
+                            </span>
+                        </div>
+                        <button onclick="toggleHeart(this)"
+                            class="absolute top-3 right-3 p-1.5 bg-white/50 backdrop-blur rounded-full hover:bg-white text-stone-500 transition-all">
+                            <span
+                                class="material-symbols-outlined text-lg transition-transform duration-200">favorite</span>
+                        </button>
+                    </div>
+
+                    <div class="p-5 flex flex-col flex-1">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-bold text-lg text-stone-800 group-hover:text-primary transition-colors">경주
+                                역사 탐방 2박3일</h3>
+                            <div class="flex items-center gap-1 text-xs font-bold text-orange-400">
+                                <span class="material-symbols-outlined text-sm"
+                                    style="font-variation-settings: 'FILL' 1;">star</span>
+                                4.6 <span class="text-stone-300 font-normal">(156)</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-2 text-xs text-stone-500 mb-3">
+                            <span class="flex items-center gap-0.5"><span
+                                    class="material-symbols-outlined text-sm">location_on</span> 경주</span>
+                            <span>·</span>
+                            <span class="flex items-center gap-0.5"><span
+                                    class="material-symbols-outlined text-sm">calendar_today</span> 2박 3일</span>
+                        </div>
+
+                        <div class="flex gap-1.5 mb-4">
+                            <span class="px-2 py-0.5 bg-stone-100 text-stone-600 rounded text-[10px]">역사</span>
+                            <span class="px-2 py-0.5 bg-stone-100 text-stone-600 rounded text-[10px]">문화</span>
+                            <span class="px-2 py-0.5 bg-stone-100 text-stone-600 rounded text-[10px]">야경</span>
+                        </div>
+
+                        <div
+                            class="mt-auto pt-4 border-t border-stone-100 flex items-center justify-between text-xs text-stone-500 mb-4">
+                            <div class="flex gap-3">
+                                <span class="flex items-center gap-1"><span
+                                        class="material-symbols-outlined text-sm">directions_walk</span> 약 3시간</span>
+                                <span class="flex items-center gap-1"><span
+                                        class="material-symbols-outlined text-sm">payments</span> 28만원</span>
+                            </div>
+                            <span
+                                class="px-2 py-0.5 bg-stone-100 text-stone-600 rounded text-[10px] font-bold">보통</span>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2 mt-auto">
+                            <button
+                                class="py-2.5 rounded-xl border border-stone-200 text-stone-600 text-xs font-bold hover:bg-stone-50 transition-colors"
+                                onclick="showDetails('경주 역사 탐방 2박3일', '경주', '4.6', '28만원', '약 3시간')">상세보기</button>
+                            <button
+                                class="py-2.5 rounded-xl bg-primary text-white text-xs font-bold hover:bg-teal-700 transition-colors flex items-center justify-center gap-1"
+                                onclick="addToPlanner(this)">
+                                <span class="material-symbols-outlined text-sm">add</span> 플래너에 담기
+                            </button>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 5 -->
+                <article
+                    class="bg-white rounded-2xl border border-stone-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow group flex flex-col h-full">
+                    <div class="relative aspect-[16/9] bg-stone-200 overflow-hidden">
+                        <div class="absolute inset-0 bg-stone-100 flex items-center justify-center text-stone-300">
+                            <span class="material-symbols-outlined text-4xl">location_on</span>
+                        </div>
+                        <div class="absolute top-3 left-3 flex gap-2">
+                            <span
+                                class="px-2 py-1 bg-white/90 backdrop-blur text-[10px] font-bold text-teal-700 rounded-full flex items-center gap-1 border border-teal-100 shadow-sm">
+                                <span class="material-symbols-outlined text-[10px]">check_circle</span> 커플 추천
+                            </span>
+                        </div>
+                        <button onclick="toggleHeart(this)"
+                            class="absolute top-3 right-3 p-1.5 bg-white/50 backdrop-blur rounded-full hover:bg-white text-stone-500 transition-all">
+                            <span
+                                class="material-symbols-outlined text-lg transition-transform duration-200">favorite</span>
+                        </button>
+                    </div>
+
+                    <div class="p-5 flex flex-col flex-1">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-bold text-lg text-stone-800 group-hover:text-primary transition-colors">여수
+                                밤바다 낭만 여행</h3>
+                            <div class="flex items-center gap-1 text-xs font-bold text-orange-400">
+                                <span class="material-symbols-outlined text-sm"
+                                    style="font-variation-settings: 'FILL' 1;">star</span>
+                                4.9 <span class="text-stone-300 font-normal">(203)</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-2 text-xs text-stone-500 mb-3">
+                            <span class="flex items-center gap-0.5"><span
+                                    class="material-symbols-outlined text-sm">location_on</span> 여수</span>
+                            <span>·</span>
+                            <span class="flex items-center gap-0.5"><span
+                                    class="material-symbols-outlined text-sm">calendar_today</span> 1박 2일</span>
+                        </div>
+
+                        <div class="flex gap-1.5 mb-4">
+                            <span class="px-2 py-0.5 bg-stone-100 text-stone-600 rounded text-[10px]">낭만</span>
+                            <span class="px-2 py-0.5 bg-stone-100 text-stone-600 rounded text-[10px]">야경</span>
+                            <span class="px-2 py-0.5 bg-stone-100 text-stone-600 rounded text-[10px]">데이트</span>
+                        </div>
+
+                        <div
+                            class="mt-auto pt-4 border-t border-stone-100 flex items-center justify-between text-xs text-stone-500 mb-4">
+                            <div class="flex gap-3">
+                                <span class="flex items-center gap-1"><span
+                                        class="material-symbols-outlined text-sm">directions_walk</span> 약 2.5시간</span>
+                                <span class="flex items-center gap-1"><span
+                                        class="material-symbols-outlined text-sm">payments</span> 22만원</span>
+                            </div>
+                            <span
+                                class="px-2 py-0.5 bg-stone-100 text-stone-600 rounded text-[10px] font-bold">보통</span>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2 mt-auto">
+                            <button
+                                class="py-2.5 rounded-xl border border-stone-200 text-stone-600 text-xs font-bold hover:bg-stone-50 transition-colors"
+                                onclick="showDetails('여수 밤바다 낭만 여행', '여수', '4.9', '22만원', '약 2.5시간')">상세보기</button>
+                            <button
+                                class="py-2.5 rounded-xl bg-primary text-white text-xs font-bold hover:bg-teal-700 transition-colors flex items-center justify-center gap-1"
+                                onclick="addToPlanner(this)">
+                                <span class="material-symbols-outlined text-sm">add</span> 플래너에 담기
+                            </button>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 6 -->
+                <article
+                    class="bg-white rounded-2xl border border-stone-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow group flex flex-col h-full">
+                    <div class="relative aspect-[16/9] bg-stone-200 overflow-hidden">
+                        <div class="absolute inset-0 bg-stone-100 flex items-center justify-center text-stone-300">
+                            <span class="material-symbols-outlined text-4xl">location_on</span>
+                        </div>
+                        <div class="absolute top-3 left-3 flex gap-2">
+                            <span
+                                class="px-2 py-1 bg-white/90 backdrop-blur text-[10px] font-bold text-green-600 rounded-full flex items-center gap-1 border border-green-100 shadow-sm">
+                                <span class="material-symbols-outlined text-[10px]">savings</span> 가성비 최고
+                            </span>
+                        </div>
+                        <button onclick="toggleHeart(this)"
+                            class="absolute top-3 right-3 p-1.5 bg-white/50 backdrop-blur rounded-full hover:bg-white text-stone-500 transition-all">
+                            <span
+                                class="material-symbols-outlined text-lg transition-transform duration-200">favorite</span>
+                        </button>
+                    </div>
+
+                    <div class="p-5 flex flex-col flex-1">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-bold text-lg text-stone-800 group-hover:text-primary transition-colors">전주
+                                한옥마을 먹방</h3>
+                            <div class="flex items-center gap-1 text-xs font-bold text-orange-400">
+                                <span class="material-symbols-outlined text-sm"
+                                    style="font-variation-settings: 'FILL' 1;">star</span>
+                                4.7 <span class="text-stone-300 font-normal">(189)</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-2 text-xs text-stone-500 mb-3">
+                            <span class="flex items-center gap-0.5"><span
+                                    class="material-symbols-outlined text-sm">location_on</span> 전주</span>
+                            <span>·</span>
+                            <span class="flex items-center gap-0.5"><span
+                                    class="material-symbols-outlined text-sm">calendar_today</span> 당일치기</span>
+                        </div>
+
+                        <div class="flex gap-1.5 mb-4">
+                            <span class="px-2 py-0.5 bg-stone-100 text-stone-600 rounded text-[10px]">한옥</span>
+                            <span class="px-2 py-0.5 bg-stone-100 text-stone-600 rounded text-[10px]">먹방</span>
+                            <span class="px-2 py-0.5 bg-stone-100 text-stone-600 rounded text-[10px]">전통</span>
+                        </div>
+
+                        <div
+                            class="mt-auto pt-4 border-t border-stone-100 flex items-center justify-between text-xs text-stone-500 mb-4">
+                            <div class="flex gap-3">
+                                <span class="flex items-center gap-1"><span
+                                        class="material-symbols-outlined text-sm">directions_walk</span> 약 3시간</span>
+                                <span class="flex items-center gap-1"><span
+                                        class="material-symbols-outlined text-sm">payments</span> 12만원</span>
+                            </div>
+                            <span
+                                class="px-2 py-0.5 bg-stone-100 text-stone-600 rounded text-[10px] font-bold">보통</span>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2 mt-auto">
+                            <button
+                                class="py-2.5 rounded-xl border border-stone-200 text-stone-600 text-xs font-bold hover:bg-stone-50 transition-colors"
+                                onclick="showDetails('전주 한옥마을 먹방', '전주', '4.7', '12만원', '약 3시간')">상세보기</button>
+                            <button
+                                class="py-2.5 rounded-xl bg-primary text-white text-xs font-bold hover:bg-teal-700 transition-colors flex items-center justify-center gap-1"
+                                onclick="addToPlanner(this)">
+                                <span class="material-symbols-outlined text-sm">add</span> 플래너에 담기
+                            </button>
+                        </div>
+                    </div>
+                </article>
+
+            </div>
+        </main>
+    </div>
+
+    <footer class="bg-muted py-8">
+        <div class="container mx-auto text-center text-muted-foreground text-sm">
+            © 2026 여백. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- Details Modal -->
+    <div id="detailsModal" class="fixed inset-0 z-[100] hidden" aria-labelledby="modal-title" role="dialog"
+        aria-modal="true">
+        <div class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm transition-opacity opacity-0"
+            id="detailsModalBackdrop"></div>
+        <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+            <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+                <div class="relative transform overflow-hidden bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg rounded-2xl opacity-0 scale-95"
+                    id="detailsModalPanel">
+                    <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="text-xl font-bold text-slate-900" id="modalTitle">여행 제목</h3>
+                            <button onclick="closeDetailsModal()" class="text-slate-400 hover:text-slate-500">
+                                <span class="material-symbols-outlined">close</span>
+                            </button>
+                        </div>
+                        <div class="space-y-3">
+                            <div class="flex items-center text-sm text-slate-600">
+                                <span class="material-symbols-outlined mr-2 text-primary">location_on</span>
+                                <span id="modalLocation">위치</span>
+                            </div>
+                            <div class="flex items-center text-sm text-slate-600">
+                                <span class="material-symbols-outlined mr-2 text-orange-400">star</span>
+                                <span id="modalRating">평점</span>
+                            </div>
+                            <div class="flex items-center text-sm text-slate-600">
+                                <span class="material-symbols-outlined mr-2 text-blue-500">payments</span>
+                                <span id="modalCost">비용</span>
+                            </div>
+                            <div class="flex items-center text-sm text-slate-600">
+                                <span class="material-symbols-outlined mr-2 text-green-500">schedule</span>
+                                <span id="modalDuration">소요시간</span>
+                            </div>
+                            <p class="text-slate-500 text-sm mt-4 bg-slate-50 p-3 rounded-lg leading-relaxed">
+                                이 여행 일정은 검증된 코스로 구성되어 있습니다. 상세한 동선과 맛집 정보가 포함되어 있어 실패 없는 여행을 즐길 수 있습니다.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                        <button type="button"
+                            class="inline-flex w-full justify-center rounded-xl bg-primary px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-teal-700 sm:ml-3 sm:w-auto"
+                            onclick="closeDetailsModal()">확인</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function addToPlanner(btn) {
+            // Check if already animating to prevent double clicks
+            if (btn.dataset.isAnimating === 'true') return;
+
+            btn.dataset.isAnimating = 'true';
+
+            // Save original state
+            const originalContent = btn.innerHTML;
+
+            // Change to "Added" state
+            btn.classList.remove('bg-primary', 'hover:bg-teal-700');
+            btn.classList.add('bg-slate-600', 'scale-95'); // Add slight press effect
+            btn.innerHTML = '<span class="material-symbols-outlined text-sm">check</span> 담김';
+
+            // Revert after delay
+            setTimeout(() => {
+                btn.classList.remove('bg-slate-600', 'scale-95');
+                btn.classList.add('bg-primary', 'hover:bg-teal-700');
+                btn.innerHTML = originalContent;
+                btn.dataset.isAnimating = 'false';
+            }, 500); // 0.5초 후 복귀
+        }
+
+        function showDetails(title, location, rating, cost, duration) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalLocation').textContent = location;
+            document.getElementById('modalRating').textContent = '평점 ' + rating;
+            document.getElementById('modalCost').textContent = '예상 비용: ' + cost;
+            document.getElementById('modalDuration').textContent = '소요 시간: ' + duration;
+
+            const modal = document.getElementById('detailsModal');
+            const backdrop = document.getElementById('detailsModalBackdrop');
+            const panel = document.getElementById('detailsModalPanel');
+
+            modal.classList.remove('hidden');
+            // Small delay to allow display:block to apply before opacity transition
+            setTimeout(() => {
+                backdrop.classList.remove('opacity-0');
+                panel.classList.remove('opacity-0', 'scale-95');
+            }, 10);
+        }
+
+        function closeDetailsModal() {
+            const modal = document.getElementById('detailsModal');
+            const backdrop = document.getElementById('detailsModalBackdrop');
+            const panel = document.getElementById('detailsModalPanel');
+
+            backdrop.classList.add('opacity-0');
+            panel.classList.add('opacity-0', 'scale-95');
+
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        function selectFilter(btn, group) {
+            const containerId = group + '-filters';
+            const container = document.getElementById(containerId);
+            const buttons = container.getElementsByTagName('button');
+
+            // Reset all buttons in the group
+            for (let b of buttons) {
+                b.classList.remove('bg-stone-100', 'text-stone-800', 'font-medium', 'selected');
+                b.classList.add('bg-white', 'text-stone-600', 'hover:border-primary', 'hover:text-primary');
+            }
+
+            // Activate the clicked button
+            btn.classList.remove('bg-white', 'text-stone-600', 'hover:border-primary', 'hover:text-primary');
+            btn.classList.add('bg-stone-100', 'text-stone-800', 'font-medium', 'selected');
+        }
+
+        function toggleHeart(btn) {
+            const icon = btn.querySelector('.material-symbols-outlined');
+
+            if (btn.classList.contains('text-pink-500')) {
+                // Unliked state
+                btn.classList.remove('text-pink-500', 'bg-white');
+                btn.classList.add('text-stone-500', 'bg-white/50');
+                icon.style.fontVariationSettings = "'FILL' 0";
+            } else {
+                // Liked state
+                btn.classList.remove('text-stone-500', 'bg-white/50');
+                btn.classList.add('text-pink-500', 'bg-white');
+                icon.style.fontVariationSettings = "'FILL' 1";
+
+                // Pop animation
+                icon.classList.add('scale-125');
+                setTimeout(() => icon.classList.remove('scale-125'), 200);
+            }
+        }
+
+        function toggleSortDropdown() {
+            const dropdown = document.getElementById('sortDropdown');
+            const icon = document.getElementById('sortIcon');
+
+            if (dropdown.classList.contains('hidden')) {
+                dropdown.classList.remove('hidden');
+                setTimeout(() => {
+                    dropdown.classList.add('opacity-100', 'scale-100');
+                    dropdown.classList.remove('opacity-0', 'scale-95');
+                }, 10);
+                icon.classList.add('rotate-180');
+            } else {
+                dropdown.classList.remove('opacity-100', 'scale-100');
+                dropdown.classList.add('opacity-0', 'scale-95');
+                setTimeout(() => {
+                    dropdown.classList.add('hidden');
+                }, 200);
+                icon.classList.remove('rotate-180');
+            }
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function (event) {
+            const dropdown = document.getElementById('sortDropdown');
+            const button = document.getElementById('sortButton');
+
+            if (!dropdown.classList.contains('hidden') && !button.contains(event.target) && !dropdown.contains(event.target)) {
+                toggleSortDropdown();
+            }
+        });
+
+        function sortItineraries(criteria) {
+            const grid = document.getElementById('itineraryGrid');
+            const items = Array.from(grid.children);
+            const label = document.getElementById('sortLabel');
+
+            // Update Label
+            const countMap = {
+                'popularity': '인기순',
+                'reviews': '리뷰순',
+                'price': '가격순',
+                'latest': '최신순'
+            };
+            label.textContent = countMap[criteria];
+            toggleSortDropdown(); // Close menu
+
+            items.sort((a, b) => {
+                let valA, valB;
+
+                if (criteria === 'popularity') {
+                    // Extract numerical rating (e.g., "4.8" -> 4.8)
+                    valA = parseFloat(a.querySelector('.text-orange-400').innerText.match(/[\d.]+/)[0]);
+                    valB = parseFloat(b.querySelector('.text-orange-400').innerText.match(/[\d.]+/)[0]);
+                    return valB - valA; // Descending
+                } else if (criteria === 'reviews') {
+                    // Extract review count (e.g., "(128)" -> 128)
+                    valA = parseInt(a.querySelector('.text-stone-300').innerText.replace(/[()]/g, ''));
+                    valB = parseInt(b.querySelector('.text-stone-300').innerText.replace(/[()]/g, ''));
+                    return valB - valA; // Descending
+                } else if (criteria === 'price') {
+                    // Extract price (e.g., "35만원" -> 35)
+                    valA = parseInt(a.querySelector('.material-symbols-outlined + span:last-child')?.innerText?.replace(/[^0-9]/g, '') || 0); // Need robust selector
+                    // Let's use a more specific search since DOM structure varies slightly
+                    const priceNodeA = Array.from(a.querySelectorAll('span')).find(s => s.innerText.includes('만원'));
+                    const priceNodeB = Array.from(b.querySelectorAll('span')).find(s => s.innerText.includes('만원'));
+                    valA = parseInt(priceNodeA.innerText.replace(/[^0-9]/g, ''));
+                    valB = parseInt(priceNodeB.innerText.replace(/[^0-9]/g, ''));
+
+                    return valA - valB; // Ascending (Cheaper first)
+                } else if (criteria === 'latest') {
+                    // Simulate random chronological order for demo since no dates are visible
+                    return Math.random() - 0.5;
+                }
+            });
+
+            // Re-append items
+            grid.innerHTML = '';
+            items.forEach(item => grid.appendChild(item));
+        }
+
+
+    </script>
+</body>
+
+</html>
