@@ -73,6 +73,33 @@
                 }
             }
 
+            /* --- 닫기 버튼 스타일 (추가됨) --- */
+            .close-button {
+                position: absolute;
+                top: 20px;
+                right: 20px;
+                font-size: 1.5rem;
+                font-weight: bold;
+                color: var(--text-dark);
+                text-decoration: none;
+                z-index: 10001; /* 다른 요소보다 위에 오도록 설정 */
+                background-color: rgba(255, 255, 255, 0.7);
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                transition: all 0.2s ease-in-out;
+            }
+
+            .close-button:hover {
+                background-color: var(--primary-color);
+                color: white;
+                transform: scale(1.1);
+            }
+
             /* --- 인트로 섹션 --- */
             /* 인트로 섹션 내용 중앙 정렬 */
             .intro-content {
@@ -1137,36 +1164,10 @@
                 );
             }
         </style>
-        <style>
-            .close-button {
-                position: absolute;
-                top: 20px;
-                right: 20px;
-                font-size: 1.5rem;
-                font-weight: bold;
-                color: var(--text-dark);
-                text-decoration: none;
-                z-index: 10001; /* Ensure it's above other elements */
-                background-color: rgba(255, 255, 255, 0.7);
-                border-radius: 50%;
-                width: 40px;
-                height: 40px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-                transition: all 0.2s ease-in-out;
-            }
-
-            .close-button:hover {
-                background-color: var(--primary-color);
-                color: white;
-                transform: scale(1.1);
-            }
-        </style>
     </head>
     <body>
         <a href="Main.html" class="close-button">X</a>
+
         <div id="app" class="app-container">
             <section id="intro-section" class="step-section active">
                 <div class="intro-content">
@@ -1955,7 +1956,7 @@
                 document
                     .getElementById("get-recommendations-btn")
                     .addEventListener("click", () => {
-                        alert("맞춤 여행 추천받기 기능은 아직 개발 중입니다!");
+                        window.location.href = "Main.html";
                     });
                 document
                     .getElementById("restart-btn")
