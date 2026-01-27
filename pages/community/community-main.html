@@ -1,507 +1,1178 @@
-<!DOCTYPE html>
-<html class="light" lang="en"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>PINPOINT 커뮤니티 갤러리</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        "primary": "#7c3aed",
-                        "primary-hover": "#6d28d9",
-                        "secondary": "#f76f5e",
-                        "accent": "#ffda66",
-                        "background-light": "#fafaf9",
-                        "background-dark": "#181f25",
-                        "surface-light": "#ffffff",
-                        "surface-dark": "#232d36",
-                        "border-light": "#e8f0f2",
-                        "border-dark": "#343b42",
-                        "text-main-light": "#0f181a",
-                        "text-main-dark": "#e8f0f2",
-                        "text-muted-light": "#538893",
-                        "text-muted-dark": "#94a3b8",
-                    },
-                    fontFamily: {
-                        "display": ["Plus Jakarta Sans", "Noto Sans", "sans-serif"]
-                    },
-                    borderRadius: {
-                        "DEFAULT": "0.5rem",
-                        "lg": "1rem",
-                        "xl": "1.5rem",
-                        "2xl": "2rem",
-                        "full": "9999px"
-                    },
-                    boxShadow: {
-                        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
-                        'soft-hover': '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.01)',
-                    }
-                },
+<!doctype html>
+<html class="light overflow-y-scroll" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>여백 커뮤니티 갤러리</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script
+      type="text/javascript"
+      src="//dapi.kakao.com/v2/maps/sdk.js?appkey=YOUR_APP_KEY&libraries=services,drawing"
+    ></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#7c3aed",
+              "primary-hover": "#6d28d9",
+              secondary: "#f76f5e",
+              accent: "#ffda66",
+              "background-light": "#fafaf9",
+              "background-dark": "#181f25",
+              "surface-light": "#ffffff",
+              "surface-dark": "#232d36",
+              "border-light": "#e8f0f2",
+              "border-dark": "#343b42",
+              "text-main-light": "#0f181a",
+              "text-main-dark": "#e8f0f2",
+              "text-muted-light": "#538893",
+              "text-muted-dark": "#94a3b8",
             },
-        }
+            fontFamily: {
+              display: ["Plus Jakarta Sans", "Noto Sans", "sans-serif"],
+            },
+            boxShadow: {
+              soft: "0 4px 20px -2px rgba(0, 0, 0, 0.05)",
+              "soft-hover":
+                "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.01)",
+            },
+          },
+        },
+      };
     </script>
-<style>.custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background-color: #cbd5e1;
-            border-radius: 20px;
-        }
-        .dark .custom-scrollbar::-webkit-scrollbar-thumb {
-            background-color: #475569;
-        }.plan-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .plan-card:hover {
-            transform: translateY(-4px);
-        }
+    <style>
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background-color: #cbd5e1;
+        border-radius: 20px;
+      }
+      .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+        background-color: #475569;
+      }
+      .plan-card {
+        transition:
+          transform 0.3s ease,
+          box-shadow 0.3s ease;
+      }
+      .plan-card:hover {
+        transform: translateY(-4px);
+      }
+      #star-visual-display {
+        display: flex;
+        align-items: center;
+        gap: 2px; /* Adjust as needed */
+      }
+      .star-icon {
+        font-size: 2rem; /* Adjust size as needed */
+        color: #d1d5db; /* Default empty star color */
+        transition: all 0.2s ease-in-out;
+      }
+      /* For partially filled stars, controlled by JS background-clip */
+      .star-icon[style*="background-clip"] {
+        color: transparent;
+      }
     </style>
-</head>
-<body class="bg-background-light dark:bg-background-dark text-text-main-light dark:text-text-main-dark font-display antialiased flex flex-col min-h-screen transition-colors duration-300">
-<div class="flex flex-1 max-w-[1440px] mx-auto w-full pt-6 pb-20 px-4 lg:px-10 gap-8">
-<aside class="hidden lg:flex flex-col w-64 shrink-0 sticky top-24 h-[calc(100vh-8rem)] overflow-y-auto custom-scrollbar pr-2">
-<div class="flex items-center justify-between mb-6">
-<h3 class="text-lg font-bold text-text-main-light dark:text-white">필터</h3>
-<button class="text-xs font-semibold text-primary hover:underline">모두 초기화</button>
-</div>
-<div class="flex flex-col gap-5">
-<div class="group">
-<details class="group/accordion" open="">
-<summary class="flex cursor-pointer items-center justify-between py-2 list-none mb-2">
-<span class="text-sm font-bold text-text-main-light dark:text-white uppercase tracking-wider">여행지</span>
-<span class="material-symbols-outlined text-text-muted-light group-open/accordion:rotate-180 transition-transform">expand_more</span>
-</summary>
-<div class="flex flex-col gap-3 pb-2 pl-1">
-<label class="flex items-center gap-3 cursor-pointer group/item">
-<input class="size-4 rounded border-gray-300 text-primary focus:ring-primary dark:bg-surface-dark dark:border-gray-600" type="checkbox"/>
-<span class="text-sm text-text-muted-light dark:text-text-muted-dark group-hover/item:text-primary transition-colors">유럽</span>
-</label>
-<label class="flex items-center gap-3 cursor-pointer group/item">
-<input checked="" class="size-4 rounded border-gray-300 text-primary focus:ring-primary dark:bg-surface-dark dark:border-gray-600" type="checkbox"/>
-<span class="text-sm text-text-muted-light dark:text-text-muted-dark group-hover/item:text-primary transition-colors">아시아</span>
-</label>
-<label class="flex items-center gap-3 cursor-pointer group/item">
-<input class="size-4 rounded border-gray-300 text-primary focus:ring-primary dark:bg-surface-dark dark:border-gray-600" type="checkbox"/>
-<span class="text-sm text-text-muted-light dark:text-text-muted-dark group-hover/item:text-primary transition-colors">북미</span>
-</label>
-<label class="flex items-center gap-3 cursor-pointer group/item">
-<input class="size-4 rounded border-gray-300 text-primary focus:ring-primary dark:bg-surface-dark dark:border-gray-600" type="checkbox"/>
-<span class="text-sm text-text-muted-light dark:text-text-muted-dark group-hover/item:text-primary transition-colors">오세아니아</span>
-</label>
-</div>
-</details>
-</div>
-<hr class="border-border-light dark:border-border-dark"/>
-<div class="group">
-<details class="group/accordion" open="">
-<summary class="flex cursor-pointer items-center justify-between py-2 list-none mb-2">
-<span class="text-sm font-bold text-text-main-light dark:text-white uppercase tracking-wider">테마</span>
-<span class="material-symbols-outlined text-text-muted-light group-open/accordion:rotate-180 transition-transform">expand_more</span>
-</summary>
-<div class="flex flex-col gap-3 pb-2 pl-1">
-<label class="flex items-center gap-3 cursor-pointer group/item">
-<input class="size-4 rounded border-gray-300 text-primary focus:ring-primary dark:bg-surface-dark dark:border-gray-600" type="checkbox"/>
-<span class="text-sm text-text-muted-light dark:text-text-muted-dark group-hover/item:text-primary transition-colors">미식</span>
-</label>
-<label class="flex items-center gap-3 cursor-pointer group/item">
-<input class="size-4 rounded border-gray-300 text-primary focus:ring-primary dark:bg-surface-dark dark:border-gray-600" type="checkbox"/>
-<span class="text-sm text-text-muted-light dark:text-text-muted-dark group-hover/item:text-primary transition-colors">모험</span>
-</label>
-<label class="flex items-center gap-3 cursor-pointer group/item">
-<input class="size-4 rounded border-gray-300 text-primary focus:ring-primary dark:bg-surface-dark dark:border-gray-600" type="checkbox"/>
-<span class="text-sm text-text-muted-light dark:text-text-muted-dark group-hover/item:text-primary transition-colors">가족 여행</span>
-</label>
-<label class="flex items-center gap-3 cursor-pointer group/item">
-<input class="size-4 rounded border-gray-300 text-primary focus:ring-primary dark:bg-surface-dark dark:border-gray-600" type="checkbox"/>
-<span class="text-sm text-text-muted-light dark:text-text-muted-dark group-hover/item:text-primary transition-colors">예산</span>
-</label>
-<label class="flex items-center gap-3 cursor-pointer group/item">
-<input class="size-4 rounded border-gray-300 text-primary focus:ring-primary dark:bg-surface-dark dark:border-gray-600" type="checkbox"/>
-<span class="text-sm text-text-muted-light dark:text-text-muted-dark group-hover/item:text-primary transition-colors">럭셔리</span>
-</label>
-</div>
-</details>
-</div>
-<hr class="border-border-light dark:border-border-dark"/>
-<div class="group py-2">
-<div class="flex justify-between items-center mb-4">
-<span class="text-sm font-bold text-text-main-light dark:text-white uppercase tracking-wider">예산</span>
-</div>
-<input class="w-full h-2 bg-border-light rounded-lg appearance-none cursor-pointer dark:bg-border-dark accent-primary" max="100" min="0" type="range" value="50"/>
-<div class="flex justify-between mt-2 text-xs text-text-muted-light font-medium">
-<span>₩0</span>
-<span>₩500만원+</span>
-</div>
-</div>
-</aside>
-<main class="flex-1 flex flex-col min-w-0">
-<div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
-<div>
-<h1 class="text-3xl md:text-4xl font-black text-text-main-light dark:text-white tracking-tight leading-tight mb-2">
-                        다음 <span class="text-primary">모험</span>을<br class="hidden lg:block"/> 발견하세요
-</h1>
-<p class="text-text-muted-light dark:text-text-muted-dark text-base md:text-lg max-w-xl">
-                        수천 개의 커뮤니티 여행 후기를 찾아보고 당신의 여행을 위한 완벽한 계획을 찾으세요.
-                    </p>
-</div>
-<div class="flex items-center gap-3 shrink-0">
-<span class="text-sm font-medium text-text-muted-light dark:text-text-muted-dark hidden sm:inline">정렬 기준:</span>
-<div class="relative">
-<select class="appearance-none bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark rounded-xl py-2.5 pl-4 pr-10 text-sm font-semibold text-text-main-light dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent cursor-pointer shadow-sm min-w-[160px]">
-<option>가장 인기 있는</option>
-<option>최신</option>
-<option>최고 평점</option>
-<option>최단 기간</option>
-</select>
+  </head>
+  <body
+    class="bg-background-light dark:bg-background-dark text-text-main-light dark:text-text-main-dark font-display antialiased flex flex-col min-h-screen transition-colors duration-300"
+  >
+    <div
+      class="flex flex-1 max-w-[1440px] mx-auto w-full pt-6 pb-20 px-4 lg:px-10 gap-8 items-start"
+    >
+      <aside
+        class="hidden lg:flex flex-col w-64 shrink-0 sticky top-24 h-[calc(100vh-8rem)] overflow-y-auto custom-scrollbar pr-2"
+      >
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-lg font-bold text-text-main-light dark:text-white">
+            필터
+          </h3>
+          <button
+            id="reset-filters"
+            class="text-xs font-semibold text-primary hover:underline"
+          >
+            모두 초기화
+          </button>
+        </div>
+        <div class="flex flex-col gap-8">
+          <div class="group">
+            <div class="flex items-center justify-between py-2 mb-2">
+              <span
+                class="text-sm font-bold text-text-main-light dark:text-white uppercase tracking-wider"
+                >여행지</span
+              >
+            </div>
+            <div class="flex flex-col gap-3 pl-1">
+              <label class="flex items-center gap-3 cursor-pointer group/item"
+                ><input
+                  class="size-4 rounded border-gray-300 text-primary focus:ring-primary dark:bg-surface-dark dark:border-gray-600"
+                  type="checkbox"
+                  name="destination"
+                  value="유럽"
+                /><span
+                  class="text-sm text-text-muted-light dark:text-text-muted-dark group-hover/item:text-primary transition-colors"
+                  >유럽</span
+                ></label
+              >
+              <label class="flex items-center gap-3 cursor-pointer group/item"
+                ><input
+                  class="size-4 rounded border-gray-300 text-primary focus:ring-primary dark:bg-surface-dark dark:border-gray-600"
+                  type="checkbox"
+                  name="destination"
+                  value="아시아"
+                /><span
+                  class="text-sm text-text-muted-light dark:text-text-muted-dark group-hover/item:text-primary transition-colors"
+                  >아시아</span
+                ></label
+              >
+              <label class="flex items-center gap-3 cursor-pointer group/item"
+                ><input
+                  class="size-4 rounded border-gray-300 text-primary focus:ring-primary dark:bg-surface-dark dark:border-gray-600"
+                  type="checkbox"
+                  name="destination"
+                  value="북미"
+                /><span
+                  class="text-sm text-text-muted-light dark:text-text-muted-dark group-hover/item:text-primary transition-colors"
+                  >북미</span
+                ></label
+              >
+            </div>
+          </div>
+          <hr class="border-border-light dark:border-border-dark" />
+          <div class="group">
+            <div class="flex items-center justify-between py-2 mb-2">
+              <span
+                class="text-sm font-bold text-text-main-light dark:text-white uppercase tracking-wider"
+                >태그</span
+              >
+            </div>
+            <div
+              id="tag-filter-container"
+              class="flex flex-col gap-3 pl-1"
+            ></div>
+          </div>
+        </div>
+      </aside>
+      <main class="flex-1 flex flex-col min-w-0 min-h-screen">
+        <div
+          class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8"
+        >
+          <div>
+            <h1
+              class="text-3xl md:text-4xl font-black text-text-main-light dark:text-white tracking-tight leading-tight mb-2"
+            >
+              다음 <span class="text-primary">모험</span>을<br
+                class="hidden lg:block"
+              />
+              발견하세요
+            </h1>
+            <p
+              class="text-text-muted-light dark:text-text-muted-dark text-base md:text-lg max-w-xl"
+            >
+              수천 개의 커뮤니티 여행 후기를 찾아보고 당신의 여행을 위한 완벽한
+              계획을 찾으세요.
+            </p>
+          </div>
+          <div
+            class="flex flex-col sm:flex-row items-end sm:items-center gap-3 shrink-0"
+          >
+            <div class="flex items-center gap-3">
+              <span
+                class="text-sm font-medium text-text-muted-light dark:text-text-muted-dark hidden sm:inline"
+                >정렬 기준:</span
+              >
+              <div class="relative">
+                <select
+                  id="sort-select"
+                  class="appearance-none bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark rounded-xl py-2.5 pl-4 pr-10 text-sm font-semibold text-text-main-light dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent cursor-pointer shadow-sm min-w-[160px]"
+                >
+                  <option value="popular">가장 인기 있는</option>
+                  <option value="latest">최신</option>
+                  <option value="rating">최고 평점</option>
+                </select>
+                <div
+                  class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-text-muted-light"
+                >
+                  <span class="material-symbols-outlined text-sm"
+                    >expand_more</span
+                  >
+                </div>
+              </div>
+              <button
+                id="my-posts-button"
+                class="flex items-center gap-2 bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark px-4 py-2.5 rounded-xl shadow-sm text-sm font-semibold text-text-main-light dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+              >
+                <span class="material-symbols-outlined text-[20px]">person</span
+                >내 글 보기
+              </button>
+            </div>
+            <button
+              id="open-write-modal-button"
+              class="flex items-center gap-2 bg-primary hover:bg-primary-hover text-white px-5 py-2.5 rounded-xl shadow-lg shadow-primary/30 transition-all active:scale-95 font-bold text-sm whitespace-nowrap"
+            >
+              <span class="material-symbols-outlined text-[20px]"
+                >edit_square</span
+              >글 작성하기
+            </button>
+          </div>
+        </div>
+        <div
+          class="flex lg:hidden gap-2 overflow-x-auto pb-4 mb-2 no-scrollbar"
+        >
+          <button
+            class="flex items-center gap-2 bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark px-4 py-2 rounded-full whitespace-nowrap shadow-sm text-sm font-medium"
+          >
+            <span class="material-symbols-outlined text-[18px]">tune</span> 필터
+          </button>
+        </div>
+        <div
+          id="plan-grid"
+          class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 auto-rows-fr"
+        ></div>
+        <div class="flex justify-center mt-12">
+          <button
+            id="load-more-button"
+            class="px-8 py-3 rounded-xl border-2 border-primary text-primary hover:bg-primary hover:text-white font-bold transition-colors"
+          >
+            더 많은 계획 불러오기
+          </button>
+        </div>
+      </main>
+    </div>
+    <div
+      id="community-write-modal"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden"
+    >
+      <div
+        class="bg-white dark:bg-surface-dark rounded-xl p-8 max-w-4xl w-full max-h-[90vh] overflow-y-auto relative"
+      >
+        <button
+          id="close-write-modal"
+          class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:text-gray-300 dark:hover:text-white"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-x"
+          >
+            <path d="M18 6 6 18" />
+            <path d="m6 6 12 12" />
+          </svg>
+        </button>
+        <h1
+          id="write-modal-title"
+          class="text-2xl text-gray-800 dark:text-white mb-6"
+        >
+          게시글 작성
+        </h1>
+        <div class="mb-6">
+          <label
+            for="post-title"
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            >제목</label
+          ><input
+            type="text"
+            id="post-title"
+            placeholder="여행 후기 제목을 입력하세요"
+            class="w-full px-4 py-3 border border-gray-300 dark:border-border-dark bg-white dark:bg-surface-dark rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+          />
+        </div>
+        <div class="mb-6">
+          <label
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            >별점</label
+          >
+          <div class="flex items-center gap-4">
+            <input
+              type="range"
+              id="star-rating-slider"
+              min="0"
+              max="5"
+              step="0.1"
+              value="0.0"
+              class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
+            /><span
+              id="star-rating-display"
+              class="font-bold text-lg text-primary w-12 text-center"
+              >0.0</span
+            >
+            <!-- 별 아이콘들 (새로 추가) -->
+            <div id="star-visual-display">
+              <span class="star-icon">★</span>
+              <span class="star-icon">★</span>
+              <span class="star-icon">★</span>
+              <span class="star-icon">★</span>
+              <span class="star-icon">★</span>
+            </div>
+          </div>
+        </div>
+        <div class="mb-6">
+          <label
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            >여행 계획 연결 (선택)</label
+          >
+          <div class="relative">
+            <button
+              id="select-plan-button"
+              class="w-full px-4 py-3 border border-gray-300 dark:border-border-dark bg-white dark:bg-surface-dark rounded-lg text-left hover:border-primary transition-colors flex items-center justify-between"
+            >
+              <div class="flex items-center gap-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-map-pin text-gray-500"
+                >
+                  <path d="M18 8c0 4.5-6 9-6 9s-6-4.5-6-9a6 6 0 0 1 12 0Z" />
+                  <circle cx="12" cy="8" r="2" /></svg
+                ><span
+                  id="selected-plan-name"
+                  class="text-gray-600 dark:text-gray-300"
+                  >여행 계획을 선택하세요</span
+                >
+              </div>
+              <button
+                id="clear-selected-plan"
+                class="text-gray-400 hover:text-gray-600 hidden p-1"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-x"
+                >
+                  <path d="M18 6 6 18" />
+                  <path d="m6 6 12 12" />
+                </svg>
+              </button>
+            </button>
+            <div
+              id="plan-selector-dropdown"
+              class="absolute z-10 mt-1 w-full border border-gray-300 dark:border-border-dark bg-white dark:bg-surface-dark rounded-lg max-h-60 overflow-y-auto hidden shadow-lg"
+            ></div>
+          </div>
+        </div>
+        <div class="mb-6">
+          <label
+            for="thumbnail-url"
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            >썸네일 이미지 (선택)</label
+          >
+          <div class="flex gap-2">
+            <input
+              type="text"
+              id="thumbnail-url"
+              placeholder="이미지 URL을 붙여넣거나 파일을 업로드하세요"
+              class="flex-1 px-4 py-3 border border-gray-300 dark:border-border-dark bg-white dark:bg-surface-dark rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+            /><input
+              type="file"
+              id="thumbnail-file-input"
+              accept="image/*"
+              class="hidden"
+            /><button
+              id="upload-button"
+              class="px-4 py-3 border border-gray-300 dark:border-border-dark rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-upload"
+              >
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="17 8 12 3 7 8" />
+                <line x1="12" x2="12" y1="3" y2="15" />
+              </svg>
+            </button>
+          </div>
+          <div id="thumbnail-preview-container" class="mt-3 hidden">
+            <img
+              id="thumbnail-preview"
+              src=""
+              alt="썸네일 미리보기"
+              class="w-full h-48 object-cover rounded-lg"
+            />
+          </div>
+        </div>
+        <div class="mb-6">
+          <label
+            for="post-content"
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            >여행 후기</label
+          ><textarea
+            id="post-content"
+            placeholder="여행에서 경험한 이야기를 자유롭게 작성해주세요"
+            rows="12"
+            class="w-full px-4 py-3 border border-gray-300 dark:border-border-dark bg-white dark:bg-surface-dark rounded-lg focus:outline-none focus:ring-2 focus:ring-primary resize-y"
+          ></textarea>
+        </div>
+        <div class="mb-8">
+          <label
+            for="tag-input"
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            >태그</label
+          >
+          <div class="flex gap-2 mb-3">
+            <input
+              type="text"
+              id="tag-input"
+              placeholder="태그 입력 후 Enter"
+              class="flex-1 px-4 py-2 border border-gray-300 dark:border-border-dark bg-white dark:bg-surface-dark rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+            /><button
+              id="add-tag-button"
+              class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-500 transition-colors"
+            >
+              추가
+            </button>
+          </div>
+          <div id="tags-container" class="flex flex-wrap gap-2"></div>
+        </div>
+        <div class="mb-8">
+          <label
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            >경로 (선택)</label
+          >
+          <div class="flex items-center gap-2">
+            <input
+              type="text"
+              id="location-display"
+              placeholder="지도에서 경로를 추가하세요"
+              readonly
+              class="flex-1 px-4 py-2 border border-gray-300 dark:border-border-dark bg-gray-100 dark:bg-gray-800 rounded-lg cursor-pointer"
+            /><button
+              type="button"
+              id="open-map-modal-button"
+              class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-500 transition-colors"
+            >
+              경로 설정
+            </button>
+          </div>
+        </div>
+        <div class="flex gap-3 justify-end">
+          <button
+            id="cancel-post-button"
+            class="px-6 py-3 border border-gray-300 dark:border-border-dark text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+          >
+            취소</button
+          ><button
+            id="submit-post-button"
+            class="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-hover transition-colors"
+          >
+            작성 완료
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      id="map-modal"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60] hidden"
+    >
+      <div
+        class="bg-white dark:bg-surface-dark rounded-lg p-4 max-w-4xl w-full flex flex-col max-h-[90vh]"
+      >
+        <div class="flex gap-2 mb-2">
+          <input
+            type="text"
+            id="map-search-input"
+            placeholder="장소를 검색하세요..."
+            class="flex-1 px-4 py-2 border rounded-lg"
+          /><button
+            id="map-search-button"
+            class="px-4 py-2 bg-primary text-white rounded-lg"
+          >
+            검색
+          </button>
+        </div>
+        <div class="flex-1 flex gap-4 min-h-0">
+          <div class="w-1/3 flex flex-col gap-4">
+            <div class="flex-1 flex flex-col border rounded-lg overflow-hidden">
+              <h3
+                class="p-2 font-semibold border-b bg-gray-50 dark:bg-gray-800"
+              >
+                검색 결과
+              </h3>
+              <ul id="search-results-list" class="overflow-y-auto p-2"></ul>
+            </div>
+            <div class="flex-1 flex flex-col border rounded-lg overflow-hidden">
+              <h3
+                class="p-2 font-semibold border-b bg-gray-50 dark:bg-gray-800"
+              >
+                선택된 경로
+              </h3>
+              <ul id="selected-route-list" class="overflow-y-auto p-2"></ul>
+            </div>
+          </div>
+          <div class="w-2/3 rounded-lg overflow-hidden">
+            <div id="map" style="width: 100%; height: 100%"></div>
+          </div>
+        </div>
+        <div class="flex justify-end gap-2 mt-4">
+          <button
+            id="close-map-modal-button"
+            class="px-4 py-2 border border-gray-300 rounded-lg"
+          >
+            취소</button
+          ><button
+            id="save-location-button"
+            class="px-4 py-2 bg-primary text-white rounded-lg"
+          >
+            경로 저장
+          </button>
+        </div>
+      </div>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        let allPostsData = [];
+        let currentFilteredPosts = [];
+        const initialVisibleCount = 9;
+        let isExpanded = false;
+        let showOnlyMyPosts = false;
 
-</div>
-</div>
-</div>
-<div class="flex lg:hidden gap-2 overflow-x-auto pb-4 mb-2 no-scrollbar">
-<button class="flex items-center gap-2 bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark px-4 py-2 rounded-full whitespace-nowrap shadow-sm text-sm font-medium">
-<span class="material-symbols-outlined text-[18px]">tune</span> 필터
-                </button>
-<div class="flex items-center gap-2 bg-primary/10 text-primary px-3 py-2 rounded-full whitespace-nowrap text-sm font-bold border border-primary/20">
-                    아시아 <button class="ml-1 hover:text-primary-hover"><span class="material-symbols-outlined text-[16px]">close</span></button>
-</div>
-<div class="flex items-center gap-2 bg-primary/10 text-primary px-3 py-2 rounded-full whitespace-nowrap text-sm font-bold border border-primary/20">
-                    미식 <button class="ml-1 hover:text-primary-hover"><span class="material-symbols-outlined text-[16px]">close</span></button>
-</div>
-</div>
-<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 auto-rows-fr">
-<article class="plan-card group flex flex-col bg-surface-light dark:bg-surface-dark rounded-xl overflow-hidden border border-border-light dark:border-border-dark shadow-soft hover:shadow-soft-hover h-full relative">
-<div class="relative h-56 overflow-hidden">
-<div class="absolute top-3 left-3 bg-black/40 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full z-10 flex items-center gap-1">
-<span class="material-symbols-outlined text-[14px]">schedule</span> 7일
-                        </div>
-<button class="absolute top-3 right-3 p-2 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-full text-white transition-colors z-10">
-<span class="material-symbols-outlined text-[20px] fill-current">bookmark_border</span>
-</button>
-<img alt="Kyoto" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" data-alt="Traditional Japanese street in Kyoto with lanterns" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_nHZlfipv47VFVjmr3iRt5263XxkAWc4SIJl0u_aZvbC32qwE2t0nVE4W3vYi66yGBeUcJ5RwFw8iAk4Z_URIJ8sbAkT1McAhy8Zq7dOs4vi5krHwoIEIbg-WkrPMv5jTNc9Fur8joALwCDn_uVSIzDG-IYjTlSjMsNFDxQtEb0KWDVDAg_eMNhFspKqGvP3w4ASiRQt6HFuUjt-yyoKws95ftyWVrcVL-lgbort_933mgA0v7KmAcLSPJMRao0CVmA8kkShrK8gfTLSjudVOWJD_XTj77HYKqfgyytg8Cvjk8jzbpug8OlCiyCcGy1LYJtXcP_qm2"/>
-</div>
-<div class="p-5 flex flex-col flex-1">
-<div class="flex justify-between items-start mb-2">
-<div class="flex items-center gap-1 text-secondary text-xs font-bold uppercase tracking-wider bg-secondary/10 px-2 py-0.5 rounded-md">
-<span class="material-symbols-outlined text-[14px]">local_fire_department</span> 인기 급상승
-                            </div>
-<div class="flex items-center gap-1 text-accent text-sm font-bold">
-<span class="material-symbols-outlined text-[18px] fill-current">star</span>
-<span class="text-text-main-light dark:text-white">4.8</span>
-</div>
-</div>
-<h3 class="text-lg font-bold text-text-main-light dark:text-white leading-tight mb-2 group-hover:text-primary transition-colors cursor-pointer">
-                            미식가를 위한 교토 7일: 라면, 스시 &amp; 사원
-                        </h3>
-<p class="text-sm text-text-muted-light dark:text-text-muted-dark line-clamp-2 mb-4">
-                            상징적인 신사를 방문하며 교토의 숨겨진 미식 보석을 탐험하세요. 맛과 문화의 완벽한 조화.
-                        </p>
-<div class="mt-auto flex items-center justify-between pt-4 border-t border-border-light dark:border-border-dark">
-<div class="flex items-center gap-2">
-<img alt="User" class="size-8 rounded-full object-cover border border-border-light dark:border-border-dark" data-alt="Portrait of a female traveler" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAhKLJMmku0pOwhBbnjDyGr6M13QRSGNTtZ0NQ8gLuKJ9ZfEp5Rk1SwO8zm2-uzc1sDDrkukxB5kMyk4cE5h9lIOqd4wBFsTfhqdNUcgjj1IAF09yZEzxcpNDUIVGaCLbJwayRTZVsDG-IYjTlSjMsNFDxQtEb0KWDVDAg_eMNhFspKqGvP3w4ASiRQt6HFuUjt-yyoKws95ftyWVrcVL-lgbort_933mgA0v7KmAcLSPJMRao0CVmA8kkShrK8gfTLSjudVOWJD_XTj77HYKqfgyytg8Cvjk8jzbpug8OlCiyCcGy1LYJtXcP_qm2"/>
-<span class="text-sm font-medium text-text-main-light dark:text-white">사라 젠킨스</span>
-</div>
-<button class="flex items-center gap-1.5 text-text-muted-light hover:text-secondary transition-colors group/like">
-<span class="material-symbols-outlined text-[20px] fill-current">favorite</span>
-<span class="text-xs font-bold">1.2천</span>
-</button>
-</div>
-</div>
-</article>
-<article class="plan-card group flex flex-col bg-surface-light dark:bg-surface-dark rounded-xl overflow-hidden border border-border-light dark:border-border-dark shadow-soft hover:shadow-soft-hover h-full relative">
-<div class="relative h-56 overflow-hidden">
-<div class="absolute top-3 left-3 bg-black/40 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full z-10 flex items-center gap-1">
-<span class="material-symbols-outlined text-[14px]">schedule</span> 3일
-                        </div>
-<button class="absolute top-3 right-3 p-2 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-full text-white transition-colors z-10">
-<span class="material-symbols-outlined text-[20px] fill-current">bookmark_border</span>
-</button>
-<img alt="Paris" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" data-alt="Eiffel Tower view from a street in Paris" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTD4cCXgi8aV9zFdQzhkW7YkzGxw2jSB3HROUjcoLeyn7OpCrgUdFCbnJWi7AItF6q0zbLG1p1MlRm7_o9jIYFihodVNnL_CDl6Hjt70aLmlczLrBOgIEMVqYCjrtBWIS5FlMUgEWugnhrn5FPVXnFOJ8ZuCy-ZHRYwK08bmLW0OcrouKonhKyZGOnoz16vF8bUO6gjci-RNNt_UTKtf_fk1xA3tQalIISHMNjhHsRjmWhp1Kh2-w0g_55arhxKqGvP3w4ASiRQt6HFuUjt-yyoKws95ftyWVrcVL-lgbort_933mgA0v7KmAcLSPJMRao0CVmA8kkShrK8gfTLSjudVOWJD_XTj77HYKqfgyytg8Cvjk8jzbpug8OlCiyCcGy1LYJtXcP_qm2"/>
-</div>
-<div class="p-5 flex flex-col flex-1">
-<div class="flex justify-between items-start mb-2">
-<div class="flex items-center gap-1 text-primary text-xs font-bold uppercase tracking-wider bg-primary/10 px-2 py-0.5 rounded-md">
-                                럭셔리
-                            </div>
-<div class="flex items-center gap-1 text-accent text-sm font-bold">
-<span class="material-symbols-outlined text-[18px] fill-current">star</span>
-<span class="text-text-main-light dark:text-white">4.5</span>
-</div>
-</div>
-<h3 class="text-lg font-bold text-text-main-light dark:text-white leading-tight mb-2 group-hover:text-primary transition-colors cursor-pointer">
-                            파리 로맨틱 주말 여행
-                        </h3>
-<p class="text-sm text-text-muted-light dark:text-text-muted-dark line-clamp-2 mb-4">
-                            로맨틱한 휴가를 위한 최고의 가이드. 일몰, 와인 시음, 프라이빗 보트 투어를 위한 최고의 장소.
-                        </p>
-<div class="mt-auto flex items-center justify-between pt-4 border-t border-border-light dark:border-border-dark">
-<div class="flex items-center gap-2">
-<img alt="User" class="size-8 rounded-full object-cover border border-border-light dark:border-border-dark" data-alt="Portrait of a male traveler" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAoq6uLBFTu093-iCb0NLuXfgvXPDYewpj68hzGArj4j1CB_z6ch3B8E4QxkCtnBmfif182DhhLBWRQ6knn35UrM4cwaW7KOgvFhAalNw7pKym9FnebksqZDWy3d0BXHz-RLD1zoFQzW_MkATptsdHkfXpX4PJ-wOAuP5NmWrzzSsyYeF0x4RQRPBZwsQ_bejRjbavAjjelbI92mVrIP93mjBdGZo01RsyD3oQOXwIiQ0W2JkJeuiBD-o_vY7T5dN1Hlurj0sczUMPi"/>
-<span class="text-sm font-medium text-text-main-light dark:text-white">마르크 뒤부아</span>
-</div>
-<button class="flex items-center gap-1.5 text-text-muted-light hover:text-secondary transition-colors group/like">
-<span class="material-symbols-outlined text-[20px] fill-current">favorite</span>
-<span class="text-xs font-bold">850</span>
-</button>
-</div>
-</div>
-</article>
-<article class="plan-card group flex flex-col bg-surface-light dark:bg-surface-dark rounded-xl overflow-hidden border border-border-light dark:border-border-dark shadow-soft hover:shadow-soft-hover h-full relative">
-<div class="relative h-56 overflow-hidden">
-<div class="absolute top-3 left-3 bg-black/40 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full z-10 flex items-center gap-1">
-<span class="material-symbols-outlined text-[14px]">schedule</span> 14일
-                        </div>
-<button class="absolute top-3 right-3 p-2 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-full text-white transition-colors z-10">
-<span class="material-symbols-outlined text-[20px] fill-current">bookmark_border</span>
-</button>
-<img alt="Peru" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" data-alt="Machu Picchu ruins in Peru with mountains in background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCP-w3VqhjOGXYEyKRiOWzFExFpVbq8ctHn-g6iLNmp1yVNIiLiIgm2BzKFE9pSXfv0bx7Rg5urOb0wPJT9W3EzZn_JTw4-X8nuPt1nrxGuEvCb4m0dBfglkBvLyn9UQRv75-W7CqLsaCjrE7ECXWy7jmGhYeiIHQZ8QIVhQ_lJb1TgPuSwqi7gw9cf7wzjxbDE7HdQQSuvO18JEuaeOPNnL_CDl6Hjt70aLmlczLrBOgIEMVqYCjrtBWIS5FlMUgEWugnhrn5FPVXnFOJ8ZuCy-ZHRYwK08bmLW0OcrouKonhKyZGOnoz16vF8bUO6gjci-RNNt_UTKtf_fk1xA3tQalIISHMNjhHsRjmWhp1Kh2-w0g_55arhxKqGvP3w4ASiRQt6HFuUjt-yyoKws95ftyWVrcVL-lgbort_933mgA0v7KmAcLSPJMRao0CVmA8kkShrK8gfTLSjudVOWJD_XTj77HYKqfgyytg8Cvjk8jzbpug8OlCiyCcGy1LYJtXcP_qm2"/>
-</div>
-<div class="p-5 flex flex-col flex-1">
-<div class="flex justify-between items-start mb-2">
-<div class="flex items-center gap-1 text-primary text-xs font-bold uppercase tracking-wider bg-primary/10 px-2 py-0.5 rounded-md">
-                                모험
-                            </div>
-<div class="flex items-center gap-1 text-accent text-sm font-bold">
-<span class="material-symbols-outlined text-[18px] fill-current">star</span>
-<span class="text-text-main-light dark:text-white">4.9</span>
-</div>
-</div>
-<h3 class="text-lg font-bold text-text-main-light dark:text-white leading-tight mb-2 group-hover:text-primary transition-colors cursor-pointer">
-                            페루 배낭여행: 쿠스코, 성스러운 계곡 &amp; 마추픽추
-                        </h3>
-<p class="text-sm text-text-muted-light dark:text-text-muted-dark line-clamp-2 mb-4">
-                            배낭여행객을 위한 종합 가이드. 호스텔 추천, 버스 노선, 하이킹 팁 포함.
-                        </p>
-<div class="mt-auto flex items-center justify-between pt-4 border-t border-border-light dark:border-border-dark">
-<div class="flex items-center gap-2">
-<img alt="User" class="size-8 rounded-full object-cover border border-border-light dark:border-border-dark" data-alt="Portrait of a smiling man" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCr6UAbanAhOP2wMuPRANl0AHD9uaKzNLzyZYMvmfa_Z-hJB0YFjc3eIvYD18clQvURGTwBKf_1fj3lcJ338zrYh8u6is_ubNyq6bsvaUFHQYyjIIluzq8QzKAZCNtCGCLjz9z7_JHoiuG7IIylNyVblzk6-I4CZTYdRq7ypHqberuM-WCuRuWz0UQvdKo6tiP32ETPGjSIwQ4juQGh_lgbort_933mgA0v7KmAcLSPJMRao0CVmA8kkShrK8gfTLSjudVOWJD_XTj77HYKqfgyytg8Cvjk8jzbpug8OlCiyCcGy1LYJtXcP_qm2"/>
-<span class="text-sm font-medium text-text-main-light dark:text-white">알렉스 리베라</span>
-</div>
-<button class="flex items-center gap-1.5 text-text-muted-light hover:text-secondary transition-colors group/like">
-<span class="material-symbols-outlined text-[20px] fill-current">favorite</span>
-<span class="text-xs font-bold">2.1천</span>
-</button>
-</div>
-</div>
-</article>
-<article class="plan-card group flex flex-col bg-surface-light dark:bg-surface-dark rounded-xl overflow-hidden border border-border-light dark:border-border-dark shadow-soft hover:shadow-soft-hover h-full relative">
-<div class="relative h-56 overflow-hidden">
-<div class="absolute top-3 left-3 bg-black/40 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full z-10 flex items-center gap-1">
-<span class="material-symbols-outlined text-[14px]">schedule</span> 10일
-                        </div>
-<button class="absolute top-3 right-3 p-2 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-full text-white transition-colors z-10">
-<span class="material-symbols-outlined text-[20px] fill-current">bookmark_border</span>
-</button>
-<img alt="Thailand" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" data-alt="Traditional Thai temples in Bangkok" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2PsmYSn5e8OkEHvUyaqzvQru9tIreXKZUNygf3oiQOQ4NpXRkx7gqWtTOMQ3GAPMlQvR7UmJXGnXSI_lz9bgf5Ctt-1HLBnj6aQadtN04kR4hOD6CqmJS912kJ7FS3LUZO0QDprRRrtXcOEAu5w9plLgZGpUEzxcpNDUIVGaCLbJwayRTZVsDG-IYjTlSjMsNFDxQtEb0KWDVDAg_eMNhFspKqGvP3w4ASiRQt6HFuUjt-yyoKws95ftyWVrcVL-lgbort_933mgA0v7KmAcLSPJMRao0CVmA8kkShrK8gfTLSjudVOWJD_XTj77HYKqfgyytg8Cvjk8jzbpug8OlCiyCcGy1LYJtXcP_qm2"/>
-</div>
-<div class="p-5 flex flex-col flex-1">
-<div class="flex justify-between items-start mb-2">
-<div class="flex items-center gap-1 text-primary text-xs font-bold uppercase tracking-wider bg-primary/10 px-2 py-0.5 rounded-md">
-                                예산
-                            </div>
-<div class="flex items-center gap-1 text-accent text-sm font-bold">
-<span class="material-symbols-outlined text-[18px] fill-current">star</span>
-<span class="text-text-main-light dark:text-white">4.7</span>
-</div>
-</div>
-<h3 class="text-lg font-bold text-text-main-light dark:text-white leading-tight mb-2 group-hover:text-primary transition-colors cursor-pointer">
-                            예산으로 태국 여행: 방콕에서 섬까지
-                        </h3>
-<p class="text-sm text-text-muted-light dark:text-text-muted-dark line-clamp-2 mb-4">
-                            비용 부담 없이 경험을 극대화하세요. 길거리 음식 가이드, 페리 팁, 저렴한 숙소.
-                        </p>
-<div class="mt-auto flex items-center justify-between pt-4 border-t border-border-light dark:border-border-dark">
-<div class="flex items-center gap-2">
-<img alt="User" class="size-8 rounded-full object-cover border border-border-light dark:border-border-dark" data-alt="Portrait of a young woman" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8NZpD8RqAftFPvzhF833mCH05x7BEaIfjWAab4SpfntMOVHUd5ljaMYahG3HwagFPy1CoPXcn5wMHmTuR0DzZ8CZhIgaS5kPaRY1mexqrzcdIZ28O1CnJV68MwbvWQfMM5gkEqCwd_WityzmrEDaCgh56Csw36Jo8mXLYq55mqNFfEwHXEO5caSMlwp4hwhAqFP03fZ7h97KlLmFU9oYm9hNeAnFeTq_Hp4gTOSm0aHlNugBXiL6maBssbPLZd5scB4weG5YNKqq"/>
-<span class="text-sm font-medium text-text-main-light dark:text-white">마야 첸</span>
-</div>
-<button class="flex items-center gap-1.5 text-text-muted-light hover:text-secondary transition-colors group/like">
-<span class="material-symbols-outlined text-[20px] fill-current">favorite</span>
-<span class="text-xs font-bold">3.4천</span>
-</button>
-</div>
-</div>
-</article>
-<article class="plan-card group flex flex-col bg-surface-light dark:bg-surface-dark rounded-xl overflow-hidden border border-border-light dark:border-border-dark shadow-soft hover:shadow-soft-hover h-full relative">
-<div class="relative h-56 overflow-hidden">
-<div class="absolute top-3 left-3 bg-black/40 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full z-10 flex items-center gap-1">
-<span class="material-symbols-outlined text-[14px]">schedule</span> 5일
-                        </div>
-<button class="absolute top-3 right-3 p-2 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-full text-white transition-colors z-10">
-<span class="material-symbols-outlined text-[20px] fill-current">bookmark_border</span>
-</button>
-<img alt="Amsterdam" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" data-alt="Canals of Amsterdam with bicycles" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPEnfPOjlDLUMyb3P3gLD8nSc9-ikArDO-DsLoYfNuYv3rN-8O7YL5Yd4DHPKHiqEsSDwj9aPaTjjIdnA5eFPwGIrDUhiipPpofZKl4NrysOiHjS3sDkDQXWYXs5O3i1ejhRO_I8d8BWxeKmgh58XbOzp6C2iIP_nYGY8lk2zJmTIj44PhoqxfxKqGvP3w4ASiRQt6HFuUjt-yyoKws95ftyWVrcVL-lgbort_933mgA0v7KmAcLSPJMRao0CVmA8kkShrK8gfTLSjudVOWJD_XTj77HYKqfgyytg8Cvjk8jzbpug8OlCiyCcGy1LYJtXcP_qm2"/>
-</div>
-<div class="p-5 flex flex-col flex-1">
-<div class="flex justify-between items-start mb-2">
-<div class="flex items-center gap-1 text-primary text-xs font-bold uppercase tracking-wider bg-primary/10 px-2 py-0.5 rounded-md">
-                                나홀로 여행
-                            </div>
-<div class="flex items-center gap-1 text-accent text-sm font-bold">
-<span class="material-symbols-outlined text-[18px] fill-current">star</span>
-<span class="text-text-main-light dark:text-white">4.6</span>
-</div>
-</div>
-<h3 class="text-lg font-bold text-text-main-light dark:text-white leading-tight mb-2 group-hover:text-primary transition-colors cursor-pointer">
-                            암스테르담 나홀로 여행: 예술, 역사 &amp; 운하
-                        </h3>
-<p class="text-sm text-text-muted-light dark:text-text-muted-dark line-clamp-2 mb-4">
-                            나홀로 여행자를 위한 안전하고 매력적인 여정. 박물관 패스 팁과 사람 구경하기 좋은 최고의 카페.
-                        </p>
-<div class="mt-auto flex items-center justify-between pt-4 border-t border-border-light dark:border-border-dark">
-<div class="flex items-center gap-2">
-<img alt="User" class="size-8 rounded-full object-cover border border-border-light dark:border-border-dark" data-alt="Portrait of a man with glasses" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCpSHHnJWoII--0HCgHPg-d9P7QT_c9RwZjFHYYSnx8cqPbFQ7Ke2c4AhC4J8AOV2ctqgxdAQqfUQ5GPW3tAqij4QFN0lrCJB1BPMOkCGYDlwpAjWu0A9KkH4WB_sEzueSfIFizPxJFdg5CMbR5BhCwkEz0XWgAyMCZBbCbQp0mATvFs2KC5e6gBKfw-3OHORDY28Av2OO0Wxc0wUDokREsWRqMXzmD331cxUm6eVrEkYISkWP2WuA9KkH4WB_sEzueSfIFizPxJFdg5CMbR5BhCwkEz0XWgAyMCZBbCbQp0mATvFs2KC5e6gBKfw-3OHORDY28Av2OO0Wxc0wUDokREsWRqMXzmD331cxUm6eVrEkYISkWP2Wu9KkH4WB_sEzueSfIFizPxJFdg5CMbR5BhCwkEz0XWgAyMCZBbCbQp0mATvFs2KC5e6gBKfw-3OHORDY28Av2OO0Wxc0wUDokREsWRqMXzmD331cxUm6eVrEkYISkWP2Wu"/>
-<span class="text-sm font-medium text-text-main-light dark:text-white">데이비드 김</span>
-</div>
-<button class="flex items-center gap-1.5 text-text-muted-light hover:text-secondary transition-colors group/like">
-<span class="material-symbols-outlined text-[20px] fill-current">favorite</span>
-<span class="text-xs font-bold">920</span>
-</button>
-</div>
-</div>
-</article>
-<article class="plan-card group flex flex-col bg-surface-light dark:bg-surface-dark rounded-xl overflow-hidden border border-border-light dark:border-border-dark shadow-soft hover:shadow-soft-hover h-full relative">
-<div class="relative h-56 overflow-hidden">
-<div class="absolute top-3 left-3 bg-black/40 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full z-10 flex items-center gap-1">
-<span class="material-symbols-outlined text-[14px]">schedule</span> 12일
-                        </div>
-<button class="absolute top-3 right-3 p-2 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-full text-white transition-colors z-10">
-<span class="material-symbols-outlined text-[20px] fill-current">bookmark_border</span>
-</button>
-<img alt="Tokyo" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" data-alt="Tokyo city street at night with neon lights" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZHp5DOc8bkHRaXPq2N7Xqtw8qUt8A_mvsgvdvYxD9hZHtw0yOfSMa7_Yuqct0SxIFEHeyjUBRQmYSzy1qHv0j1GRXIw-ZtpNAPtghT9w0cYabirsvMCNqxCMOOpSOkv02A2hofiLP5fUKIcq21NqkB2tIYHs8rXD09Q_9kJCQGYqPuZ7W08nIx8PlzmM_j8lFW7KKclJBleuk98iHT3GxjZBKWuFvtA34gbwpv6x52fhCEa8s80_WHhyOLNL2gyvPqDymijs29bJe"/>
-</div>
-<div class="p-5 flex flex-col flex-1">
-<div class="flex justify-between items-start mb-2">
-<div class="flex items-center gap-1 text-primary text-xs font-bold uppercase tracking-wider bg-primary/10 px-2 py-0.5 rounded-md">
-                                가족
-                            </div>
-<div class="flex items-center gap-1 text-accent text-sm font-bold">
-<span class="material-symbols-outlined text-[18px] fill-current">star</span>
-<span class="text-text-main-light dark:text-white">4.9</span>
-</div>
-</div>
-<h3 class="text-lg font-bold text-text-main-light dark:text-white leading-tight mb-2 group-hover:text-primary transition-colors cursor-pointer">
-                            아이들과 함께하는 일본 여행: 도쿄, 오사카 &amp; 디즈니
-                        </h3>
-<p class="text-sm text-text-muted-light dark:text-text-muted-dark line-clamp-2 mb-4">
-                            가족과 함께하는 스트레스 없는 여행. 아이들을 위한 기차 여행 팁, 테마파크, 쉬운 음식 옵션 포함.
-                        </p>
-<div class="mt-auto flex items-center justify-between pt-4 border-t border-border-light dark:border-border-dark">
-<div class="flex items-center gap-2">
-<img alt="User" class="size-8 rounded-full object-cover border border-border-light dark:border-border-dark" data-alt="Portrait of a smiling woman" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3KOQXmdjUDpCWaQ1_aV77E54zqyZnA87h3eVCcCSQm_NyPyluRlK3RS-j3utnVNqDNeqarQngI3ScGsnCSDM81_pLCKimwqAX0hSX9bFo6iGN3iI6VA9815OIlNX5heSTkP4jx-Ms5vuk_MPQSgh129IylNyVblzk6-I4CZTYdRq7ypHqberuM-WCuRuWz0UQvdKo6tiP32ETPGjSIwQ4juQGh_lgbort_933mgA0v7KmAcLSPJMRao0CVmA8kkShrK8gfTLSjudVOWJD_XTj77HYKqfgyytg8Cvjk8jzbpug8OlCiyCcGy1LYJtXcP_qm2"/>
-<span class="text-sm font-medium text-text-main-light dark:text-white">엘레나 로드리게스</span>
-</div>
-<button class="flex items-center gap-1.5 text-text-muted-light hover:text-secondary transition-colors group/like">
-<span class="material-symbols-outlined text-[20px] fill-current">favorite</span>
-<span class="text-xs font-bold">2.8천</span>
-</button>
-</div>
-</div>
-</article>
-</div>
-<div id="hidden-plans" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 auto-rows-fr hidden">
-<article class="plan-card group flex flex-col bg-surface-light dark:bg-surface-dark rounded-xl overflow-hidden border border-border-light dark:border-border-dark shadow-soft hover:shadow-soft-hover h-full relative">
-<div class="relative h-56 overflow-hidden">
-<div class="absolute top-3 left-3 bg-black/40 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full z-10 flex items-center gap-1">
-<span class="material-symbols-outlined text-[14px]">schedule</span> 7일
-                        </div>
-<button class="absolute top-3 right-3 p-2 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-full text-white transition-colors z-10">
-<span class="material-symbols-outlined text-[20px] fill-current">bookmark_border</span>
-</button>
-<img alt="Kyoto" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" data-alt="Traditional Japanese street in Kyoto with lanterns" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_nHZlfipv47VFVjmr3iRt5263XxkAWc4SIJl0u_aZvbC32qwE2t0nVE4W3vYi66yGBeUcJ5RwFw8iAk4Z_URIJ8sbAkT1McAhy8Zq7dOs4vi5krHwoIEIbg-WkrPMv5jTNc9Fur8joALwCDn_uVSIzDG-IYjTlSjMsNFDxQtEb0KWDVDAg_eMNhFspKqGvP3w4ASiRQt6HFuUjt-yyoKws95ftyWVrcVL-lgbort_933mgA0v7KmAcLSPJMRao0CVmA8kkShrK8gfTLSjudVOWJD_XTj77HYKqfgyytg8Cvjk8jzbpug8OlCiyCcGy1LYJtXcP_qm2"/>
-</div>
-<div class="p-5 flex flex-col flex-1">
-<div class="flex justify-between items-start mb-2">
-<div class="flex items-center gap-1 text-secondary text-xs font-bold uppercase tracking-wider bg-secondary/10 px-2 py-0.5 rounded-md">
-<span class="material-symbols-outlined text-[14px]">local_fire_department</span> 인기 급상승
-                            </div>
-<div class="flex items-center gap-1 text-accent text-sm font-bold">
-<span class="material-symbols-outlined text-[18px] fill-current">star</span>
-<span class="text-text-main-light dark:text-white">4.8</span>
-</div>
-</div>
-<h3 class="text-lg font-bold text-text-main-light dark:text-white leading-tight mb-2 group-hover:text-primary transition-colors cursor-pointer">
-                            미식가를 위한 교토 7일: 라면, 스시 &amp; 사원
-                        </h3>
-<p class="text-sm text-text-muted-light dark:text-text-muted-dark line-clamp-2 mb-4">
-                            상징적인 신사를 방문하며 교토의 숨겨진 미식 보석을 탐험하세요. 맛과 문화의 완벽한 조화.
-                        </p>
-<div class="mt-auto flex items-center justify-between pt-4 border-t border-border-light dark:border-border-dark">
-<div class="flex items-center gap-2">
-<img alt="User" class="size-8 rounded-full object-cover border border-border-light dark:border-border-dark" data-alt="Portrait of a female traveler" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAhKLJMmku0pOwhBbnjDyGr6M13QRSGNTtZ0NQ8gLuKJ9ZfEp5Rk1SwO8zm2-uzc1sDDrkukxB5kMyk4cE5h9lIOqd4wBFsTfhqdNUcgjj1IAF09yZEzxcpNDUIVGaCLbJwayRTZVsDG-IYjTlSjMsNFDxQtEb0KWDVDAg_eMNhFspKqGvP3w4ASiRQt6HFuUjt-yyoKws95ftyWVrcVL-lgbort_933mgA0v7KmAcLSPJMRao0CVmA8kkShrK8gfTLSjudVOWJD_XTj77HYKqfgyytg8Cvjk8jzbpug8OlCiyCcGy1LYJtXcP_qm2"/>
-<span class="text-sm font-medium text-text-main-light dark:text-white">사라 젠킨스</span>
-</div>
-<button class="flex items-center gap-1.5 text-text-muted-light hover:text-secondary transition-colors group/like">
-<span class="material-symbols-outlined text-[20px] fill-current">favorite</span>
-<span class="text-xs font-bold">1.2천</span>
-</button>
-</div>
-</div>
-</article>
-<article class="plan-card group flex flex-col bg-surface-light dark:bg-surface-dark rounded-xl overflow-hidden border border-border-light dark:border-border-dark shadow-soft hover:shadow-soft-hover h-full relative">
-<div class="relative h-56 overflow-hidden">
-<div class="absolute top-3 left-3 bg-black/40 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full z-10 flex items-center gap-1">
-<span class="material-symbols-outlined text-[14px]">schedule</span> 3일
-                        </div>
-<button class="absolute top-3 right-3 p-2 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-full text-white transition-colors z-10">
-<span class="material-symbols-outlined text-[20px] fill-current">bookmark_border</span>
-</button>
-<img alt="Paris" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" data-alt="Eiffel Tower view from a street in Paris" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTD4cCXgi8aV9zFdQzhkW7YkzGxw2jSB3HROUjcoLeyn7OpCrgUdFCbnJWi7AItF6q0zbLG1p1MlRm7_o9jIYFihodVNnL_CDl6Hjt70aLmlczLrBOgIEMVqYCjrtBWIS5FlMUgEWugnhrn5FPVXnFOJ8ZuCy-ZHRYwK08bmLW0OcrouKonhKyZGOnoz16vF8bUO6gjci-RNNt_UTKtf_fk1xA3tA3nISISHMNjhHsRjmWhp1Kh2-w0g_55arhxKqGvP3w4ASiRQt6HFuUjt-yyoKws95ftyWVrcVL-lgbort_933mgA0v7KmAcLSPJMRao0CVmA8kkShrK8gfTLSjudVOWJD_XTj77HYKqfgyytg8Cvjk8jzbpug8OlCiyCcGy1LYJtXcP_qm2"/>
-</div>
-<div class="p-5 flex flex-col flex-1">
-<div class="flex justify-between items-start mb-2">
-<div class="flex items-center gap-1 text-primary text-xs font-bold uppercase tracking-wider bg-primary/10 px-2 py-0.5 rounded-md">
-                                럭셔리
-                            </div>
-<div class="flex items-center gap-1 text-accent text-sm font-bold">
-<span class="material-symbols-outlined text-[18px] fill-current">star</span>
-<span class="text-text-main-light dark:text-white">4.5</span>
-</div>
-</div>
-<h3 class="text-lg font-bold text-text-main-light dark:text-white leading-tight mb-2 group-hover:text-primary transition-colors cursor-pointer">
-                            파리 로맨틱 주말 여행
-                        </h3>
-<p class="text-sm text-text-muted-light dark:text-text-muted-dark line-clamp-2 mb-4">
-                            로맨틱한 휴가를 위한 최고의 가이드. 일몰, 와인 시음, 프라이빗 보트 투어를 위한 최고의 장소.
-                        </p>
-<div class="mt-auto flex items-center justify-between pt-4 border-t border-border-light dark:border-border-dark">
-<div class="flex items-center gap-2">
-<img alt="User" class="size-8 rounded-full object-cover border border-border-light dark:border-border-dark" data-alt="Portrait of a male traveler" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAoq6uLBFTu093-iCb0NLuXfgvXPDYewpj68hzGArj4j1CB_z6ch3B8E4QxkCtnBmfif182DhhLBWRQ6knn35UrM4cwaW7KOgvFhAalNw7pKym9FnebksqZDWy3d0BXHz-RLD1zoFQzW_MkATptsdHkfXpX4PJ-wOAuP5NmWrzzSsyYeF0x4RQRPBZwsQ_bejRjbavAjjelbI92mVrIP93mjBdGZo01RsyD3oQOXwIiQ0W2JkJeuiBD-o_vY7T5dN1Hlurj0sczUMPi"/>
-<span class="text-sm font-medium text-text-main-light dark:text-white">마르크 뒤부아</span>
-</div>
-<button class="flex items-center gap-1.5 text-text-muted-light hover:text-secondary transition-colors group/like">
-<span class="material-symbols-outlined text-[20px] fill-current">favorite</span>
-<span class="text-xs font-bold">850</span>
-</button>
-</div>
-</div>
-</article>
-</div>
-<div class="flex justify-center mt-12">
-<button id="load-more-button" class="px-8 py-3 rounded-xl border-2 border-primary text-primary hover:bg-primary hover:text-white font-bold transition-colors">
-                    더 많은 계획 불러오기
-                </button>
-</div>
-</main>
-</div>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const loadMoreButton = document.getElementById('load-more-button');
-        const hiddenPlans = document.getElementById('hidden-plans');
+        const planContainer = document.getElementById("plan-grid");
+        const loadMoreBtn = document.getElementById("load-more-button");
+        const sortSelect = document.getElementById("sort-select");
+        const resetBtn = document.getElementById("reset-filters");
+        const myPostsBtn = document.getElementById("my-posts-button");
+        const tagFilterContainer = document.getElementById(
+          "tag-filter-container",
+        );
 
-        if (loadMoreButton && hiddenPlans) {
-            loadMoreButton.addEventListener('click', function() {
-                hiddenPlans.classList.remove('hidden');
-                loadMoreButton.classList.add('hidden');
-            });
+        function initializeAndLoadPosts() {
+          const staticPosts = [
+            {
+              id: "static-1",
+              title: "미식가를 위한 교토 7일",
+              author: "사라 젠킨스",
+              authorId: "user1",
+              date: "2024-07-21",
+              content: "교토의 숨겨진 미식 보석 탐험.",
+              thumbnail: "./community-image/교토음식.JPG",
+              likes: 1200,
+              tags: ["미식"],
+              duration: 7,
+              rating: 4.8,
+              continent: "아시아",
+              destination: "교토",
+              liked: false,
+              bookmarked: false,
+              routeData: [],
+            },
+
+            {
+              id: "static-3",
+              title: "프라하 배낭여행",
+              author: "알렉스 리베라",
+              authorId: "user3",
+              date: "2024-07-19",
+              content: "배낭여행객을 위한 종합 가이드.",
+              thumbnail: "./community-image/프라하.JPG",
+              likes: 2100,
+              tags: ["모험"],
+              duration: 14,
+              rating: 4.9,
+              continent: "유럽",
+              destination: "프라하",
+              liked: false,
+              bookmarked: false,
+              routeData: [],
+            },
+            {
+              id: "static-4",
+              title: "예산으로 세부 여행",
+              author: "마야 첸",
+              authorId: "user4",
+              date: "2024-07-18",
+              content: "비용 부담 없는 최고의 경험.",
+              thumbnail: "./community-image/세부.JPG",
+              likes: 3400,
+              tags: ["예산"],
+              duration: 10,
+              rating: 4.7,
+              continent: "아시아",
+              destination: "세부",
+              liked: false,
+              bookmarked: false,
+              routeData: [],
+            },
+            {
+              id: "static-5",
+              title: "나홀로 타이베이 여행",
+              author: "데이비드 김",
+              authorId: "user5",
+              date: "2024-07-17",
+              content: "나홀로 여행자를 위한 안전하고 매력적인 여정.",
+              thumbnail: "./community-image/대만.JPG",
+              likes: 920,
+              tags: ["나홀로 여행"],
+              duration: 5,
+              rating: 4.6,
+              continent: "아시아",
+              destination: "타이베이",
+              liked: false,
+              bookmarked: false,
+              routeData: [],
+            },
+            {
+              id: "static-6",
+              title: "나고야 & 지브리파크 가족 여행",
+              author: "엘레나",
+              authorId: "user6",
+              date: "2024-07-16",
+              content: "가족과 함께하는 스트레스 없는 여행.",
+              thumbnail: "./community-image/나고야성.JPG",
+              likes: 2800,
+              tags: ["가족"],
+              duration: 12,
+              rating: 4.9,
+              continent: "아시아",
+              destination: "나고야",
+              liked: false,
+              bookmarked: false,
+              routeData: [],
+            },
+          ];
+          const savedPosts =
+            JSON.parse(localStorage.getItem("communityPosts")) || [];
+          const combinedPosts = [...savedPosts];
+          staticPosts.forEach((staticPost) => {
+            if (!combinedPosts.some((p) => p.id === staticPost.id))
+              combinedPosts.push(staticPost);
+          });
+          allPostsData = combinedPosts;
+          localStorage.setItem("communityPosts", JSON.stringify(allPostsData));
+          populateTagFilters();
         }
-    });
-</script>
-</body></html>
+
+        function populateTagFilters() {
+          const allTags = [
+            ...new Set(allPostsData.flatMap((p) => p.tags || [])),
+          ];
+          tagFilterContainer.innerHTML = "";
+          allTags.forEach((tag) => {
+            const label = document.createElement("label");
+            label.className =
+              "flex items-center gap-3 cursor-pointer group/item";
+            label.innerHTML = `<input type="checkbox" name="tag" value="${tag}" class="size-4 rounded border-gray-300 text-primary focus:ring-primary dark:bg-surface-dark dark:border-gray-600"><span class="text-sm text-text-muted-light dark:text-text-muted-dark group-hover/item:text-primary transition-colors">${tag}</span>`;
+            tagFilterContainer.appendChild(label);
+          });
+          tagFilterContainer.addEventListener("change", () => updateGallery());
+        }
+
+        function updateGallery(resetUi = true) {
+          if (resetUi) isExpanded = false;
+          const selectedDestinations = Array.from(
+            document.querySelectorAll('input[name="destination"]:checked'),
+          ).map((cb) => cb.value);
+          const selectedTags = Array.from(
+            document.querySelectorAll('input[name="tag"]:checked'),
+          ).map((cb) => cb.value);
+          let currentUser = null;
+          try {
+            currentUser = JSON.parse(localStorage.getItem("currentUser"));
+          } catch {}
+
+          currentFilteredPosts = allPostsData.filter((post) => {
+            if (
+              showOnlyMyPosts &&
+              (!currentUser || post.authorId !== currentUser.id)
+            )
+              return false;
+            const destMatch =
+              selectedDestinations.length === 0 ||
+              selectedDestinations.includes(post.continent);
+            const tagMatch =
+              selectedTags.length === 0 ||
+              (post.tags &&
+                post.tags.some((tag) => selectedTags.includes(tag)));
+            return destMatch && tagMatch;
+          });
+
+          const sortBy = sortSelect.value;
+          currentFilteredPosts.sort((a, b) => {
+            if (sortBy === "popular") return (b.likes || 0) - (a.likes || 0);
+            if (sortBy === "rating") return (b.rating || 0) - (a.rating || 0);
+            return (
+              (new Date(b.date).getTime() || 0) -
+              (new Date(a.date).getTime() || 0)
+            );
+          });
+          renderPlans();
+        }
+
+        function renderPlans() {
+          planContainer.innerHTML = "";
+          const postsToDisplay = isExpanded
+            ? currentFilteredPosts
+            : currentFilteredPosts.slice(0, initialVisibleCount);
+          if (postsToDisplay.length === 0) {
+            planContainer.innerHTML = `<div class="col-span-full text-center py-10 text-text-muted-light">${showOnlyMyPosts ? "작성한 글이 없습니다." : "조건에 맞는 여행 계획이 없습니다."}</div>`;
+            loadMoreBtn.style.display = "none";
+            return;
+          }
+          postsToDisplay.forEach((post) => {
+            planContainer.appendChild(createPlanCardElement(post));
+          });
+
+          if (currentFilteredPosts.length > initialVisibleCount) {
+            loadMoreBtn.style.display = "block";
+            loadMoreBtn.textContent = isExpanded
+              ? "간략히 보기"
+              : "더 많은 계획 불러오기";
+          } else {
+            loadMoreBtn.style.display = "none";
+          }
+        }
+
+        function createPlanCardElement(post) {
+          const article = document.createElement("article");
+          article.dataset.id = post.id;
+          article.className =
+            "plan-card group flex flex-col bg-surface-light dark:bg-surface-dark rounded-xl overflow-hidden border border-border-light dark:border-border-dark shadow-soft hover:shadow-soft-hover h-full relative";
+          const likesCount =
+            post.likes > 1000
+              ? `${(post.likes / 1000).toFixed(1)}k`
+              : post.likes;
+          const isBookmarked = post.bookmarked
+            ? "material-symbols-outlined text-[20px] fill-current text-primary"
+            : "material-symbols-outlined text-[20px]";
+          const isLiked = post.liked
+            ? "material-symbols-outlined text-[20px] fill-current text-secondary"
+            : "material-symbols-outlined text-[20px]";
+
+          article.innerHTML = `
+              <div class="relative h-56 overflow-hidden">
+                 <div class="absolute top-3 left-3 bg-black/40 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full z-10 flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">schedule</span>${post.duration ? `${post.duration}일` : "여행 미지정"}</div>
+                <button data-action="bookmark" class="absolute top-3 right-3 p-2 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-full text-white hover:text-primary transition-colors z-10"><span class="${isBookmarked}">bookmark</span></button>
+                <a href="community-post.html?id=${post.id}" class="absolute inset-0"></a>
+                <img alt="${post.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" src="${post.thumbnail}" onerror="this.src = 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=400&h=300&fit=crop'" />
+              </div>
+              <div class="p-5 flex flex-col flex-1">
+                <div class="flex justify-between items-start mb-2">
+                   <div class="flex items-center gap-1 text-primary text-xs font-bold uppercase tracking-wider bg-primary/10 px-2 py-0.5 rounded-md">${post.tags && post.tags.length > 0 ? post.tags[0] : "일반"}</div>
+                  <div class="flex items-center gap-1 text-accent text-sm font-bold"><span class="material-symbols-outlined text-[18px] fill-current">star</span><span>${post.rating || 0}</span></div>
+                </div>
+                <a href="community-post.html?id=${post.id}"><h3 class="text-lg font-bold text-text-main-light dark:text-white leading-tight mb-2 group-hover:text-primary transition-colors cursor-pointer">${post.title}</h3></a>
+                <p class="text-sm text-text-muted-light dark:text-text-muted-dark line-clamp-2 mb-4">${post.content}</p>
+                <div class="mt-auto flex items-center justify-between pt-4 border-t border-border-light dark:border-border-dark">
+                  <div class="flex items-center gap-2">
+                    <div class="size-8 rounded-full bg-gray-200 overflow-hidden"><img src="https://i.pravatar.cc/150?u=${post.authorId}" alt="User" /></div>
+                    <span class="text-sm font-medium text-text-main-light dark:text-white">${post.author}</span>
+                  </div>
+                  <button data-action="like" class="flex items-center gap-1.5 text-text-muted-light hover:text-secondary transition-colors"><span class="${isLiked}">favorite</span><span class="text-xs font-bold">${likesCount}</span></button>
+                </div>
+              </div>`;
+          return article;
+        }
+
+        document
+          .querySelectorAll('input[name="destination"]')
+          .forEach((cb) =>
+            cb.addEventListener("change", () => updateGallery()),
+          );
+        sortSelect.addEventListener("change", () => updateGallery());
+        resetBtn.addEventListener("click", () => {
+          document
+            .querySelectorAll('input[type="checkbox"]')
+            .forEach((cb) => (cb.checked = false));
+          sortSelect.value = "popular";
+          showOnlyMyPosts = false;
+          myPostsBtn.classList.remove("bg-primary", "text-white");
+          updateGallery();
+        });
+        loadMoreBtn.addEventListener("click", () => {
+          isExpanded = !isExpanded;
+          renderPlans();
+        });
+        myPostsBtn.addEventListener("click", () => {
+          showOnlyMyPosts = !showOnlyMyPosts;
+          myPostsBtn.classList.toggle("bg-primary", showOnlyMyPosts);
+          myPostsBtn.classList.toggle("text-white", showOnlyMyPosts);
+          updateGallery();
+        });
+        planContainer.addEventListener("click", (e) => {
+          const button = e.target.closest("button[data-action]");
+          if (!button) return;
+          const card = e.target.closest(".plan-card");
+          const postId = card.dataset.id;
+          const post = allPostsData.find((p) => p.id === postId);
+          if (!post) return;
+          if (button.dataset.action === "like") {
+            post.liked = !post.liked;
+            post.likes = (post.likes || 0) + (post.liked ? 1 : -1);
+          } else if (button.dataset.action === "bookmark") {
+            post.bookmarked = !post.bookmarked;
+          }
+          localStorage.setItem("communityPosts", JSON.stringify(allPostsData));
+          updateGallery(false);
+        });
+
+        initializeAndLoadPosts();
+        updateGallery();
+
+        const communityWriteModal = document.getElementById(
+          "community-write-modal",
+        );
+        const openWriteModalBtn = document.getElementById(
+          "open-write-modal-button",
+        );
+        const closeWriteModalBtn = document.getElementById("close-write-modal");
+        const submitPostBtn = document.getElementById("submit-post-button");
+        const cancelPostBtn = document.getElementById("cancel-post-button");
+        const postTitleInput = document.getElementById("post-title");
+        const postContentTextarea = document.getElementById("post-content");
+        const starRatingSlider = document.getElementById("star-rating-slider");
+        const starRatingDisplay = document.getElementById(
+          "star-rating-display",
+        );
+        const locationDisplay = document.getElementById("location-display");
+        const openMapModalBtn = document.getElementById(
+          "open-map-modal-button",
+        );
+        const tagInput = document.getElementById("tag-input");
+        const addTagButton = document.getElementById("add-tag-button");
+        const tagsContainer = document.getElementById("tags-container");
+        const thumbnailFileInput = document.getElementById(
+          "thumbnail-file-input",
+        );
+        const uploadButton = document.getElementById("upload-button");
+        const thumbnailUrlInput = document.getElementById("thumbnail-url");
+
+        const mapModal = document.getElementById("map-modal");
+        const closeMapModalBtn = document.getElementById(
+          "close-map-modal-button",
+        );
+        const saveLocationBtn = document.getElementById("save-location-button");
+        const mapContainer = document.getElementById("map");
+        const mapSearchInput = document.getElementById("map-search-input");
+        const mapSearchBtn = document.getElementById("map-search-button");
+        const searchResultsList = document.getElementById(
+          "search-results-list",
+        );
+        const selectedRouteList = document.getElementById(
+          "selected-route-list",
+        );
+
+        let editPostId = null,
+          rating = 0;
+        let routeData = [],
+          tempRouteData = [];
+        let map = null,
+          markers = [],
+          polyline = null;
+        let tags = [];
+        let currentTagInput = "";
+        let thumbnail = "";
+
+        function setRating(newRating) {
+          // 2-1. 값 저장 및 표시
+          rating = parseFloat(newRating).toFixed(1); // 소수점 1자리까지
+          starRatingSlider.value = rating;
+          starRatingDisplay.textContent = rating; // 숫자 업데이트
+
+          // 2-2. 별 아이콘들 가져오기
+          const starIcons = document.querySelectorAll(
+            '#star-visual-display .star-icon',
+          );
+          const ratingValue = parseFloat(rating);
+
+          // 2-3. 각 별마다 처리
+          starIcons.forEach((star, index) => {
+            // 예: rating = 3.7이면
+            // index 0,1,2 → 완전히 채움
+            // index 3 → 70% 채움
+            // index 4 → 빈 별
+
+            if (index < Math.floor(ratingValue)) {
+              // 완전히 채워진 별 (예: 0,1,2번째 별)
+              star.style.color = '#FFD700'; // 금색
+            } else if (index < ratingValue) {
+              // 부분적으로 채워진 별 (예: 3번째 별)
+              const percentage = (ratingValue - index) * 100; // 70%
+              star.style.background = `linear-gradient(90deg, #FFD700 ${percentage}%, #d1d5db ${percentage}%)`;
+              star.style.webkitBackgroundClip = 'text';
+              star.style.webkitTextFillColor = 'transparent';
+            } else {
+              // 빈 별 (예: 4번째 별)
+              star.style.color = '#d1d5db'; // 회색
+              star.style.background = 'none';
+              star.style.webkitTextFillColor = 'inherit';
+            }
+          });
+        }
+        function setRouteData(newRoute) {
+          routeData = newRoute || [];
+          locationDisplay.value = routeData.length
+            ? `${routeData.length}개 장소 선택됨`
+            : "지도에서 경로를 추가하세요";
+        }
+        function setTags(newTags) {
+          tags = newTags || [];
+          updateTagsDisplay();
+        }
+        function updateTagsDisplay() {
+          tagsContainer.innerHTML = "";
+          tags.forEach((tag) => {
+            const span = document.createElement("span");
+            span.className =
+              "px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full flex items-center gap-2";
+            span.innerHTML = `#${tag} <button type="button" class="hover:text-indigo-900" data-tag="${tag}"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>`;
+            tagsContainer.appendChild(span);
+          });
+        }
+        function setThumbnail(newThumbnail) {
+          thumbnail = newThumbnail || "";
+          thumbnailUrlInput.value = thumbnail;
+          document.getElementById("thumbnail-preview").src = thumbnail;
+          document
+            .getElementById("thumbnail-preview-container")
+            .classList.toggle("hidden", !thumbnail);
+        }
+
+        openWriteModalBtn.addEventListener("click", () => {
+          communityWriteModal.classList.remove("hidden");
+          document.body.classList.add("overflow-hidden");
+          editPostId = null;
+          postTitleInput.value = "";
+          postContentTextarea.value = "";
+          setTags([]);
+          setRating(0.0);
+          setRouteData([]);
+          setThumbnail("");
+          document.getElementById("write-modal-title").textContent =
+            "게시글 작성";
+        });
+
+        closeWriteModalBtn.addEventListener("click", () => {
+          communityWriteModal.classList.add("hidden");
+          document.body.classList.remove("overflow-hidden");
+        });
+        cancelPostBtn.addEventListener("click", () =>
+          closeWriteModalBtn.click(),
+        );
+        starRatingSlider.addEventListener("input", (e) =>
+          setRating(e.target.value),
+        );
+        addTagButton.addEventListener("click", () => {
+          currentTagInput = tagInput.value.trim();
+          if (currentTagInput && !tags.includes(currentTagInput)) {
+            setTags([...tags, currentTagInput]);
+            tagInput.value = "";
+          }
+        });
+        tagInput.addEventListener("keypress", (e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            addTagButton.click();
+          }
+        });
+        tagsContainer.addEventListener("click", (e) => {
+          const button = e.target.closest("button");
+          if (button && button.dataset.tag)
+            setTags(tags.filter((tag) => tag !== button.dataset.tag));
+        });
+        uploadButton.addEventListener("click", () =>
+          thumbnailFileInput.click(),
+        );
+        thumbnailFileInput.addEventListener("change", (e) => {
+          const file = e.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => setThumbnail(e.target.result);
+            reader.readAsDataURL(file);
+          }
+        });
+        thumbnailUrlInput.addEventListener("input", (e) =>
+          setThumbnail(e.target.value),
+        );
+
+        let ps;
+        openMapModalBtn.addEventListener("click", () => {
+          mapModal.classList.remove("hidden");
+          try {
+            if (
+              typeof kakao === "undefined" ||
+              typeof kakao.maps === "undefined"
+            )
+              throw new Error("Kakao Maps script not loaded");
+            if (!map) {
+              const options = {
+                center: new kakao.maps.LatLng(37.566826, 126.9786567),
+                level: 5,
+              };
+              map = new kakao.maps.Map(mapContainer, options);
+              ps = new kakao.maps.services.Places();
+              polyline = new kakao.maps.Polyline({
+                strokeWeight: 3,
+                strokeColor: "#db4040",
+                strokeOpacity: 0.8,
+                strokeStyle: "solid",
+              });
+            }
+            tempRouteData = [...routeData];
+            updateRouteUI();
+            setTimeout(() => map && map.relayout(), 0);
+          } catch (e) {
+            mapContainer.innerHTML = `<div class="p-4 text-center text-red-500">지도 로딩 실패: ${e.message}. API 키를 확인해주세요.</div>`;
+          }
+        });
+        closeMapModalBtn.addEventListener("click", () =>
+          mapModal.classList.add("hidden"),
+        );
+        saveLocationBtn.addEventListener("click", () => {
+          setRouteData(tempRouteData);
+          mapModal.classList.add("hidden");
+        });
+        mapSearchBtn.addEventListener("click", searchPlaces);
+        mapSearchInput.addEventListener(
+          "keydown",
+          (e) => e.key === "Enter" && searchPlaces(),
+        );
+        selectedRouteList.addEventListener("click", (e) => {
+          if (e.target.tagName === "BUTTON")
+            removePlaceFromRoute(e.target.dataset.id);
+        });
+
+        function searchPlaces() {
+          if (!ps) return alert("지도 서비스가 초기화되지 않았습니다.");
+          const keyword = mapSearchInput.value.trim();
+          if (!keyword) return alert("키워드를 입력해주세요!");
+          ps.keywordSearch(keyword, (data, status) => {
+            if (status === kakao.maps.services.Status.OK)
+              displaySearchResults(data);
+            else alert("검색 결과가 없습니다.");
+          });
+        }
+        function displaySearchResults(places) {
+          searchResultsList.innerHTML = "";
+          places.forEach((place, i) => {
+            const li = document.createElement("li");
+            li.innerHTML = `<div class="p-2 hover:bg-gray-100 cursor-pointer"><span class="font-semibold">${i + 1}. ${place.place_name}</span><div class="text-xs text-gray-500">${place.road_address_name || place.address_name}</div></div>`;
+            li.onclick = () => addPlaceToRoute(place);
+            searchResultsList.appendChild(li);
+          });
+        }
+        function addPlaceToRoute(place) {
+          if (tempRouteData.find((p) => p.id === place.id)) return;
+          tempRouteData.push(place);
+          updateRouteUI();
+        }
+        function removePlaceFromRoute(placeId) {
+          tempRouteData = tempRouteData.filter((p) => p.id !== placeId);
+          updateRouteUI();
+        }
+        function updateRouteUI() {
+          selectedRouteList.innerHTML = "";
+          markers.forEach((m) => m.setMap(null));
+          markers = [];
+          const path = [];
+          if (tempRouteData.length > 0) {
+            const bounds = new kakao.maps.LatLngBounds();
+            tempRouteData.forEach((place, i) => {
+              const li = document.createElement("li");
+              li.className = "p-2 flex justify-between items-center";
+              li.innerHTML = `<span>${i + 1}. ${place.place_name}</span><button data-id="${place.id}" class="text-red-500 text-xs">삭제</button>`;
+              selectedRouteList.appendChild(li);
+
+              const latlng = new kakao.maps.LatLng(place.y, place.x);
+              const marker = new kakao.maps.Marker({ position: latlng });
+              marker.setMap(map);
+              markers.push(marker);
+              path.push(latlng);
+              bounds.extend(latlng);
+            });
+            map.setBounds(bounds);
+          }
+          polyline.setPath(path.length > 1 ? path : []);
+          polyline.setMap(map);
+        }
+
+        submitPostBtn.addEventListener("click", () => {
+          const title = postTitleInput.value;
+          const content = postContentTextarea.value;
+          if (!title.trim() || !content.trim())
+            return alert("제목과 내용을 입력해주세요.");
+          let currentUser = { name: "익명", id: "anonymous" };
+          try {
+            currentUser =
+              JSON.parse(localStorage.getItem("currentUser")) || currentUser;
+          } catch {}
+
+          const postData = {
+            title,
+            content,
+            tags,
+            rating,
+            routeData,
+            thumbnail,
+          };
+
+          if (editPostId) {
+            const index = allPostsData.findIndex((p) => p.id === editPostId);
+            if (index > -1)
+              allPostsData[index] = { ...allPostsData[index], ...postData };
+          } else {
+            allPostsData.unshift({
+              ...postData,
+              id: `post-${Date.now()}`,
+              author: currentUser.name,
+              authorId: currentUser.id,
+              date: new Date().toISOString(),
+              likes: 0,
+              liked: false,
+              bookmarked: false,
+            });
+          }
+          localStorage.setItem("communityPosts", JSON.stringify(allPostsData));
+          populateTagFilters();
+          alert(
+            editPostId
+              ? "게시글이 수정되었습니다."
+              : "게시글이 작성되었습니다.",
+          );
+          closeWriteModalBtn.click();
+          updateGallery(true);
+        });
+      });
+    </script>
+  </body>
+</html>
