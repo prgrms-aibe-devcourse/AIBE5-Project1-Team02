@@ -964,15 +964,11 @@
             .map((key) => {
                 const dest = destinations[key];
                 return `
-                <div class="group flex flex-col bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 border border-gray-100 hover:border-primary cursor-pointer" style="border-color: #f3f4f6;" onclick="openModal('${key}')">
-                    <div class="relative w-full aspect-[4/3] bg-cover bg-center overflow-hidden" style='background-image: url("${dest.images[0]}");'>
-                        <div class="absolute inset-0 overflow-hidden">
+                <div class="popular-card-new group cursor-pointer" onclick="openModal('${key}')">                    
+                <div class="popular-card-image-wrapper relative w-full bg-cover bg-center overflow-hidden" style='background-image: url("${dest.images[0]}");'>                        <div class="absolute inset-0 overflow-hidden">
                             <div class="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-300" style='background-image: url("${dest.images[0]}");'></div>
                         </div>
-                        <div class="absolute top-4 left-4 bg-primary/90 text-white text-[10px] font-black px-2 py-1 rounded uppercase tracking-widest" style="background-color: rgba(19, 182, 236, 0.9);">${dest.matchScore}% 매치</div>
-                        <button class="absolute top-4 right-4 bg-white/30 backdrop-blur-md hover:bg-white text-white hover:text-red-500 p-2 rounded-full transition-all" onclick="event.stopPropagation();">
-                            <span class="material-symbols-outlined text-[20px]">favorite</span>
-                        </button>
+                        <div class="absolute top-4 right-4 bg-primary/90 text-white text-[10px] font-black px-2 py-1 rounded uppercase tracking-widest" style="background-color: #008774;">${dest.matchScore}% 매치</div>
                         <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex items-end p-4">
                             <span class="text-white text-sm font-medium drop-shadow-lg">${typeInfo.nickname} 맞춤 여행지</span>
                         </div>
@@ -995,7 +991,7 @@
                                 <p class="text-xs text-gray-400 font-medium">평균 항공료</p>
                                 <p class="text-lg font-bold">${dest.flights[0].price} <span class="text-xs font-normal text-gray-400">/왕복</span></p>
                             </div>
-                            <button class="bg-gray-100 hover:bg-primary hover:text-white transition-all p-2 rounded-lg flex items-center gap-2" style="background: #f3f4f6; color: #6b7280;" onmouseover="this.style.background='#13b6ec'; this.style.color='white';" onmouseout="this.style.background='#f3f4f6'; this.style.color='#6b7280';" onclick="event.stopPropagation();">
+                            <button class="bg-gray-100 hover:bg-primary hover:text-white transition-all p-2 rounded-lg flex items-center gap-2" style="background: #f3f4f6; color: #6b7280;" onmouseover="this.style.background='#008774'; this.style.color='white';" onmouseout="this.style.background='#f3f4f6'; this.style.color='#6b7280';" onclick="event.stopPropagation();">
                                 <span class="text-sm font-medium">플래너에 담기</span>
                                 <span class="material-symbols-outlined">add</span>
                             </button>
@@ -1048,7 +1044,7 @@
         const tagsHTML = dest.tags
             .map(
                 (tag) => `
-            <span class="bg-primary/10 text-primary px-3 py-1.5 rounded-full text-xs font-bold border border-primary/20 flex items-center gap-1.5" style="color: #13b6ec; background: rgba(19, 182, 236, 0.1); border-color: rgba(19, 182, 236, 0.2);">
+            <span class="bg-primary/10 text-primary px-3 py-1.5 rounded-full text-xs font-bold border border-primary/20 flex items-center gap-1.5" style="color: #008774; background: rgba(19, 182, 236, 0.1); border-color: rgba(19, 182, 236, 0.2);">
                 <span class="material-symbols-outlined text-sm">${tag.icon}</span> ${tag.text}
             </span>
         `,
@@ -1077,7 +1073,7 @@
                 <div class="flex items-center justify-between mb-4">
                     <div class="flex items-center gap-3">
                         <div style="width: 2.5rem; height: 2.5rem;" class="rounded bg-gray-50 flex items-center justify-center">
-                            <span class="material-symbols-outlined" style="color: #13b6ec;">flight_takeoff</span>
+                            <span class="material-symbols-outlined" style="color: #008774;">flight_takeoff</span>
                         </div>
                         <div>
                             <h4 class="font-bold text-sm">${flight.airline}</h4>
@@ -1085,7 +1081,7 @@
                         </div>
                     </div>
                     <div class="text-right">
-                        <p class="text-lg font-black" style="color: #13b6ec;">${flight.price}</p>
+                        <p class="text-lg font-black" style="color: #008774;">${flight.price}</p>
                         <p class="text-[10px] text-gray-500 font-bold">왕복</p>
                     </div>
                 </div>
@@ -1097,8 +1093,8 @@
                     <div class="flex-1 flex flex-col items-center gap-1">
                         <p class="text-[10px] font-bold text-gray-500">${flight.duration}</p>
                         <div class="w-full h-[2px] bg-gray-200 relative">
-                            <div class="absolute inset-0 w-1/2 mx-auto" style="background: #13b6ec;"></div>
-                            <span class="material-symbols-outlined text-[14px] absolute -top-[6px] right-0 bg-white rounded-full" style="color: #13b6ec;">flight</span>
+                            <div class="absolute inset-0 w-1/2 mx-auto" style="background: #008774;"></div>
+                            <span class="material-symbols-outlined text-[14px] absolute -top-[6px] right-0 bg-white rounded-full" style="color: #008774;">flight</span>
                         </div>
                         <p class="text-[10px] font-bold ${flight.stops === "직항" ? "text-green-500" : "text-gray-500"}">${flight.stops}</p>
                     </div>
