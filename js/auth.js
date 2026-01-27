@@ -64,7 +64,7 @@ function checkLoginStatus() {
     if (isLoggedIn === 'true' && user && authLinksContainer) {
         authLinksContainer.innerHTML = `
             <a href="../profile/profile.html" class="text-sm font-medium">${user.name}님</a>
-            <button onclick="handleLogout()" class="text-sm font-medium bg-primary text-primary-foreground px-4 py-2 rounded-md">로그아웃</button>
+            <button onclick="handleLogout()" class="text-sm font-medium text-primary-foreground px-4 py-2 rounded-md">로그아웃</button>
         `;
     }
 }
