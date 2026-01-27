@@ -1,0 +1,1609 @@
+<!doctype html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Trip Planner v2 (Korean Patch)</title>
+
+        <link href="https://fonts.googleapis.com" rel="preconnect" />
+        <link
+            crossorigin=""
+            href="https://fonts.gstatic.com"
+            rel="preconnect"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+            rel="stylesheet"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+            rel="stylesheet"
+        />
+
+        <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+        <script id="tailwind-config">
+            tailwind.config = {
+                darkMode: "class",
+                theme: {
+                    extend: {
+                        colors: {
+                            primary: "#4f46e5", // 사이트 테마색(Indigo)
+                            "primary-dark": "#4338ca", // 호버 색상
+                            "background-light": "#f3f6f8",
+                            "background-dark": "#1f262e",
+                        },
+                        fontFamily: {
+                            display: ["Plus Jakarta Sans", "sans-serif"],
+                        },
+                        borderRadius: {
+                            DEFAULT: "0.5rem",
+                            lg: "1rem",
+                            xl: "1.5rem",
+                            full: "9999px",
+                        },
+                    },
+                },
+            };
+        </script>
+
+        <style>
+            ::-webkit-scrollbar {
+                width: 6px;
+            }
+            ::-webkit-scrollbar-track {
+                background: #f1f1f1;
+            }
+            ::-webkit-scrollbar-thumb {
+                background: #c7c7c7;
+                border-radius: 3px;
+            }
+            .fade-in {
+                animation: fadeIn 0.3s ease-in-out;
+            }
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(10px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            /* 드래그 상태 스타일 */
+            .dragging {
+                opacity: 0.5;
+                border: 2px dashed #4f46e5;
+            }
+            .drag-over {
+                background-color: #e0e7ff;
+                border: 2px dashed #4338ca;
+            }
+
+            /* 지도 마커 애니메이션 */
+            .marker-pulse {
+                animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1)
+                    infinite;
+            }
+            @keyframes pulse-ring {
+                0% {
+                    transform: scale(0.33);
+                    opacity: 1;
+                }
+                80%,
+                100% {
+                    transform: scale(2);
+                    opacity: 0;
+                }
+            }
+        </style>
+    </head>
+    <body class="bg-gray-50 h-screen overflow-hidden text-gray-800 font-sans">
+        <div id="app" class="h-full flex flex-col relative"></div>
+
+        <script>
+            // ==========================================
+            // 1. ICONS & ASSETS (기존 유지)
+            // ==========================================
+            const Icons = {
+                MapPin: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>`,
+                Calendar: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>`,
+                Save: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>`,
+                Trash2: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>`,
+                Plus: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>`,
+                List: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>`,
+                Edit: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>`,
+                ChevronLeft: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>`,
+                ChevronRight: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>`,
+                Clock: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>`,
+                GripVertical: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="12" r="1"></circle><circle cx="9" cy="5" r="1"></circle><circle cx="9" cy="19" r="1"></circle><circle cx="15" cy="12" r="1"></circle><circle cx="15" cy="5" r="1"></circle><circle cx="15" cy="19" r="1"></circle></svg>`,
+                Search: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>`,
+                Info: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>`,
+                Phone: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>`,
+                Star: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="orange" stroke="orange" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`,
+                ArrowLeft: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>`,
+                Navigation: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>`,
+                Close: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`,
+            };
+
+            const INITIAL_PLACES = [
+                {
+                    id: "1",
+                    name: "에펠탑",
+                    country: "프랑스 파리",
+                    image: "https://images.unsplash.com/photo-1431274172761-fca41d930114?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
+                    category: "landmark",
+                    description: "파리의 상징적인 철탑",
+                },
+                {
+                    id: "2",
+                    name: "도쿄 타워",
+                    country: "일본 도쿄",
+                    image: "https://images.unsplash.com/photo-1583915223588-7d88ebf23414?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
+                    category: "landmark",
+                    description: "도쿄의 랜드마크",
+                },
+                {
+                    id: "3",
+                    name: "스위스 알프스",
+                    country: "스위스",
+                    image: "https://images.unsplash.com/photo-1527668752968-14dc70a27c95?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
+                    category: "nature",
+                    description: "아름다운 산악 경관",
+                },
+                {
+                    id: "4",
+                    name: "산토리니",
+                    country: "그리스",
+                    image: "https://images.unsplash.com/photo-1676730056228-7e38cbb88edc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
+                    category: "nature",
+                    description: "환상적인 석양",
+                },
+                {
+                    id: "5",
+                    name: "사그라다 파밀리아",
+                    country: "스페인",
+                    image: "https://images.unsplash.com/photo-1583422409516-2895a77efded?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
+                    category: "landmark",
+                    description: "가우디의 미완성 걸작",
+                },
+                {
+                    id: "6",
+                    name: "몰디브 해변",
+                    country: "몰디브",
+                    image: "https://images.unsplash.com/photo-1602455891364-31034e19a826?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
+                    category: "nature",
+                    description: "열대 해변 휴양지",
+                },
+                {
+                    id: "7",
+                    name: "로마 콜로세움",
+                    country: "이탈리아",
+                    image: "https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=400&q=80",
+                    category: "landmark",
+                    description: "고대 로마의 원형 경기장",
+                },
+                {
+                    id: "8",
+                    name: "두바이",
+                    country: "UAE",
+                    image: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=400&q=80",
+                    category: "landmark",
+                    description: "현대적인 도시 경관",
+                },
+            ];
+
+            const BASE_PLACE_DETAILS = {
+                phone: "+82-2-1234-5678",
+                hours: "09:00 - 18:00",
+                rating: 4.5,
+                reviewCount: 234,
+                tags: ["인기", "사진 명소", "가족 여행", "데이트"],
+                reviews: [
+                    {
+                        id: "1",
+                        author: "여행러버",
+                        rating: 5,
+                        date: "2026-01-15",
+                        content:
+                            "정말 멋진 곳이었어요! 사진 찍기에도 좋고 주변에 맛집도 많아요. 강력 추천합니다!",
+                        likes: 12,
+                    },
+                    {
+                        id: "2",
+                        author: "세계여행가",
+                        rating: 4,
+                        date: "2026-01-10",
+                        content:
+                            "기대했던 것보다 좋았습니다. 다만 사람이 많아서 조금 붐볐어요. 평일에 가시는 걸 추천드려요.",
+                        likes: 8,
+                    },
+                    {
+                        id: "3",
+                        author: "가족여행",
+                        rating: 5,
+                        date: "2026-01-05",
+                        content:
+                            "아이들과 함께 가기 정말 좋은 곳이에요. 시설도 깨끗하고 직원분들도 친절하셨습니다.",
+                        likes: 15,
+                    },
+                ],
+                facilities: [
+                    "주차 가능",
+                    "와이파이",
+                    "휠체어 접근",
+                    "반려동물 동반 가능",
+                ],
+            };
+
+            const getNearbyPlaces = (currentPlace) => {
+                return [
+                    {
+                        id: "nearby-1",
+                        name: "현지 맛집",
+                        category: "음식점",
+                        rating: 4.5,
+                        distance: "200m",
+                        lat: 48.8584 + 0.001,
+                        lng: 2.2945 + 0.001,
+                    },
+                    {
+                        id: "nearby-2",
+                        name: "박물관",
+                        category: "문화",
+                        rating: 4.8,
+                        distance: "350m",
+                        lat: 48.8584 - 0.002,
+                        lng: 2.2945 + 0.002,
+                    },
+                    {
+                        id: "nearby-3",
+                        name: "기념품 가게",
+                        category: "쇼핑",
+                        rating: 4.2,
+                        distance: "150m",
+                        lat: 48.8584 + 0.002,
+                        lng: 2.2945 - 0.001,
+                    },
+                    {
+                        id: "nearby-4",
+                        name: "카페",
+                        category: "카페",
+                        rating: 4.6,
+                        distance: "280m",
+                        lat: 48.8584 - 0.001,
+                        lng: 2.2945 - 0.002,
+                    },
+                    {
+                        id: "nearby-5",
+                        name: "공원",
+                        category: "휴식",
+                        rating: 4.4,
+                        distance: "500m",
+                        lat: 48.8584 + 0.003,
+                        lng: 2.2945 + 0.003,
+                    },
+                ];
+            };
+
+            // ==========================================
+            // 2. STATE MANAGEMENT (수정됨: 자동 저장 추가)
+            // ==========================================
+            const Store = {
+                state: {
+                    tripName: "나의 멋진 여행", // 기본 제목 변경
+                    startDate: "",
+                    endDate: "",
+                    departure: "",
+                    destination: "",
+                    schedule: [],
+                    selectedDay: 0,
+                    savedPlans: [],
+                    currentPlanId: null,
+                    showPlanList: false,
+                    isCollapsed: false,
+                    selectedPlace: null,
+                    showAddModal: false,
+                },
+
+                init() {
+                    // 1. 기존 저장된 계획 목록 불러오기
+                    const plans = localStorage.getItem("tripPlans");
+                    if (plans) {
+                        this.state.savedPlans = JSON.parse(plans);
+                    }
+
+                    // 2. ★ [수정됨] Flight.html에서 넘어온 데이터가 있는지 확인
+                    const flightInfo = localStorage.getItem(
+                        "tripPlanner_flightInfo",
+                    );
+
+                    if (flightInfo) {
+                        const fData = JSON.parse(flightInfo);
+
+                        // 항공권 정보로 상태 덮어쓰기
+                        this.state.startDate = fData.startDate;
+                        this.state.endDate = fData.endDate;
+                        this.state.departure = fData.departure;
+                        this.state.destination = fData.destination;
+
+                        // (선택사항) 항공편 정보를 첫날과 마지막날 일정에 자동으로 추가하고 싶다면 여기서 처리 가능
+                        // 일단은 날짜와 장소만 동기화합니다.
+                    }
+                    // 3. 작업 중이던 임시 데이터(Draft) 확인 (항공권 정보가 없을 때만)
+                    else {
+                        const draft = localStorage.getItem("tripPlanner_draft");
+                        if (draft) {
+                            const parsedDraft = JSON.parse(draft);
+                            this.state = { ...this.state, ...parsedDraft };
+                        }
+                    }
+
+                    // 날짜에 맞춰 스케줄 배열 초기화
+                    this.updateScheduleDates();
+                },
+
+                setState(newState) {
+                    this.state = { ...this.state, ...newState };
+
+                    // 날짜 변경 시 스케줄 배열 재조정
+                    if (newState.startDate || newState.endDate) {
+                        this.updateScheduleDates();
+                    }
+
+                    // ★ [추가] 상태가 변할 때마다 '현재 작업 내용'을 로컬스토리지에 자동 저장
+                    // (목록이나 UI 관련 상태는 제외하고, 실제 데이터만 저장)
+                    const draftData = {
+                        tripName: this.state.tripName,
+                        startDate: this.state.startDate,
+                        endDate: this.state.endDate,
+                        departure: this.state.departure,
+                        destination: this.state.destination,
+                        schedule: this.state.schedule,
+                        selectedDay: this.state.selectedDay,
+                        currentPlanId: this.state.currentPlanId,
+                    };
+                    localStorage.setItem(
+                        "tripPlanner_draft",
+                        JSON.stringify(draftData),
+                    );
+
+                    App.render();
+                },
+
+                updateScheduleDates() {
+                    if (this.state.startDate && this.state.endDate) {
+                        const start = new Date(this.state.startDate);
+                        const end = new Date(this.state.endDate);
+                        const days = [];
+
+                        for (
+                            let d = new Date(start);
+                            d <= end;
+                            d.setDate(d.getDate() + 1)
+                        ) {
+                            const dateStr = d.toISOString().split("T")[0];
+                            const existing = this.state.schedule.find(
+                                (s) => s.date === dateStr,
+                            );
+                            days.push(existing || { date: dateStr, items: [] });
+                        }
+                        this.state.schedule = days;
+                        // 날짜가 변경되었으므로 selectedDay가 범위를 벗어나지 않게 조정
+                        if (this.state.selectedDay >= days.length) {
+                            this.state.selectedDay = 0;
+                        }
+                    }
+                },
+
+                getDays() {
+                    return this.state.schedule.length;
+                },
+            };
+
+            // ==========================================
+            // 9. ADD SCHEDULE MODAL (수정 모드 지원)
+            // ==========================================
+
+            const MainNavbar = {
+                render() {
+                    return `
+<header class="sticky top-0 z-50 w-full border-b border-gray-200 bg-white/80 backdrop-blur-sm">
+    <div class="mx-auto relative flex h-16 max-w-screen-2xl items-center justify-between px-6">
+        <a class="flex items-center space-x-2" href="../main/Main.html">
+            <img src="../../images/Logo.png" alt="여백 로고" class="h-9 w-9 rounded-full object-cover" />
+            <span class="font-bold ml-2 text-xl text-gray-800">여백</span>
+        </a>
+        <nav class="hidden md:flex items-center gap-8 text-base font-medium absolute left-1/2 -translate-x-1/2">
+            <a class="transition-colors text-primary font-semibold" href="#">플래너</a>
+            <a class="transition-colors hover:text-primary text-gray-600" href="#">숙소</a>
+            <a class="transition-colors hover:text-primary text-gray-600" href="#">여행기록</a>
+        </nav>
+        <div id="auth-links" class="flex items-center gap-4">
+            <a href="../auth/SignIn.html" class="text-sm font-medium"
+                >로그인</a
+            >
+            <a
+                href="../auth/SignUp.html"
+                class="text-sm font-medium text-primary-foreground px-4 py-2 rounded-md"
+                >회원가입</a
+            >
+        </div>
+    </div>
+</header>
+`;
+                },
+            };
+
+            const AddScheduleModal = {
+                render() {
+                    if (!Store.state.showAddModal) return "";
+
+                    // 수정 모드인지 확인
+                    const editItem = Store.state.editingItem || null;
+                    const isEditMode = !!editItem;
+
+                    // 기본값 혹은 수정할 값 설정
+                    const titleVal = isEditMode ? editItem.place.name : "";
+                    const memoVal = isEditMode ? editItem.memo : "";
+                    const startTimeVal = isEditMode
+                        ? editItem.startTime
+                        : "14:00";
+                    const endTimeVal = isEditMode ? editItem.endTime : "16:00";
+                    const locationVal = isEditMode
+                        ? editItem.place.country
+                        : "";
+
+                    return `
+                    <div class="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6" role="dialog">
+                        <div class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm transition-opacity" onclick="App.closeAddModal()"></div>
+                        <div class="relative w-full max-w-2xl bg-white dark:bg-[#1a2027] rounded-2xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden transform transition-all animate-in fade-in zoom-in-95 duration-200" onclick="event.stopPropagation()">
+                            
+                            <div class="relative h-48 bg-gray-50 dark:bg-gray-800/50 border-b border-gray-100 dark:border-gray-700 group cursor-pointer flex flex-col items-center justify-center transition-colors hover:bg-gray-100 dark:hover:bg-gray-800">
+                                <div class="absolute inset-0 opacity-5" style="background-image: radial-gradient(#6b7280 1px, transparent 1px); background-size: 16px 16px;"></div>
+                                <div class="text-center p-4 z-10">
+                                    <div class="mx-auto size-14 rounded-full bg-white dark:bg-gray-700 shadow-sm border border-gray-100 dark:border-gray-600 flex items-center justify-center mb-3 text-primary group-hover:scale-110 group-hover:border-primary/30 transition-all">
+                                        <span class="material-symbols-outlined text-3xl">add_photo_alternate</span>
+                                    </div>
+                                    <p class="text-sm font-bold text-gray-600 dark:text-gray-300 group-hover:text-primary transition-colors">커버 이미지 업로드</p>
+                                    <p class="text-xs text-gray-400 mt-1">이미지가 없으면 기본 이미지가 적용됩니다.</p>
+                                </div>
+                                <button onclick="App.closeAddModal()" class="absolute top-4 right-4 p-2 bg-white/80 dark:bg-black/50 hover:bg-white dark:hover:bg-black/70 backdrop-blur rounded-full text-gray-500 hover:text-red-500 transition-colors z-20 shadow-sm border border-gray-100 dark:border-gray-700">
+                                    <span class="material-symbols-outlined text-xl">close</span>
+                                </button>
+                            </div>
+
+                            <div class="flex-1 overflow-y-auto p-6 space-y-5 custom-scrollbar">
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">일정 제목 <span class="text-red-500">*</span></label>
+                                    <input id="modal-title" value="${titleVal}" class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm font-bold text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" placeholder="예: 선셋 디너 크루즈" type="text"/>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">설명 / 메모</label>
+                                    <textarea id="modal-memo" class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all resize-none" placeholder="이 활동에 대한 상세 내용을 입력하세요..." rows="3">${memoVal}</textarea>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">시간 <span class="text-red-500">*</span></label>
+                                    <div class="flex items-center gap-2">
+                                        <div class="relative flex-1">
+                                            <input id="modal-start-time" value="${startTimeVal}" class="w-full pl-3 pr-2 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm font-bold text-gray-900 dark:text-white focus:border-primary outline-none focus:ring-2 focus:ring-primary/20 transition-all" type="time"/>
+                                        </div>
+                                        <span class="text-gray-400 font-medium">-</span>
+                                        <div class="relative flex-1">
+                                            <input id="modal-end-time" value="${endTimeVal}" class="w-full pl-3 pr-2 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm font-bold text-gray-900 dark:text-white focus:border-primary outline-none focus:ring-2 focus:ring-primary/20 transition-all" type="time"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">위치 설정 (Country)</label>
+                                    <div class="relative h-40 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 bg-slate-100 dark:bg-gray-800 group shadow-inner">
+                                        <div class="absolute inset-0 bg-[#e5e7eb] dark:bg-[#374151]" style="background-image: radial-gradient(#94a3b8 1px, transparent 1px); background-size: 16px 16px; opacity: 0.4;"></div>
+                                        <div class="absolute top-3 left-3 right-3 z-20">
+                                            <div class="relative">
+                                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                                                    <span class="material-symbols-outlined text-lg">search</span>
+                                                </span>
+                                                <input id="modal-location" value="${locationVal}" class="w-full pl-9 pr-3 py-2 bg-white/90 dark:bg-gray-900/90 backdrop-blur border border-gray-200 dark:border-gray-700 rounded-lg text-xs font-bold text-gray-800 dark:text-white shadow-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" placeholder="장소 검색..." type="text"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="p-6 border-t border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-900/20 flex items-center justify-end gap-3">
+                                <button onclick="App.closeAddModal()" class="px-5 py-2.5 rounded-xl text-sm font-bold text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                                    취소
+                                </button>
+                                <button onclick="App.addManualSchedule()" class="px-5 py-2.5 rounded-xl text-sm font-bold text-white bg-primary hover:bg-primary-dark shadow-lg shadow-primary/25 hover:shadow-primary/40 active:scale-95 transition-all flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-lg">${isEditMode ? "edit_square" : "add_circle"}</span>
+                                    ${isEditMode ? "수정 완료" : "일정에 추가"}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                },
+            };
+
+            const Header = {
+                render() {
+                    const {
+                        tripName,
+                        savedPlans,
+                        currentPlanId,
+                        showPlanList,
+                    } = Store.state;
+                    return `
+                    <div class="bg-white border-b border-gray-200 px-6 py-4 shadow-sm z-30">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-4">
+                                <input type="text" value="${tripName}" 
+                                    onchange="Store.setState({ tripName: this.value })"
+                                    class="text-2xl font-semibold text-gray-800 border-none outline-none focus:text-indigo-600 bg-transparent" placeholder="여행 이름 입력" />
+                                ${currentPlanId ? `<span class="px-3 py-1 bg-green-100 text-green-700 text-sm rounded-full">저장됨</span>` : ""}
+                            </div>
+                            <div class="flex gap-3">
+                                <button onclick="Store.setState({ showPlanList: !Store.state.showPlanList })" class="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">
+                                    ${Icons.List} 내 계획 (${savedPlans.length})
+                                </button>
+                                <button onclick="App.newPlan()" class="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">
+                                    ${Icons.Plus} 새 계획
+                                </button>
+                                <button onclick="App.savePlan()" class="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                                    ${Icons.Save} 저장하기
+                                </button>
+                            </div>
+                        </div>
+                        ${showPlanList ? this.renderPlanList(savedPlans, currentPlanId) : ""}
+                    </div>
+                `;
+                },
+                renderPlanList(savedPlans, currentPlanId) {
+                    return `
+                    <div class="mt-4 pt-4 border-t border-gray-200">
+                        <h3 class="text-lg font-medium text-gray-800 mb-3">저장된 여행 계획</h3>
+                        ${
+                            savedPlans.length === 0
+                                ? `<p class="text-gray-500 text-center py-8">저장된 계획이 없습니다</p>`
+                                : `<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 max-h-96 overflow-y-auto">
+                                ${savedPlans
+                                    .map(
+                                        (plan) => `
+                                    <div class="border ${currentPlanId === plan.id ? "border-indigo-600 bg-indigo-50" : "border-gray-200"} rounded-lg p-4 hover:border-indigo-500 transition-colors">
+                                        <div class="flex items-start justify-between mb-2">
+                                            <h4 class="font-medium text-gray-800 flex-1">${plan.name}</h4>
+                                            <div class="flex gap-1">
+                                                <button onclick="App.loadPlan('${plan.id}')" class="p-1 text-indigo-600 hover:bg-indigo-100 rounded" title="불러오기">${Icons.Edit}</button>
+                                                <button onclick="App.deletePlan('${plan.id}')" class="p-1 text-red-600 hover:bg-red-100 rounded" title="삭제">${Icons.Trash2}</button>
+                                            </div>
+                                        </div>
+                                        <div class="text-sm text-gray-600">
+                                            <p>${plan.startDate} ~ ${plan.endDate}</p>
+                                        </div>
+                                    </div>
+                                `,
+                                    )
+                                    .join("")}
+                              </div>`
+                        }
+                    </div>`;
+                },
+            };
+
+            // planner.html의 TripSetting 객체 전체 교체
+
+            const TripSetting = {
+                render() {
+                    const {
+                        isCollapsed,
+                        startDate,
+                        endDate,
+                        departure,
+                        destination,
+                        selectedDay,
+                    } = Store.state;
+                    const totalDays = Store.getDays();
+
+                    const formatDate = (dateStr) => {
+                        if (!dateStr) return "";
+                        const d = new Date(dateStr);
+                        const year = d.getFullYear();
+                        const month = String(d.getMonth() + 1).padStart(2, "0");
+                        const day = String(d.getDate()).padStart(2, "0");
+                        return `${year}. ${month}. ${day}`;
+                    };
+                    const dateRangeStr =
+                        startDate && endDate
+                            ? `${formatDate(startDate)} - ${formatDate(endDate)}`
+                            : "날짜를 선택하세요";
+
+                    if (isCollapsed) {
+                        return `
+                <div class="w-12 bg-white border-r border-gray-200 relative transition-all duration-300">
+                    <button onclick="Store.setState({ isCollapsed: false })" class="absolute -right-3 top-6 z-10 bg-white border border-gray-300 rounded-full p-1 shadow-md hover:bg-gray-50">
+                         <span class="material-symbols-outlined text-sm text-gray-600">chevron_right</span>
+                    </button>
+                </div>`;
+                    }
+
+                    const dayButtons = Array.from(
+                        { length: totalDays },
+                        (_, i) => {
+                            const isSelected = selectedDay === i;
+                            let label = `Day ${i + 1}`;
+                            if (i === 0) label = "Arrival";
+                            else if (i === totalDays - 1) label = "Departure";
+                            let dateLabel = "";
+                            if (startDate) {
+                                const d = new Date(startDate);
+                                d.setDate(d.getDate() + i);
+                                dateLabel = `${String(d.getMonth() + 1).padStart(2, "0")}/${String(d.getDate()).padStart(2, "0")}`;
+                            }
+                            return `
+                <button onclick="Store.setState({ selectedDay: ${i} })" 
+                    class="w-full text-left px-4 py-3 rounded-xl transition-all flex items-center justify-between group ${isSelected ? "bg-indigo-600 text-white shadow-md shadow-indigo-200" : "bg-gray-50 text-gray-700 hover:bg-gray-100"}">
+                    <div>
+                        <div class="text-[10px] font-bold uppercase tracking-wider mb-0.5 ${isSelected ? "text-indigo-200" : "text-gray-400 group-hover:text-indigo-500"}">${dateLabel}</div>
+                        <div class="font-bold text-sm">${label}</div>
+                    </div>
+                    ${isSelected ? '<span class="material-symbols-outlined text-sm">chevron_right</span>' : ""}
+                </button>
+            `;
+                        },
+                    ).join("");
+
+                    return `
+            <div class="w-80 bg-white border-r border-gray-200 flex-shrink-0 transition-all duration-300 relative flex flex-col h-full z-20">
+                <button onclick="Store.setState({ isCollapsed: true })" class="absolute -right-3 top-6 z-10 bg-white border border-gray-300 rounded-full p-1 shadow-md hover:bg-gray-50">
+                    <span class="material-symbols-outlined text-sm text-gray-600">chevron_left</span>
+                </button>
+                
+                <div class="p-6 h-full overflow-y-auto custom-scrollbar flex flex-col">
+                    <div class="flex items-center gap-2 mb-4 px-1">
+                        <span class="material-symbols-outlined text-gray-400 text-lg">tune</span>
+                        <h2 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Trip Settings</h2>
+                    </div>
+
+                    <div class="space-y-3 mb-6">
+                        <div class="flex items-center gap-3 px-4 py-3 bg-white border border-gray-200 rounded-full shadow-sm hover:border-indigo-300 transition-colors cursor-default group">
+                            <span class="material-symbols-outlined text-gray-400 group-hover:text-indigo-500 transition-colors">flight_takeoff</span>
+                            <span class="font-bold text-gray-800 text-sm truncate">${departure || "출발지를 선택하세요"}</span>
+                        </div>
+                        <div class="flex items-center gap-3 px-4 py-3 bg-white border border-gray-200 rounded-full shadow-sm hover:border-indigo-300 transition-colors cursor-default group">
+                            <span class="material-symbols-outlined text-gray-400 group-hover:text-indigo-500 transition-colors">location_on</span>
+                            <span class="font-bold text-gray-800 text-sm truncate">${destination || "도착지를 선택하세요"}</span>
+                        </div>
+                        <div class="flex items-center gap-3 px-4 py-3 bg-white border border-gray-200 rounded-full shadow-sm hover:border-indigo-300 transition-colors cursor-default group">
+                            <span class="material-symbols-outlined text-gray-400 group-hover:text-indigo-500 transition-colors">date_range</span>
+                            <span class="font-bold text-gray-800 text-sm truncate tracking-tight">${dateRangeStr}</span>
+                        </div>
+                    </div>
+
+                    <button onclick="App.goToFlightSearch()" class="w-full py-3 border-2 border-dashed border-indigo-200 rounded-xl text-indigo-600 font-bold text-m hover:bg-indigo-50 hover:border-indigo-400 transition-all flex items-center justify-center gap-2 mb-6 group">
+                        <span class="material-symbols-outlined text-lg group-hover:rotate-180 transition-transform">sync_alt</span>
+                        항공권 / 일정 변경
+                    </button>
+
+                    ${
+                        totalDays > 0
+                            ? `
+                        <div class="pt-4 border-t border-gray-100 flex-1">
+                            <div class="flex justify-between items-end mb-4 px-1">
+                                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Itinerary</h3>
+                                <span class="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full">${totalDays} Days</span>
+                            </div>
+                            <div class="space-y-2 pb-4">
+                                ${dayButtons}
+                            </div>
+                        </div>
+                    `
+                            : `
+                        <div class="flex-1 flex flex-col items-center justify-center text-gray-400 text-center p-4 opacity-50">
+                             <span class="material-symbols-outlined text-4xl mb-2">airplane_ticket</span>
+                            <p class="text-xs">일정이 비어있습니다.<br>항공권을 먼저 선택해주세요.</p>
+                        </div>
+                    `
+                    }
+                </div>
+            </div>
+        `;
+                },
+            };
+
+            // ==========================================
+            // 5. TIMELINE SCHEDULE (수정됨: 상세 버튼 분기 처리)
+            // ==========================================
+            const TimelineSchedule = {
+                render() {
+                    const { schedule, selectedDay, tripName } = Store.state;
+
+                    if (schedule.length === 0) {
+                        return `
+                        <div class="flex-1 bg-white flex items-center justify-center">
+                            <div class="text-center text-gray-500">
+                                <div class="opacity-50 mb-4 scale-150 inline-block">${Icons.Calendar}</div>
+                                <p class="text-lg">날짜를 선택하여 여행 계획을 시작하세요</p>
+                            </div>
+                        </div>
+                    `;
+                    }
+
+                    const currentDay = schedule[selectedDay];
+                    const dateObj = new Date(currentDay.date);
+                    const dateStr = `${dateObj.getFullYear()}년 ${dateObj.getMonth() + 1}월 ${dateObj.getDate()}일`;
+                    const items = currentDay.items;
+
+                    // 시간순 정렬
+                    const sortedItems = [...items].sort((a, b) => {
+                        const timeA = a.startTime || "00:00";
+                        const timeB = b.startTime || "00:00";
+                        return timeA.localeCompare(timeB);
+                    });
+
+                    let blocksHtml = sortedItems
+                        .map((item) => {
+                            const placeJson = encodeURIComponent(
+                                JSON.stringify(item.place),
+                            );
+                            const startTime = item.startTime || "10:00";
+                            const endTime = item.endTime || "12:00";
+
+                            // ★ [핵심 변경] 직접 입력한 일정인지 확인
+                            const isCustom = item.place.category === "custom";
+
+                            // 직접 입력이면 editManualItem 실행, 아니면 showDetail 실행
+                            const clickAction = isCustom
+                                ? `App.editManualItem('${item.id}')`
+                                : `App.showDetail('${placeJson}')`;
+
+                            // 아이콘: 직접 입력이면 수정(Edit) 아이콘처럼 보이게 할 수도 있지만,
+                            // 요청하신 대로 상세 정보 아이콘(Info)을 유지하되 기능만 바꿉니다.
+                            const actionIcon = Icons.Info;
+
+                            return `
+                        <div class="border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm flex mb-4 relative group min-h-[200px] hover:border-indigo-400 transition-colors">
+                            <div class="w-[200px] h-[200px] flex-shrink-0 p-2 relative">
+                                <img src="${item.place.image}" class="w-full h-full object-cover rounded-lg" />
+                                <button onclick="${clickAction}" class="absolute bottom-3 right-3 p-1.5 bg-white rounded-full shadow hover:bg-gray-100 text-gray-600" title="${isCustom ? "일정 수정" : "상세 정보"}">
+                                    ${actionIcon}
+                                </button>
+                            </div>
+                            <div class="flex-1 p-4 flex flex-col">
+                                <div class="flex justify-between items-start mb-2">
+                                    <div>
+                                        <h4 class="font-medium text-gray-800">${item.place.name}</h4>
+                                        <p class="text-sm text-gray-500">${item.place.country}</p>
+                                    </div>
+                                    <button onclick="App.removeItem('${item.id}')" class="text-gray-400 hover:text-red-600">${Icons.Trash2}</button>
+                                </div>
+                                
+                                <div class="flex items-center gap-2 mb-3 bg-gray-50 p-2 rounded-lg border border-gray-100">
+                                    <div class="text-indigo-500">${Icons.Clock}</div>
+                                    <input type="time" value="${startTime}" 
+                                        onchange="App.updateItem('${item.id}', 'startTime', this.value)" 
+                                        class="bg-transparent text-sm font-bold text-gray-700 focus:outline-none focus:text-indigo-700" />
+                                    <span class="text-gray-400 text-sm">~</span>
+                                    <input type="time" value="${endTime}" 
+                                        onchange="App.updateItem('${item.id}', 'endTime', this.value)" 
+                                        class="bg-transparent text-sm font-bold text-gray-700 focus:outline-none focus:text-indigo-700" />
+                                </div>
+
+                                <textarea onchange="App.updateItem('${item.id}', 'memo', this.value)" placeholder="메모를 입력하세요" class="w-full text-sm border border-gray-200 rounded-lg p-3 resize-none flex-1 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-200 outline-none transition-all">${item.memo}</textarea>
+                            </div>
+                        </div>
+                    `;
+                        })
+                        .join("");
+
+                    blocksHtml += `
+                    <div onclick="App.openAddModal()" class="drop-zone border-2 border-dashed border-gray-300 rounded-lg min-h-[140px] flex items-center justify-center text-gray-400 bg-gray-50 hover:border-indigo-500 hover:text-indigo-600 transition-colors cursor-pointer" data-day-index="${selectedDay}">
+                        <div class="text-center pointer-events-none">
+                            <div class="mx-auto mb-2 inline-block">${Icons.Plus}</div>
+                            <p class="text-sm">장소를 드래그하거나 <span class="font-bold underline">클릭하여 일정 추가</span></p>
+                        </div>
+                    </div>
+                `;
+
+                    return `
+                    <div class="flex-1 flex flex-col h-full overflow-hidden bg-gray-50">
+                        <div class="p-6 border-b border-gray-200 bg-white">
+                            <h2 class="text-2xl font-semibold text-gray-800 mb-1">${tripName}</h2>
+                            <p class="text-gray-500">${dateStr}</p>
+                        </div>
+                        <div class="flex-1 overflow-y-auto p-6 scroll-smooth">
+                            <div class="max-w-3xl mx-auto pb-20">
+                                ${blocksHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                },
+            };
+
+            const PlaceMapCenterPanel = {
+                render() {
+                    const place = Store.state.selectedPlace;
+                    if (!place) return "";
+
+                    const nearbyPlaces = getNearbyPlaces(place);
+
+                    const markerPositions = [
+                        { left: "30%", top: "30%" },
+                        { left: "70%", top: "35%" },
+                        { left: "65%", top: "65%" },
+                        { left: "35%", top: "70%" },
+                        { left: "25%", top: "60%" },
+                    ];
+
+                    return `
+                    <div class="flex-1 flex flex-col h-full bg-white animate-fade-in">
+                        <div class="p-6 border-b border-gray-200">
+                            <div class="flex items-start gap-4">
+                                <img src="${place.image}" alt="${place.name}" class="w-20 h-20 object-cover rounded-lg" />
+                                <div class="flex-1">
+                                    <h2 class="text-xl text-gray-800 font-bold mb-1">${place.name}</h2>
+                                    <p class="text-sm text-gray-500 mb-2">${place.country}</p>
+                                    <div class="flex items-center gap-2">
+                                        <div class="text-indigo-600 w-4 h-4">${Icons.MapPin}</div>
+                                        <span class="text-sm text-gray-600">지도에서 위치 및 주변 장소 확인</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex-1 overflow-y-auto">
+                            <div class="relative bg-gray-100 h-96 flex items-center justify-center border-b border-gray-200 overflow-hidden">
+                                <div class="absolute inset-0 bg-gradient-to-br from-blue-50 to-green-50"></div>
+                                
+                                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                                    <div class="relative">
+                                        <div class="w-4 h-4 bg-indigo-600 rounded-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 marker-pulse"></div>
+                                        <div class="w-12 h-12 bg-indigo-600 rounded-full flex items-center justify-center shadow-lg z-10 relative text-white">
+                                            ${Icons.MapPin}
+                                        </div>
+                                        <div class="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap bg-white px-2 py-1 rounded shadow text-xs font-bold text-indigo-600">
+                                            ${place.name}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                ${nearbyPlaces
+                                    .map((nearby, index) => {
+                                        const pos = markerPositions[index] || {
+                                            left: "50%",
+                                            top: "50%",
+                                        };
+                                        return `
+                                        <div class="absolute" style="left: ${pos.left}; top: ${pos.top};">
+                                            <div class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center shadow-md hover:scale-110 transition-transform cursor-pointer text-white" title="${nearby.name}">
+                                                ${Icons.Navigation}
+                                            </div>
+                                        </div>
+                                    `;
+                                    })
+                                    .join("")}
+
+                                <div class="absolute bottom-4 right-4 bg-white/90 backdrop-blur px-4 py-2 rounded-lg shadow text-xs text-gray-600">
+                                    🗺️ 실제 서비스에서는 Google Maps 연동
+                                </div>
+                            </div>
+
+                            <div class="p-6 pb-20">
+                                <div class="flex items-center gap-2 mb-4">
+                                    <div class="text-orange-500 w-5 h-5">${Icons.Star}</div>
+                                    <h3 class="text-lg text-gray-800 font-medium">주변 인기 장소</h3>
+                                </div>
+                                
+                                <div class="space-y-3 max-w-3xl mx-auto">
+                                    ${nearbyPlaces
+                                        .map((nearby) => {
+                                            const placeObj = {
+                                                id: nearby.id,
+                                                name: nearby.name,
+                                                country: place.country,
+                                                category: nearby.category,
+                                                image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=200&q=80",
+                                                description: `${nearby.category} - ${nearby.distance} 거리`,
+                                            };
+                                            const placeJson =
+                                                encodeURIComponent(
+                                                    JSON.stringify(placeObj),
+                                                );
+
+                                            return `
+                                            <div class="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border border-gray-100">
+                                                <div class="flex items-center justify-between mb-2">
+                                                    <div class="flex items-center gap-3">
+                                                        <div class="w-10 h-10 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center">
+                                                            ${Icons.Navigation}
+                                                        </div>
+                                                        <div>
+                                                            <h4 class="text-sm font-bold text-gray-800">${nearby.name}</h4>
+                                                            <p class="text-xs text-gray-500">${nearby.category}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="text-right">
+                                                        <div class="flex items-center justify-end gap-1 mb-1">
+                                                            <div class="w-4 h-4 text-orange-400 fill-current">${Icons.Star}</div>
+                                                            <span class="text-sm font-medium text-gray-800">${nearby.rating}</span>
+                                                        </div>
+                                                        <span class="text-xs text-gray-500">${nearby.distance}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="flex items-center justify-between gap-3 mt-3 pt-2 border-t border-gray-200">
+                                                    <div class="flex items-center gap-2 text-xs text-indigo-600 cursor-pointer hover:underline">
+                                                        <div class="w-3 h-3">${Icons.MapPin}</div>
+                                                        <span>길찾기</span>
+                                                    </div>
+                                                    <button onclick="App.addNearbyToSchedule('${placeJson}')" class="px-3 py-1.5 text-xs bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors shadow-sm">
+                                                        + 일정에 추가
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        `;
+                                        })
+                                        .join("")}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                },
+            };
+
+            const PlaceSearch = {
+                render() {
+                    return `
+                    <div class="flex flex-col h-full">
+                        <div class="p-6 border-b border-gray-200">
+                            <h2 class="text-xl font-semibold text-gray-800 mb-4">장소 검색</h2>
+                            <div class="relative">
+                                <div class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">${Icons.Search}</div>
+                                <input type="text" placeholder="장소 검색..." oninput="App.handleSearch(this.value)" 
+                                    class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                            </div>
+                        </div>
+                        <div class="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar">
+                            ${INITIAL_PLACES.map((place) => {
+                                const placeJson = encodeURIComponent(
+                                    JSON.stringify(place),
+                                );
+                                return `
+                                    <div draggable="true" data-place="${placeJson}" class="draggable-source place-item bg-white border border-gray-200 rounded-lg p-3 cursor-move hover:shadow-lg transition-all group" data-text="${place.name} ${place.country}">
+                                        <div class="flex gap-3 relative">
+                                            <div class="flex items-center text-gray-400 cursor-grab">${Icons.GripVertical}</div>
+                                            <img src="${place.image}" class="w-16 h-16 object-cover rounded-lg bg-gray-200" />
+                                            <div class="flex-1 min-w-0">
+                                                <h3 class="text-sm font-bold text-gray-800 truncate">${place.name}</h3>
+                                                <p class="text-xs text-gray-500 truncate">${place.country}</p>
+                                                <p class="text-xs text-gray-400 mt-1 line-clamp-1">${place.description}</p>
+                                            </div>
+                                            <button onclick="App.showDetail('${placeJson}')" class="absolute top-0 right-0 p-1 text-gray-400 hover:text-indigo-600 rounded-full hover:bg-gray-100 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                ${Icons.Info}
+                                            </button>
+                                        </div>
+                                    </div>
+                                `;
+                            }).join("")}
+                        </div>
+                    </div>
+                `;
+                },
+            };
+
+            const PlaceDetails = {
+                render() {
+                    const place = Store.state.selectedPlace;
+                    if (!place) return "";
+
+                    const details = {
+                        ...BASE_PLACE_DETAILS,
+                        name: place.name,
+                        image: place.image,
+                        address: `123 Travel Street, ${place.country}`,
+                    };
+
+                    return `
+                    <div class="flex flex-col h-full bg-white animate-fade-in border-l border-gray-200">
+                        <div class="relative h-48 w-full flex-shrink-0">
+                            <img src="${details.image}" class="w-full h-full object-cover" />
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                            
+                            <button onclick="App.closeDetail()" class="absolute top-4 left-4 p-2 bg-white/20 backdrop-blur-sm rounded-full text-white hover:bg-white/30 transition flex items-center gap-1 pr-3">
+                                ${Icons.ArrowLeft} <span class="text-xs font-bold">목록</span>
+                            </button>
+                            
+                            <div class="absolute bottom-4 left-4 text-white">
+                                <h2 class="text-2xl font-bold leading-tight">${details.name}</h2>
+                                <p class="text-sm opacity-90">${place.country}</p>
+                            </div>
+                        </div>
+
+                        <div class="flex-1 overflow-y-auto p-6 custom-scrollbar">
+                            <div class="space-y-4 mb-8">
+                                <div class="flex items-center gap-3 text-sm text-gray-600">
+                                    <div class="text-indigo-600">${Icons.MapPin}</div>
+                                    <span>${details.address}</span>
+                                </div>
+                                <div class="flex items-center gap-3 text-sm text-gray-600">
+                                    <div class="text-indigo-600">${Icons.Phone}</div>
+                                    <span>${details.phone}</span>
+                                </div>
+                                <div class="flex items-center gap-3 text-sm text-gray-600">
+                                    <div class="text-indigo-600">${Icons.Clock}</div>
+                                    <span>${details.hours}</span>
+                                </div>
+                                <div class="flex items-center gap-2 text-sm">
+                                    <div class="flex text-orange-400 gap-0.5">
+                                        ${Icons.Star}
+                                    </div>
+                                    <span class="font-bold text-gray-800">${details.rating}</span>
+                                    <span class="text-gray-400">(${details.reviewCount} reviews)</span>
+                                </div>
+                            </div>
+                            
+                            <div class="flex flex-wrap gap-2 mb-8">
+                                ${details.tags.map((tag) => `<span class="px-3 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">#${tag}</span>`).join("")}
+                            </div>
+
+                            <div class="mb-8">
+                                <h3 class="font-bold text-gray-800 mb-3 text-sm uppercase">편의 시설</h3>
+                                <ul class="grid grid-cols-2 gap-2">
+                                    ${details.facilities.map((f) => `<li class="flex items-center gap-2 text-sm text-gray-600"><span class="w-1.5 h-1.5 bg-indigo-500 rounded-full"></span>${f}</li>`).join("")}
+                                </ul>
+                            </div>
+
+                            <div>
+                                <h3 class="font-bold text-gray-800 mb-4 text-sm uppercase">방문자 리뷰</h3>
+                                <div class="space-y-4">
+                                    ${details.reviews
+                                        .map(
+                                            (review) => `
+                                        <div class="bg-gray-50 p-4 rounded-lg">
+                                            <div class="flex justify-between items-start mb-2">
+                                                <div class="font-medium text-sm text-gray-900">${review.author}</div>
+                                                <div class="text-xs text-gray-400">${review.date}</div>
+                                            </div>
+                                            <div class="flex text-orange-400 gap-0.5 mb-2 scale-75 origin-left">
+                                                ${Array(review.rating).fill(Icons.Star).join("")}
+                                            </div>
+                                            <p class="text-sm text-gray-600 leading-relaxed">${review.content}</p>
+                                        </div>
+                                    `,
+                                        )
+                                        .join("")}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                },
+            };
+
+            const CenterPanel = {
+                render() {
+                    return Store.state.selectedPlace
+                        ? PlaceMapCenterPanel.render()
+                        : TimelineSchedule.render();
+                },
+            };
+
+            const RightPanel = {
+                render() {
+                    return `
+                    <div class="w-96 border-l border-gray-200 bg-white flex flex-col h-full z-20 transition-all">
+                        ${Store.state.selectedPlace ? PlaceDetails.render() : PlaceSearch.render()}
+                    </div>
+                `;
+                },
+            };
+
+            // ==========================================
+            // 4. APP CONTROLLER (수정됨: 편집 로직 포함)
+            // ==========================================
+            const App = {
+                init() {
+                    Store.init(); // 기본적인 상태 로드
+                    this.checkIncomingFlightData(); // ★ 항공권 데이터 수신 확인
+                    this.render();
+                },
+
+                // ★ [추가] 항공권 페이지로 이동 전 상태 전달
+                goToFlightSearch() {
+                    const {
+                        startDate,
+                        endDate,
+                        departure,
+                        destination,
+                        savedFlights,
+                    } = Store.state;
+
+                    localStorage.setItem(
+                        "tripPlanner_draft",
+                        JSON.stringify(Store.state),
+                    );
+
+                    const flightRequest = {
+                        mode: !startDate || !endDate ? "NEW" : "EDIT",
+                        origin: departure || "",
+                        destination: destination || "",
+                        startDate: startDate || "",
+                        endDate: endDate || "",
+                        // ★ [추가] 기존에 선택된 항공권이 있다면 같이 보냄
+                        selectedFlights: savedFlights || null,
+                    };
+
+                    sessionStorage.setItem(
+                        "planner_request",
+                        JSON.stringify(flightRequest),
+                    );
+                    location.href = "flight.html";
+                },
+
+                // ★ [추가] 항공권 페이지에서 돌아왔을 때 데이터 처리
+                checkIncomingFlightData() {
+                    const flightInfoStr = localStorage.getItem(
+                        "tripPlanner_flightInfo",
+                    );
+
+                    if (flightInfoStr) {
+                        const flightInfo = JSON.parse(flightInfoStr);
+
+                        // 기존 Draft 복구
+                        const draftStr =
+                            localStorage.getItem("tripPlanner_draft");
+                        if (draftStr) {
+                            const draft = JSON.parse(draftStr);
+                            Store.state = { ...Store.state, ...draft };
+                        }
+
+                        if (!Store.state.currentPlanId) {
+                            Store.state.currentPlanId = Date.now().toString();
+                        }
+
+                        const isLocationChanged =
+                            Store.state.departure !== flightInfo.departure ||
+                            Store.state.destination !== flightInfo.destination;
+                        const isDateChanged =
+                            Store.state.startDate !== flightInfo.startDate ||
+                            Store.state.endDate !== flightInfo.endDate;
+
+                        const nextState = {
+                            startDate: flightInfo.startDate,
+                            endDate: flightInfo.endDate,
+                            departure: flightInfo.departure,
+                            destination: flightInfo.destination,
+                            // ★ [추가] 항공권 상세 정보를 State에 저장해둡니다.
+                            savedFlights: {
+                                outbound: flightInfo.outbound,
+                                inbound: flightInfo.inbound,
+                            },
+                        };
+
+                        // 장소나 날짜가 바뀌면 일정 초기화
+                        if (isLocationChanged || isDateChanged) {
+                            nextState.schedule = [];
+                        }
+
+                        Store.setState(nextState, false);
+
+                        localStorage.removeItem("tripPlanner_flightInfo");
+                        localStorage.setItem(
+                            "tripPlanner_draft",
+                            JSON.stringify(Store.state),
+                        );
+                    } else {
+                        // 취소 시
+                        const draftStr =
+                            localStorage.getItem("tripPlanner_draft");
+                        if (draftStr) {
+                            Store.setState(JSON.parse(draftStr), false);
+                        }
+                    }
+                },
+
+                render() {
+                    const app = document.getElementById("app");
+                    app.innerHTML = `
+                    ${MainNavbar.render()}
+                    ${Header.render()}
+                    <div class="flex-1 flex overflow-hidden">
+                        ${TripSetting.render()}
+                        ${CenterPanel.render()}
+                        ${RightPanel.render()}
+                    </div>
+                    ${AddScheduleModal.render()}
+                `;
+                    this.attachEvents();
+                },
+
+                attachEvents() {
+                    this.handleSearch = (query) => {
+                        const term = query.toLowerCase();
+                        document
+                            .querySelectorAll(".place-item")
+                            .forEach((item) => {
+                                const text = item.dataset.text.toLowerCase();
+                                item.style.display = text.includes(term)
+                                    ? "block"
+                                    : "none";
+                            });
+                    };
+
+                    const draggables =
+                        document.querySelectorAll(".draggable-source");
+                    draggables.forEach((el) => {
+                        el.addEventListener("dragstart", (e) => {
+                            e.dataTransfer.setData(
+                                "text/plain",
+                                el.dataset.place,
+                            );
+                            e.dataTransfer.effectAllowed = "copy";
+                            el.classList.add("dragging");
+                        });
+                        el.addEventListener("dragend", () =>
+                            el.classList.remove("dragging"),
+                        );
+                    });
+
+                    const dropZone = document.querySelector(".drop-zone");
+                    if (dropZone) {
+                        dropZone.addEventListener("dragover", (e) => {
+                            e.preventDefault();
+                            dropZone.classList.add("drag-over");
+                        });
+                        dropZone.addEventListener("dragleave", () =>
+                            dropZone.classList.remove("drag-over"),
+                        );
+                        dropZone.addEventListener("drop", (e) => {
+                            e.preventDefault();
+                            dropZone.classList.remove("drag-over");
+                            const rawData =
+                                e.dataTransfer.getData("text/plain");
+                            if (!rawData) return;
+                            try {
+                                const place = JSON.parse(
+                                    decodeURIComponent(rawData),
+                                );
+                                this.addItemToSchedule(place);
+                            } catch (err) {
+                                console.error(err);
+                            }
+                        });
+                    }
+                },
+
+                // '새 일정 추가' 버튼 클릭 시 (초기화 후 오픈)
+                openAddModal() {
+                    Store.setState({ showAddModal: true, editingItem: null });
+                },
+
+                closeAddModal() {
+                    Store.setState({ showAddModal: false, editingItem: null });
+                },
+
+                // ★ [신규] 수정 모드로 모달 열기
+                editManualItem(itemId) {
+                    const { schedule, selectedDay } = Store.state;
+                    const currentDayItems = schedule[selectedDay].items;
+                    const itemToEdit = currentDayItems.find(
+                        (item) => item.id === itemId,
+                    );
+
+                    if (itemToEdit) {
+                        Store.setState({
+                            showAddModal: true,
+                            editingItem: itemToEdit,
+                        });
+                    }
+                },
+
+                // ★ [수정] 팝업에서 저장 (신규 추가 OR 수정)
+                addManualSchedule() {
+                    const titleInput = document.getElementById("modal-title");
+                    const memoInput = document.getElementById("modal-memo");
+                    const startTimeInput =
+                        document.getElementById("modal-start-time");
+                    const endTimeInput =
+                        document.getElementById("modal-end-time");
+                    const locationInput =
+                        document.getElementById("modal-location");
+
+                    const title = titleInput ? titleInput.value.trim() : "";
+                    const startTime = startTimeInput
+                        ? startTimeInput.value
+                        : "";
+                    const endTime = endTimeInput ? endTimeInput.value : "";
+                    const memo = memoInput ? memoInput.value.trim() : "";
+                    const location = locationInput
+                        ? locationInput.value.trim()
+                        : "";
+
+                    if (!title || !startTime || !endTime) {
+                        alert("일정 제목과 시간은 필수 입력 항목입니다.");
+                        return;
+                    }
+
+                    const { editingItem } = Store.state;
+
+                    // ★ CASE 1: 수정 (Editing)
+                    if (editingItem) {
+                        const { schedule, selectedDay } = Store.state;
+                        const newSchedule = [...schedule];
+                        const items = newSchedule[selectedDay].items;
+                        const targetIndex = items.findIndex(
+                            (i) => i.id === editingItem.id,
+                        );
+
+                        if (targetIndex !== -1) {
+                            // 기존 데이터 업데이트
+                            items[targetIndex] = {
+                                ...items[targetIndex],
+                                startTime: startTime,
+                                endTime: endTime,
+                                memo: memo,
+                                place: {
+                                    ...items[targetIndex].place,
+                                    name: title,
+                                    country: location,
+                                },
+                            };
+                            Store.setState({ schedule: newSchedule });
+                        }
+                    }
+                    // ★ CASE 2: 신규 추가 (New)
+                    else {
+                        const newPlace = {
+                            id: "custom-" + Date.now(),
+                            name: title,
+                            country: location || "",
+                            image: "https://placehold.co/400x300?text=No+Image",
+                            category: "custom",
+                            description: memo,
+                        };
+
+                        this.addItemToSchedule(newPlace, {
+                            startTime: startTime,
+                            endTime: endTime,
+                            memo: memo,
+                        });
+                    }
+
+                    this.closeAddModal();
+                },
+
+                addItemToSchedule(place, options = {}) {
+                    const { selectedDay, schedule } = Store.state;
+                    if (schedule.length <= selectedDay) {
+                        Store.updateScheduleDates();
+                        if (Store.state.schedule.length === 0) {
+                            Store.state.schedule = [
+                                {
+                                    date: new Date()
+                                        .toISOString()
+                                        .split("T")[0],
+                                    items: [],
+                                },
+                            ];
+                        }
+                    }
+
+                    const newItem = {
+                        id: Date.now().toString(),
+                        place: place,
+                        startTime: options.startTime || "10:00",
+                        endTime: options.endTime || "12:00",
+                        memo: options.memo || "",
+                    };
+
+                    const newSchedule = [...Store.state.schedule];
+                    newSchedule[Store.state.selectedDay].items.push(newItem);
+                    Store.setState({ schedule: newSchedule });
+                },
+
+                addNearbyToSchedule(placeJson) {
+                    const place = JSON.parse(decodeURIComponent(placeJson));
+                    if (
+                        confirm(
+                            `'${place.name}'을(를) 일정에 추가하시겠습니까?`,
+                        )
+                    ) {
+                        this.addItemToSchedule(place);
+                        alert(
+                            "추가되었습니다. 뒤로가기를 눌러 일정을 확인하세요.",
+                        );
+                    }
+                },
+
+                showDetail(placeJsonOrObj) {
+                    let place;
+                    if (typeof placeJsonOrObj === "string") {
+                        place = JSON.parse(decodeURIComponent(placeJsonOrObj));
+                    } else {
+                        place = placeJsonOrObj;
+                    }
+                    Store.setState({ selectedPlace: place });
+                },
+
+                closeDetail() {
+                    Store.setState({ selectedPlace: null });
+                },
+
+                removeItem(itemId) {
+                    if (!confirm("삭제하시겠습니까?")) return;
+                    const { schedule, selectedDay } = Store.state;
+                    const newSchedule = [...schedule];
+                    newSchedule[selectedDay].items = newSchedule[
+                        selectedDay
+                    ].items.filter((i) => i.id !== itemId);
+                    Store.setState({ schedule: newSchedule });
+                },
+
+                updateItem(itemId, field, value) {
+                    const { schedule, selectedDay } = Store.state;
+                    const newSchedule = [...schedule];
+                    const item = newSchedule[selectedDay].items.find(
+                        (i) => i.id === itemId,
+                    );
+
+                    if (item) {
+                        item[field] = value;
+                        Store.setState({ schedule: newSchedule });
+                    }
+                },
+
+                savePlan() {
+                    const {
+                        tripName,
+                        schedule,
+                        savedPlans,
+                        currentPlanId,
+                        startDate,
+                        endDate,
+                        departure,
+                        destination,
+                    } = Store.state;
+
+                    if (!tripName || schedule.length === 0) {
+                        alert("여행 제목과 일정을 입력해주세요.");
+                        return;
+                    }
+
+                    let newPlans = [...savedPlans];
+                    let saveId = currentPlanId;
+
+                    // currentPlanId가 있으면 (Requirement 2에 의해 생성되었거나, 이미 로드된 계획)
+                    if (saveId) {
+                        const idx = newPlans.findIndex((p) => p.id === saveId);
+                        if (idx !== -1) {
+                            // 기존 계획 업데이트 (덮어쓰기)
+                            newPlans[idx] = {
+                                ...newPlans[idx],
+                                name: tripName,
+                                schedule,
+                                startDate,
+                                endDate,
+                                departure,
+                                destination,
+                                updatedAt: new Date().toISOString(),
+                            };
+                        } else {
+                            // ID는 있는데 리스트에 없다면 (예: 신규 생성 후 첫 저장)
+                            newPlans.push({
+                                id: saveId,
+                                name: tripName,
+                                startDate,
+                                endDate,
+                                departure,
+                                destination,
+                                schedule,
+                                createdAt: new Date().toISOString(),
+                            });
+                        }
+                    } else {
+                        // 방어 코드: ID가 없는 경우 (이론상 이 로직엔 안 걸려야 함)
+                        saveId = Date.now().toString();
+                        Store.setState({ currentPlanId: saveId });
+                        newPlans.push({
+                            id: saveId,
+                            name: tripName,
+                            startDate,
+                            endDate,
+                            departure,
+                            destination,
+                            schedule,
+                            createdAt: new Date().toISOString(),
+                        });
+                    }
+
+                    localStorage.setItem("tripPlans", JSON.stringify(newPlans));
+                    Store.setState({ savedPlans: newPlans }); // currentPlanId는 유지
+                    alert("저장되었습니다!");
+                },
+
+                loadPlan(planId) {
+                    const plan = Store.state.savedPlans.find(
+                        (p) => p.id === planId,
+                    );
+                    if (plan) {
+                        Store.setState({
+                            currentPlanId: plan.id,
+                            tripName: plan.name,
+                            startDate: plan.startDate,
+                            endDate: plan.endDate,
+                            departure: plan.departure || "",
+                            destination: plan.destination || "",
+                            schedule: plan.schedule || [],
+                            selectedDay: 0,
+                            showPlanList: false,
+                        });
+                    }
+                },
+
+                deletePlan(planId) {
+                    if (confirm("정말 이 계획을 삭제하시겠습니까?")) {
+                        const newPlans = Store.state.savedPlans.filter(
+                            (p) => p.id !== planId,
+                        );
+                        localStorage.setItem(
+                            "tripPlans",
+                            JSON.stringify(newPlans),
+                        );
+
+                        let nextState = { savedPlans: newPlans };
+                        if (Store.state.currentPlanId === planId) {
+                            localStorage.removeItem("tripPlanner_draft");
+                            nextState = {
+                                ...nextState,
+                                currentPlanId: null,
+                                tripName: "새로운 여행 계획",
+                                startDate: "",
+                                endDate: "",
+                                departure: "",
+                                destination: "",
+                                schedule: [],
+                                selectedDay: 0,
+                                selectedPlace: null,
+                            };
+                        }
+                        Store.setState(nextState);
+                    }
+                },
+
+                newPlan() {
+                    const isLoggedIn = localStorage.getItem('isLoggedIn');
+                    if (isLoggedIn !== 'true') {
+                        alert('새로운 여행 계획을 생성하려면 로그인해야 합니다.');
+                        window.location.href = '../auth/SignIn.html';
+                        return;
+                    }
+
+                    if (confirm("현재 작업을 초기화하시겠습니까?")) {
+                        localStorage.removeItem("tripPlanner_draft");
+                        Store.setState({
+                            currentPlanId: null,
+                            tripName: "새로운 여행 계획",
+                            startDate: "",
+                            endDate: "",
+                            departure: "",
+                            destination: "",
+                            schedule: [],
+                            selectedDay: 0,
+                            showPlanList: false,
+                            selectedPlace: null,
+                        });
+                    }
+                },
+            };
+
+            App.init();
+        </script>
+        <script src="../../js/auth.js"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", checkLoginStatus);
+        </script>
+    </body>
+</html>
