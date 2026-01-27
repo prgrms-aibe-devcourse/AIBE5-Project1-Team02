@@ -230,7 +230,8 @@
 
             function init() {
                 const urlParams = new URLSearchParams(window.location.search);
-                const planId = urlParams.get("planId");
+                const planId = urlParams.get("id");
+                console.log("Received planId in schedule.html:", planId);
                 const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
                 if (!loggedInUser || !loggedInUser.email) {
                     document.body.innerHTML = `<div class="flex items-center justify-center h-full text-slate-500">로그인이 필요합니다.</div>`;

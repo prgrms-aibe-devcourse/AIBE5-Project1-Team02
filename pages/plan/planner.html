@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Trip Planner v2 (Korean Patch)</title>
+        <title>Trip Planner v2 (Merged Version)</title>
 
         <link href="https://fonts.googleapis.com" rel="preconnect" />
         <link
@@ -20,9 +20,8 @@
             rel="stylesheet"
         />
         <link rel="stylesheet" href="../../styles.css" />
-        
+
         <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-        
 
         <script id="tailwind-config">
             tailwind.config = {
@@ -30,10 +29,10 @@
                 theme: {
                     extend: {
                         colors: {
-                            primary: "#00897b", // 사이트 테마색(Indigo)
-                            "primary-dark": "#00897b", // 호버 색상
+                            primary: "#00897b", // 코드 1의 테마색 (Teal) 유지
+                            "primary-dark": "#00897b",
                             "background-light": "#f3f4f6",
-                            "background-dark": "#1f262e"
+                            "background-dark": "#1f262e",
                         },
                         fontFamily: {
                             display: ["Plus Jakarta Sans", "sans-serif"],
@@ -76,7 +75,6 @@
                     transform: translateY(0);
                 }
             }
-            /* 드래그 상태 스타일 */
             .dragging {
                 opacity: 0.5;
                 border: 2px dashed #4f46e5;
@@ -85,8 +83,6 @@
                 background-color: #e0e7ff;
                 border: 2px dashed #4338ca;
             }
-
-            /* 지도 마커 애니메이션 */
             .marker-pulse {
                 animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1)
                     infinite;
@@ -104,15 +100,22 @@
             }
         </style>
     </head>
-    <body class=" h-screen overflow-hidden text-gray-800"
-          style='background-color: #f3f4f6; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; line-height: 1.6; color: #111827;'
+    <body
+        class="h-screen overflow-hidden text-gray-800"
+        style="
+            background-color: #f3f4f6;
+            font-family:
+                -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto,
+                sans-serif;
+            line-height: 1.6;
+            color: #111827;
+        "
     >
-        
         <div id="app" class="h-full flex flex-col relative"></div>
 
         <script>
             // ==========================================
-            // 1. ICONS & ASSETS (기존 유지)
+            // 1. ICONS & ASSETS
             // ==========================================
             const Icons = {
                 MapPin: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>`,
@@ -296,11 +299,11 @@
             };
 
             // ==========================================
-            // 2. STATE MANAGEMENT (수정됨: 자동 저장 추가)
+            // 2. STATE MANAGEMENT
             // ==========================================
             const Store = {
                 state: {
-                    tripName: "나의 멋진 여행", // 기본 제목 변경
+                    tripName: "나의 멋진 여행",
                     startDate: "",
                     endDate: "",
                     departure: "",
@@ -313,10 +316,16 @@
                     isCollapsed: false,
                     selectedPlace: null,
                     showAddModal: false,
+
+                    // ★ 코드 2에서 가져온 부분 (미리보기 상태)
+                    showPreviewModal: false,
+                    previewUrl: "",
                 },
 
                 init() {
-                    const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+                    const loggedInUser = JSON.parse(
+                        localStorage.getItem("loggedInUser"),
+                    );
                     if (loggedInUser && loggedInUser.email) {
                         const userPlansKey = `tripPlans_${loggedInUser.email}`;
                         const plans = localStorage.getItem(userPlansKey);
@@ -326,50 +335,37 @@
                             this.state.savedPlans = [];
                         }
                     } else {
-                        this.state.savedPlans = []; // 로그인하지 않은 경우 저장된 계획 없음
+                        this.state.savedPlans = [];
                     }
 
-                    // 2. ★ [수정됨] Flight.html에서 넘어온 데이터가 있는지 확인
                     const flightInfo = localStorage.getItem(
                         "tripPlanner_flightInfo",
                     );
-
                     if (flightInfo) {
                         const fData = JSON.parse(flightInfo);
-
-                        // 항공권 정보로 상태 덮어쓰기
                         this.state.startDate = fData.startDate;
                         this.state.endDate = fData.endDate;
                         this.state.departure = fData.departure;
                         this.state.destination = fData.destination;
-
-                        // (선택사항) 항공편 정보를 첫날과 마지막날 일정에 자동으로 추가하고 싶다면 여기서 처리 가능
-                        // 일단은 날짜와 장소만 동기화합니다.
-                    }
-                    // 3. 작업 중이던 임시 데이터(Draft) 확인 (항공권 정보가 없을 때만)
-                    else {
-                        const draftKey = loggedInUser && loggedInUser.email ? `tripPlanner_draft_${loggedInUser.email}` : 'tripPlanner_draft_guest';
+                    } else {
+                        const draftKey =
+                            loggedInUser && loggedInUser.email
+                                ? `tripPlanner_draft_${loggedInUser.email}`
+                                : "tripPlanner_draft_guest";
                         const draft = localStorage.getItem(draftKey);
                         if (draft) {
                             const parsedDraft = JSON.parse(draft);
                             this.state = { ...this.state, ...parsedDraft };
                         }
                     }
-
-                    // 날짜에 맞춰 스케줄 배열 초기화
                     this.updateScheduleDates();
                 },
 
                 setState(newState) {
                     this.state = { ...this.state, ...newState };
-
-                    // 날짜 변경 시 스케줄 배열 재조정
                     if (newState.startDate || newState.endDate) {
                         this.updateScheduleDates();
                     }
-
-                    // ★ [추가] 상태가 변할 때마다 '현재 작업 내용'을 로컬스토리지에 자동 저장
-                    // (목록이나 UI 관련 상태는 제외하고, 실제 데이터만 저장)
                     const draftData = {
                         tripName: this.state.tripName,
                         startDate: this.state.startDate,
@@ -380,13 +376,14 @@
                         selectedDay: this.state.selectedDay,
                         currentPlanId: this.state.currentPlanId,
                     };
-                    const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
-                    const draftKey = loggedInUser && loggedInUser.email ? `tripPlanner_draft_${loggedInUser.email}` : 'tripPlanner_draft_guest';
-                    localStorage.setItem(
-                        draftKey,
-                        JSON.stringify(draftData),
+                    const loggedInUser = JSON.parse(
+                        localStorage.getItem("loggedInUser"),
                     );
-
+                    const draftKey =
+                        loggedInUser && loggedInUser.email
+                            ? `tripPlanner_draft_${loggedInUser.email}`
+                            : "tripPlanner_draft_guest";
+                    localStorage.setItem(draftKey, JSON.stringify(draftData));
                     App.render();
                 },
 
@@ -395,7 +392,6 @@
                         const start = new Date(this.state.startDate);
                         const end = new Date(this.state.endDate);
                         const days = [];
-
                         for (
                             let d = new Date(start);
                             d <= end;
@@ -408,10 +404,8 @@
                             days.push(existing || { date: dateStr, items: [] });
                         }
                         this.state.schedule = days;
-                        // 날짜가 변경되었으므로 selectedDay가 범위를 벗어나지 않게 조정
-                        if (this.state.selectedDay >= days.length) {
+                        if (this.state.selectedDay >= days.length)
                             this.state.selectedDay = 0;
-                        }
                     }
                 },
 
@@ -420,85 +414,43 @@
                 },
             };
 
-            // ==========================================
-            // 9. ADD SCHEDULE MODAL (수정 모드 지원)
-            // ==========================================
-
             const MainNavbar = {
                 render() {
-                    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-                    const user = JSON.parse(localStorage.getItem('loggedInUser'));
-
+                    const isLoggedIn =
+                        localStorage.getItem("isLoggedIn") === "true";
+                    const user = JSON.parse(
+                        localStorage.getItem("loggedInUser"),
+                    );
                     let authContent;
                     if (isLoggedIn && user && user.name) {
-                        authContent = `
-                            <a href="../profile/profile.html" class="text-sm font-medium">${user.name}님</a>
-                            <button onclick="handleLogout()" class="text-sm font-medium text-primary-foreground px-4 py-2 rounded-md">로그아웃</button>
-                        `;
+                        authContent = `<a href="../profile/profile.html" class="text-sm font-medium">${user.name}님</a><button onclick="handleLogout()" class="text-sm font-medium text-primary-foreground px-4 py-2 rounded-md">로그아웃</button>`;
                     } else {
-                        authContent = `
-                            <a href="../auth/SignIn.html" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-                                로그인
-                            </a>
-                            <a
-                                href="../auth/SignUp.html"
-                                class="text-sm font-bold text-white bg-primary px-5 py-2.5 rounded-full shadow-md transition-all duration-200 hover:bg-indigo-700 hover:shadow-lg hover:-translate-y-0.5 active:scale-95"
-                            >
-                                회원가입
-                            </a>
-                        `;
+                        authContent = `<a href="../auth/SignIn.html" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">로그인</a><a href="../auth/SignUp.html" class="text-sm font-bold text-white bg-primary px-5 py-2.5 rounded-full shadow-md transition-all duration-200 hover:bg-indigo-700 hover:shadow-lg hover:-translate-y-0.5 active:scale-95">회원가입</a>`;
                     }
-
                     return `
-                            <header class="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-                                <div class="w-full px-8 relative flex h-20 items-center justify-between">
-                                    
-                                    <a class="flex items-center space-x-2 transition-transform duration-300 hover:scale-105" href="../main/Main.html">
-                                        <img
-                                            src="../../images/Logo.png"
-                                            alt="여백 로고"
-                                            class="h-9 w-9 rounded-full object-cover"
-                                        />
-                                        <span class="font-serif text-foreground font-bold ml-2 text-xl">여백</span>
-                                    </a>
-
-                                    <nav
-                                        class="flex items-center justify-center text-muted-foreground gap-8 text-lg font-medium"
-                                        style="position: absolute; left: 50%; transform: translateX(-50%);"
-                                    >
-                                        <a href="../plan/planner.html" class="group relative py-1 transition-colors hover:text-foreground">
-                                            플래너
-                                            <span class="absolute left-0 bottom-0 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full"></span>
-                                        </a>
-                                        <a href="" class="group relative py-1 transition-colors hover:text-foreground">
-                                            숙소
-                                            <span class="absolute left-0 bottom-0 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full"></span>
-                                        </a>
-                                        <a href="" class="group relative py-1 transition-colors hover:text-foreground">
-                                            여행기록
-                                            <span class="absolute left-0 bottom-0 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full"></span>
-                                        </a>
-                                    </nav>
-
-                                    <div id="auth-links" class="flex items-center gap-6">
-                                        ${authContent}
-                                    </div>
-                                </div>
-                            </header>
-                        `;
-                            },
-                            
-                        };
+                        <header class="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+                            <div class="w-full px-8 relative flex h-20 items-center justify-between">
+                                <a class="flex items-center space-x-2 transition-transform duration-300 hover:scale-105" href="../main/Main.html">
+                                    <img src="../../images/Logo.png" alt="여백 로고" class="h-9 w-9 rounded-full object-cover" />
+                                    <span class="font-serif text-foreground font-bold ml-2 text-xl">여백</span>
+                                </a>
+                                <nav class="flex items-center justify-center text-muted-foreground gap-8 text-lg font-medium" style="position: absolute; left: 50%; transform: translateX(-50%);">
+                                    <a href="../plan/planner.html" class="group relative py-1 transition-colors hover:text-foreground">플래너<span class="absolute left-0 bottom-0 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full"></span></a>
+                                    <a href="" class="group relative py-1 transition-colors hover:text-foreground">숙소<span class="absolute left-0 bottom-0 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full"></span></a>
+                                    <a href="" class="group relative py-1 transition-colors hover:text-foreground">여행기록<span class="absolute left-0 bottom-0 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full"></span></a>
+                                </nav>
+                                <div id="auth-links" class="flex items-center gap-6">${authContent}</div>
+                            </div>
+                        </header>
+                    `;
+                },
+            };
 
             const AddScheduleModal = {
                 render() {
                     if (!Store.state.showAddModal) return "";
-
-                    // 수정 모드인지 확인
                     const editItem = Store.state.editingItem || null;
                     const isEditMode = !!editItem;
-
-                    // 기본값 혹은 수정할 값 설정
                     const titleVal = isEditMode ? editItem.place.name : "";
                     const memoVal = isEditMode ? editItem.memo : "";
                     const startTimeVal = isEditMode
@@ -513,7 +465,6 @@
                     <div class="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6" role="dialog">
                         <div class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm transition-opacity" onclick="App.closeAddModal()"></div>
                         <div class="relative w-full max-w-2xl bg-white dark:bg-[#1a2027] rounded-2xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden transform transition-all animate-in fade-in zoom-in-95 duration-200" onclick="event.stopPropagation()">
-                            
                             <div class="relative h-48 bg-gray-50 dark:bg-gray-800/50 border-b border-gray-100 dark:border-gray-700 group cursor-pointer flex flex-col items-center justify-center transition-colors hover:bg-gray-100 dark:hover:bg-gray-800">
                                 <div class="absolute inset-0 opacity-5" style="background-image: radial-gradient(#6b7280 1px, transparent 1px); background-size: 16px 16px;"></div>
                                 <div class="text-center p-4 z-10">
@@ -521,65 +472,55 @@
                                         <span class="material-symbols-outlined text-3xl">add_photo_alternate</span>
                                     </div>
                                     <p class="text-sm font-bold text-gray-600 dark:text-gray-300 group-hover:text-primary transition-colors">커버 이미지 업로드</p>
-                                    <p class="text-xs text-gray-400 mt-1">이미지가 없으면 기본 이미지가 적용됩니다.</p>
                                 </div>
-                                <button onclick="App.closeAddModal()" class="absolute top-4 right-4 p-2 bg-white/80 dark:bg-black/50 hover:bg-white dark:hover:bg-black/70 backdrop-blur rounded-full text-gray-500 hover:text-red-500 transition-colors z-20 shadow-sm border border-gray-100 dark:border-gray-700">
-                                    <span class="material-symbols-outlined text-xl">close</span>
-                                </button>
+                                <button onclick="App.closeAddModal()" class="absolute top-4 right-4 p-2 bg-white/80 dark:bg-black/50 hover:bg-white dark:hover:bg-black/70 backdrop-blur rounded-full text-gray-500 hover:text-red-500 transition-colors z-20 shadow-sm border border-gray-100 dark:border-gray-700"><span class="material-symbols-outlined text-xl">close</span></button>
                             </div>
-
                             <div class="flex-1 overflow-y-auto p-6 space-y-5 custom-scrollbar">
-                                <div>
-                                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">일정 제목 <span class="text-red-500">*</span></label>
-                                    <input id="modal-title" value="${titleVal}" class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm font-bold text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" placeholder="예: 선셋 디너 크루즈" type="text"/>
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">설명 / 메모</label>
-                                    <textarea id="modal-memo" class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all resize-none" placeholder="이 활동에 대한 상세 내용을 입력하세요..." rows="3">${memoVal}</textarea>
-                                </div>
-                                
-                                <div>
-                                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">시간 <span class="text-red-500">*</span></label>
-                                    <div class="flex items-center gap-2">
-                                        <div class="relative flex-1">
-                                            <input id="modal-start-time" value="${startTimeVal}" class="w-full pl-3 pr-2 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm font-bold text-gray-900 dark:text-white focus:border-primary outline-none focus:ring-2 focus:ring-primary/20 transition-all" type="time"/>
-                                        </div>
-                                        <span class="text-gray-400 font-medium">-</span>
-                                        <div class="relative flex-1">
-                                            <input id="modal-end-time" value="${endTimeVal}" class="w-full pl-3 pr-2 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm font-bold text-gray-900 dark:text-white focus:border-primary outline-none focus:ring-2 focus:ring-primary/20 transition-all" type="time"/>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">위치 설정 (Country)</label>
-                                    <div class="relative h-40 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 bg-slate-100 dark:bg-gray-800 group shadow-inner">
-                                        <div class="absolute inset-0 bg-[#e5e7eb] dark:bg-[#374151]" style="background-image: radial-gradient(#94a3b8 1px, transparent 1px); background-size: 16px 16px; opacity: 0.4;"></div>
-                                        <div class="absolute top-3 left-3 right-3 z-20">
-                                            <div class="relative">
-                                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                                                    <span class="material-symbols-outlined text-lg">search</span>
-                                                </span>
-                                                <input id="modal-location" value="${locationVal}" 
-                                                class="w-full pl-9 pr-3 py-2 bg-white/90 dark:bg-gray-900/90 backdrop-blur border border-gray-200 dark:border-gray-700 rounded-lg text-xs font-bold text-gray-800 dark:text-white shadow-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" placeholder="장소 검색..." type="text"/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <div><label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">일정 제목 <span class="text-red-500">*</span></label><input id="modal-title" value="${titleVal}" class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm font-bold text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" type="text"/></div>
+                                <div><label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">설명 / 메모</label><textarea id="modal-memo" class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm font-medium text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all resize-none" rows="3">${memoVal}</textarea></div>
+                                <div><label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">시간 <span class="text-red-500">*</span></label><div class="flex items-center gap-2"><div class="relative flex-1"><input id="modal-start-time" value="${startTimeVal}" class="w-full pl-3 pr-2 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm font-bold text-gray-900 dark:text-white focus:border-primary outline-none focus:ring-2 focus:ring-primary/20 transition-all" type="time"/></div><span class="text-gray-400 font-medium">-</span><div class="relative flex-1"><input id="modal-end-time" value="${endTimeVal}" class="w-full pl-3 pr-2 py-2.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm font-bold text-gray-900 dark:text-white focus:border-primary outline-none focus:ring-2 focus:ring-primary/20 transition-all" type="time"/></div></div></div>
+                                <div><label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">위치 설정 (Country)</label><div class="relative h-40 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 bg-slate-100 dark:bg-gray-800 group shadow-inner"><div class="absolute inset-0 bg-[#e5e7eb] dark:bg-[#374151]" style="background-image: radial-gradient(#94a3b8 1px, transparent 1px); background-size: 16px 16px; opacity: 0.4;"></div><div class="absolute top-3 left-3 right-3 z-20"><div class="relative"><span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400"><span class="material-symbols-outlined text-lg">search</span></span><input id="modal-location" value="${locationVal}" class="w-full pl-9 pr-3 py-2 bg-white/90 dark:bg-gray-900/90 backdrop-blur border border-gray-200 dark:border-gray-700 rounded-lg text-xs font-bold text-gray-800 dark:text-white shadow-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" placeholder="장소 검색..." type="text"/></div></div></div></div>
                             </div>
-
                             <div class="p-6 border-t border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-900/20 flex items-center justify-end gap-3">
-                                <button onclick="App.closeAddModal()" class="px-5 py-2.5 rounded-xl text-sm font-bold text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-                                    취소
-                                </button>
-                                <button onclick="App.addManualSchedule()" class="px-5 py-2.5 rounded-xl text-sm font-bold text-white bg-primary hover:bg-primary-dark shadow-lg shadow-primary/25 hover:shadow-primary/40 active:scale-95 transition-all flex items-center gap-2">
-                                    <span class="material-symbols-outlined text-lg">${isEditMode ? "edit_square" : "add_circle"}</span>
-                                    ${isEditMode ? "수정 완료" : "일정에 추가"}
-                                </button>
+                                <button onclick="App.closeAddModal()" class="px-5 py-2.5 rounded-xl text-sm font-bold text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">취소</button>
+                                <button onclick="App.addManualSchedule()" class="px-5 py-2.5 rounded-xl text-sm font-bold text-white bg-primary hover:bg-primary-dark shadow-lg shadow-primary/25 hover:shadow-primary/40 active:scale-95 transition-all flex items-center gap-2"><span class="material-symbols-outlined text-lg">${isEditMode ? "edit_square" : "add_circle"}</span>${isEditMode ? "수정 완료" : "일정에 추가"}</button>
                             </div>
                         </div>
                     </div>
-                `;
+                    `;
+                },
+            };
+
+            // ★ [추가됨] 코드 2의 미리보기 모달 컴포넌트
+            const SchedulePreviewModal = {
+                render() {
+                    const { showPreviewModal, previewUrl } = Store.state;
+                    if (!showPreviewModal) return "";
+
+                    return `
+                    <div class="fixed inset-0 z-[200] flex items-center justify-center p-4 sm:p-6" role="dialog">
+                        <div class="fixed inset-0 bg-gray-900/70 backdrop-blur-sm transition-opacity" onclick="App.closePreviewModal()"></div>
+                        
+                        <div class="relative w-full max-w-7xl h-[90vh] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden transform transition-all animate-fade-in" onclick="event.stopPropagation()">
+                            
+                            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 bg-white z-10">
+                                <h3 class="font-bold text-gray-800 text-lg">여행 일정 미리보기</h3>
+                                <div class="flex gap-2">
+                                    <button onclick="window.open(Store.state.previewUrl)" class="p-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-full transition-colors" title="새 창으로 열기">
+                                        <span class="material-symbols-outlined text-xl">open_in_new</span>
+                                    </button>
+                                    <button onclick="App.closePreviewModal()" class="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors" title="닫기">
+                                        <span class="material-symbols-outlined text-xl">close</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="flex-1 bg-gray-100 relative w-full h-full">
+                                <iframe src="${previewUrl}" class="w-full h-full border-none" title="Schedule Preview"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                    `;
                 },
             };
 
@@ -595,24 +536,13 @@
                     <div class="bg-white border-b border-gray-200 px-6 py-4 shadow-sm z-30">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center gap-4">
-                                <input type="text" value="${tripName}" 
-                                    onchange="Store.setState({ tripName: this.value })"
-                                    class="text-2xl font-semibold text-gray-800 border-none outline-none focus:text-indigo-600 bg-transparent" placeholder="여행 이름 입력" />
+                                <input type="text" value="${tripName}" onchange="Store.setState({ tripName: this.value })" class="text-2xl font-semibold text-gray-800 border-none outline-none focus:text-indigo-600 bg-transparent" placeholder="여행 이름 입력" />
                                 ${currentPlanId ? `<span class="px-3 py-1 bg-green-100 text-green-700 text-sm rounded-full">저장됨</span>` : ""}
                             </div>
                             <div class="flex gap-3">
-                                <button onclick="Store.setState({ showPlanList: !Store.state.showPlanList })" class="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">
-                                    ${Icons.List} 내 계획 (${savedPlans.length})
-                                </button>
-                                <button onclick="App.newPlan()" class="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">
-                                    ${Icons.Plus} 새 계획
-                                </button>
-                                <button 
-                                    onclick="App.savePlan()" 
-                                    class="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg transition-transform duration-200 hover:scale-105 shadow-md active:scale-95"
-                                >
-                                    ${Icons.Save} 저장하기
-                                </button>
+                                <button onclick="Store.setState({ showPlanList: !Store.state.showPlanList })" class="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">${Icons.List} 내 계획 (${savedPlans.length})</button>
+                                <button onclick="App.newPlan()" class="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">${Icons.Plus} 새 계획</button>
+                                <button onclick="App.savePlan()" class="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg transition-transform duration-200 hover:scale-105 shadow-md active:scale-95">${Icons.Save} 저장하기</button>
                             </div>
                         </div>
                         ${showPlanList ? this.renderPlanList(savedPlans, currentPlanId) : ""}
@@ -623,35 +553,10 @@
                     return `
                     <div class="mt-4 pt-4 border-t border-gray-200">
                         <h3 class="text-lg font-medium text-gray-800 mb-3">저장된 여행 계획</h3>
-                        ${
-                            savedPlans.length === 0
-                                ? `<p class="text-gray-500 text-center py-8">저장된 계획이 없습니다</p>`
-                                : `<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 max-h-96 overflow-y-auto">
-                                ${savedPlans
-                                    .map(
-                                        (plan) => `
-                                    <div class="border ${currentPlanId === plan.id ? "border-indigo-600 bg-indigo-50" : "border-gray-200"} rounded-lg p-4 hover:border-indigo-500 transition-colors">
-                                        <div class="flex items-start justify-between mb-2">
-                                            <h4 class="font-medium text-gray-800 flex-1">${plan.name}</h4>
-                                            <div class="flex gap-1">
-                                                <button onclick="App.loadPlan('${plan.id}')" class="p-1 text-indigo-600 hover:bg-indigo-100 rounded" title="불러오기">${Icons.Edit}</button>
-                                                <button onclick="App.deletePlan('${plan.id}')" class="p-1 text-red-600 hover:bg-red-100 rounded" title="삭제">${Icons.Trash2}</button>
-                                            </div>
-                                        </div>
-                                        <div class="text-sm text-gray-600">
-                                            <p>${plan.startDate} ~ ${plan.endDate}</p>
-                                        </div>
-                                    </div>
-                                `,
-                                    )
-                                    .join("")}
-                              </div>`
-                        }
+                        ${savedPlans.length === 0 ? `<p class="text-gray-500 text-center py-8">저장된 계획이 없습니다</p>` : `<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 max-h-96 overflow-y-auto">${savedPlans.map((plan) => `<div class="border ${currentPlanId === plan.id ? "border-indigo-600 bg-indigo-50" : "border-gray-200"} rounded-lg p-4 hover:border-indigo-500 transition-colors"><div class="flex items-start justify-between mb-2"><h4 class="font-medium text-gray-800 flex-1">${plan.name}</h4><div class="flex gap-1"><button onclick="App.loadPlan('${plan.id}')" class="p-1 text-indigo-600 hover:bg-indigo-100 rounded" title="불러오기">${Icons.Edit}</button><button onclick="App.deletePlan('${plan.id}')" class="p-1 text-red-600 hover:bg-red-100 rounded" title="삭제">${Icons.Trash2}</button></div></div><div class="text-sm text-gray-600"><p>${plan.startDate} ~ ${plan.endDate}</p></div></div>`).join("")}</div>`}
                     </div>`;
                 },
             };
-
-            // planner.html의 TripSetting 객체 전체 교체
 
             const TripSetting = {
                 render() {
@@ -664,14 +569,10 @@
                         selectedDay,
                     } = Store.state;
                     const totalDays = Store.getDays();
-
                     const formatDate = (dateStr) => {
                         if (!dateStr) return "";
                         const d = new Date(dateStr);
-                        const year = d.getFullYear();
-                        const month = String(d.getMonth() + 1).padStart(2, "0");
-                        const day = String(d.getDate()).padStart(2, "0");
-                        return `${year}. ${month}. ${day}`;
+                        return `${d.getFullYear()}. ${String(d.getMonth() + 1).padStart(2, "0")}. ${String(d.getDate()).padStart(2, "0")}`;
                     };
                     const dateRangeStr =
                         startDate && endDate
@@ -679,12 +580,7 @@
                             : "날짜를 선택하세요";
 
                     if (isCollapsed) {
-                        return `
-                <div class="w-12 bg-white border-r border-gray-200 relative transition-all duration-300">
-                    <button onclick="Store.setState({ isCollapsed: false })" class="absolute -right-3 top-6 z-10 bg-white border border-gray-300 rounded-full p-1 shadow-md hover:bg-gray-50">
-                         <span class="material-symbols-outlined text-sm text-gray-600">chevron_right</span>
-                    </button>
-                </div>`;
+                        return `<div class="w-12 bg-white border-r border-gray-200 relative transition-all duration-300"><button onclick="Store.setState({ isCollapsed: false })" class="absolute -right-3 top-6 z-10 bg-white border border-gray-300 rounded-full p-1 shadow-md hover:bg-gray-50"><span class="material-symbols-outlined text-sm text-gray-600">chevron_right</span></button></div>`;
                     }
 
                     const dayButtons = Array.from(
@@ -700,106 +596,42 @@
                                 d.setDate(d.getDate() + i);
                                 dateLabel = `${String(d.getMonth() + 1).padStart(2, "0")}/${String(d.getDate()).padStart(2, "0")}`;
                             }
-                            return `
-                <button onclick="Store.setState({ selectedDay: ${i} })" 
-                    class="w-full text-left px-4 py-3 rounded-xl transition-all flex items-center justify-between group ${isSelected ? "bg-primary text-white shadow-md shadow-indigo-200" : "bg-gray-50 text-gray-700 hover:bg-gray-100"}">
-                    <div>
-                        <div class="text-[10px] font-bold uppercase tracking-wider mb-0.5 ${isSelected ? "text-white" : "text-gray-400 group-hover:text-indigo-500"}">${dateLabel}</div>
-                        <div class="font-bold text-sm">${label}</div>
-                    </div>
-                    ${isSelected ? '<span class="material-symbols-outlined text-sm">chevron_right</span>' : ""}
-                </button>
-            `;
+                            return `<button onclick="Store.setState({ selectedDay: ${i} })" class="w-full text-left px-4 py-3 rounded-xl transition-all flex items-center justify-between group ${isSelected ? "bg-primary text-white shadow-md shadow-indigo-200" : "bg-gray-50 text-gray-700 hover:bg-gray-100"}"><div><div class="text-[10px] font-bold uppercase tracking-wider mb-0.5 ${isSelected ? "text-white" : "text-gray-400 group-hover:text-indigo-500"}">${dateLabel}</div><div class="font-bold text-sm">${label}</div></div>${isSelected ? '<span class="material-symbols-outlined text-sm">chevron_right</span>' : ""}</button>`;
                         },
                     ).join("");
 
                     return `
-            <div class="w-80 bg-white border-r border-gray-200 flex-shrink-0 transition-all duration-300 relative flex flex-col h-full z-20">
-                <button onclick="Store.setState({ isCollapsed: true })" class="absolute -right-3 top-6 z-10 bg-white border border-gray-300 rounded-full p-1 shadow-md hover:bg-gray-50">
-                    <span class="material-symbols-outlined text-sm text-gray-600">chevron_left</span>
-                </button>
-                
-                <div class="p-6 h-full overflow-y-auto custom-scrollbar flex flex-col">
-                    <div class="flex items-center gap-2 mb-4 px-1">
-                        <span class="material-symbols-outlined text-gray-400 text-lg">tune</span>
-                        <h2 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Trip Settings</h2>
-                    </div>
-
-                    <div class="space-y-3 mb-6">
-                        <div class="flex items-center gap-3 px-4 py-3 bg-white border border-gray-200 rounded-full shadow-sm hover:border-primary transition-colors cursor-default group">
-                            <span class="material-symbols-outlined text-gray-400 group-hover:text-primary transition-colors">flight_takeoff</span>
-                            <span class="font-bold text-gray-800 text-sm truncate">${departure || "출발지를 선택하세요"}</span>
-                        </div>
-                        <div class="flex items-center gap-3 px-4 py-3 bg-white border border-gray-200 rounded-full shadow-sm hover:border-primary transition-colors cursor-default group">
-                            <span class="material-symbols-outlined text-gray-400 group-hover:text-primary transition-colors">location_on</span>
-                            <span class="font-bold text-gray-800 text-sm truncate">${destination || "도착지를 선택하세요"}</span>
-                        </div>
-                        <div class="flex items-center gap-3 px-4 py-3 bg-white border border-gray-200 rounded-full shadow-sm hover:border-primary transition-colors cursor-default group">
-                            <span class="material-symbols-outlined text-gray-400 group-hover:text-primary transition-colors">date_range</span>
-                            <span class="font-bold text-gray-800 text-sm truncate tracking-tight">${dateRangeStr}</span>
-                        </div>
-                    </div>
-
-                    <button onclick="App.goToFlightSearch()" class="w-full py-3 border-2 border-dashed border-primary rounded-xl text-primary font-bold text-m hover:bg-primary/10 hover:border-primary-400 transition-all flex items-center justify-center gap-2 mb-6 group">
-                        <span class="material-symbols-outlined text-lg group-hover:rotate-180 transition-transform">sync_alt</span>
-                        항공권 / 일정 변경
-                    </button>
-
-                    ${
-                        totalDays > 0
-                            ? `
-                        <div class="pt-4 border-t border-gray-100 flex-1">
-                            <div class="flex justify-between items-end mb-4 px-1">
-                                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Itinerary</h3>
-                                <span class="text-[10px] font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full">${totalDays} Days</span>
+                    <div class="w-80 bg-white border-r border-gray-200 flex-shrink-0 transition-all duration-300 relative flex flex-col h-full z-20">
+                        <button onclick="Store.setState({ isCollapsed: true })" class="absolute -right-3 top-6 z-10 bg-white border border-gray-300 rounded-full p-1 shadow-md hover:bg-gray-50"><span class="material-symbols-outlined text-sm text-gray-600">chevron_left</span></button>
+                        <div class="p-6 h-full overflow-y-auto custom-scrollbar flex flex-col">
+                            <div class="flex items-center gap-2 mb-4 px-1"><span class="material-symbols-outlined text-gray-400 text-lg">tune</span><h2 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Trip Settings</h2></div>
+                            <div class="space-y-3 mb-6">
+                                <div class="flex items-center gap-3 px-4 py-3 bg-white border border-gray-200 rounded-full shadow-sm hover:border-primary transition-colors cursor-default group"><span class="material-symbols-outlined text-gray-400 group-hover:text-primary transition-colors">flight_takeoff</span><span class="font-bold text-gray-800 text-sm truncate">${departure || "출발지를 선택하세요"}</span></div>
+                                <div class="flex items-center gap-3 px-4 py-3 bg-white border border-gray-200 rounded-full shadow-sm hover:border-primary transition-colors cursor-default group"><span class="material-symbols-outlined text-gray-400 group-hover:text-primary transition-colors">location_on</span><span class="font-bold text-gray-800 text-sm truncate">${destination || "도착지를 선택하세요"}</span></div>
+                                <div class="flex items-center gap-3 px-4 py-3 bg-white border border-gray-200 rounded-full shadow-sm hover:border-primary transition-colors cursor-default group"><span class="material-symbols-outlined text-gray-400 group-hover:text-primary transition-colors">date_range</span><span class="font-bold text-gray-800 text-sm truncate tracking-tight">${dateRangeStr}</span></div>
                             </div>
-                            <div class="space-y-2 pb-4">
-                                ${dayButtons}
-                            </div>
+                            <button onclick="App.goToFlightSearch()" class="w-full py-3 border-2 border-dashed border-primary rounded-xl text-primary font-bold text-m hover:bg-primary/10 hover:border-primary-400 transition-all flex items-center justify-center gap-2 mb-6 group"><span class="material-symbols-outlined text-lg group-hover:rotate-180 transition-transform">sync_alt</span>항공권 / 일정 변경</button>
+                            ${totalDays > 0 ? `<div class="pt-4 border-t border-gray-100 flex-1"><div class="flex justify-between items-end mb-4 px-1"><h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Itinerary</h3><span class="text-[10px] font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full">${totalDays} Days</span></div><div class="space-y-2 pb-4">${dayButtons}</div></div>` : `<div class="flex-1 flex flex-col items-center justify-center text-gray-400 text-center p-4 opacity-50"><span class="material-symbols-outlined text-4xl mb-2">airplane_ticket</span><p class="text-xs">일정이 비어있습니다.<br>항공권을 먼저 선택해주세요.</p></div>`}
                         </div>
-                    `
-                            : `
-                        <div class="flex-1 flex flex-col items-center justify-center text-gray-400 text-center p-4 opacity-50">
-                             <span class="material-symbols-outlined text-4xl mb-2">airplane_ticket</span>
-                            <p class="text-xs">일정이 비어있습니다.<br>항공권을 먼저 선택해주세요.</p>
-                        </div>
-                    `
-                    }
-                </div>
-            </div>
-        `;
+                    </div>`;
                 },
             };
 
-            // ==========================================
-            // 5. TIMELINE SCHEDULE (수정됨: 상세 버튼 분기 처리)
-            // ==========================================
             const TimelineSchedule = {
                 render() {
                     const { schedule, selectedDay, tripName } = Store.state;
-
-                    if (schedule.length === 0) {
-                        return `
-                        <div class="flex-1 flex items-center justify-center">
-                            <div class="text-center text-gray-500">
-                                <div class="opacity-50 mb-4 scale-150 inline-block">${Icons.Calendar}</div>
-                                <p class="text-lg">날짜를 선택하여 여행 계획을 시작하세요</p>
-                            </div>
-                        </div>
-                    `;
-                    }
+                    if (schedule.length === 0)
+                        return `<div class="flex-1 flex items-center justify-center"><div class="text-center text-gray-500"><div class="opacity-50 mb-4 scale-150 inline-block">${Icons.Calendar}</div><p class="text-lg">날짜를 선택하여 여행 계획을 시작하세요</p></div></div>`;
 
                     const currentDay = schedule[selectedDay];
                     const dateObj = new Date(currentDay.date);
                     const dateStr = `${dateObj.getFullYear()}년 ${dateObj.getMonth() + 1}월 ${dateObj.getDate()}일`;
                     const items = currentDay.items;
-
-                    // 시간순 정렬
-                    const sortedItems = [...items].sort((a, b) => {
-                        const timeA = a.startTime || "00:00";
-                        const timeB = b.startTime || "00:00";
-                        return timeA.localeCompare(timeB);
-                    });
+                    const sortedItems = [...items].sort((a, b) =>
+                        (a.startTime || "00:00").localeCompare(
+                            b.startTime || "00:00",
+                        ),
+                    );
 
                     let blocksHtml = sortedItems
                         .map((item) => {
@@ -808,76 +640,28 @@
                             );
                             const startTime = item.startTime || "10:00";
                             const endTime = item.endTime || "12:00";
-
-                            // ★ [핵심 변경] 직접 입력한 일정인지 확인
                             const isCustom = item.place.category === "custom";
-
-                            // 직접 입력이면 editManualItem 실행, 아니면 showDetail 실행
                             const clickAction = isCustom
                                 ? `App.editManualItem('${item.id}')`
                                 : `App.showDetail('${placeJson}')`;
-
-                            // 아이콘: 직접 입력이면 수정(Edit) 아이콘처럼 보이게 할 수도 있지만,
-                            // 요청하신 대로 상세 정보 아이콘(Info)을 유지하되 기능만 바꿉니다.
-                            const actionIcon = Icons.Info;
-
                             return `
                         <div class="border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm flex mb-4 relative group min-h-[200px] hover:border-indigo-400 transition-colors">
                             <div class="w-[200px] h-[200px] flex-shrink-0 p-2 relative">
                                 <img src="${item.place.image}" class="w-full h-full object-cover rounded-lg" />
-                                <button onclick="${clickAction}" class="absolute bottom-3 right-3 p-1.5 bg-white rounded-full shadow hover:bg-gray-100 text-gray-600" title="${isCustom ? "일정 수정" : "상세 정보"}">
-                                    ${actionIcon}
-                                </button>
+                                <button onclick="${clickAction}" class="absolute bottom-3 right-3 p-1.5 bg-white rounded-full shadow hover:bg-gray-100 text-gray-600" title="${isCustom ? "일정 수정" : "상세 정보"}">${Icons.Info}</button>
                             </div>
                             <div class="flex-1 p-4 flex flex-col">
-                                <div class="flex justify-between items-start mb-2">
-                                    <div>
-                                        <h4 class="font-medium text-gray-800">${item.place.name}</h4>
-                                        <p class="text-sm text-gray-500">${item.place.country}</p>
-                                    </div>
-                                    <button onclick="App.removeItem('${item.id}')" class="text-gray-400 hover:text-red-600">${Icons.Trash2}</button>
-                                </div>
-                                
-                                <div class="flex items-center gap-2 mb-3 bg-gray-50 p-2 rounded-lg border border-gray-100">
-                                    <div class="text-indigo-500">${Icons.Clock}</div>
-                                    <input type="time" value="${startTime}" 
-                                        onchange="App.updateItem('${item.id}', 'startTime', this.value)" 
-                                        class="bg-transparent text-sm font-bold text-gray-700 focus:outline-none focus:text-indigo-700" />
-                                    <span class="text-gray-400 text-sm">~</span>
-                                    <input type="time" value="${endTime}" 
-                                        onchange="App.updateItem('${item.id}', 'endTime', this.value)" 
-                                        class="bg-transparent text-sm font-bold text-gray-700 focus:outline-none focus:text-indigo-700" />
-                                </div>
-
+                                <div class="flex justify-between items-start mb-2"><div><h4 class="font-medium text-gray-800">${item.place.name}</h4><p class="text-sm text-gray-500">${item.place.country}</p></div><button onclick="App.removeItem('${item.id}')" class="text-gray-400 hover:text-red-600">${Icons.Trash2}</button></div>
+                                <div class="flex items-center gap-2 mb-3 bg-gray-50 p-2 rounded-lg border border-gray-100"><div class="text-indigo-500">${Icons.Clock}</div><input type="time" value="${startTime}" onchange="App.updateItem('${item.id}', 'startTime', this.value)" class="bg-transparent text-sm font-bold text-gray-700 focus:outline-none focus:text-indigo-700" /><span class="text-gray-400 text-sm">~</span><input type="time" value="${endTime}" onchange="App.updateItem('${item.id}', 'endTime', this.value)" class="bg-transparent text-sm font-bold text-gray-700 focus:outline-none focus:text-indigo-700" /></div>
                                 <textarea onchange="App.updateItem('${item.id}', 'memo', this.value)" placeholder="메모를 입력하세요" class="w-full text-sm border border-gray-200 rounded-lg p-3 resize-none flex-1 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-200 outline-none transition-all">${item.memo}</textarea>
                             </div>
-                        </div>
-                    `;
+                        </div>`;
                         })
                         .join("");
 
-                    blocksHtml += `
-                    <div onclick="App.openAddModal()" class="drop-zone border-2 border-dashed border-gray-300 rounded-lg min-h-[140px] flex items-center justify-center text-gray-400 bg-gray-50 hover:border-primary hover:text-black transition-colors cursor-pointer" data-day-index="${selectedDay}">
-                        <div class="text-center pointer-events-none">
-                            <div class="mx-auto mb-2 inline-block">${Icons.Plus}</div>
-                            <p class="text-sm">장소를 드래그하거나 <span class="font-bold underline">클릭하여 일정 추가</span></p>
-                        </div>
-                    </div>
-                `;
+                    blocksHtml += `<div onclick="App.openAddModal()" class="drop-zone border-2 border-dashed border-gray-300 rounded-lg min-h-[140px] flex items-center justify-center text-gray-400 bg-gray-50 hover:border-primary hover:text-black transition-colors cursor-pointer" data-day-index="${selectedDay}"><div class="text-center pointer-events-none"><div class="mx-auto mb-2 inline-block">${Icons.Plus}</div><p class="text-sm">장소를 드래그하거나 <span class="font-bold underline">클릭하여 일정 추가</span></p></div></div>`;
 
-                    return `
-                    <div class="flex-1 flex flex-col h-full overflow-hidden bg-transparent">
-                        <div class="p-6 border-b border-gray-200 bg-white">
-                            <h2 class="text-2xl font-semibold text-gray-800 mb-1">${tripName}</h2>
-                            <p class="text-gray-500">${dateStr}</p>
-                        </div>
-                        <div class="flex-1 overflow-y-auto p-6 scroll-smooth">
-                            <div class="max-w-3xl mx-auto pb-20">
-                                ${blocksHtml}
-                            </div>
-                        </div>
-                    </div>
-                `;
+                    return `<div class="flex-1 flex flex-col h-full overflow-hidden bg-transparent"><div class="p-6 border-b border-gray-200 bg-white"><h2 class="text-2xl font-semibold text-gray-800 mb-1">${tripName}</h2><p class="text-gray-500">${dateStr}</p></div><div class="flex-1 overflow-y-auto p-6 scroll-smooth"><div class="max-w-3xl mx-auto pb-20">${blocksHtml}</div></div></div>`;
                 },
             };
 
@@ -885,9 +669,7 @@
                 render() {
                     const place = Store.state.selectedPlace;
                     if (!place) return "";
-
                     const nearbyPlaces = getNearbyPlaces(place);
-
                     const markerPositions = [
                         { left: "30%", top: "30%" },
                         { left: "70%", top: "35%" },
@@ -899,62 +681,25 @@
                     return `
                     <div class="flex-1 flex flex-col h-full bg-white animate-fade-in">
                         <div class="p-6 border-b border-gray-200">
-                            <div class="flex items-start gap-4">
-                                <img src="${place.image}" alt="${place.name}" class="w-20 h-20 object-cover rounded-lg" />
-                                <div class="flex-1">
-                                    <h2 class="text-xl text-gray-800 font-bold mb-1">${place.name}</h2>
-                                    <p class="text-sm text-gray-500 mb-2">${place.country}</p>
-                                    <div class="flex items-center gap-2">
-                                        <div class="text-indigo-600 w-4 h-4">${Icons.MapPin}</div>
-                                        <span class="text-sm text-gray-600">지도에서 위치 및 주변 장소 확인</span>
-                                    </div>
-                                </div>
-                            </div>
+                            <div class="flex items-start gap-4"><img src="${place.image}" alt="${place.name}" class="w-20 h-20 object-cover rounded-lg" /><div class="flex-1"><h2 class="text-xl text-gray-800 font-bold mb-1">${place.name}</h2><p class="text-sm text-gray-500 mb-2">${place.country}</p><div class="flex items-center gap-2"><div class="text-indigo-600 w-4 h-4">${Icons.MapPin}</div><span class="text-sm text-gray-600">지도에서 위치 및 주변 장소 확인</span></div></div></div>
                         </div>
-
                         <div class="flex-1 overflow-y-auto">
                             <div class="relative bg-gray-100 h-96 flex items-center justify-center border-b border-gray-200 overflow-hidden">
                                 <div class="absolute inset-0 bg-gradient-to-br from-blue-50 to-green-50"></div>
-                                
-                                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                                    <div class="relative">
-                                        <div class="w-4 h-4 bg-indigo-600 rounded-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 marker-pulse"></div>
-                                        <div class="w-12 h-12 bg-indigo-600 rounded-full flex items-center justify-center shadow-lg z-10 relative text-white">
-                                            ${Icons.MapPin}
-                                        </div>
-                                        <div class="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap bg-white px-2 py-1 rounded shadow text-xs font-bold text-indigo-600">
-                                            ${place.name}
-                                        </div>
-                                    </div>
-                                </div>
-
+                                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"><div class="relative"><div class="w-4 h-4 bg-indigo-600 rounded-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 marker-pulse"></div><div class="w-12 h-12 bg-indigo-600 rounded-full flex items-center justify-center shadow-lg z-10 relative text-white">${Icons.MapPin}</div><div class="absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap bg-white px-2 py-1 rounded shadow text-xs font-bold text-indigo-600">${place.name}</div></div></div>
                                 ${nearbyPlaces
                                     .map((nearby, index) => {
                                         const pos = markerPositions[index] || {
                                             left: "50%",
                                             top: "50%",
                                         };
-                                        return `
-                                        <div class="absolute" style="left: ${pos.left}; top: ${pos.top};">
-                                            <div class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center shadow-md hover:scale-110 transition-transform cursor-pointer text-white" title="${nearby.name}">
-                                                ${Icons.Navigation}
-                                            </div>
-                                        </div>
-                                    `;
+                                        return `<div class="absolute" style="left: ${pos.left}; top: ${pos.top};"><div class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center shadow-md hover:scale-110 transition-transform cursor-pointer text-white" title="${nearby.name}">${Icons.Navigation}</div></div>`;
                                     })
                                     .join("")}
-
-                                <div class="absolute bottom-4 right-4 bg-white/90 backdrop-blur px-4 py-2 rounded-lg shadow text-xs text-gray-600">
-                                    🗺️ 실제 서비스에서는 Google Maps 연동
-                                </div>
+                                <div class="absolute bottom-4 right-4 bg-white/90 backdrop-blur px-4 py-2 rounded-lg shadow text-xs text-gray-600">🗺️ 실제 서비스에서는 Google Maps 연동</div>
                             </div>
-
                             <div class="p-6 pb-20">
-                                <div class="flex items-center gap-2 mb-4">
-                                    <div class="text-orange-500 w-5 h-5">${Icons.Star}</div>
-                                    <h3 class="text-lg text-gray-800 font-medium">주변 인기 장소</h3>
-                                </div>
-                                
+                                <div class="flex items-center gap-2 mb-4"><div class="text-orange-500 w-5 h-5">${Icons.Star}</div><h3 class="text-lg text-gray-800 font-medium">주변 인기 장소</h3></div>
                                 <div class="space-y-3 max-w-3xl mx-auto">
                                     ${nearbyPlaces
                                         .map((nearby) => {
@@ -970,45 +715,13 @@
                                                 encodeURIComponent(
                                                     JSON.stringify(placeObj),
                                                 );
-
-                                            return `
-                                            <div class="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border border-gray-100">
-                                                <div class="flex items-center justify-between mb-2">
-                                                    <div class="flex items-center gap-3">
-                                                        <div class="w-10 h-10 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center">
-                                                            ${Icons.Navigation}
-                                                        </div>
-                                                        <div>
-                                                            <h4 class="text-sm font-bold text-gray-800">${nearby.name}</h4>
-                                                            <p class="text-xs text-gray-500">${nearby.category}</p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="text-right">
-                                                        <div class="flex items-center justify-end gap-1 mb-1">
-                                                            <div class="w-4 h-4 text-orange-400 fill-current">${Icons.Star}</div>
-                                                            <span class="text-sm font-medium text-gray-800">${nearby.rating}</span>
-                                                        </div>
-                                                        <span class="text-xs text-gray-500">${nearby.distance}</span>
-                                                    </div>
-                                                </div>
-                                                <div class="flex items-center justify-between gap-3 mt-3 pt-2 border-t border-gray-200">
-                                                    <div class="flex items-center gap-2 text-xs text-indigo-600 cursor-pointer hover:underline">
-                                                        <div class="w-3 h-3">${Icons.MapPin}</div>
-                                                        <span>길찾기</span>
-                                                    </div>
-                                                    <button onclick="App.addNearbyToSchedule('${placeJson}')" class="px-3 py-1.5 text-xs bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors shadow-sm">
-                                                        + 일정에 추가
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        `;
+                                            return `<div class="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors border border-gray-100"><div class="flex items-center justify-between mb-2"><div class="flex items-center gap-3"><div class="w-10 h-10 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center">${Icons.Navigation}</div><div><h4 class="text-sm font-bold text-gray-800">${nearby.name}</h4><p class="text-xs text-gray-500">${nearby.category}</p></div></div><div class="text-right"><div class="flex items-center justify-end gap-1 mb-1"><div class="w-4 h-4 text-orange-400 fill-current">${Icons.Star}</div><span class="text-sm font-medium text-gray-800">${nearby.rating}</span></div><span class="text-xs text-gray-500">${nearby.distance}</span></div></div><div class="flex items-center justify-between gap-3 mt-3 pt-2 border-t border-gray-200"><div class="flex items-center gap-2 text-xs text-indigo-600 cursor-pointer hover:underline"><div class="w-3 h-3">${Icons.MapPin}</div><span>길찾기</span></div><button onclick="App.addNearbyToSchedule('${placeJson}')" class="px-3 py-1.5 text-xs bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors shadow-sm">+ 일정에 추가</button></div></div>`;
                                         })
                                         .join("")}
                                 </div>
                             </div>
                         </div>
-                    </div>
-                `;
+                    </div>`;
                 },
             };
 
@@ -1018,39 +731,17 @@
                     <div class="flex flex-col h-full">
                         <div class="p-6 border-b border-gray-200">
                             <h2 class="text-xl font-semibold text-gray-800 mb-4">장소 검색</h2>
-                            <div class="relative">
-                                <div class="absolute inset-y-0 left-3 flex items-center pointer-events-none text-gray-400">
-                                ${Icons.Search}
-                                </div>
-                                <input type="text" placeholder="장소 검색..." oninput="App.handleSearch(this.value)" 
-                                    class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" />
-                            </div>
+                            <div class="relative"><div class="absolute inset-y-0 left-3 flex items-center pointer-events-none text-gray-400">${Icons.Search}</div><input type="text" placeholder="장소 검색..." oninput="App.handleSearch(this.value)" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" /></div>
                         </div>
                         <div class="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar">
                             ${INITIAL_PLACES.map((place) => {
                                 const placeJson = encodeURIComponent(
                                     JSON.stringify(place),
                                 );
-                                return `
-                                    <div draggable="true" data-place="${placeJson}" class="draggable-source place-item bg-white border border-gray-200 rounded-lg p-3 cursor-move hover:shadow-lg transition-all group" data-text="${place.name} ${place.country}">
-                                        <div class="flex gap-3 relative">
-                                            <div class="flex items-center text-gray-400 cursor-grab">${Icons.GripVertical}</div>
-                                            <img src="${place.image}" class="w-16 h-16 object-cover rounded-lg bg-gray-200" />
-                                            <div class="flex-1 min-w-0">
-                                                <h3 class="text-sm font-bold text-gray-800 truncate">${place.name}</h3>
-                                                <p class="text-xs text-gray-500 truncate">${place.country}</p>
-                                                <p class="text-xs text-gray-400 mt-1 line-clamp-1">${place.description}</p>
-                                            </div>
-                                            <button onclick="App.showDetail('${placeJson}')" class="absolute top-0 right-0 p-1 text-gray-400 hover:text-indigo-600 rounded-full hover:bg-gray-100 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                ${Icons.Info}
-                                            </button>
-                                        </div>
-                                    </div>
-                                `;
+                                return `<div draggable="true" data-place="${placeJson}" class="draggable-source place-item bg-white border border-gray-200 rounded-lg p-3 cursor-move hover:shadow-lg transition-all group" data-text="${place.name} ${place.country}"><div class="flex gap-3 relative"><div class="flex items-center text-gray-400 cursor-grab">${Icons.GripVertical}</div><img src="${place.image}" class="w-16 h-16 object-cover rounded-lg bg-gray-200" /><div class="flex-1 min-w-0"><h3 class="text-sm font-bold text-gray-800 truncate">${place.name}</h3><p class="text-xs text-gray-500 truncate">${place.country}</p><p class="text-xs text-gray-400 mt-1 line-clamp-1">${place.description}</p></div><button onclick="App.showDetail('${placeJson}')" class="absolute top-0 right-0 p-1 text-gray-400 hover:text-indigo-600 rounded-full hover:bg-gray-100 opacity-0 group-hover:opacity-100 transition-opacity">${Icons.Info}</button></div></div>`;
                             }).join("")}
                         </div>
-                    </div>
-                `;
+                    </div>`;
                 },
             };
 
@@ -1058,88 +749,27 @@
                 render() {
                     const place = Store.state.selectedPlace;
                     if (!place) return "";
-
                     const details = {
                         ...BASE_PLACE_DETAILS,
                         name: place.name,
                         image: place.image,
                         address: `123 Travel Street, ${place.country}`,
                     };
-
                     return `
                     <div class="flex flex-col h-full bg-white animate-fade-in border-l border-gray-200">
-                        <div class="relative h-48 w-full flex-shrink-0">
-                            <img src="${details.image}" class="w-full h-full object-cover" />
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                            
-                            <button onclick="App.closeDetail()" class="absolute top-4 left-4 p-2 bg-white/20 backdrop-blur-sm rounded-full text-white hover:bg-white/30 transition flex items-center gap-1 pr-3">
-                                ${Icons.ArrowLeft} <span class="text-xs font-bold">목록</span>
-                            </button>
-                            
-                            <div class="absolute bottom-4 left-4 text-white">
-                                <h2 class="text-2xl font-bold leading-tight">${details.name}</h2>
-                                <p class="text-sm opacity-90">${place.country}</p>
-                            </div>
-                        </div>
-
+                        <div class="relative h-48 w-full flex-shrink-0"><img src="${details.image}" class="w-full h-full object-cover" /><div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div><button onclick="App.closeDetail()" class="absolute top-4 left-4 p-2 bg-white/20 backdrop-blur-sm rounded-full text-white hover:bg-white/30 transition flex items-center gap-1 pr-3">${Icons.ArrowLeft} <span class="text-xs font-bold">목록</span></button><div class="absolute bottom-4 left-4 text-white"><h2 class="text-2xl font-bold leading-tight">${details.name}</h2><p class="text-sm opacity-90">${place.country}</p></div></div>
                         <div class="flex-1 overflow-y-auto p-6 custom-scrollbar">
                             <div class="space-y-4 mb-8">
-                                <div class="flex items-center gap-3 text-sm text-gray-600">
-                                    <div class="text-indigo-600">${Icons.MapPin}</div>
-                                    <span>${details.address}</span>
-                                </div>
-                                <div class="flex items-center gap-3 text-sm text-gray-600">
-                                    <div class="text-indigo-600">${Icons.Phone}</div>
-                                    <span>${details.phone}</span>
-                                </div>
-                                <div class="flex items-center gap-3 text-sm text-gray-600">
-                                    <div class="text-indigo-600">${Icons.Clock}</div>
-                                    <span>${details.hours}</span>
-                                </div>
-                                <div class="flex items-center gap-2 text-sm">
-                                    <div class="flex text-orange-400 gap-0.5">
-                                        ${Icons.Star}
-                                    </div>
-                                    <span class="font-bold text-gray-800">${details.rating}</span>
-                                    <span class="text-gray-400">(${details.reviewCount} reviews)</span>
-                                </div>
+                                <div class="flex items-center gap-3 text-sm text-gray-600"><div class="text-indigo-600">${Icons.MapPin}</div><span>${details.address}</span></div>
+                                <div class="flex items-center gap-3 text-sm text-gray-600"><div class="text-indigo-600">${Icons.Phone}</div><span>${details.phone}</span></div>
+                                <div class="flex items-center gap-3 text-sm text-gray-600"><div class="text-indigo-600">${Icons.Clock}</div><span>${details.hours}</span></div>
+                                <div class="flex items-center gap-2 text-sm"><div class="flex text-orange-400 gap-0.5">${Icons.Star}</div><span class="font-bold text-gray-800">${details.rating}</span><span class="text-gray-400">(${details.reviewCount} reviews)</span></div>
                             </div>
-                            
-                            <div class="flex flex-wrap gap-2 mb-8">
-                                ${details.tags.map((tag) => `<span class="px-3 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">#${tag}</span>`).join("")}
-                            </div>
-
-                            <div class="mb-8">
-                                <h3 class="font-bold text-gray-800 mb-3 text-sm uppercase">편의 시설</h3>
-                                <ul class="grid grid-cols-2 gap-2">
-                                    ${details.facilities.map((f) => `<li class="flex items-center gap-2 text-sm text-gray-600"><span class="w-1.5 h-1.5 bg-indigo-500 rounded-full"></span>${f}</li>`).join("")}
-                                </ul>
-                            </div>
-
-                            <div>
-                                <h3 class="font-bold text-gray-800 mb-4 text-sm uppercase">방문자 리뷰</h3>
-                                <div class="space-y-4">
-                                    ${details.reviews
-                                        .map(
-                                            (review) => `
-                                        <div class="bg-gray-50 p-4 rounded-lg">
-                                            <div class="flex justify-between items-start mb-2">
-                                                <div class="font-medium text-sm text-gray-900">${review.author}</div>
-                                                <div class="text-xs text-gray-400">${review.date}</div>
-                                            </div>
-                                            <div class="flex text-orange-400 gap-0.5 mb-2 scale-75 origin-left">
-                                                ${Array(review.rating).fill(Icons.Star).join("")}
-                                            </div>
-                                            <p class="text-sm text-gray-600 leading-relaxed">${review.content}</p>
-                                        </div>
-                                    `,
-                                        )
-                                        .join("")}
-                                </div>
-                            </div>
+                            <div class="flex flex-wrap gap-2 mb-8">${details.tags.map((tag) => `<span class="px-3 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">#${tag}</span>`).join("")}</div>
+                            <div class="mb-8"><h3 class="font-bold text-gray-800 mb-3 text-sm uppercase">편의 시설</h3><ul class="grid grid-cols-2 gap-2">${details.facilities.map((f) => `<li class="flex items-center gap-2 text-sm text-gray-600"><span class="w-1.5 h-1.5 bg-indigo-500 rounded-full"></span>${f}</li>`).join("")}</ul></div>
+                            <div><h3 class="font-bold text-gray-800 mb-4 text-sm uppercase">방문자 리뷰</h3><div class="space-y-4">${details.reviews.map((review) => `<div class="bg-gray-50 p-4 rounded-lg"><div class="flex justify-between items-start mb-2"><div class="font-medium text-sm text-gray-900">${review.author}</div><div class="text-xs text-gray-400">${review.date}</div></div><div class="flex text-orange-400 gap-0.5 mb-2 scale-75 origin-left">${Array(review.rating).fill(Icons.Star).join("")}</div><p class="text-sm text-gray-600 leading-relaxed">${review.content}</p></div>`).join("")}</div></div>
                         </div>
-                    </div>
-                `;
+                    </div>`;
                 },
             };
 
@@ -1150,28 +780,22 @@
                         : TimelineSchedule.render();
                 },
             };
-
             const RightPanel = {
                 render() {
-                    return `
-                    <div class="w-96 border-l border-gray-200 bg-white flex flex-col h-full z-20 transition-all">
-                        ${Store.state.selectedPlace ? PlaceDetails.render() : PlaceSearch.render()}
-                    </div>
-                `;
+                    return `<div class="w-96 border-l border-gray-200 bg-white flex flex-col h-full z-20 transition-all">${Store.state.selectedPlace ? PlaceDetails.render() : PlaceSearch.render()}</div>`;
                 },
             };
 
             // ==========================================
-            // 4. APP CONTROLLER (수정됨: 편집 로직 포함)
+            // 4. APP CONTROLLER
             // ==========================================
             const App = {
                 init() {
-                    Store.init(); // 기본적인 상태 로드
-                    this.checkIncomingFlightData(); // ★ 항공권 데이터 수신 확인
+                    Store.init();
+                    this.checkIncomingFlightData();
                     this.render();
                 },
 
-                // ★ [추가] 항공권 페이지로 이동 전 상태 전달
                 goToFlightSearch() {
                     const {
                         startDate,
@@ -1180,25 +804,22 @@
                         destination,
                         savedFlights,
                     } = Store.state;
-
-                    const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
-                    const draftKey = loggedInUser && loggedInUser.email ? `tripPlanner_draft_${loggedInUser.email}` : 'tripPlanner_draft_guest';
-
-                    localStorage.setItem(
-                        draftKey,
-                        JSON.stringify(Store.state),
+                    const loggedInUser = JSON.parse(
+                        localStorage.getItem("loggedInUser"),
                     );
-
+                    const draftKey =
+                        loggedInUser && loggedInUser.email
+                            ? `tripPlanner_draft_${loggedInUser.email}`
+                            : "tripPlanner_draft_guest";
+                    localStorage.setItem(draftKey, JSON.stringify(Store.state));
                     const flightRequest = {
                         mode: !startDate || !endDate ? "NEW" : "EDIT",
                         origin: departure || "",
                         destination: destination || "",
                         startDate: startDate || "",
                         endDate: endDate || "",
-                        // ★ [추가] 기존에 선택된 항공권이 있다면 같이 보냄
                         selectedFlights: savedFlights || null,
                     };
-
                     sessionStorage.setItem(
                         "planner_request",
                         JSON.stringify(flightRequest),
@@ -1206,28 +827,28 @@
                     location.href = "flight.html";
                 },
 
-                // ★ [추가] 항공권 페이지에서 돌아왔을 때 데이터 처리
                 checkIncomingFlightData() {
                     const flightInfoStr = localStorage.getItem(
                         "tripPlanner_flightInfo",
                     );
-
                     if (flightInfoStr) {
                         const flightInfo = JSON.parse(flightInfoStr);
-
-                        const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
-                        const draftKey = loggedInUser && loggedInUser.email ? `tripPlanner_draft_${loggedInUser.email}` : 'tripPlanner_draft_guest';
-
-                        // 기존 Draft 복구
+                        const loggedInUser = JSON.parse(
+                            localStorage.getItem("loggedInUser"),
+                        );
+                        const draftKey =
+                            loggedInUser && loggedInUser.email
+                                ? `tripPlanner_draft_${loggedInUser.email}`
+                                : "tripPlanner_draft_guest";
                         const draftStr = localStorage.getItem(draftKey);
-                        if (draftStr) {
-                            const draft = JSON.parse(draftStr);
-                            Store.state = { ...Store.state, ...draft };
-                        }
+                        if (draftStr)
+                            Store.state = {
+                                ...Store.state,
+                                ...JSON.parse(draftStr),
+                            };
 
-                        if (!Store.state.currentPlanId) {
+                        if (!Store.state.currentPlanId)
                             Store.state.currentPlanId = Date.now().toString();
-                        }
 
                         const isLocationChanged =
                             Store.state.departure !== flightInfo.departure ||
@@ -1235,61 +856,62 @@
                         const isDateChanged =
                             Store.state.startDate !== flightInfo.startDate ||
                             Store.state.endDate !== flightInfo.endDate;
-
                         const nextState = {
                             startDate: flightInfo.startDate,
                             endDate: flightInfo.endDate,
                             departure: flightInfo.departure,
                             destination: flightInfo.destination,
-                            // ★ [추가] 항공권 상세 정보를 State에 저장해둡니다.
                             savedFlights: {
                                 outbound: flightInfo.outbound,
                                 inbound: flightInfo.inbound,
                             },
                         };
-
-                        // 장소나 날짜가 바뀌면 일정 초기화
-                        if (isLocationChanged || isDateChanged) {
+                        if (isLocationChanged || isDateChanged)
                             nextState.schedule = [];
-                        }
-
                         Store.setState(nextState, false);
-
                         localStorage.removeItem("tripPlanner_flightInfo");
                         localStorage.setItem(
-                            draftKey, // Use user-specific draft key
+                            draftKey,
                             JSON.stringify(Store.state),
                         );
                     } else {
-                        // 취소 시
-                        const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
-                        const draftKey = loggedInUser && loggedInUser.email ? `tripPlanner_draft_${loggedInUser.email}` : 'tripPlanner_draft_guest';
+                        const loggedInUser = JSON.parse(
+                            localStorage.getItem("loggedInUser"),
+                        );
+                        const draftKey =
+                            loggedInUser && loggedInUser.email
+                                ? `tripPlanner_draft_${loggedInUser.email}`
+                                : "tripPlanner_draft_guest";
                         const draftStr = localStorage.getItem(draftKey);
-                        if (draftStr) {
+                        if (draftStr)
                             Store.setState(JSON.parse(draftStr), false);
-                        }
                     }
+                },
+
+                // ★ [추가됨] 미리보기 모달 제어 함수
+                openPreviewModal(url) {
+                    Store.setState({ showPreviewModal: true, previewUrl: url });
+                },
+                closePreviewModal() {
+                    Store.setState({ showPreviewModal: false, previewUrl: "" });
                 },
 
                 render() {
                     const app = document.getElementById("app");
                     app.innerHTML = `
-                    ${MainNavbar.render()}
-                    ${Header.render()}
-                    <div class="flex-1 flex overflow-hidden">
-                        ${TripSetting.render()}
-                        ${CenterPanel.render()}
-                        ${RightPanel.render()}
-                    </div>
-
-                    <footer class="bg-muted py-8">
-                        <div class="container mx-auto text-center text-muted-foreground text-sm">
-                            © 2026 여백. All rights reserved.
+                        ${MainNavbar.render()}
+                        ${Header.render()}
+                        <div class="flex-1 flex overflow-hidden">
+                            ${TripSetting.render()}
+                            ${CenterPanel.render()}
+                            ${RightPanel.render()}
                         </div>
-                    </footer>
-
-                    ${AddScheduleModal.render()}
-                `;
+                        <footer class="bg-muted py-8">
+                            <div class="container mx-auto text-center text-muted-foreground text-sm">© 2026 여백. All rights reserved.</div>
+                        </footer>
+                        ${AddScheduleModal.render()}
+                        ${SchedulePreviewModal.render()} 
+                    `; // ★ SchedulePreviewModal 추가됨
                     this.attachEvents();
                 },
 
@@ -1305,7 +927,6 @@
                                     : "none";
                             });
                     };
-
                     const draggables =
                         document.querySelectorAll(".draggable-source");
                     draggables.forEach((el) => {
@@ -1321,7 +942,6 @@
                             el.classList.remove("dragging"),
                         );
                     });
-
                     const dropZone = document.querySelector(".drop-zone");
                     if (dropZone) {
                         dropZone.addEventListener("dragover", (e) => {
@@ -1349,32 +969,23 @@
                     }
                 },
 
-                // '새 일정 추가' 버튼 클릭 시 (초기화 후 오픈)
                 openAddModal() {
                     Store.setState({ showAddModal: true, editingItem: null });
                 },
-
                 closeAddModal() {
                     Store.setState({ showAddModal: false, editingItem: null });
                 },
-
-                // ★ [신규] 수정 모드로 모달 열기
                 editManualItem(itemId) {
                     const { schedule, selectedDay } = Store.state;
-                    const currentDayItems = schedule[selectedDay].items;
-                    const itemToEdit = currentDayItems.find(
+                    const itemToEdit = schedule[selectedDay].items.find(
                         (item) => item.id === itemId,
                     );
-
-                    if (itemToEdit) {
+                    if (itemToEdit)
                         Store.setState({
                             showAddModal: true,
                             editingItem: itemToEdit,
                         });
-                    }
                 },
-
-                // ★ [수정] 팝업에서 저장 (신규 추가 OR 수정)
                 addManualSchedule() {
                     const titleInput = document.getElementById("modal-title");
                     const memoInput = document.getElementById("modal-memo");
@@ -1384,7 +995,6 @@
                         document.getElementById("modal-end-time");
                     const locationInput =
                         document.getElementById("modal-location");
-
                     const title = titleInput ? titleInput.value.trim() : "";
                     const startTime = startTimeInput
                         ? startTimeInput.value
@@ -1399,10 +1009,7 @@
                         alert("일정 제목과 시간은 필수 입력 항목입니다.");
                         return;
                     }
-
                     const { editingItem } = Store.state;
-
-                    // ★ CASE 1: 수정 (Editing)
                     if (editingItem) {
                         const { schedule, selectedDay } = Store.state;
                         const newSchedule = [...schedule];
@@ -1410,9 +1017,7 @@
                         const targetIndex = items.findIndex(
                             (i) => i.id === editingItem.id,
                         );
-
                         if (targetIndex !== -1) {
-                            // 기존 데이터 업데이트
                             items[targetIndex] = {
                                 ...items[targetIndex],
                                 startTime: startTime,
@@ -1426,9 +1031,7 @@
                             };
                             Store.setState({ schedule: newSchedule });
                         }
-                    }
-                    // ★ CASE 2: 신규 추가 (New)
-                    else {
+                    } else {
                         const newPlace = {
                             id: "custom-" + Date.now(),
                             name: title,
@@ -1437,22 +1040,19 @@
                             category: "custom",
                             description: memo,
                         };
-
                         this.addItemToSchedule(newPlace, {
                             startTime: startTime,
                             endTime: endTime,
                             memo: memo,
                         });
                     }
-
                     this.closeAddModal();
                 },
-
                 addItemToSchedule(place, options = {}) {
                     const { selectedDay, schedule } = Store.state;
                     if (schedule.length <= selectedDay) {
                         Store.updateScheduleDates();
-                        if (Store.state.schedule.length === 0) {
+                        if (Store.state.schedule.length === 0)
                             Store.state.schedule = [
                                 {
                                     date: new Date()
@@ -1461,9 +1061,7 @@
                                     items: [],
                                 },
                             ];
-                        }
                     }
-
                     const newItem = {
                         id: Date.now().toString(),
                         place: place,
@@ -1471,12 +1069,10 @@
                         endTime: options.endTime || "12:00",
                         memo: options.memo || "",
                     };
-
                     const newSchedule = [...Store.state.schedule];
                     newSchedule[Store.state.selectedDay].items.push(newItem);
                     Store.setState({ schedule: newSchedule });
                 },
-
                 addNearbyToSchedule(placeJson) {
                     const place = JSON.parse(decodeURIComponent(placeJson));
                     if (
@@ -1490,21 +1086,16 @@
                         );
                     }
                 },
-
                 showDetail(placeJsonOrObj) {
                     let place;
-                    if (typeof placeJsonOrObj === "string") {
+                    if (typeof placeJsonOrObj === "string")
                         place = JSON.parse(decodeURIComponent(placeJsonOrObj));
-                    } else {
-                        place = placeJsonOrObj;
-                    }
+                    else place = placeJsonOrObj;
                     Store.setState({ selectedPlace: place });
                 },
-
                 closeDetail() {
                     Store.setState({ selectedPlace: null });
                 },
-
                 removeItem(itemId) {
                     if (!confirm("삭제하시겠습니까?")) return;
                     const { schedule, selectedDay } = Store.state;
@@ -1514,25 +1105,32 @@
                     ].items.filter((i) => i.id !== itemId);
                     Store.setState({ schedule: newSchedule });
                 },
-
                 updateItem(itemId, field, value) {
                     const { schedule, selectedDay } = Store.state;
                     const newSchedule = [...schedule];
                     const item = newSchedule[selectedDay].items.find(
                         (i) => i.id === itemId,
                     );
-
                     if (item) {
                         item[field] = value;
                         Store.setState({ schedule: newSchedule });
                     }
                 },
 
+                // ★ [수정됨] savePlan: 저장 후 팝업 띄우도록 변경
                 savePlan() {
-                    const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+                    // [수정 1] loggedInUser를 가장 먼저 가져옵니다.
+                    const loggedInUser = JSON.parse(
+                        localStorage.getItem("loggedInUser"),
+                    );
+
+                    // [수정 2] 이제 변수가 선언되었으므로 에러 없이 로그를 출력할 수 있습니다.
+                    console.log("Logged in user:", loggedInUser);
+                    console.log("User email:", loggedInUser?.email);
+
                     if (!loggedInUser || !loggedInUser.email) {
-                        alert('로그인 후 계획을 저장할 수 있습니다.');
-                        window.location.href = '../auth/SignIn.html';
+                        alert("로그인 후 계획을 저장할 수 있습니다.");
+                        window.location.href = "../auth/SignIn.html";
                         return;
                     }
 
@@ -1555,11 +1153,9 @@
                     let newPlans = [...savedPlans];
                     let saveId = currentPlanId;
 
-                    // currentPlanId가 있으면 (Requirement 2에 의해 생성되었거나, 이미 로드된 계획)
                     if (saveId) {
                         const idx = newPlans.findIndex((p) => p.id === saveId);
                         if (idx !== -1) {
-                            // 기존 계획 업데이트 (덮어쓰기)
                             newPlans[idx] = {
                                 ...newPlans[idx],
                                 name: tripName,
@@ -1571,7 +1167,7 @@
                                 updatedAt: new Date().toISOString(),
                             };
                         } else {
-                            // ID는 있는데 리스트에 없다면 (예: 신규 생성 후 첫 저장)
+                            saveId = Date.now().toString();
                             newPlans.push({
                                 id: saveId,
                                 name: tripName,
@@ -1584,9 +1180,7 @@
                             });
                         }
                     } else {
-                        // 방어 코드: ID가 없는 경우 (이론상 이 로직엔 안 걸려야 함)
                         saveId = Date.now().toString();
-                        Store.setState({ currentPlanId: saveId });
                         newPlans.push({
                             id: saveId,
                             name: tripName,
@@ -1598,11 +1192,21 @@
                             createdAt: new Date().toISOString(),
                         });
                     }
+                    Store.setState({
+                        currentPlanId: saveId,
+                        savedPlans: newPlans,
+                    });
 
                     const userPlansKey = `tripPlans_${loggedInUser.email}`;
-                    localStorage.setItem(userPlansKey, JSON.stringify(newPlans));
-                    Store.setState({ savedPlans: newPlans }); // currentPlanId는 유지
-                    alert("저장되었습니다!");
+                    localStorage.setItem(
+                        userPlansKey,
+                        JSON.stringify(newPlans),
+                    );
+
+                    const previewUrl = `schedule.html?id=${saveId}`;
+                    console.log("Generated saveId:", saveId);
+                    console.log("Preview URL:", previewUrl);
+                    this.openPreviewModal(previewUrl);
                 },
 
                 loadPlan(planId) {
@@ -1623,15 +1227,15 @@
                         });
                     }
                 },
-
                 deletePlan(planId) {
-                    const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+                    const loggedInUser = JSON.parse(
+                        localStorage.getItem("loggedInUser"),
+                    );
                     if (!loggedInUser || !loggedInUser.email) {
-                        alert('로그인 후 계획을 삭제할 수 있습니다.');
-                        window.location.href = '../auth/SignIn.html';
+                        alert("로그인 후 계획을 삭제할 수 있습니다.");
+                        window.location.href = "../auth/SignIn.html";
                         return;
                     }
-
                     if (confirm("정말 이 계획을 삭제하시겠습니까?")) {
                         const newPlans = Store.state.savedPlans.filter(
                             (p) => p.id !== planId,
@@ -1641,10 +1245,8 @@
                             userPlansKey,
                             JSON.stringify(newPlans),
                         );
-
                         let nextState = { savedPlans: newPlans };
                         if (Store.state.currentPlanId === planId) {
-                            // 현재 계획이 삭제되면 사용자별 임시 저장(draft)도 제거합니다.
                             const draftKey = `tripPlanner_draft_${loggedInUser.email}`;
                             localStorage.removeItem(draftKey);
                             nextState = {
@@ -1664,18 +1266,23 @@
                         Store.setState(nextState);
                     }
                 },
-
                 newPlan() {
-                    const isLoggedIn = localStorage.getItem('isLoggedIn');
-                    if (isLoggedIn !== 'true') {
-                        alert('새로운 여행 계획을 생성하려면 로그인해야 합니다.');
-                        window.location.href = '../auth/SignIn.html';
+                    const isLoggedIn = localStorage.getItem("isLoggedIn");
+                    if (isLoggedIn !== "true") {
+                        alert(
+                            "새로운 여행 계획을 생성하려면 로그인해야 합니다.",
+                        );
+                        window.location.href = "../auth/SignIn.html";
                         return;
                     }
-
                     if (confirm("현재 작업을 초기화하시겠습니까?")) {
-                        const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
-                        const draftKey = loggedInUser && loggedInUser.email ? `tripPlanner_draft_${loggedInUser.email}` : 'tripPlanner_draft_guest';
+                        const loggedInUser = JSON.parse(
+                            localStorage.getItem("loggedInUser"),
+                        );
+                        const draftKey =
+                            loggedInUser && loggedInUser.email
+                                ? `tripPlanner_draft_${loggedInUser.email}`
+                                : "tripPlanner_draft_guest";
                         localStorage.removeItem(draftKey);
                         Store.setState({
                             currentPlanId: null,

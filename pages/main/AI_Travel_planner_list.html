@@ -180,7 +180,7 @@
                         >
                         <span
                             class="ml-2 px-2.5 py-0.5 bg-stone-100 text-stone-500 rounded-full text-[11px] font-medium border border-stone-200"
-                            >Total 6</span
+                            >Total 5</span
                         >
                     </div>
                     <div class="relative">
@@ -233,24 +233,34 @@
                 <div
                     id="itineraryGrid"
                     class="grid grid-cols-1 lg:grid-cols-2 gap-6"
+                    style="grid-auto-rows: 1fr"
                 >
-                    <!-- 카드 1 -->
+                    <!-- 카드 공통 템플릿: 이미지(16:9) + 내용 동일 -->
+
+                    <!-- 1) 제주 -->
                     <article
                         class="bg-white rounded-2xl border border-stone-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow group flex flex-col h-full"
                     >
-                        <!-- 이미지 영역 -->
                         <div
                             class="relative aspect-[16/9] bg-stone-200 overflow-hidden"
                         >
+                            <img
+                                src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80"
+                                alt="제주"
+                                class="absolute inset-0 w-full h-full object-cover"
+                                loading="lazy"
+                                decoding="async"
+                                referrerpolicy="no-referrer"
+                                onerror="
+                                    this.onerror = null;
+                                    this.src =
+                                        'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80';
+                                "
+                            />
                             <div
-                                class="absolute inset-0 bg-stone-100 flex items-center justify-center text-stone-300"
-                            >
-                                <span class="material-symbols-outlined text-4xl"
-                                    >location_on</span
-                                >
-                            </div>
+                                class="absolute inset-0 bg-gradient-to-t from-black/25 via-black/0 to-black/0"
+                            ></div>
 
-                            <!-- 뱃지 -->
                             <div class="absolute top-3 left-3 flex gap-2">
                                 <span
                                     class="px-2 py-1 bg-white/90 backdrop-blur text-[10px] font-bold text-blue-600 rounded-full flex items-center gap-1 border border-blue-100 shadow-sm"
@@ -259,10 +269,19 @@
                                         class="material-symbols-outlined text-[10px]"
                                         >route</span
                                     >
-                                    동선 최적화
+                                    대중교통 동선
+                                </span>
+                                <span
+                                    class="px-2 py-1 bg-white/90 backdrop-blur text-[10px] font-bold text-stone-700 rounded-full flex items-center gap-1 border border-stone-200 shadow-sm"
+                                >
+                                    <span
+                                        class="material-symbols-outlined text-[10px]"
+                                        >photo_camera</span
+                                    >
+                                    사진 스팟
                                 </span>
                             </div>
-                            <!-- 하트 아이콘 -->
+
                             <button
                                 onclick="toggleHeart(this)"
                                 class="absolute top-3 right-3 p-1.5 bg-white/50 backdrop-blur rounded-full hover:bg-white text-stone-500 transition-all"
@@ -274,13 +293,12 @@
                             </button>
                         </div>
 
-                        <!-- 콘텐츠 -->
                         <div class="p-5 flex flex-col flex-1">
                             <div class="flex justify-between items-start mb-2">
                                 <h3
                                     class="font-bold text-lg text-stone-800 group-hover:text-primary transition-colors"
                                 >
-                                    제주 힐링 여행 2박3일
+                                    제주 감성 맛집 & 사진 2박3일
                                 </h3>
                                 <div
                                     class="flex items-center gap-1 text-xs font-bold text-orange-400"
@@ -295,7 +313,7 @@
                                     >
                                     4.8
                                     <span class="text-stone-300 font-normal"
-                                        >(128)</span
+                                        >(214)</span
                                     >
                                 </div>
                             </div>
@@ -318,16 +336,32 @@
                                     >
                                     2박 3일</span
                                 >
+                                <span>·</span>
+                                <span class="flex items-center gap-0.5"
+                                    ><span
+                                        class="material-symbols-outlined text-sm"
+                                        >group</span
+                                    >
+                                    친구</span
+                                >
                             </div>
 
-                            <div class="flex gap-1.5 mb-4">
+                            <div class="flex flex-wrap gap-1.5 mb-4">
                                 <span
                                     class="px-2 py-0.5 bg-stone-100 text-stone-600 rounded text-[10px]"
-                                    >힐링</span
+                                    >#힐링코스</span
                                 >
                                 <span
                                     class="px-2 py-0.5 bg-stone-100 text-stone-600 rounded text-[10px]"
-                                    >자연</span
+                                    >#뷰맛집</span
+                                >
+                                <span
+                                    class="px-2 py-0.5 bg-stone-100 text-stone-600 rounded text-[10px]"
+                                    >#인생샷</span
+                                >
+                                <span
+                                    class="px-2 py-0.5 bg-stone-100 text-stone-600 rounded text-[10px]"
+                                    >#감성여행</span
                                 >
                             </div>
 
@@ -335,24 +369,31 @@
                                 class="mt-auto pt-4 border-t border-stone-100 flex items-center justify-between text-xs text-stone-500 mb-4"
                             >
                                 <div class="flex gap-3">
-                                    <span class="flex items-center gap-1"
-                                        ><span
+                                    <span class="flex items-center gap-1">
+                                        <span
                                             class="material-symbols-outlined text-sm"
                                             >directions_walk</span
                                         >
-                                        약 4시간</span
-                                    >
-                                    <span class="flex items-center gap-1"
-                                        ><span
+                                        이동 중간
+                                    </span>
+                                    <span class="flex items-center gap-1">
+                                        <span
+                                            class="material-symbols-outlined text-sm"
+                                            >directions_bus</span
+                                        >
+                                        대중교통
+                                    </span>
+                                    <span class="flex items-center gap-1">
+                                        <span
                                             class="material-symbols-outlined text-sm"
                                             >payments</span
                                         >
-                                        35만원</span
-                                    >
+                                        68만원
+                                    </span>
                                 </div>
                                 <span
-                                    class="px-2 py-0.5 bg-cyan-50 text-cyan-600 rounded text-[10px] font-bold"
-                                    >여유로움</span
+                                    class="px-2 py-0.5 bg-stone-100 text-stone-600 rounded text-[10px] font-bold"
+                                    >보통</span
                                 >
                             </div>
 
@@ -361,11 +402,11 @@
                                     class="py-2.5 rounded-xl border border-stone-200 text-stone-600 text-xs font-bold hover:bg-stone-50 transition-colors"
                                     onclick="
                                         showDetails(
-                                            '제주 힐링 여행 2박3일',
+                                            '제주 감성 맛집 & 사진 2박3일',
                                             '제주도',
                                             '4.8',
-                                            '35만원',
-                                            '약 4시간',
+                                            '68만원',
+                                            '이동 중간',
                                         )
                                     "
                                 >
@@ -385,31 +426,51 @@
                         </div>
                     </article>
 
-                    <!-- 카드 2 -->
+                    <!-- 2) 도쿄 -->
                     <article
                         class="bg-white rounded-2xl border border-stone-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow group flex flex-col h-full"
                     >
                         <div
                             class="relative aspect-[16/9] bg-stone-200 overflow-hidden"
                         >
+                            <img
+                                src="https://images.unsplash.com/photo-1549693578-d683be217e58?auto=format&fit=crop&w=1200&q=80"
+                                alt="도쿄타워"
+                                class="absolute inset-0 w-full h-full object-cover"
+                                loading="lazy"
+                                decoding="async"
+                                referrerpolicy="no-referrer"
+                                onerror="
+                                    this.onerror = null;
+                                    this.src =
+                                        'https://images.unsplash.com/photo-1549692520-acc6669e2f0c?auto=format&fit=crop&w=1200&q=80';
+                                "
+                            />
                             <div
-                                class="absolute inset-0 bg-stone-100 flex items-center justify-center text-stone-300"
-                            >
-                                <span class="material-symbols-outlined text-4xl"
-                                    >location_on</span
-                                >
-                            </div>
+                                class="absolute inset-0 bg-gradient-to-t from-black/25 via-black/0 to-black/0"
+                            ></div>
+
                             <div class="absolute top-3 left-3 flex gap-2">
                                 <span
                                     class="px-2 py-1 bg-white/90 backdrop-blur text-[10px] font-bold text-green-600 rounded-full flex items-center gap-1 border border-green-100 shadow-sm"
                                 >
                                     <span
                                         class="material-symbols-outlined text-[10px]"
-                                        >savings</span
+                                        >restaurant</span
                                     >
-                                    가성비 최고
+                                    맛집 집중
+                                </span>
+                                <span
+                                    class="px-2 py-1 bg-white/90 backdrop-blur text-[10px] font-bold text-stone-700 rounded-full flex items-center gap-1 border border-stone-200 shadow-sm"
+                                >
+                                    <span
+                                        class="material-symbols-outlined text-[10px]"
+                                        >photo_camera</span
+                                    >
+                                    야경 스팟
                                 </span>
                             </div>
+
                             <button
                                 onclick="toggleHeart(this)"
                                 class="absolute top-3 right-3 p-1.5 bg-white/50 backdrop-blur rounded-full hover:bg-white text-stone-500 transition-all"
@@ -426,7 +487,7 @@
                                 <h3
                                     class="font-bold text-lg text-stone-800 group-hover:text-primary transition-colors"
                                 >
-                                    부산 맛집 투어 1박2일
+                                    도쿄 감성 거리 + 맛집/사진 2박3일
                                 </h3>
                                 <div
                                     class="flex items-center gap-1 text-xs font-bold text-orange-400"
@@ -441,7 +502,7 @@
                                     >
                                     4.9
                                     <span class="text-stone-300 font-normal"
-                                        >(256)</span
+                                        >(301)</span
                                     >
                                 </div>
                             </div>
@@ -454,312 +515,7 @@
                                         class="material-symbols-outlined text-sm"
                                         >location_on</span
                                     >
-                                    부산</span
-                                >
-                                <span>·</span>
-                                <span class="flex items-center gap-0.5"
-                                    ><span
-                                        class="material-symbols-outlined text-sm"
-                                        >calendar_today</span
-                                    >
-                                    1박 2일</span
-                                >
-                            </div>
-
-                            <div class="flex gap-1.5 mb-4">
-                                <span
-                                    class="px-2 py-0.5 bg-stone-100 text-stone-600 rounded text-[10px]"
-                                    >맛집</span
-                                >
-                                <span
-                                    class="px-2 py-0.5 bg-stone-100 text-stone-600 rounded text-[10px]"
-                                    >야경</span
-                                >
-                            </div>
-
-                            <div
-                                class="mt-auto pt-4 border-t border-stone-100 flex items-center justify-between text-xs text-stone-500 mb-4"
-                            >
-                                <div class="flex gap-3">
-                                    <span class="flex items-center gap-1"
-                                        ><span
-                                            class="material-symbols-outlined text-sm"
-                                            >directions_walk</span
-                                        >
-                                        약 2시간</span
-                                    >
-                                    <span class="flex items-center gap-1"
-                                        ><span
-                                            class="material-symbols-outlined text-sm"
-                                            >payments</span
-                                        >
-                                        18만원</span
-                                    >
-                                </div>
-                                <span
-                                    class="px-2 py-0.5 bg-stone-100 text-stone-600 rounded text-[10px] font-bold"
-                                    >보통</span
-                                >
-                            </div>
-
-                            <div class="grid grid-cols-2 gap-2 mt-auto">
-                                <button
-                                    class="py-2.5 rounded-xl border border-stone-200 text-stone-600 text-xs font-bold hover:bg-stone-50 transition-colors"
-                                    onclick="
-                                        showDetails(
-                                            '부산 맛집 투어 1박2일',
-                                            '부산',
-                                            '4.9',
-                                            '18만원',
-                                            '약 2시간',
-                                        )
-                                    "
-                                >
-                                    상세보기
-                                </button>
-                                <button
-                                    class="py-2.5 rounded-xl bg-primary text-white text-xs font-bold hover:bg-teal-700 transition-colors flex items-center justify-center gap-1"
-                                    onclick="addToPlanner(this)"
-                                >
-                                    <span
-                                        class="material-symbols-outlined text-sm"
-                                        >add</span
-                                    >
-                                    플래너에 담기
-                                </button>
-                            </div>
-                        </div>
-                    </article>
-
-                    <!-- 카드 3 -->
-                    <article
-                        class="bg-white rounded-2xl border border-stone-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow group flex flex-col h-full"
-                    >
-                        <div
-                            class="relative aspect-[16/9] bg-stone-200 overflow-hidden"
-                        >
-                            <div
-                                class="absolute inset-0 bg-stone-100 flex items-center justify-center text-stone-300"
-                            >
-                                <span class="material-symbols-outlined text-4xl"
-                                    >location_on</span
-                                >
-                            </div>
-                            <div class="absolute top-3 left-3 flex gap-2">
-                                <span
-                                    class="px-2 py-1 bg-white/90 backdrop-blur text-[10px] font-bold text-blue-600 rounded-full flex items-center gap-1 border border-blue-100 shadow-sm"
-                                >
-                                    <span
-                                        class="material-symbols-outlined text-[10px]"
-                                        >route</span
-                                    >
-                                    동선 최적화
-                                </span>
-                                <span
-                                    class="px-2 py-1 bg-white/90 backdrop-blur text-[10px] font-bold text-stone-600 rounded-full flex items-center gap-1 border border-stone-200 shadow-sm"
-                                >
-                                    <span
-                                        class="material-symbols-outlined text-[10px]"
-                                        >photo_camera</span
-                                    >
-                                    사진 맛집
-                                </span>
-                            </div>
-                            <button
-                                onclick="toggleHeart(this)"
-                                class="absolute top-3 right-3 p-1.5 bg-white/50 backdrop-blur rounded-full hover:bg-white text-stone-500 transition-all"
-                            >
-                                <span
-                                    class="material-symbols-outlined text-lg transition-transform duration-200"
-                                    >favorite</span
-                                >
-                            </button>
-                        </div>
-
-                        <div class="p-5 flex flex-col flex-1">
-                            <div class="flex justify-between items-start mb-2">
-                                <h3
-                                    class="font-bold text-lg text-stone-800 group-hover:text-primary transition-colors"
-                                >
-                                    강릉 바다 카페 투어
-                                </h3>
-                                <div
-                                    class="flex items-center gap-1 text-xs font-bold text-orange-400"
-                                >
-                                    <span
-                                        class="material-symbols-outlined text-sm"
-                                        style="
-                                            font-variation-settings: &quot;FILL&quot;
-                                                1;
-                                        "
-                                        >star</span
-                                    >
-                                    4.7
-                                    <span class="text-stone-300 font-normal"
-                                        >(89)</span
-                                    >
-                                </div>
-                            </div>
-
-                            <div
-                                class="flex items-center gap-2 text-xs text-stone-500 mb-3"
-                            >
-                                <span class="flex items-center gap-0.5"
-                                    ><span
-                                        class="material-symbols-outlined text-sm"
-                                        >location_on</span
-                                    >
-                                    강릉</span
-                                >
-                                <span>·</span>
-                                <span class="flex items-center gap-0.5"
-                                    ><span
-                                        class="material-symbols-outlined text-sm"
-                                        >calendar_today</span
-                                    >
-                                    1박 2일</span
-                                >
-                            </div>
-
-                            <div class="flex gap-1.5 mb-4">
-                                <span
-                                    class="px-2 py-0.5 bg-stone-100 text-stone-600 rounded text-[10px]"
-                                    >카페</span
-                                >
-                                <span
-                                    class="px-2 py-0.5 bg-stone-100 text-stone-600 rounded text-[10px]"
-                                    >바다</span
-                                >
-                                <span
-                                    class="px-2 py-0.5 bg-stone-100 text-stone-600 rounded text-[10px]"
-                                    >힐링</span
-                                >
-                            </div>
-
-                            <div
-                                class="mt-auto pt-4 border-t border-stone-100 flex items-center justify-between text-xs text-stone-500 mb-4"
-                            >
-                                <div class="flex gap-3">
-                                    <span class="flex items-center gap-1"
-                                        ><span
-                                            class="material-symbols-outlined text-sm"
-                                            >directions_walk</span
-                                        >
-                                        약 1.5시간</span
-                                    >
-                                    <span class="flex items-center gap-1"
-                                        ><span
-                                            class="material-symbols-outlined text-sm"
-                                            >payments</span
-                                        >
-                                        15만원</span
-                                    >
-                                </div>
-                                <span
-                                    class="px-2 py-0.5 bg-cyan-50 text-cyan-600 rounded text-[10px] font-bold"
-                                    >여유로움</span
-                                >
-                            </div>
-
-                            <div class="grid grid-cols-2 gap-2 mt-auto">
-                                <button
-                                    class="py-2.5 rounded-xl border border-stone-200 text-stone-600 text-xs font-bold hover:bg-stone-50 transition-colors"
-                                    onclick="
-                                        showDetails(
-                                            '강릉 바다 카페 투어',
-                                            '강릉',
-                                            '4.7',
-                                            '15만원',
-                                            '약 1.5시간',
-                                        )
-                                    "
-                                >
-                                    상세보기
-                                </button>
-                                <button
-                                    class="py-2.5 rounded-xl bg-primary text-white text-xs font-bold hover:bg-teal-700 transition-colors flex items-center justify-center gap-1"
-                                    onclick="addToPlanner(this)"
-                                >
-                                    <span
-                                        class="material-symbols-outlined text-sm"
-                                        >add</span
-                                    >
-                                    플래너에 담기
-                                </button>
-                            </div>
-                        </div>
-                    </article>
-
-                    <!-- 카드 4 -->
-                    <article
-                        class="bg-white rounded-2xl border border-stone-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow group flex flex-col h-full"
-                    >
-                        <div
-                            class="relative aspect-[16/9] bg-stone-200 overflow-hidden"
-                        >
-                            <div
-                                class="absolute inset-0 bg-stone-100 flex items-center justify-center text-stone-300"
-                            >
-                                <span class="material-symbols-outlined text-4xl"
-                                    >location_on</span
-                                >
-                            </div>
-                            <div class="absolute top-3 left-3 flex gap-2">
-                                <span
-                                    class="px-2 py-1 bg-white/90 backdrop-blur text-[10px] font-bold text-indigo-600 rounded-full flex items-center gap-1 border border-indigo-100 shadow-sm"
-                                >
-                                    <span
-                                        class="material-symbols-outlined text-[10px]"
-                                        >school</span
-                                    >
-                                    교육적
-                                </span>
-                            </div>
-                            <button
-                                onclick="toggleHeart(this)"
-                                class="absolute top-3 right-3 p-1.5 bg-white/50 backdrop-blur rounded-full hover:bg-white text-stone-500 transition-all"
-                            >
-                                <span
-                                    class="material-symbols-outlined text-lg transition-transform duration-200"
-                                    >favorite</span
-                                >
-                            </button>
-                        </div>
-
-                        <div class="p-5 flex flex-col flex-1">
-                            <div class="flex justify-between items-start mb-2">
-                                <h3
-                                    class="font-bold text-lg text-stone-800 group-hover:text-primary transition-colors"
-                                >
-                                    경주 역사 탐방 2박3일
-                                </h3>
-                                <div
-                                    class="flex items-center gap-1 text-xs font-bold text-orange-400"
-                                >
-                                    <span
-                                        class="material-symbols-outlined text-sm"
-                                        style="
-                                            font-variation-settings: &quot;FILL&quot;
-                                                1;
-                                        "
-                                        >star</span
-                                    >
-                                    4.6
-                                    <span class="text-stone-300 font-normal"
-                                        >(156)</span
-                                    >
-                                </div>
-                            </div>
-
-                            <div
-                                class="flex items-center gap-2 text-xs text-stone-500 mb-3"
-                            >
-                                <span class="flex items-center gap-0.5"
-                                    ><span
-                                        class="material-symbols-outlined text-sm"
-                                        >location_on</span
-                                    >
-                                    경주</span
+                                    도쿄</span
                                 >
                                 <span>·</span>
                                 <span class="flex items-center gap-0.5"
@@ -769,20 +525,32 @@
                                     >
                                     2박 3일</span
                                 >
+                                <span>·</span>
+                                <span class="flex items-center gap-0.5"
+                                    ><span
+                                        class="material-symbols-outlined text-sm"
+                                        >group</span
+                                    >
+                                    친구</span
+                                >
                             </div>
 
-                            <div class="flex gap-1.5 mb-4">
+                            <div class="flex flex-wrap gap-1.5 mb-4">
                                 <span
                                     class="px-2 py-0.5 bg-stone-100 text-stone-600 rounded text-[10px]"
-                                    >역사</span
+                                    >#야경맛집</span
                                 >
                                 <span
                                     class="px-2 py-0.5 bg-stone-100 text-stone-600 rounded text-[10px]"
-                                    >문화</span
+                                    >#도시감성</span
                                 >
                                 <span
                                     class="px-2 py-0.5 bg-stone-100 text-stone-600 rounded text-[10px]"
-                                    >야경</span
+                                    >#먹방투어</span
+                                >
+                                <span
+                                    class="px-2 py-0.5 bg-stone-100 text-stone-600 rounded text-[10px]"
+                                    >#핫플탐방</span
                                 >
                             </div>
 
@@ -790,20 +558,27 @@
                                 class="mt-auto pt-4 border-t border-stone-100 flex items-center justify-between text-xs text-stone-500 mb-4"
                             >
                                 <div class="flex gap-3">
-                                    <span class="flex items-center gap-1"
-                                        ><span
+                                    <span class="flex items-center gap-1">
+                                        <span
                                             class="material-symbols-outlined text-sm"
                                             >directions_walk</span
                                         >
-                                        약 3시간</span
-                                    >
-                                    <span class="flex items-center gap-1"
-                                        ><span
+                                        이동 중간
+                                    </span>
+                                    <span class="flex items-center gap-1">
+                                        <span
+                                            class="material-symbols-outlined text-sm"
+                                            >subway</span
+                                        >
+                                        대중교통
+                                    </span>
+                                    <span class="flex items-center gap-1">
+                                        <span
                                             class="material-symbols-outlined text-sm"
                                             >payments</span
                                         >
-                                        28만원</span
-                                    >
+                                        79만원
+                                    </span>
                                 </div>
                                 <span
                                     class="px-2 py-0.5 bg-stone-100 text-stone-600 rounded text-[10px] font-bold"
@@ -816,11 +591,11 @@
                                     class="py-2.5 rounded-xl border border-stone-200 text-stone-600 text-xs font-bold hover:bg-stone-50 transition-colors"
                                     onclick="
                                         showDetails(
-                                            '경주 역사 탐방 2박3일',
-                                            '경주',
-                                            '4.6',
-                                            '28만원',
-                                            '약 3시간',
+                                            '도쿄 감성 거리 + 맛집/사진 2박3일',
+                                            '도쿄',
+                                            '4.9',
+                                            '79만원',
+                                            '이동 중간',
                                         )
                                     "
                                 >
@@ -840,31 +615,51 @@
                         </div>
                     </article>
 
-                    <!-- 카드 5 -->
+                    <!-- 3) 오사카 -->
                     <article
                         class="bg-white rounded-2xl border border-stone-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow group flex flex-col h-full"
                     >
                         <div
                             class="relative aspect-[16/9] bg-stone-200 overflow-hidden"
                         >
+                            <img
+                                src="https://images.unsplash.com/photo-1526481280695-3c687fd643ed?auto=format&fit=crop&w=1200&q=80"
+                                alt="오사카"
+                                class="absolute inset-0 w-full h-full object-cover"
+                                loading="lazy"
+                                decoding="async"
+                                referrerpolicy="no-referrer"
+                                onerror="
+                                    this.onerror = null;
+                                    this.src =
+                                        'https://images.unsplash.com/photo-1528164344705-47542687000d?auto=format&fit=crop&w=1200&q=80';
+                                "
+                            />
                             <div
-                                class="absolute inset-0 bg-stone-100 flex items-center justify-center text-stone-300"
-                            >
-                                <span class="material-symbols-outlined text-4xl"
-                                    >location_on</span
-                                >
-                            </div>
+                                class="absolute inset-0 bg-gradient-to-t from-black/25 via-black/0 to-black/0"
+                            ></div>
+
                             <div class="absolute top-3 left-3 flex gap-2">
                                 <span
-                                    class="px-2 py-1 bg-white/90 backdrop-blur text-[10px] font-bold text-teal-700 rounded-full flex items-center gap-1 border border-teal-100 shadow-sm"
+                                    class="px-2 py-1 bg-white/90 backdrop-blur text-[10px] font-bold text-purple-700 rounded-full flex items-center gap-1 border border-purple-100 shadow-sm"
                                 >
                                     <span
                                         class="material-symbols-outlined text-[10px]"
-                                        >check_circle</span
+                                        >ramen_dining</span
                                     >
-                                    커플 추천
+                                    먹방 코스
+                                </span>
+                                <span
+                                    class="px-2 py-1 bg-white/90 backdrop-blur text-[10px] font-bold text-stone-700 rounded-full flex items-center gap-1 border border-stone-200 shadow-sm"
+                                >
+                                    <span
+                                        class="material-symbols-outlined text-[10px]"
+                                        >photo_camera</span
+                                    >
+                                    감성 스팟
                                 </span>
                             </div>
+
                             <button
                                 onclick="toggleHeart(this)"
                                 class="absolute top-3 right-3 p-1.5 bg-white/50 backdrop-blur rounded-full hover:bg-white text-stone-500 transition-all"
@@ -881,7 +676,7 @@
                                 <h3
                                     class="font-bold text-lg text-stone-800 group-hover:text-primary transition-colors"
                                 >
-                                    여수 밤바다 낭만 여행
+                                    오사카 도톤보리 감성 + 맛집/사진 2박3일
                                 </h3>
                                 <div
                                     class="flex items-center gap-1 text-xs font-bold text-orange-400"
@@ -894,9 +689,9 @@
                                         "
                                         >star</span
                                     >
-                                    4.9
+                                    4.8
                                     <span class="text-stone-300 font-normal"
-                                        >(203)</span
+                                        >(197)</span
                                     >
                                 </div>
                             </div>
@@ -909,7 +704,7 @@
                                         class="material-symbols-outlined text-sm"
                                         >location_on</span
                                     >
-                                    여수</span
+                                    오사카</span
                                 >
                                 <span>·</span>
                                 <span class="flex items-center gap-0.5"
@@ -917,22 +712,34 @@
                                         class="material-symbols-outlined text-sm"
                                         >calendar_today</span
                                     >
-                                    1박 2일</span
+                                    2박 3일</span
+                                >
+                                <span>·</span>
+                                <span class="flex items-center gap-0.5"
+                                    ><span
+                                        class="material-symbols-outlined text-sm"
+                                        >group</span
+                                    >
+                                    친구</span
                                 >
                             </div>
 
-                            <div class="flex gap-1.5 mb-4">
+                            <div class="flex flex-wrap gap-1.5 mb-4">
                                 <span
                                     class="px-2 py-0.5 bg-stone-100 text-stone-600 rounded text-[10px]"
-                                    >낭만</span
+                                    >#먹방성지</span
                                 >
                                 <span
                                     class="px-2 py-0.5 bg-stone-100 text-stone-600 rounded text-[10px]"
-                                    >야경</span
+                                    >#골목감성</span
                                 >
                                 <span
                                     class="px-2 py-0.5 bg-stone-100 text-stone-600 rounded text-[10px]"
-                                    >데이트</span
+                                    >#여행스타그램</span
+                                >
+                                <span
+                                    class="px-2 py-0.5 bg-stone-100 text-stone-600 rounded text-[10px]"
+                                    >#인생샷</span
                                 >
                             </div>
 
@@ -940,20 +747,27 @@
                                 class="mt-auto pt-4 border-t border-stone-100 flex items-center justify-between text-xs text-stone-500 mb-4"
                             >
                                 <div class="flex gap-3">
-                                    <span class="flex items-center gap-1"
-                                        ><span
+                                    <span class="flex items-center gap-1">
+                                        <span
                                             class="material-symbols-outlined text-sm"
                                             >directions_walk</span
                                         >
-                                        약 2.5시간</span
-                                    >
-                                    <span class="flex items-center gap-1"
-                                        ><span
+                                        이동 중간
+                                    </span>
+                                    <span class="flex items-center gap-1">
+                                        <span
+                                            class="material-symbols-outlined text-sm"
+                                            >train</span
+                                        >
+                                        대중교통
+                                    </span>
+                                    <span class="flex items-center gap-1">
+                                        <span
                                             class="material-symbols-outlined text-sm"
                                             >payments</span
                                         >
-                                        22만원</span
-                                    >
+                                        74만원
+                                    </span>
                                 </div>
                                 <span
                                     class="px-2 py-0.5 bg-stone-100 text-stone-600 rounded text-[10px] font-bold"
@@ -966,11 +780,11 @@
                                     class="py-2.5 rounded-xl border border-stone-200 text-stone-600 text-xs font-bold hover:bg-stone-50 transition-colors"
                                     onclick="
                                         showDetails(
-                                            '여수 밤바다 낭만 여행',
-                                            '여수',
-                                            '4.9',
-                                            '22만원',
-                                            '약 2.5시간',
+                                            '오사카 도톤보리 감성 + 맛집/사진 2박3일',
+                                            '오사카',
+                                            '4.8',
+                                            '74만원',
+                                            '이동 중간',
                                         )
                                     "
                                 >
@@ -990,31 +804,51 @@
                         </div>
                     </article>
 
-                    <!-- 카드 6 -->
+                    <!-- 4) 후쿠오카 -->
                     <article
                         class="bg-white rounded-2xl border border-stone-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow group flex flex-col h-full"
                     >
                         <div
                             class="relative aspect-[16/9] bg-stone-200 overflow-hidden"
                         >
+                            <img
+                                src="https://images.unsplash.com/photo-1554797589-7241bb691973?auto=format&fit=crop&w=1200&q=80"
+                                alt="후쿠오카 시사이드 모모치"
+                                class="absolute inset-0 w-full h-full object-cover"
+                                loading="lazy"
+                                decoding="async"
+                                referrerpolicy="no-referrer"
+                                onerror="
+                                    this.onerror = null;
+                                    this.src =
+                                        'https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?auto=format&fit=crop&w=1200&q=80';
+                                "
+                            />
                             <div
-                                class="absolute inset-0 bg-stone-100 flex items-center justify-center text-stone-300"
-                            >
-                                <span class="material-symbols-outlined text-4xl"
-                                    >location_on</span
-                                >
-                            </div>
+                                class="absolute inset-0 bg-gradient-to-t from-black/25 via-black/0 to-black/0"
+                            ></div>
+
                             <div class="absolute top-3 left-3 flex gap-2">
                                 <span
-                                    class="px-2 py-1 bg-white/90 backdrop-blur text-[10px] font-bold text-green-600 rounded-full flex items-center gap-1 border border-green-100 shadow-sm"
+                                    class="px-2 py-1 bg-white/90 backdrop-blur text-[10px] font-bold text-teal-700 rounded-full flex items-center gap-1 border border-teal-100 shadow-sm"
                                 >
                                     <span
                                         class="material-symbols-outlined text-[10px]"
-                                        >savings</span
+                                        >local_cafe</span
                                     >
-                                    가성비 최고
+                                    감성 카페
+                                </span>
+                                <span
+                                    class="px-2 py-1 bg-white/90 backdrop-blur text-[10px] font-bold text-stone-700 rounded-full flex items-center gap-1 border border-stone-200 shadow-sm"
+                                >
+                                    <span
+                                        class="material-symbols-outlined text-[10px]"
+                                        >photo_camera</span
+                                    >
+                                    스냅 코스
                                 </span>
                             </div>
+
                             <button
                                 onclick="toggleHeart(this)"
                                 class="absolute top-3 right-3 p-1.5 bg-white/50 backdrop-blur rounded-full hover:bg-white text-stone-500 transition-all"
@@ -1031,7 +865,7 @@
                                 <h3
                                     class="font-bold text-lg text-stone-800 group-hover:text-primary transition-colors"
                                 >
-                                    전주 한옥마을 먹방
+                                    후쿠오카 감성 골목 + 맛집 사진 2박3일
                                 </h3>
                                 <div
                                     class="flex items-center gap-1 text-xs font-bold text-orange-400"
@@ -1046,7 +880,7 @@
                                     >
                                     4.7
                                     <span class="text-stone-300 font-normal"
-                                        >(189)</span
+                                        >(165)</span
                                     >
                                 </div>
                             </div>
@@ -1059,7 +893,7 @@
                                         class="material-symbols-outlined text-sm"
                                         >location_on</span
                                     >
-                                    전주</span
+                                    후쿠오카</span
                                 >
                                 <span>·</span>
                                 <span class="flex items-center gap-0.5"
@@ -1067,22 +901,34 @@
                                         class="material-symbols-outlined text-sm"
                                         >calendar_today</span
                                     >
-                                    당일치기</span
+                                    2박 3일</span
+                                >
+                                <span>·</span>
+                                <span class="flex items-center gap-0.5"
+                                    ><span
+                                        class="material-symbols-outlined text-sm"
+                                        >group</span
+                                    >
+                                    친구</span
                                 >
                             </div>
 
-                            <div class="flex gap-1.5 mb-4">
+                            <div class="flex flex-wrap gap-1.5 mb-4">
                                 <span
                                     class="px-2 py-0.5 bg-stone-100 text-stone-600 rounded text-[10px]"
-                                    >한옥</span
+                                    >#감성산책</span
                                 >
                                 <span
                                     class="px-2 py-0.5 bg-stone-100 text-stone-600 rounded text-[10px]"
-                                    >먹방</span
+                                    >#카페투어</span
                                 >
                                 <span
                                     class="px-2 py-0.5 bg-stone-100 text-stone-600 rounded text-[10px]"
-                                    >전통</span
+                                    >#힐링트립</span
+                                >
+                                <span
+                                    class="px-2 py-0.5 bg-stone-100 text-stone-600 rounded text-[10px]"
+                                    >#바다뷰</span
                                 >
                             </div>
 
@@ -1090,20 +936,27 @@
                                 class="mt-auto pt-4 border-t border-stone-100 flex items-center justify-between text-xs text-stone-500 mb-4"
                             >
                                 <div class="flex gap-3">
-                                    <span class="flex items-center gap-1"
-                                        ><span
+                                    <span class="flex items-center gap-1">
+                                        <span
                                             class="material-symbols-outlined text-sm"
                                             >directions_walk</span
                                         >
-                                        약 3시간</span
-                                    >
-                                    <span class="flex items-center gap-1"
-                                        ><span
+                                        이동 중간
+                                    </span>
+                                    <span class="flex items-center gap-1">
+                                        <span
+                                            class="material-symbols-outlined text-sm"
+                                            >directions_bus</span
+                                        >
+                                        대중교통
+                                    </span>
+                                    <span class="flex items-center gap-1">
+                                        <span
                                             class="material-symbols-outlined text-sm"
                                             >payments</span
                                         >
-                                        12만원</span
-                                    >
+                                        63만원
+                                    </span>
                                 </div>
                                 <span
                                     class="px-2 py-0.5 bg-stone-100 text-stone-600 rounded text-[10px] font-bold"
@@ -1116,11 +969,200 @@
                                     class="py-2.5 rounded-xl border border-stone-200 text-stone-600 text-xs font-bold hover:bg-stone-50 transition-colors"
                                     onclick="
                                         showDetails(
-                                            '전주 한옥마을 먹방',
-                                            '전주',
+                                            '후쿠오카 감성 골목 + 맛집 사진 2박3일',
+                                            '후쿠오카',
                                             '4.7',
-                                            '12만원',
-                                            '약 3시간',
+                                            '63만원',
+                                            '이동 중간',
+                                        )
+                                    "
+                                >
+                                    상세보기
+                                </button>
+                                <button
+                                    class="py-2.5 rounded-xl bg-primary text-white text-xs font-bold hover:bg-teal-700 transition-colors flex items-center justify-center gap-1"
+                                    onclick="addToPlanner(this)"
+                                >
+                                    <span
+                                        class="material-symbols-outlined text-sm"
+                                        >add</span
+                                    >
+                                    플래너에 담기
+                                </button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- 5) 타이베이 (✅ 여기: 마지막 카드도 동일 템플릿/크기) -->
+                    <article
+                        class="bg-white rounded-2xl border border-stone-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow group flex flex-col h-full"
+                    >
+                        <div
+                            class="relative aspect-[16/9] bg-stone-200 overflow-hidden"
+                        >
+                            <img
+                                src="https://images.unsplash.com/photo-1508009603885-50cf7c579365?auto=format&fit=crop&w=1200&q=80"
+                                alt="타이베이"
+                                class="absolute inset-0 w-full h-full object-cover"
+                                loading="lazy"
+                                decoding="async"
+                                referrerpolicy="no-referrer"
+                                onerror="
+                                    this.onerror = null;
+                                    this.src =
+                                        'https://images.unsplash.com/photo-1526481280695-3c687fd643ed?auto=format&fit=crop&w=1200&q=80';
+                                "
+                            />
+                            <div
+                                class="absolute inset-0 bg-gradient-to-t from-black/25 via-black/0 to-black/0"
+                            ></div>
+
+                            <div class="absolute top-3 left-3 flex gap-2">
+                                <span
+                                    class="px-2 py-1 bg-white/90 backdrop-blur text-[10px] font-bold text-red-600 rounded-full flex items-center gap-1 border border-red-100 shadow-sm"
+                                >
+                                    <span
+                                        class="material-symbols-outlined text-[10px]"
+                                        >restaurant</span
+                                    >
+                                    야시장 맛집
+                                </span>
+                                <span
+                                    class="px-2 py-1 bg-white/90 backdrop-blur text-[10px] font-bold text-stone-700 rounded-full flex items-center gap-1 border border-stone-200 shadow-sm"
+                                >
+                                    <span
+                                        class="material-symbols-outlined text-[10px]"
+                                        >photo_camera</span
+                                    >
+                                    스냅 코스
+                                </span>
+                            </div>
+
+                            <button
+                                onclick="toggleHeart(this)"
+                                class="absolute top-3 right-3 p-1.5 bg-white/50 backdrop-blur rounded-full hover:bg-white text-stone-500 transition-all"
+                            >
+                                <span
+                                    class="material-symbols-outlined text-lg transition-transform duration-200"
+                                    >favorite</span
+                                >
+                            </button>
+                        </div>
+
+                        <div class="p-5 flex flex-col flex-1">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3
+                                    class="font-bold text-lg text-stone-800 group-hover:text-primary transition-colors"
+                                >
+                                    타이베이 감성 야시장 + 맛집/사진 2박3일
+                                </h3>
+                                <div
+                                    class="flex items-center gap-1 text-xs font-bold text-orange-400"
+                                >
+                                    <span
+                                        class="material-symbols-outlined text-sm"
+                                        style="
+                                            font-variation-settings: &quot;FILL&quot;
+                                                1;
+                                        "
+                                        >star</span
+                                    >
+                                    4.8
+                                    <span class="text-stone-300 font-normal"
+                                        >(142)</span
+                                    >
+                                </div>
+                            </div>
+
+                            <div
+                                class="flex items-center gap-2 text-xs text-stone-500 mb-3"
+                            >
+                                <span class="flex items-center gap-0.5"
+                                    ><span
+                                        class="material-symbols-outlined text-sm"
+                                        >location_on</span
+                                    >
+                                    타이베이</span
+                                >
+                                <span>·</span>
+                                <span class="flex items-center gap-0.5"
+                                    ><span
+                                        class="material-symbols-outlined text-sm"
+                                        >calendar_today</span
+                                    >
+                                    2박 3일</span
+                                >
+                                <span>·</span>
+                                <span class="flex items-center gap-0.5"
+                                    ><span
+                                        class="material-symbols-outlined text-sm"
+                                        >group</span
+                                    >
+                                    친구</span
+                                >
+                            </div>
+
+                            <div class="flex flex-wrap gap-1.5 mb-4">
+                                <span
+                                    class="px-2 py-0.5 bg-stone-100 text-stone-600 rounded text-[10px]"
+                                    >#야시장투어</span
+                                >
+                                <span
+                                    class="px-2 py-0.5 bg-stone-100 text-stone-600 rounded text-[10px]"
+                                    >#로컬맛집</span
+                                >
+                                <span
+                                    class="px-2 py-0.5 bg-stone-100 text-stone-600 rounded text-[10px]"
+                                    >#우정여행</span
+                                >
+                                <span
+                                    class="px-2 py-0.5 bg-stone-100 text-stone-600 rounded text-[10px]"
+                                    >#여행기록</span
+                                >
+                            </div>
+
+                            <div
+                                class="mt-auto pt-4 border-t border-stone-100 flex items-center justify-between text-xs text-stone-500 mb-4"
+                            >
+                                <div class="flex gap-3">
+                                    <span class="flex items-center gap-1">
+                                        <span
+                                            class="material-symbols-outlined text-sm"
+                                            >directions_walk</span
+                                        >
+                                        이동 중간
+                                    </span>
+                                    <span class="flex items-center gap-1">
+                                        <span
+                                            class="material-symbols-outlined text-sm"
+                                            >subway</span
+                                        >
+                                        대중교통
+                                    </span>
+                                    <span class="flex items-center gap-1">
+                                        <span
+                                            class="material-symbols-outlined text-sm"
+                                            >payments</span
+                                        >
+                                        72만원
+                                    </span>
+                                </div>
+                                <span
+                                    class="px-2 py-0.5 bg-stone-100 text-stone-600 rounded text-[10px] font-bold"
+                                    >보통</span
+                                >
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-2 mt-auto">
+                                <button
+                                    class="py-2.5 rounded-xl border border-stone-200 text-stone-600 text-xs font-bold hover:bg-stone-50 transition-colors"
+                                    onclick="
+                                        showDetails(
+                                            '타이베이 감성 야시장 + 맛집/사진 2박3일 ',
+                                            '타이베이',
+                                            '4.8',
+                                            '72만원',
+                                            '이동 중간',
                                         )
                                     "
                                 >
@@ -1232,6 +1274,10 @@
                                     있습니다. 상세한 동선과 맛집 정보가 포함되어
                                     있어 실패 없는 여행을 즐길 수 있습니다.
                                 </p>
+                                <div
+                                    id="modalPlan"
+                                    class="mt-4 space-y-3"
+                                ></div>
                             </div>
                         </div>
                         <div
@@ -1275,6 +1321,538 @@
                 }, 500); // 0.5초 후 복귀
             }
 
+            const plansByLocation = {
+                제주도: [
+                    {
+                        dayTitle: "Day 1",
+                        items: [
+                            {
+                                time: "10:30",
+                                title: "동문시장 브런치",
+                                stayMin: 70,
+                                cost: 18000,
+                                moveMin: 25,
+                                moveKm: 12,
+                            },
+                            {
+                                time: "13:00",
+                                title: "성산일출봉 포토스팟",
+                                stayMin: 90,
+                                cost: 2000,
+                                moveMin: 35,
+                                moveKm: 18,
+                            },
+                            {
+                                time: "16:00",
+                                title: "카페 스냅 & 감성거리",
+                                stayMin: 80,
+                                cost: 9000,
+                                moveMin: 20,
+                                moveKm: 9,
+                            },
+                            {
+                                time: "19:00",
+                                title: "흑돼지 저녁",
+                                stayMin: 90,
+                                cost: 26000,
+                                moveMin: 30,
+                                moveKm: 14,
+                            },
+                        ],
+                    },
+                    {
+                        dayTitle: "Day 2",
+                        items: [
+                            {
+                                time: "10:00",
+                                title: "협재해변 산책/사진",
+                                stayMin: 80,
+                                cost: 0,
+                                moveMin: 35,
+                                moveKm: 16,
+                            },
+                            {
+                                time: "12:30",
+                                title: "해산물 점심",
+                                stayMin: 70,
+                                cost: 22000,
+                                moveMin: 15,
+                                moveKm: 6,
+                            },
+                            {
+                                time: "15:00",
+                                title: "오름 트레킹(가벼움)",
+                                stayMin: 90,
+                                cost: 0,
+                                moveMin: 30,
+                                moveKm: 13,
+                            },
+                            {
+                                time: "18:30",
+                                title: "감성 술집/펍",
+                                stayMin: 90,
+                                cost: 25000,
+                                moveMin: 25,
+                                moveKm: 10,
+                            },
+                        ],
+                    },
+                    {
+                        dayTitle: "Day 3",
+                        items: [
+                            {
+                                time: "09:30",
+                                title: "카페 & 기념샷",
+                                stayMin: 70,
+                                cost: 9000,
+                                moveMin: 20,
+                                moveKm: 8,
+                            },
+                            {
+                                time: "11:30",
+                                title: "로컬 맛집 점심",
+                                stayMin: 70,
+                                cost: 20000,
+                                moveMin: 15,
+                                moveKm: 5,
+                            },
+                            {
+                                time: "13:30",
+                                title: "기념품 쇼핑",
+                                stayMin: 60,
+                                cost: 15000,
+                                moveMin: 20,
+                                moveKm: 7,
+                            },
+                        ],
+                    },
+                ],
+
+                도쿄: [
+                    {
+                        dayTitle: "Day 1",
+                        items: [
+                            {
+                                time: "11:00",
+                                title: "도쿄타워 전망/사진",
+                                stayMin: 90,
+                                cost: 15000,
+                                moveMin: 25,
+                                moveKm: 7,
+                            },
+                            {
+                                time: "13:30",
+                                title: "긴자 맛집 점심",
+                                stayMin: 70,
+                                cost: 25000,
+                                moveMin: 20,
+                                moveKm: 5,
+                            },
+                            {
+                                time: "16:00",
+                                title: "시부야 감성거리 스냅",
+                                stayMin: 80,
+                                cost: 0,
+                                moveMin: 25,
+                                moveKm: 6,
+                            },
+                            {
+                                time: "19:00",
+                                title: "이자카야 저녁",
+                                stayMin: 90,
+                                cost: 30000,
+                                moveMin: 15,
+                                moveKm: 3,
+                            },
+                        ],
+                    },
+                    {
+                        dayTitle: "Day 2",
+                        items: [
+                            {
+                                time: "10:30",
+                                title: "아사쿠사/센소지",
+                                stayMin: 90,
+                                cost: 0,
+                                moveMin: 30,
+                                moveKm: 8,
+                            },
+                            {
+                                time: "13:00",
+                                title: "스시 런치",
+                                stayMin: 70,
+                                cost: 28000,
+                                moveMin: 20,
+                                moveKm: 4,
+                            },
+                            {
+                                time: "15:30",
+                                title: "하라주쿠 감성카페",
+                                stayMin: 80,
+                                cost: 9000,
+                                moveMin: 25,
+                                moveKm: 6,
+                            },
+                            {
+                                time: "18:30",
+                                title: "야경 포인트(오다이바)",
+                                stayMin: 80,
+                                cost: 0,
+                                moveMin: 35,
+                                moveKm: 12,
+                            },
+                        ],
+                    },
+                    {
+                        dayTitle: "Day 3",
+                        items: [
+                            {
+                                time: "09:30",
+                                title: "츠키지/시장 간식",
+                                stayMin: 60,
+                                cost: 12000,
+                                moveMin: 25,
+                                moveKm: 6,
+                            },
+                            {
+                                time: "11:30",
+                                title: "쇼핑(시부야/긴자)",
+                                stayMin: 90,
+                                cost: 20000,
+                                moveMin: 20,
+                                moveKm: 5,
+                            },
+                            {
+                                time: "14:00",
+                                title: "공항 이동",
+                                stayMin: 0,
+                                cost: 15000,
+                                moveMin: 60,
+                                moveKm: 25,
+                            },
+                        ],
+                    },
+                ],
+
+                오사카: [
+                    {
+                        dayTitle: "Day 1",
+                        items: [
+                            {
+                                time: "11:00",
+                                title: "도톤보리 먹방",
+                                stayMin: 90,
+                                cost: 25000,
+                                moveMin: 20,
+                                moveKm: 5,
+                            },
+                            {
+                                time: "14:00",
+                                title: "난바 감성 스냅",
+                                stayMin: 70,
+                                cost: 0,
+                                moveMin: 10,
+                                moveKm: 2,
+                            },
+                            {
+                                time: "16:30",
+                                title: "우메다 카페",
+                                stayMin: 80,
+                                cost: 8000,
+                                moveMin: 25,
+                                moveKm: 7,
+                            },
+                            {
+                                time: "19:00",
+                                title: "야키니쿠 저녁",
+                                stayMin: 90,
+                                cost: 32000,
+                                moveMin: 15,
+                                moveKm: 3,
+                            },
+                        ],
+                    },
+                    {
+                        dayTitle: "Day 2",
+                        items: [
+                            {
+                                time: "10:30",
+                                title: "오사카성 포토",
+                                stayMin: 90,
+                                cost: 6000,
+                                moveMin: 25,
+                                moveKm: 8,
+                            },
+                            {
+                                time: "13:00",
+                                title: "쿠로몬시장 점심",
+                                stayMin: 70,
+                                cost: 20000,
+                                moveMin: 20,
+                                moveKm: 6,
+                            },
+                            {
+                                time: "15:30",
+                                title: "감성 골목 산책",
+                                stayMin: 80,
+                                cost: 0,
+                                moveMin: 20,
+                                moveKm: 5,
+                            },
+                            {
+                                time: "18:30",
+                                title: "라멘/이자카야",
+                                stayMin: 90,
+                                cost: 25000,
+                                moveMin: 15,
+                                moveKm: 3,
+                            },
+                        ],
+                    },
+                    {
+                        dayTitle: "Day 3",
+                        items: [
+                            {
+                                time: "10:00",
+                                title: "기념품 쇼핑",
+                                stayMin: 80,
+                                cost: 15000,
+                                moveMin: 15,
+                                moveKm: 4,
+                            },
+                            {
+                                time: "12:30",
+                                title: "마지막 맛집",
+                                stayMin: 70,
+                                cost: 22000,
+                                moveMin: 15,
+                                moveKm: 4,
+                            },
+                            {
+                                time: "14:00",
+                                title: "공항 이동",
+                                stayMin: 0,
+                                cost: 15000,
+                                moveMin: 60,
+                                moveKm: 25,
+                            },
+                        ],
+                    },
+                ],
+
+                후쿠오카: [
+                    {
+                        dayTitle: "Day 1",
+                        items: [
+                            {
+                                time: "11:00",
+                                title: "텐진 맛집 점심",
+                                stayMin: 70,
+                                cost: 22000,
+                                moveMin: 20,
+                                moveKm: 6,
+                            },
+                            {
+                                time: "14:00",
+                                title: "시사이드 모모치 해변공원",
+                                stayMin: 90,
+                                cost: 0,
+                                moveMin: 25,
+                                moveKm: 7,
+                            },
+                            {
+                                time: "17:00",
+                                title: "감성 카페 & 스냅",
+                                stayMin: 70,
+                                cost: 8000,
+                                moveMin: 20,
+                                moveKm: 5,
+                            },
+                            {
+                                time: "19:30",
+                                title: "야타이(포장마차) 저녁",
+                                stayMin: 90,
+                                cost: 25000,
+                                moveMin: 15,
+                                moveKm: 3,
+                            },
+                        ],
+                    },
+                    {
+                        dayTitle: "Day 2",
+                        items: [
+                            {
+                                time: "10:30",
+                                title: "다자이후 당일",
+                                stayMin: 120,
+                                cost: 5000,
+                                moveMin: 45,
+                                moveKm: 17,
+                            },
+                            {
+                                time: "14:30",
+                                title: "로컬 맛집",
+                                stayMin: 70,
+                                cost: 20000,
+                                moveMin: 25,
+                                moveKm: 7,
+                            },
+                            {
+                                time: "17:00",
+                                title: "하카타 감성거리",
+                                stayMin: 80,
+                                cost: 0,
+                                moveMin: 20,
+                                moveKm: 6,
+                            },
+                            {
+                                time: "19:30",
+                                title: "모츠나베 저녁",
+                                stayMin: 90,
+                                cost: 28000,
+                                moveMin: 15,
+                                moveKm: 3,
+                            },
+                        ],
+                    },
+                    {
+                        dayTitle: "Day 3",
+                        items: [
+                            {
+                                time: "10:00",
+                                title: "쇼핑(하카타/텐진)",
+                                stayMin: 90,
+                                cost: 15000,
+                                moveMin: 20,
+                                moveKm: 5,
+                            },
+                            {
+                                time: "12:30",
+                                title: "카페 & 디저트",
+                                stayMin: 70,
+                                cost: 9000,
+                                moveMin: 15,
+                                moveKm: 4,
+                            },
+                            {
+                                time: "14:00",
+                                title: "공항 이동",
+                                stayMin: 0,
+                                cost: 8000,
+                                moveMin: 35,
+                                moveKm: 12,
+                            },
+                        ],
+                    },
+                ],
+
+                타이베이: [
+                    {
+                        dayTitle: "Day 1",
+                        items: [
+                            {
+                                time: "11:00",
+                                title: "용산사/감성 스냅",
+                                stayMin: 80,
+                                cost: 0,
+                                moveMin: 25,
+                                moveKm: 7,
+                            },
+                            {
+                                time: "13:00",
+                                title: "우육면 점심",
+                                stayMin: 70,
+                                cost: 18000,
+                                moveMin: 20,
+                                moveKm: 5,
+                            },
+                            {
+                                time: "16:00",
+                                title: "시먼딩 거리",
+                                stayMin: 80,
+                                cost: 0,
+                                moveMin: 15,
+                                moveKm: 4,
+                            },
+                            {
+                                time: "19:00",
+                                title: "야시장(스린) 먹방",
+                                stayMin: 120,
+                                cost: 25000,
+                                moveMin: 30,
+                                moveKm: 9,
+                            },
+                        ],
+                    },
+                    {
+                        dayTitle: "Day 2",
+                        items: [
+                            {
+                                time: "10:30",
+                                title: "타이베이101 전망",
+                                stayMin: 90,
+                                cost: 18000,
+                                moveMin: 25,
+                                moveKm: 6,
+                            },
+                            {
+                                time: "13:00",
+                                title: "딤섬 런치",
+                                stayMin: 70,
+                                cost: 23000,
+                                moveMin: 20,
+                                moveKm: 5,
+                            },
+                            {
+                                time: "15:30",
+                                title: "카페 투어",
+                                stayMin: 80,
+                                cost: 9000,
+                                moveMin: 15,
+                                moveKm: 4,
+                            },
+                            {
+                                time: "18:30",
+                                title: "단수이 노을",
+                                stayMin: 80,
+                                cost: 0,
+                                moveMin: 40,
+                                moveKm: 15,
+                            },
+                        ],
+                    },
+                    {
+                        dayTitle: "Day 3",
+                        items: [
+                            {
+                                time: "10:00",
+                                title: "기념품 쇼핑",
+                                stayMin: 80,
+                                cost: 15000,
+                                moveMin: 15,
+                                moveKm: 4,
+                            },
+                            {
+                                time: "12:30",
+                                title: "마지막 맛집",
+                                stayMin: 70,
+                                cost: 20000,
+                                moveMin: 15,
+                                moveKm: 4,
+                            },
+                            {
+                                time: "14:00",
+                                title: "공항 이동",
+                                stayMin: 0,
+                                cost: 12000,
+                                moveMin: 60,
+                                moveKm: 25,
+                            },
+                        ],
+                    },
+                ],
+            };
+
             function showDetails(title, location, rating, cost, duration) {
                 document.getElementById("modalTitle").textContent = title;
                 document.getElementById("modalLocation").textContent = location;
@@ -1284,6 +1862,64 @@
                     "예상 비용: " + cost;
                 document.getElementById("modalDuration").textContent =
                     "소요 시간: " + duration;
+
+                // 일정 렌더링
+                const planWrap = document.getElementById("modalPlan");
+                if (planWrap) {
+                    const days = plansByLocation[location] || [];
+                    planWrap.innerHTML = days
+                        .map((day) => {
+                            const rows = day.items
+                                .map((it) => {
+                                    return `
+            <div class="grid grid-cols-5 gap-2 text-[12px] text-slate-700 py-2 border-b border-slate-100">
+              <div class="font-semibold">${it.time}</div>
+              <div class="col-span-2">${it.title}</div>
+              <div class="text-right">${it.stayMin}분</div>
+              <div class="text-right">${it.cost.toLocaleString()}원</div>
+              <div class="col-span-5 text-[11px] text-slate-500 mt-1">
+                이동: ${it.moveMin}분 · ${it.moveKm}km
+              </div>
+            </div>
+          `;
+                                })
+                                .join("");
+
+                            const dayTotalCost = day.items.reduce(
+                                (s, x) => s + x.cost,
+                                0,
+                            );
+                            const dayTotalMove = day.items.reduce(
+                                (s, x) => s + x.moveMin,
+                                0,
+                            );
+                            const dayTotalStay = day.items.reduce(
+                                (s, x) => s + x.stayMin,
+                                0,
+                            );
+
+                            return `
+        <section class="rounded-xl border border-slate-100 bg-white">
+          <div class="px-4 py-3 flex items-center justify-between bg-slate-50 rounded-t-xl">
+            <div class="font-bold text-slate-800">${day.dayTitle}</div>
+            <div class="text-[11px] text-slate-500">
+              체류 ${dayTotalStay}분 · 이동 ${dayTotalMove}분 · 비용 ${dayTotalCost.toLocaleString()}원
+            </div>
+          </div>
+          <div class="px-4 py-2">
+            <div class="grid grid-cols-5 gap-2 text-[11px] text-slate-400 pb-2">
+              <div>시간</div>
+              <div class="col-span-2">일정</div>
+              <div class="text-right">소요</div>
+              <div class="text-right">비용</div>
+            </div>
+            ${rows}
+          </div>
+        </section>
+      `;
+                        })
+                        .join("");
+                }
 
                 const modal = document.getElementById("detailsModal");
                 const backdrop = document.getElementById(
