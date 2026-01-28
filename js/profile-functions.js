@@ -390,32 +390,40 @@ function initPassportGrid(forceExpanded = false) {
     const grid = document.getElementById("mainPassportPreview");
     if (!grid) return;
     grid.innerHTML = "";
+    
     myPassport.forEach((item, index) => {
         const badge = document.createElement("div");
         const isHidden = !forceExpanded && index >= 3;
-        badge.className = `flex flex-col items-center transition-all duration-300 ${isHidden ? "hidden passport-extra" : "passport-extra-visible"}`;
+        
+        // [수정 1] 부모 요소에 'group'과 'cursor-pointer' 클래스 추가
+        badge.className = `flex flex-col items-center transition-all duration-300 cursor-pointer group ${isHidden ? "hidden passport-extra" : "passport-extra-visible"}`;
+        
         if (index >= 3) badge.classList.add("passport-extra");
+        
         badge.innerHTML = `
-        <div class="w-20 h-20 rounded-full bg-white border-2 border-slate-100 shadow-sm flex items-center justify-center mb-3 overflow-hidden group-hover:scale-110 transition-transform">
+        <div class="w-20 h-20 rounded-full bg-white border-2 border-slate-100 shadow-sm flex items-center justify-center mb-3 overflow-hidden transition-all duration-300 group-hover:scale-105 group-hover:border-primary group-hover:shadow-md">
             <img src="${item.img}" alt="${item.name}" class="w-full h-full object-cover">
         </div>
-        <span class="text-sm font-bold text-slate-900 mb-0.5">${item.name}</span>
+        
+        <span class="text-sm font-bold text-slate-900 mb-0.5 transition-colors duration-300 group-hover:text-primary">${item.name}</span>
         <span class="text-xs text-slate-400">${item.date}</span>
     `;
         grid.appendChild(badge);
     });
+
+    // (추가하기 버튼 부분은 그대로 유지하거나, 똑같이 효과를 주고 싶으면 아래처럼 수정)
     const addBtn = document.createElement("div");
-    addBtn.className =
-        "flex flex-col items-center cursor-pointer hover:scale-105 transition-transform order-last";
+    addBtn.className = "flex flex-col items-center cursor-pointer group order-last transition-transform duration-300 hover:-translate-y-1"; // 살짝 떠오르는 효과 추가
     addBtn.onclick = () => toggleAddCountryModal();
     addBtn.innerHTML = `
-    <div class="w-20 h-20 rounded-full bg-slate-50 border-4 border-dashed border-slate-300 flex items-center justify-center mb-3 text-slate-400 hover:text-primary hover:border-primary transition-colors">
+    <div class="w-20 h-20 rounded-full bg-slate-50 border-4 border-dashed border-slate-300 flex items-center justify-center mb-3 text-slate-400 group-hover:text-primary group-hover:border-primary group-hover:bg-white transition-all duration-300 shadow-sm group-hover:shadow-md">
         <span class="material-symbols-outlined text-3xl">add</span>
     </div>
-    <span class="text-sm font-bold text-slate-900 mb-0.5">추가하기</span>
+    <span class="text-sm font-bold text-slate-900 mb-0.5 group-hover:text-primary transition-colors">추가하기</span>
     <span class="text-xs text-slate-400">New</span>
 `;
     grid.appendChild(addBtn);
+
     const btn = document.getElementById("expandPassportBtn");
     if (btn && forceExpanded) {
         btn.innerText = "접기";
