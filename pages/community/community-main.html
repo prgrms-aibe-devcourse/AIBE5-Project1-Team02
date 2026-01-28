@@ -696,6 +696,7 @@
       </div>
     </div>
 
+    <script src="../../js/auth.js"></script>
     <script>
       (function () {
         const dummyUser = {
@@ -710,6 +711,7 @@
       })();
 
       document.addEventListener("DOMContentLoaded", function () {
+        checkLoginStatus(); // 로그인 상태 확인 및 UI 업데이트
         let allPostsData = [];
         let currentFilteredPosts = [];
         const initialVisibleCount = 9;
