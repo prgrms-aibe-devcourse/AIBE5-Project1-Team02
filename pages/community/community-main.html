@@ -155,11 +155,10 @@
           <hr class="border-border-light dark:border-border-dark" />
           <div class="group">
             <div class="flex items-center justify-between py-2 mb-2">
-              <span
-                class="text-sm font-bold text-text-main-light dark:text-white uppercase tracking-wider"
-                >태그</span
-              >
-            </div>
+                              <span
+                              class="text-sm font-bold text-text-main-light dark:text-white uppercase tracking-wider"
+                              >테마</span
+                            >            </div>
             <div
               id="tag-filter-container"
               class="flex flex-col gap-3 pl-1"
@@ -205,7 +204,7 @@
                   <option value="rating">최고 평점</option>
                 </select>
                 <div
-                  class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-text-muted-light"
+                  class="pointer-events-none absolute inset-y-0 right-0 flex items-center justify-center w-8 text-text-muted-light"
                 >
                   <span class="material-symbols-outlined text-sm"
                     >expand_more</span
@@ -258,8 +257,9 @@
       class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden"
     >
       <div
-        class="bg-white dark:bg-surface-dark rounded-xl p-8 max-w-4xl w-full max-h-[90vh] overflow-y-auto relative"
+        class="bg-white dark:bg-surface-dark rounded-xl max-w-4xl w-full max-h-[90vh] overflow-hidden relative"
       >
+        <div class="p-8 overflow-y-auto max-h-[90vh]">
         <button
           id="close-write-modal"
           class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:text-gray-300 dark:hover:text-white"
@@ -449,13 +449,13 @@
           <label
             for="tag-input"
             class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-            >태그</label
+            >테마</label
           >
           <div class="flex gap-2 mb-3">
             <input
               type="text"
               id="tag-input"
-              placeholder="태그 입력 후 Enter"
+              placeholder="테마 입력 후 Enter"
               class="flex-1 px-4 py-2 border border-gray-300 dark:border-border-dark bg-white dark:bg-surface-dark rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
             /><button
               id="add-tag-button"
@@ -500,6 +500,7 @@
             작성 완료
           </button>
         </div>
+      </div>
       </div>
     </div>
     <div
@@ -588,7 +589,7 @@
               content: "교토의 숨겨진 미식 보석 탐험.",
               thumbnail: "./community-image/교토음식.JPG",
               likes: 1200,
-              tags: ["미식"],
+              tags: ["미식", "아시아", "럭셔리"],
               duration: 7,
               rating: 4.8,
               continent: "아시아",
@@ -607,7 +608,7 @@
               content: "배낭여행객을 위한 종합 가이드.",
               thumbnail: "./community-image/프라하.JPG",
               likes: 2100,
-              tags: ["모험"],
+              tags: ["모험", "유럽"],
               duration: 14,
               rating: 4.9,
               continent: "유럽",
@@ -625,7 +626,7 @@
               content: "비용 부담 없는 최고의 경험.",
               thumbnail: "./community-image/세부.JPG",
               likes: 3400,
-              tags: ["예산"],
+              tags: ["예산", "아시아"],
               duration: 10,
               rating: 4.7,
               continent: "아시아",
@@ -643,7 +644,7 @@
               content: "나홀로 여행자를 위한 안전하고 매력적인 여정.",
               thumbnail: "./community-image/대만.JPG",
               likes: 920,
-              tags: ["나홀로 여행"],
+              tags: ["나홀로 여행", "아시아"],
               duration: 5,
               rating: 4.6,
               continent: "아시아",
@@ -661,7 +662,7 @@
               content: "가족과 함께하는 스트레스 없는 여행.",
               thumbnail: "./community-image/나고야성.JPG",
               likes: 2800,
-              tags: ["가족"],
+              tags: ["가족", "아시아"],
               duration: 12,
               rating: 4.9,
               continent: "아시아",
@@ -719,7 +720,8 @@
               return false;
             const destMatch =
               selectedDestinations.length === 0 ||
-              selectedDestinations.includes(post.continent);
+              (post.tags &&
+                selectedDestinations.some(destination => post.tags.includes(destination)));
             const tagMatch =
               selectedTags.length === 0 ||
               (post.tags &&
@@ -1145,6 +1147,13 @@
             routeData,
             thumbnail,
           };
+
+          // 태그 중 알려진 대륙과 일치하는 것이 있으면 대륙을 추론합니다.
+          const knownContinents = ["유럽", "아시아", "북미"];
+          const inferredContinent = tags.find(tag => knownContinents.includes(tag));
+          if (inferredContinent) {
+            postData.continent = inferredContinent;
+          }
 
           if (editPostId) {
             const index = allPostsData.findIndex((p) => p.id === editPostId);
