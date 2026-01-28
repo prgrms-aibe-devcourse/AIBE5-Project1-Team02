@@ -85,7 +85,7 @@
                 transform: rotate(180deg);
             }
 
-            /* 애니메이션 추가 */
+            /* 모달 애니메이션 */
             @keyframes fadeIn {
                 from {
                     opacity: 0;
@@ -178,8 +178,71 @@
             </section>
         </main>
 
+        <div
+            id="detail-modal"
+            class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
+        >
+            <div
+                class="bg-white w-full max-w-2xl h-[95vh] rounded-3xl shadow-2xl flex flex-col relative overflow-hidden border border-slate-200 animate-[fadeIn_0.2s_ease-out]"
+            >
+                <button
+                    onclick="closeDetail()"
+                    class="absolute top-6 right-6 z-20 w-10 h-10 bg-black/30 hover:bg-black/50 text-white rounded-full flex items-center justify-center backdrop-blur-md transition-all shadow-lg cursor-pointer"
+                >
+                    <span class="material-symbols-outlined text-[24px]"
+                        >close</span
+                    >
+                </button>
+
+                <div
+                    id="detail-content"
+                    class="flex-1 overflow-y-auto custom-scrollbar bg-white pb-10"
+                ></div>
+            </div>
+        </div>
+
         <script>
-            // 1. 고정된 유명 장소 좌표 (이름 기준)
+            // 1. 상세 보기용 더미 데이터
+            const BASE_PLACE_DETAILS = {
+                phone: "+82-2-1234-5678",
+                hours: "09:00 - 18:00",
+                rating: 4.5,
+                reviewCount: 234,
+                tags: ["인기", "사진 명소", "가족 여행", "데이트"],
+                reviews: [
+                    {
+                        id: "1",
+                        author: "여행러버",
+                        rating: 5,
+                        date: "2026-01-15",
+                        content:
+                            "정말 멋진 곳이었어요! 사진 찍기에도 좋고 주변에 맛집도 많아요. 강력 추천합니다!",
+                    },
+                    {
+                        id: "2",
+                        author: "세계여행가",
+                        rating: 4,
+                        date: "2026-01-10",
+                        content:
+                            "기대했던 것보다 좋았습니다. 다만 사람이 많아서 조금 붐볐어요.",
+                    },
+                    {
+                        id: "3",
+                        author: "가족여행",
+                        rating: 5,
+                        date: "2026-01-05",
+                        content:
+                            "아이들과 함께 가기 정말 좋은 곳이에요. 시설도 깨끗하고 직원분들도 친절하셨습니다.",
+                    },
+                ],
+                facilities: [
+                    "주차 가능",
+                    "와이파이",
+                    "휠체어 접근",
+                    "반려동물 동반 가능",
+                ],
+            };
+
             const FIXED_COORDS = {
                 에펠탑: { top: "20%", left: "10%" },
                 "도쿄 타워": { top: "40%", left: "90%" },
@@ -196,17 +259,11 @@
                 공원: { top: "35%", left: "25%" },
             };
 
-            // 2. 좌표 결정 함수
             function getPlaceCoordinates(name, location) {
                 const cleanName = name ? name.trim() : "";
                 const cleanLoc = location ? location.trim() : "";
-
-                if (FIXED_COORDS[cleanName]) {
-                    return FIXED_COORDS[cleanName];
-                }
-
+                if (FIXED_COORDS[cleanName]) return FIXED_COORDS[cleanName];
                 const seedString = cleanLoc || cleanName || "default";
-
                 let hash = 0;
                 for (let i = 0; i < seedString.length; i++) {
                     const char = seedString.charCodeAt(i);
@@ -214,10 +271,8 @@
                     hash = hash & hash;
                 }
                 hash = Math.abs(hash);
-
                 const left = 10 + (hash % 81);
                 const top = 15 + ((hash * 7) % 76);
-
                 return { top: `${top}%`, left: `${left}%` };
             }
 
@@ -232,20 +287,25 @@
                 const urlParams = new URLSearchParams(window.location.search);
                 const planId = urlParams.get("id");
                 console.log("Received planId in schedule.html:", planId);
+
+                // ★★★ [중요] 첫 번째 코드의 로그인 체크 로직 적용 ★★★
                 const loggedInUser = JSON.parse(
                     localStorage.getItem("loggedInUser"),
                 );
+
                 if (!loggedInUser || !loggedInUser.email) {
                     document.body.innerHTML = `<div class="flex items-center justify-center h-full text-slate-500">로그인이 필요합니다.</div>`;
                     return;
                 }
+
+                // 사용자별 키 사용
                 const userPlansKey = `tripPlans_${loggedInUser.email}`;
                 const savedPlans = JSON.parse(
                     localStorage.getItem(userPlansKey) || "[]",
                 );
-
                 currentPlan = savedPlans.find((p) => p.id === planId);
 
+                // 임시 저장소(draft)도 사용자별로 체크
                 if (!currentPlan) {
                     const draftKey = `tripPlanner_draft_${loggedInUser.email}`;
                     const draft = localStorage.getItem(draftKey);
@@ -266,16 +326,16 @@
 
                 if (currentPlan.schedule) {
                     currentPlan.schedule.forEach((day) => {
-                        day.items.sort((a, b) => {
-                            return a.startTime.localeCompare(b.startTime);
-                        });
+                        day.items.sort((a, b) =>
+                            a.startTime.localeCompare(b.startTime),
+                        );
                     });
                 }
 
                 renderBasicInfo();
                 renderItinerary();
                 renderMap();
-                renderFlightInfo(); // ★ 항공권 정보 렌더링 추가
+                renderFlightInfo();
             }
 
             function renderBasicInfo() {
@@ -339,15 +399,17 @@
                                     .map(
                                         (item, i) => `
                                     <div class="relative z-10 pl-10">
-                                        <div class="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm flex gap-3">
+                                        <div onclick="openPlaceDetail(${idx}, ${i})" 
+                                             class="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm flex gap-3 cursor-pointer hover:border-slate-300 hover:shadow-md transition-all group">
+                                            
                                             <div class="flex flex-col items-center gap-1 min-w-[50px]">
-                                                <div class="p-2 rounded-xl" style="background-color: ${color}20; color: ${color}">
+                                                <div class="p-2 rounded-xl transition-colors group-hover:bg-slate-100" style="background-color: ${color}20; color: ${color}">
                                                     <span class="material-symbols-outlined text-[20px]">${item.place.category === "custom" ? "edit_location" : "location_on"}</span>
                                                 </div>
                                                 <span class="text-[11px] font-bold text-slate-400">${item.startTime}</span>
                                             </div>
                                             <div class="flex-1 min-w-0 py-0.5">
-                                                <h4 class="text-[14px] font-bold text-slate-800 truncate leading-tight">${item.place.name}</h4>
+                                                <h4 class="text-[14px] font-bold text-slate-800 truncate leading-tight group-hover:text-blue-600 transition-colors">${item.place.name}</h4>
                                                 <div class="flex items-center gap-1 mt-1">
                                                     <span class="material-symbols-outlined text-[12px] text-slate-400">public</span>
                                                     <p class="text-[12px] text-slate-500 truncate font-medium">${item.place.country || "위치 정보 없음"}</p>
@@ -357,11 +419,14 @@
                                                         ? `
                                                     <div class="mt-2 text-[11px] bg-slate-50 p-2 rounded-lg text-slate-600 border border-slate-100 flex items-start gap-1.5">
                                                         <span class="material-symbols-outlined text-[14px] text-slate-400 mt-[1px]">description</span>
-                                                        <span class="break-words leading-relaxed">${item.memo}</span>
+                                                        <span class="break-words leading-relaxed line-clamp-2">${item.memo}</span>
                                                     </div>
                                                 `
                                                         : ""
                                                 }
+                                            </div>
+                                            <div class="flex items-center text-slate-300">
+                                                <span class="material-symbols-outlined text-[18px]">chevron_right</span>
                                             </div>
                                         </div>
                                     </div>
@@ -406,13 +471,9 @@
                 currentPlan.schedule.forEach((day, dayIdx) => {
                     const dayNum = dayIdx + 1;
                     const color = getDayColor(dayIdx);
-
                     const legendSpan = document.createElement("span");
                     const marginClass = dayIdx === 0 ? "mr-1" : "ml-3 mr-1";
-                    legendSpan.innerHTML = `
-                    <span class="inline-block w-2 h-2 rounded-full ${marginClass}" style="background-color: ${color}"></span>
-                    ${dayNum}일차
-                `;
+                    legendSpan.innerHTML = `<span class="inline-block w-2 h-2 rounded-full ${marginClass}" style="background-color: ${color}"></span>${dayNum}일차`;
                     legendP.appendChild(legendSpan);
 
                     const pinsGroup = document.createElement("div");
@@ -421,13 +482,11 @@
                     pinsContainer.appendChild(pinsGroup);
 
                     let pathData = "";
-
                     day.items.forEach((item, itemIdx) => {
                         const coords = getPlaceCoordinates(
                             item.place.name,
                             item.place.country,
                         );
-
                         const pin = document.createElement("div");
                         pin.className = `map-pin ${dayIdx === 0 ? "visible" : ""}`;
                         pin.style.top = coords.top;
@@ -464,16 +523,13 @@
                         svgContainer.appendChild(path);
                     }
                 });
-
                 legendContainer.appendChild(legendP);
             }
 
-            // ★ [새로 추가된 함수] 항공권 정보 렌더링
             function renderFlightInfo() {
                 const container = document.getElementById("content-cost");
-                const info = currentPlan.flightInfo; // planner에서 저장된 flightInfo 객체
+                const info = currentPlan.flightInfo;
 
-                // 1. 정보 없음 처리
                 if (!info) {
                     container.innerHTML = `
                     <div class="p-10 text-center text-slate-400 flex flex-col items-center mt-10">
@@ -486,37 +542,29 @@
                     return;
                 }
 
-                // 2. 카드 생성 도우미 함수
                 const fmtPrice = (n) =>
                     new Intl.NumberFormat("ko-KR").format(n);
                 const renderCard = (type, flightData) => {
                     if (!flightData) return "";
-
                     const isOut = type === "가는 편";
-                    // 테마 색상 설정 (뱃지 및 텍스트용)
                     const themeColor = isOut
                         ? "text-blue-600"
                         : "text-indigo-600";
                     const badgeBg = isOut ? "bg-blue-600" : "bg-indigo-600";
                     const softBg = isOut ? "bg-blue-50" : "bg-indigo-50";
 
-                    // ★ [핵심 수정] 항공사별 원래 색상을 감지해서 '진한 배경 + 흰 글씨'로 자동 변환하는 헬퍼 함수
                     const getBoldColorClass = (originalColorStr) => {
-                        if (!originalColorStr) return "bg-slate-700 text-white"; // 기본값
-
-                        // flight.html에서 넘어온 color 문자열(예: "bg-sky-100...")에 따라 진한 색 매핑
+                        if (!originalColorStr) return "bg-slate-700 text-white";
                         if (originalColorStr.includes("sky"))
-                            return "bg-sky-300 text-white shadow-sm shadow-sky-200"; // 대한항공 (진한 파랑)
+                            return "bg-sky-300 text-white shadow-sm shadow-sky-200";
                         if (originalColorStr.includes("red"))
-                            return "bg-red-300 text-white shadow-sm shadow-red-200"; // 아시아나, 티웨이 (진한 빨강)
+                            return "bg-red-300 text-white shadow-sm shadow-red-200";
                         if (originalColorStr.includes("orange"))
-                            return "bg-orange-300 text-white shadow-sm shadow-orange-200"; // 제주항공 (진한 주황)
+                            return "bg-orange-300 text-white shadow-sm shadow-orange-200";
                         if (originalColorStr.includes("green"))
-                            return "bg-green-300 text-white shadow-sm shadow-green-200"; // 진에어 (진한 초록)
-
-                        return "bg-slate-700 text-white"; // 기타
+                            return "bg-green-300 text-white shadow-sm shadow-green-200";
+                        return "bg-slate-700 text-white";
                     };
-
                     const airlineLogoClass = getBoldColorClass(
                         flightData.airline.color,
                     );
@@ -524,13 +572,11 @@
                     return `
                     <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm relative overflow-hidden group hover:border-slate-300 transition-all">
                         <div class="absolute -right-6 -top-6 w-24 h-24 ${softBg} rounded-full opacity-50 group-hover:scale-110 transition-transform"></div>
-                        
                         <div class="flex justify-between items-start mb-6 relative z-10">
                             <div class="flex items-center gap-2">
                                 <span class="px-2 py-1 ${badgeBg} text-white text-[10px] font-bold rounded uppercase tracking-wider">${type}</span>
                                 <span class="text-xs text-slate-500 font-bold">${flightData.date || (isOut ? info.startDate : info.endDate)}</span>
                             </div>
-                            
                             <div class="flex items-center gap-2">
                                 <span class="text-sm font-bold text-slate-700">${flightData.airline.name}</span>
                                 <div class="w-7 h-7 rounded-full ${airlineLogoClass} flex items-center justify-center text-[10px] font-bold tracking-tighter">
@@ -538,30 +584,24 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="flex items-center justify-between relative z-10 mb-5 px-2">
                             <div class="text-center w-20">
                                 <div class="text-2xl font-black text-slate-800 tracking-tight">${flightData.depTime}</div>
                                 <div class="text-xs font-bold text-slate-400 mt-1 bg-slate-100 px-2 py-0.5 rounded-md inline-block">${flightData.depCode}</div>
                             </div>
-                            
                             <div class="flex-1 px-2 flex flex-col items-center justify-center w-full">
                                 <div class="text-[11px] text-slate-500 font-bold mb-2">${flightData.duration || "00시간 00분"}</div>
-                                
                                 <div class="w-full relative flex items-center justify-center">
                                     <div class="absolute inset-x-0 h-[2px] bg-slate-200"></div>
                                     <span class="material-symbols-outlined text-slate-400 text-lg rotate-90 bg-white px-1 relative z-10">flight</span>
                                 </div>
-
                                 <div class="text-[10px] ${themeColor} font-bold mt-2">직항</div>
                             </div>
-
                             <div class="text-center w-20">
                                 <div class="text-2xl font-black text-slate-800 tracking-tight">${flightData.arrTime}</div>
                                 <div class="text-xs font-bold text-slate-400 mt-1 bg-slate-100 px-2 py-0.5 rounded-md inline-block">${flightData.arrCode}</div>
                             </div>
                         </div>
-
                         <div class="border-t border-dashed border-slate-200 pt-3 flex justify-between items-center relative z-10">
                             <span class="text-xs text-slate-500 font-medium">1인 항공운임</span>
                             <span class="text-sm font-bold text-slate-800">${fmtPrice(flightData.price)}원</span>
@@ -569,20 +609,17 @@
                     </div>
                 `;
                 };
-                // 3. HTML 조립
+
                 container.innerHTML = `
                 <div class="space-y-4" style="animation: fadeIn 0.5s ease-out">
                     ${renderCard("가는 편", info.outbound)}
                     ${renderCard("오는 편", info.inbound)}
-
                     <div class="bg-slate-900 text-white p-6 rounded-2xl shadow-lg mt-6 relative overflow-hidden">
                         <div class="absolute right-0 top-0 w-32 h-32 bg-white/5 rounded-full blur-2xl pointer-events-none"></div>
-                        
                         <div class="flex justify-between items-center mb-4 border-b border-white/10 pb-4">
                             <span class="text-sm text-slate-300 font-medium">탑승객</span>
                             <span class="font-bold">성인 ${info.passengers}명</span>
                         </div>
-                        
                         <div class="flex justify-between items-end relative z-10">
                             <div class="flex flex-col">
                                 <span class="text-xs text-slate-400 mb-1">총 결제 금액 (세금포함)</span>
@@ -590,12 +627,8 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="text-center mt-4 pb-4">
-                        <p class="text-[11px] text-slate-400 leading-relaxed">
-                            * 상기 시간은 현지 시간 기준입니다.<br>
-                            * 항공사 사정에 의해 예고 없이 변경될 수 있습니다.
-                        </p>
+                        <p class="text-[11px] text-slate-400 leading-relaxed">* 상기 시간은 현지 시간 기준입니다.<br>* 항공사 사정에 의해 예고 없이 변경될 수 있습니다.</p>
                     </div>
                 </div>
             `;
@@ -605,16 +638,12 @@
                 const isSchedule = tabName === "schedule";
                 const sBtn = document.getElementById("tab-schedule");
                 const cBtn = document.getElementById("tab-cost");
-
-                // 탭 스타일 변경
                 sBtn.className = isSchedule
                     ? "flex-1 py-2.5 rounded-lg text-sm font-bold bg-white text-slate-800 shadow-sm transition-all"
                     : "flex-1 py-2.5 rounded-lg text-sm font-semibold text-slate-500 hover:text-slate-700 transition-all";
                 cBtn.className = !isSchedule
                     ? "flex-1 py-2.5 rounded-lg text-sm font-bold bg-white text-slate-800 shadow-sm transition-all"
                     : "flex-1 py-2.5 rounded-lg text-sm font-semibold text-slate-500 hover:text-slate-700 transition-all";
-
-                // 컨텐츠 표시/숨김
                 document
                     .getElementById("content-schedule")
                     .classList.toggle("hidden", !isSchedule);
@@ -630,7 +659,6 @@
                 const isActive = item.classList.toggle("active");
                 const route = document.getElementById(`route-day${day}`);
                 const pinsGroup = document.getElementById(`pins-day${day}`);
-
                 if (isActive) {
                     if (route) route.classList.add("visible");
                     if (pinsGroup) {
@@ -648,6 +676,119 @@
                             .forEach((pin) => pin.classList.remove("visible"));
                     }
                 }
+            }
+
+            // ★★★ 상세 보기 모달 관련 함수 ★★★
+            function openPlaceDetail(dayIdx, itemIdx) {
+                const item = currentPlan.schedule[dayIdx].items[itemIdx];
+                const place = item.place;
+                const modal = document.getElementById("detail-modal");
+                const content = document.getElementById("detail-content");
+
+                if (place.category === "custom") {
+                    content.innerHTML = `
+                    <div class="h-full flex flex-col items-center justify-center p-8 text-center bg-white">
+                        <div class="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mb-4 text-slate-300">
+                            <span class="material-symbols-outlined text-4xl">edit_off</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-800 mb-2">상세 정보 없음</h3>
+                        <p class="text-sm text-slate-500 leading-relaxed">
+                            사용자가 직접 추가한 일정입니다.
+                        </p>
+                    </div>
+                `;
+                } else {
+                    const details = {
+                        ...BASE_PLACE_DETAILS,
+                        name: place.name,
+                        image:
+                            place.image ||
+                            "https://assets.website-files.com/63c5e2d6778f8c4c37976150/63c5e2d6778f8c14a5976214_map-placeholder.png",
+                        address: `123 Travel Street, ${place.country}`,
+                        description: place.description || "",
+                    };
+
+                    content.innerHTML = `
+                    <div class="relative h-64 bg-slate-200">
+                        <img src="${details.image}" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                        <div class="absolute bottom-6 left-6 right-6 text-white">
+                            <h2 class="text-3xl font-bold leading-tight shadow-black drop-shadow-md">${details.name}</h2>
+                            <p class="text-sm opacity-90 mt-1 flex items-center gap-1">
+                                <span class="material-symbols-outlined text-sm">location_on</span> ${place.country}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="p-8 space-y-8 bg-white">
+                        <div class="space-y-4 text-sm text-gray-600 border-b border-gray-100 pb-8">
+                            <div class="flex items-center gap-3">
+                                <span class="material-symbols-outlined text-indigo-600">location_on</span>
+                                <span>${details.address}</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="material-symbols-outlined text-indigo-600">call</span>
+                                <span>${details.phone}</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="material-symbols-outlined text-indigo-600">schedule</span>
+                                <span>${details.hours}</span>
+                            </div>
+                            <div class="flex items-center gap-2 mt-2">
+                                <span class="flex text-orange-400">
+                                    <span class="material-symbols-outlined text-sm fill-current">star</span>
+                                </span>
+                                <span class="font-bold text-gray-800">${details.rating}</span>
+                                <span class="text-gray-400">(${details.reviewCount} reviews)</span>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-wrap gap-2">
+                            ${details.tags.map((tag) => `<span class="px-3 py-1 bg-gray-100 text-gray-600 text-xs rounded-full font-medium">#${tag}</span>`).join("")}
+                        </div>
+
+                        <div>
+                            <h3 class="font-bold text-gray-800 mb-3 text-sm uppercase flex items-center gap-2">
+                                <span class="w-1 h-4 bg-indigo-500 rounded-full"></span> 편의 시설
+                            </h3>
+                            <ul class="grid grid-cols-2 gap-y-2">
+                                ${details.facilities.map((f) => `<li class="flex items-center gap-2 text-sm text-gray-600"><span class="w-1.5 h-1.5 bg-indigo-300 rounded-full"></span>${f}</li>`).join("")}
+                            </ul>
+                        </div>
+
+                        <div>
+                            <h3 class="font-bold text-gray-800 mb-4 text-sm uppercase flex items-center gap-2">
+                                <span class="w-1 h-4 bg-orange-400 rounded-full"></span> 최근 리뷰
+                            </h3>
+                            <div class="space-y-3">
+                                ${details.reviews
+                                    .map(
+                                        (review) => `
+                                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100">
+                                        <div class="flex justify-between items-start mb-1">
+                                            <span class="font-bold text-sm text-gray-900">${review.author}</span>
+                                            <span class="text-xs text-gray-400">${review.date}</span>
+                                        </div>
+                                        <div class="flex text-orange-400 gap-0.5 mb-2 scale-75 origin-left">
+                                            ${Array(review.rating).fill('<span class="material-symbols-outlined text-xs fill-current">star</span>').join("")}
+                                        </div>
+                                        <p class="text-sm text-gray-600 leading-relaxed">${review.content}</p>
+                                    </div>
+                                `,
+                                    )
+                                    .join("")}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                }
+
+                modal.classList.remove("hidden");
+                content.scrollTop = 0;
+            }
+
+            function closeDetail() {
+                document.getElementById("detail-modal").classList.add("hidden");
             }
 
             init();
