@@ -819,6 +819,7 @@
                             const startTime = item.startTime || "10:00";
                             const endTime = item.endTime || "12:00";
                             const isCustom = item.place.category === "custom";
+                            const actionIcon = isCustom ? Icons.Edit : Icons.Info;
                             const clickAction = isCustom
                                 ? `App.editManualItem('${item.id}')`
                                 : `App.showDetail('${placeJson}')`;
