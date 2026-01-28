@@ -1,0 +1,1952 @@
+<html class="light" lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>여백 - 역 기반 숙소 검색</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+    <link rel="dns-prefetch" href="https://github.com" />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#4C6FFF", // 기존 페이지의 Primary Color 유지
+              "background-light": "#F8FAFC",
+              "background-dark": "#0F172A",
+              "surface-gray": "#F1F5F9",
+              // 여백 브랜드 컬러 (헤더용)
+              "yeobaek-primary": "#3b82f6",
+            },
+            fontFamily: {
+              display: ["Manrope", "sans-serif"],
+              serif: ["Noto Serif KR", "serif"], // 헤더용 폰트
+            },
+            borderRadius: {
+              DEFAULT: "0.375rem",
+              lg: "0.5rem",
+              xl: "1rem",
+              "2xl": "1.5rem",
+              full: "9999px",
+            },
+          },
+        },
+      };
+    </script>
+    <style type="text/tailwindcss">
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 4px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #e2e8f0;
+        border-radius: 10px;
+      }
+      :root {
+        --primary-color: #4c6fff;
+      }
+    </style>
+
+    <style>
+      /* 1. 슬라이더 컨테이너 (range-slider-container) 스타일 */
+      .range-slider-container {
+        position: relative; /* 자식 absolute 요소를 위한 기준 */
+        width: 100%;
+        height: 4px; /* 슬라이더 바의 높이 */
+        margin-top: 15px;
+      }
+
+      /* 2. 실제 Input range 요소 스타일 (투명하게 만들고 위치 조절) */
+      .range-slider-input {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        pointer-events: auto;
+        -webkit-appearance: none;
+        appearance: none;
+        background: transparent;
+        margin: 0;
+        z-index: 2;
+        outline: none; /* 클릭 시 생기는 파란 테두리 제거 */
+      }
+
+      /* 각 브라우저별 슬라이더 썸(동그란 핸들) 스타일 제거 및 클릭 영역 넓히기 */
+      .range-slider-input::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 80px; /* 클릭 영역 너비 늘리기 (예: 16px -> 28px)  */
+        height: 80px; /* 클릭 영역 높이 늘리기 (예: 16px -> 28px)  */
+        background: transparent;
+        cursor: grab;
+        margin-top: -12px; /* 트랙 중앙에 오도록 조절 (기존 -6px -> -12px)  */
+      }
+      .range-slider-input::-moz-range-thumb {
+        width: 80px; /* 클릭 영역 너비 늘리기  */
+        height: 80px; /* 클릭 영역 높이 늘리기  */
+        background: transparent;
+        border: none;
+        cursor: grab;
+      }
+      .range-slider-input::-ms-thumb {
+        width: 80px; /* 클릭 영역 너비 늘리기  */
+        height: 80px; /* 클릭 영역 높이 늘리기  */
+        background: transparent;
+        border: none;
+        cursor: grab;
+      }
+
+      /* 각 브라우저별 슬라이더 트랙(바닥 라인) 스타일 제거 및 굵기 조절 */
+      .range-slider-input::-webkit-slider-runnable-track {
+        background: transparent;
+        height: 8px; /* 슬라이더 바 굵기 (예: 4px -> 8px)  */
+      }
+      .range-slider-input::-moz-range-track {
+        background: transparent;
+        height: 8px; /* 슬라이더 바 굵기  */
+      }
+      .range-slider-input::-ms-track {
+        background: transparent;
+        height: 8px; /* 슬라이더 바 굵기  */
+        border-color: transparent;
+        color: transparent;
+      }
+      .range-slider-input::-ms-fill-lower,
+      .range-slider-input::-ms-fill-upper {
+        background: transparent;
+      }
+
+      /* 3. 커스텀 핸들 (custom-handle) 스타일 */
+      .custom-handle {
+        position: absolute;
+        top: -140%;
+        transform: translate(-50%, -50%);
+        width: 20px; /* 보이는 핸들 크기 (예: 16px -> 20px)  */
+        height: 20px; /* 보이는 핸들 크기 (예: 16px -> 20px)  */
+        background-color: #fff;
+        border: 2px solid var(--primary-color);
+        border-radius: 50%;
+        cursor: grab;
+        z-index: 3;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        transition:
+          background-color 0.1s,
+          border-color 0.1s;
+      }
+
+      /* 4. 슬라이더 채워진 부분 (slider-range-fill) 스타일*/
+      #slider-range-fill {
+        position: absolute;
+        height: 8px; /* 슬라이더 바 굵기 (range-slider-input 트랙과 동일하게)  */
+        background-color: var(--primary-color);
+        border-radius: 9999px;
+        z-index: 1;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+
+  <body
+    class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white antialiased"
+  >
+    <div class="flex min-h-screen flex-col relative">
+      <header
+        class="sticky top-0 z-50 w-full border-b border-gray-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60"
+      >
+        <div
+          class="w-full px-8 relative flex h-20 items-center justify-between max-w-[1440px] mx-auto"
+        >
+          <a
+            class="flex items-center space-x-2 transition-transform duration-300 hover:scale-105"
+            href="../main/Main.html"
+          >
+            <img
+              src="../../images/Logo.png"
+              alt="여백 로고"
+              class="h-9 w-9 rounded-full object-cover"
+              onerror="this.style.display = 'none'"
+            />
+            <span
+              class="font-serif text-slate-900 font-bold ml-2 text-xl"
+              >여백</span
+            >
+          </a>
+
+          <nav
+            class="hidden md:flex items-center justify-center text-slate-500 gap-8 text-lg font-medium absolute left-1/2 -translate-x-1/2"
+          >
+            <a
+              href="../plan/planner.html"
+              class="group relative py-1 transition-colors hover:text-slate-900"
+            >
+              플래너
+              <span
+                class="absolute left-0 bottom-0 w-0 h-[2px] bg-yeobaek-primary transition-all duration-300 group-hover:w-full"
+              ></span>
+            </a>
+            <a
+              href="search.html"
+              class="group relative py-1 transition-colors hover:text-slate-900"
+            >
+              숙소
+              <span
+                class="absolute left-0 bottom-0 w-0 h-[2px] bg-yeobaek-primary transition-all duration-300 group-hover:w-full"
+              ></span>
+            </a>
+            <a
+              href=""
+              class="group relative py-1 transition-colors hover:text-slate-900"
+            >
+              여행기록
+              <span
+                class="absolute left-0 bottom-0 w-0 h-[2px] bg-yeobaek-primary transition-all duration-300 group-hover:w-full"
+              ></span>
+            </a>
+          </nav>
+
+          <div class="flex items-center gap-6">
+            
+            <a 
+              href="table.html" 
+              class="flex items-center gap-2 px-3 py-2 rounded-full hover:bg-slate-100 transition-colors text-slate-600 hover:text-yeobaek-primary font-bold text-sm group"
+            >
+              <span class="material-symbols-outlined text-[20px] text-slate-400 group-hover:text-yeobaek-primary transition-colors">compare_arrows</span>
+              <span>비교함 (<span id="compare-counter-main" class="tabular-nums">0</span>)</span>
+            </a>
+
+            <div id="auth-links" class="flex items-center gap-6">
+              <a
+                href="../auth/SignIn.html"
+                class="text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors"
+              >
+                로그인
+              </a>
+              <a
+                href="../auth/SignUp.html"
+                class="text-sm font-bold text-white bg-yeobaek-primary px-5 py-2.5 rounded-full shadow-md transition-all duration-200 hover:bg-blue-600 hover:shadow-lg hover:-translate-y-0.5 active:scale-95"
+              >
+                회원가입
+              </a>
+            </div>
+          </div>
+        </div>
+      </header>
+      <div
+        class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-white/10 px-4 lg:px-20 py-8"
+      >
+        <div class="mx-auto max-w-[1440px]">
+          <div
+            class="mb-6 flex flex-col items-center justify-center text-center"
+          >
+            <p
+              class="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-3"
+            >
+              활성화된 플래너
+            </p>
+
+            <div class="relative z-40 w-full max-w-[340px] mx-auto">
+              <button
+                id="dropdownButton"
+                class="flex items-center gap-4 px-6 py-3 bg-white dark:bg-slate-800 border-2 border-primary rounded-2xl shadow-lg hover:bg-white transition-all w-full justify-between"
+              >
+                <div class="flex items-center gap-3 flex-1">
+                  <span
+                    class="material-symbols-outlined text-primary"
+                    >auto_awesome</span
+                  >
+
+                  <div
+                    class="flex flex-col flex-1 items-center justify-center"
+                  >
+                    <span
+                      id="selectedMainTitle"
+                      class="text-lg font-extrabold text-slate-900 dark:text-white w-full text-center"
+                      >2026 오사카 여름 여행</span
+                    >
+                    <span
+                      id="selectedMainDate"
+                      class="text-[10px] text-slate-400 font-medium w-full text-center"
+                      >2026년 8월 1일 - 8월 7일</span
+                    >
+                  </div>
+                </div>
+                <span
+                  id="dropdownArrow"
+                  class="material-symbols-outlined text-primary transition-transform"
+                  >expand_more</span
+                >
+              </button>
+
+              <div
+                id="dropdownContent"
+                class="absolute top-[calc(100%+8px)] left-1/2 -translate-x-1/2 w-full max-w-[340px] bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/10 rounded-2xl shadow-xl overflow-hidden py-2 ring-1 ring-slate-900/5 animate-in fade-in slide-in-from-top-2 duration-200 hidden"
+              >
+                <button
+                  class="dropdown-item w-full flex items-center gap-3 px-6 py-3 hover:bg-slate-50 dark:hover:bg-white/5 text-left transition-colors"
+                  data-title="삿포로 겨울 휴가"
+                  data-date="2027년 1월 15일 - 1월 20일"
+                  data-location="일본, 삿포로"
+                  data-travelers="3명"
+                >
+                  <span
+                    class="material-symbols-outlined text-slate-400"
+                    >calendar_today</span
+                  >
+                  <div class="flex flex-col">
+                    <span
+                      class="text-sm font-bold text-slate-700 dark:text-slate-200"
+                      >삿포로 겨울 휴가</span
+                    >
+                    <span
+                      class="text-[10px] text-slate-400 font-medium"
+                      >2027년 1월 15일 - 1월 20일</span
+                    >
+                  </div>
+                </button>
+                <button
+                  class="dropdown-item w-full flex items-center gap-3 px-6 py-3 hover:bg-slate-50 dark:hover:bg-white/5 text-left transition-colors"
+                  data-title="서울 비즈니스 위크"
+                  data-date="2026년 12월 2일 - 12월 5일"
+                  data-location="Seoul, South Korea"
+                  data-travelers="1명"
+                >
+                  <span
+                    class="material-symbols-outlined text-slate-400"
+                    >calendar_today</span
+                  >
+                  <div class="flex flex-col">
+                    <span
+                      class="text-sm font-bold text-slate-700 dark:text-slate-200"
+                      >서울 비즈니스 위크</span
+                    >
+                    <span
+                      class="text-[10px] text-slate-400 font-medium"
+                      >2026년 12월 2일 - 12월 5일</span
+                    >
+                  </div>
+                </button>
+                <button
+                  class="dropdown-item w-full flex items-center gap-3 px-6 py-3 hover:bg-slate-50 dark:hover:bg-white/5 text-left transition-colors"
+                  data-title="제주 가족 주말 여행"
+                  data-date="2026년 5월 10일 - 5월 12일"
+                  data-location="한국, 제주"
+                  data-travelers="4명"
+                >
+                  <span
+                    class="material-symbols-outlined text-slate-400"
+                    >calendar_today</span
+                  >
+                  <div class="flex flex-col">
+                    <span
+                      class="text-sm font-bold text-slate-700 dark:text-slate-200"
+                      >제주 가족 주말 여행</span
+                    >
+                    <span
+                      class="text-[10px] text-slate-400 font-medium"
+                      >2026년 5월 10일 - 5월 12일</span
+                    >
+                  </div>
+                </button>
+
+                <div
+                  class="border-t border-slate-100 dark:border-white/5 mt-2 pt-2 px-6 pb-2"
+                >
+                  <button
+                    class="text-xs font-bold text-primary hover:underline flex items-center gap-1"
+                  >
+                    <span
+                      class="material-symbols-outlined text-sm"
+                      >add</span
+                    >
+                    Create New Planner
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <p class="mt-3 text-xs font-semibold text-slate-400">
+              <span
+                class="material-symbols-outlined text-[14px] align-middle mr-1"
+                >info</span
+              >
+              선택하신 여행 플래너 정보를 바탕으로 검색 결과가
+              최적화되었습니다.
+            </p>
+          </div>
+          <div
+            class="bg-surface-gray dark:bg-slate-800/50 rounded-2xl p-4 border border-slate-100 dark:border-white/5 flex flex-wrap items-center justify-between gap-4"
+          >
+            <div
+              class="flex items-center gap-6 overflow-x-auto no-scrollbar"
+            >
+              <div
+                class="flex items-center gap-2 text-sm font-bold text-slate-700 dark:text-slate-200"
+              >
+                <span
+                  class="material-symbols-outlined text-primary text-lg"
+                  >location_on</span
+                >
+                <span id="detailLocation">오사카, 일본</span>
+              </div>
+              <div
+                class="w-px h-4 bg-slate-300 dark:bg-white/10"
+              ></div>
+              <div
+                class="flex items-center gap-2 text-sm font-bold text-slate-700 dark:text-slate-200"
+              >
+                <span
+                  class="material-symbols-outlined text-primary text-lg"
+                  >calendar_month</span
+                >
+                <span id="detailDate"
+                  >2026년 12월 12일 - 12월 15일</span
+                >
+              </div>
+              <div
+                class="w-px h-4 bg-slate-300 dark:bg-white/10"
+              ></div>
+              <div
+                class="flex items-center gap-2 text-sm font-bold text-slate-700 dark:text-slate-200"
+              >
+                <span
+                  class="material-symbols-outlined text-primary text-lg"
+                  >group</span
+                >
+                <span id="detailTravelers" class="tabular-nums"
+                  >2명</span
+                >
+              </div>
+            </div>
+            <button
+              class="px-4 py-2 rounded-xl border border-slate-300 dark:border-white/10 text-xs font-bold hover:bg-white dark:hover:bg-slate-800 transition-colors shadow-sm"
+            >
+              플래너 수정
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <main class="flex-1 px-4 lg:px-20 py-8">
+        <div
+          class="mx-auto max-w-[1440px] flex flex-col lg:flex-row gap-8"
+        >
+          <aside class="w-full lg:w-80 flex-shrink-0">
+            <div class="sticky top-24 space-y-6">
+              <div
+                class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-2xl p-6 shadow-sm"
+              >
+                <div
+                  class="flex items-center justify-between mb-6"
+                >
+                  <h3 class="text-lg font-bold">필터 옵션</h3>
+                  <button
+                    class="text-xs font-bold text-primary hover:text-primary/80"
+                  >
+                    초기화
+                  </button>
+                </div>
+
+                <div class="space-y-4 mb-8">
+                  <p
+                    class="text-sm font-bold text-slate-700 dark:text-slate-300"
+                  >
+                    역 기반
+                  </p>
+                  <div
+                    class="space-y-2.5 max-h-48 overflow-y-auto custom-scrollbar pr-2"
+                    id="station-checkboxes-container"
+                  ></div>
+                </div>
+
+                <div class="space-y-4 mb-8 pt-4">
+                  <p
+                    class="text-sm font-bold text-slate-700 dark:text-slate-300 mb-4"
+                  >
+                    가격 범위
+                  </p>
+
+                  <div
+                    class="flex items-center justify-between mb-2"
+                  >
+                    <span
+                      class="text-base font-extrabold text-slate-900 dark:text-white"
+                    ></span>
+                  </div>
+
+                  <div class="flex items-center gap-3 mb-8">
+                    <div class="relative flex-1">
+                      <span
+                        class="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400"
+                        >₩</span
+                      >
+                      <input
+                        class="w-full pl-7 pr-3 py-2 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl text-sm font-bold focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                        id="min-price-input"
+                        placeholder="Min"
+                        type="text"
+                        value="80000"
+                      />
+                    </div>
+                    <div
+                      class="h-px w-3 bg-slate-300"
+                    ></div>
+                    <div class="relative flex-1">
+                      <span
+                        class="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400"
+                        >₩</span
+                      >
+                      <input
+                        class="w-full pl-7 pr-3 py-2 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl text-sm font-bold focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                        id="max-price-input"
+                        placeholder="Max"
+                        type="text"
+                        value="450000"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="relative flex w-full flex-col items-start gap-3 px-1 mt-6"
+                  >
+                    <div
+                      class="range-slider-container bg-slate-100 dark:bg-white/10 rounded-full"
+                    >
+                      <div
+                        class="absolute h-full bg-primary rounded-full left-[13.33%] right-[25%] z-0"
+                        id="slider-range-fill"
+                      ></div>
+                      <div
+                        class="custom-handle left-[13.33%] -translate-x-1/2"
+                        id="min-handle"
+                      ></div>
+                      <div
+                        class="custom-handle left-[75%] -translate-x-1/2"
+                        id="max-handle"
+                      ></div>
+
+                      <input
+                        class="range-slider-input"
+                        id="min-range-slider"
+                        max="500000"
+                        min="0"
+                        step="1"
+                        type="range"
+                        value="80000"
+                      />
+
+                      <input
+                        class="range-slider-input"
+                        id="max-range-slider"
+                        max="500000"
+                        min="0"
+                        step="1"
+                        type="range"
+                        value="450000"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="space-y-4">
+                  <p
+                    class="text-sm font-bold text-slate-700 dark:text-slate-300"
+                  >
+                    객실 정보
+                  </p>
+                  <div class="space-y-3">
+                    <label
+                      class="flex items-center justify-between cursor-pointer group"
+                    >
+                      <div
+                        class="flex items-center gap-3"
+                      >
+                        <span
+                          class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors"
+                          >bed</span
+                        >
+                        <span
+                          class="text-sm font-medium text-slate-600 dark:text-slate-400"
+                          >트윈룸</span
+                        >
+                      </div>
+
+                      <input
+                        class="h-5 w-9 rounded-full bg-slate-200 border-none text-primary focus:ring-0 peer appearance-none relative before:content-[''] before:absolute before:size-4 before:bg-white before:rounded-full before:top-0.5 before:left-0.5 before:transition-all checked:before:translate-x-4 checked:bg-primary cursor-pointer"
+                        type="checkbox"
+                      />
+                    </label>
+
+                    <label
+                      class="flex items-center justify-between cursor-pointer group"
+                    >
+                      <div
+                        class="flex items-center gap-3"
+                      >
+                        <span
+                          class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors"
+                          >bed</span
+                        >
+                        <span
+                          class="text-sm font-medium text-slate-600 dark:text-slate-400"
+                          >컴포트 트윈룸</span
+                        >
+                      </div>
+
+                      <input
+                        class="h-5 w-9 rounded-full bg-slate-200 border-none text-primary focus:ring-0 peer appearance-none relative before:content-[''] before:absolute before:size-4 before:bg-white before:rounded-full before:top-0.5 before:left-0.5 before:transition-all checked:before:translate-x-4 checked:bg-primary cursor-pointer"
+                        type="checkbox"
+                      />
+                    </label>
+
+                    <label
+                      class="flex items-center justify-between cursor-pointer group"
+                    >
+                      <div
+                        class="flex items-center gap-3"
+                      >
+                        <span
+                          class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors"
+                          >smoke_free</span
+                        >
+                        <span
+                          class="text-sm font-medium text-slate-600 dark:text-slate-400"
+                          >금연실</span
+                        >
+                      </div>
+                      <input
+                        checked=""
+                        class="h-5 w-9 rounded-full bg-slate-200 border-none text-primary focus:ring-0 peer appearance-none relative before:content-[''] before:absolute before:size-4 before:bg-white before:rounded-full before:top-0.5 before:left-0.5 before:transition-all checked:before:translate-x-4 checked:bg-primary cursor-pointer"
+                        type="checkbox"
+                      />
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </aside>
+
+          <div class="flex-1 space-y-6">
+            <div
+              class="bg-primary/5 border border-primary/20 rounded-2xl p-4 flex flex-col md:flex-row md:items-center gap-4 md:gap-8 overflow-x-auto whitespace-nowrap custom-scrollbar"
+            >
+              <div class="flex items-center gap-2 flex-shrink-0">
+                <span
+                  class="material-symbols-outlined text-primary text-xl font-bold"
+                  >query_stats</span
+                >
+                <span
+                  class="text-sm font-bold text-slate-700 dark:text-slate-200 uppercase tracking-tight"
+                  >주변 가격 비교</span
+                >
+              </div>
+
+              <div
+                class="flex items-center gap-6"
+                id="station-insights-container"
+              ></div>
+            </div>
+
+            <div class="flex items-center justify-between">
+              <h2 class="text-xl font-extrabold tracking-tight">
+                추천 숙소
+              </h2>
+              <div class="flex items-center gap-2">
+                <span
+                  class="text-xs font-bold text-slate-400 uppercase"
+                  >정렬:</span
+                >
+                <select
+                  class="bg-transparent border-none text-sm font-bold text-primary focus:ring-0 py-0 pl-1 pr-8 cursor-pointer"
+                >
+                  <option>추천순</option>
+                  <option>가격 낮은 순</option>
+                  <option>평점 높은 순</option>
+                </select>
+              </div>
+            </div>
+
+            <div id="hotelCardsContainer" class="space-y-6"></div>
+
+            <div
+              class="pt-8 flex items-center justify-center gap-4"
+            >
+              <button
+                class="flex items-center gap-2 px-4 py-2 text-sm font-bold text-slate-400 hover:text-primary transition-colors disabled:opacity-50"
+                disabled=""
+              >
+                <span class="material-symbols-outlined"
+                  >arrow_back</span
+                >
+                이전
+              </button>
+              <div class="flex items-center gap-1">
+                <button
+                  class="size-10 rounded-xl bg-primary text-white font-black text-sm flex items-center justify-center shadow-md"
+                >
+                  1
+                </button>
+                <button
+                  class="size-10 rounded-xl hover:bg-slate-100 dark:hover:bg-white/5 font-bold text-sm flex items-center justify-center transition-colors"
+                >
+                  2
+                </button>
+                <button
+                  class="size-10 rounded-xl hover:bg-slate-100 dark:hover:bg-white/5 font-bold text-sm flex items-center justify-center transition-colors"
+                >
+                  3
+                </button>
+              </div>
+              <button
+                class="flex items-center gap-2 px-4 py-2 text-sm font-bold text-slate-600 dark:text-slate-300 hover:text-primary transition-colors"
+              >
+                다음
+                <span class="material-symbols-outlined"
+                  >arrow_forward</span
+                >
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="bg-gray-100 py-8 border-t border-gray-200 mt-auto">
+      <div
+        class="container mx-auto text-center text-gray-500 text-sm"
+      >
+        © 2026 여백. All rights reserved.
+      </div>
+    </footer>
+  </div>
+
+  <div
+    id="compareNotification"
+    class="fixed bottom-10 left-1/2 -translate-x-1/2 z-[100] hidden opacity-0 transition-opacity duration-300"
+  >
+    <div
+      class="bg-slate-900/90 dark:bg-slate-800 backdrop-blur-md text-white px-6 py-3.5 rounded-2xl shadow-2xl border border-white/10 flex items-center gap-3"
+    >
+      <span class="text-primary font-bold">✔</span>
+      <span id="notificationText" class="text-sm font-bold"></span>
+      <a
+        href="table.html"
+        id="viewCompareButton"
+        class="text-primary text-sm font-black ml-2 hover:underline tracking-tight"
+      >
+        [비교함 보기 (<span id="compareCount">0</span>)]
+      </a>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      checkLoginStatus();
+      // 기존 드롭다운 관련 요소들
+      const dropdownButton =
+        document.getElementById("dropdownButton");
+      const dropdownContent =
+        document.getElementById("dropdownContent");
+      const dropdownArrow = document.getElementById("dropdownArrow");
+      const selectedMainTitle =
+        document.getElementById("selectedMainTitle");
+      const selectedMainDate =
+        document.getElementById("selectedMainDate");
+
+      // 새로 추가된 상세 정보 표시 요소들
+      const detailLocation =
+        document.getElementById("detailLocation");
+      const detailDate = document.getElementById("detailDate");
+      const detailTravelers =
+        document.getElementById("detailTravelers");
+
+      // 숙소 카드들이 들어갈 컨테이너
+      const hotelCardsContainer = document.getElementById(
+        "hotelCardsContainer",
+      );
+
+      // --- Price Range Slider Logic ---
+      const minRangeSlider =
+        document.getElementById("min-range-slider");
+      const maxRangeSlider =
+        document.getElementById("max-range-slider");
+      const minPriceInput =
+        document.getElementById("min-price-input");
+      const maxPriceInput =
+        document.getElementById("max-price-input");
+      const minHandle = document.getElementById("min-handle");
+      const maxHandle = document.getElementById("max-handle");
+      const sliderRangeFill =
+        document.getElementById("slider-range-fill");
+
+      const sliderMin = parseFloat(minRangeSlider.min);
+      const sliderMax = parseFloat(maxRangeSlider.max);
+
+      // 알림창 관련 요소들
+      const compareNotification = document.getElementById(
+        "compareNotification",
+      );
+      const notificationText =
+        document.getElementById("notificationText");
+      const compareCount = document.getElementById("compareCount");
+      const viewCompareButton =
+        document.getElementById("viewCompareButton");
+
+      // 비교함에 담긴 호텔 ID(또는 이름) 목록
+      // let comparedHotels =
+      //    JSON.parse(localStorage.getItem("comparedHotels")) || []; // 로컬 저장소에서 불러오거나 없으면 빈 배열
+
+      localStorage.removeItem("comparedHotels"); //  이전에 저장된 비교함 목록 삭제!
+      let comparedHotels = []; //  비교함 목록을 빈 배열로 초기화!
+
+      const MAX_COMPARE_ITEMS = 3;
+
+      //  우측 상단 비교함 카운터 요소 선언 (이전 코드에는 있었으나 현재 헤더 구조 변경으로 인해 삭제되었을 수 있음 - 필요시 복구)
+      // 현재 변경된 헤더 디자인에는 비교함 카운터가 없습니다. 필요한 경우 헤더 HTML에 추가해야 합니다.
+      // 에러 방지를 위해 가짜 요소 생성 혹은 조건문 처리
+      const compareCounterMain =
+        document.getElementById("compare-counter-main") ||
+        document.createElement("span");
+
+      //  역별 인사이트 컨테이너 요소 선언
+      const stationInsightsContainer = document.getElementById(
+        "station-insights-container",
+      );
+
+      //  역 이름 체크박스 컨테이너 요소 선언
+      const stationCheckboxesContainer = document.getElementById(
+        "station-checkboxes-container",
+      );
+
+      //  비교함 알림창 업데이트 함수
+      function updateCompareNotification(
+        message = "",
+        currentCount = comparedHotels.length,
+      ) {
+        if (message) {
+          // 메시지가 있을 때만 알림을 표시
+          notificationText.textContent = message;
+          compareCount.textContent = currentCount; // 현재 비교 개수 업데이트
+
+          // 알림창 보이기 (hidden 제거 후 opacity 조절)
+          compareNotification.classList.remove("hidden");
+          // setTimeout을 사용하여 렌더링 사이클을 한번 돌린 후 opacity를 변경하여 트랜지션이 적용되게 함
+          setTimeout(() => {
+            compareNotification.classList.remove("opacity-0");
+            compareNotification.classList.add("opacity-100"); // 보이게!
+          }, 10);
+        } else {
+          // 메시지가 없으면 알림 숨김
+          // 알림창 숨기기 (opacity 조절 후 hidden 추가)
+          compareNotification.classList.remove("opacity-100");
+          compareNotification.classList.add("opacity-0"); // 투명하게!
+          setTimeout(() => {
+            compareNotification.classList.add("hidden"); // 완전히 숨김
+            // 숨겨진 상태에서 bounce 애니메이션 방지를 위해 animate-bounce도 제거
+            compareNotification.classList.remove(
+              "animate-bounce",
+            );
+          }, 300); // transition-opacity duration-300과 맞춰서 숨기는 시간 설정
+        }
+        updateMainCompareCounter();
+      }
+
+      //  비교 버튼 상태 초기화 함수
+      function initializeHotelCompareButtons() {
+        // ... 함수 내용 ...
+        // (이 함수 안에 document.querySelectorAll('.hotel-card') 같은 코드가 들어가야 함)
+        document.querySelectorAll(".hotel-card").forEach((card) => {
+          const addButton = card.querySelector(
+            ".group\\/btn-compare",
+          );
+          if (addButton) {
+            // 버튼이 없을 수도 있으니 안전하게 확인
+            const hotelName =
+              card.querySelector(".hotel-name").textContent; // 호텔 이름은 고유하게 가져온다고 가정
+            // 버튼의 텍스트나 아이콘을 여기서 초기화
+            if (comparedHotels.includes(hotelName)) {
+              addButton.querySelector(
+                ".material-symbols-outlined",
+              ).textContent = "check_circle";
+              addButton.classList.add("text-red-500"); // 예: 비교됨을 나타내는 색상
+            } else {
+              addButton.querySelector(
+                ".material-symbols-outlined",
+              ).textContent = "add_circle";
+              addButton.classList.remove("text-red-500"); // 예: 기본 색상
+            }
+          }
+        });
+      }
+
+      //  새로 추가할 함수: 우측 상단 비교함 숫자 업데이트
+      function updateMainCompareCounter() {
+        if (compareCounterMain)
+          compareCounterMain.textContent = comparedHotels.length;
+      }
+
+      // --- (updateHotelCards 함수 기능 강화 블록) ---
+      const originalUpdateHotelCards = updateHotelCards;
+      updateHotelCards = function (plannerTitle) {
+        originalUpdateHotelCards(plannerTitle); // 원본 호텔 카드 업데이트 실행
+        initializeHotelCompareButtons(); // 비교 버튼 상태 초기화
+        updateMainCompareCounter(); // 메인 비교함 카운터 업데이트
+        updateStationInsights(plannerTitle); // 역별 가격 인사이트 업데이트
+        updateStationCheckboxes(plannerTitle); //  역 이름 체크박스도 업데이트
+      };
+      // --- (함수 강화 블록 끝) ---
+
+      //  초기 로딩 시 비교함 카운트만 업데이트 (알림창은 숨김)
+      compareCount.textContent = comparedHotels.length;
+
+      //  페이지 로드 시 메인 카운터도 초기 업데이트
+      updateMainCompareCounter();
+
+      updateSliderHandlesAndFill();
+
+      //  "비교함에 추가" 버튼 클릭 이벤트 리스너
+      // 동적으로 생성되는 호텔 카드에도 이벤트를 걸기 위해 이벤트 위임(delegation) 사용
+      hotelCardsContainer.addEventListener("click", (event) => {
+        console.log("hotelCardsContainer 클릭 이벤트 발생!");
+
+        // 버튼의 클래스가 `group/btn-compare` 이었으니, `group\/btn-compare`로 변경 (JS 문자열이라 \/ 필요)
+        const addButton = event.target.closest(
+          ".group\\/btn-compare",
+        );
+
+        if (!addButton) {
+          console.log(
+            '클릭된 요소가 "비교함 담기" 버튼이 아님. 종료.',
+          );
+          return;
+        }
+
+        console.log('--- "비교함 담기" 버튼 클릭 감지! ---');
+        const hotelCard = addButton.closest(".hotel-card");
+        // 호텔 이름 가져오기 (고유 ID 역할, HTML 구조에 맞게)
+        const hotelName = hotelCard
+          .querySelector(".hotel-name")
+          .textContent.trim(); // 혹시 공백이 있다면 trim()
+
+        console.log(`클릭된 호텔: ${hotelName}`);
+
+        if (comparedHotels.includes(hotelName)) {
+          // 이미 비교함에 있는 경우
+          console.log(
+            `${hotelName}이(가) 이미 비교함에 있음. 제거 시작.`,
+          );
+          comparedHotels = comparedHotels.filter(
+            (name) => name !== hotelName,
+          );
+          localStorage.setItem(
+            "comparedHotels",
+            JSON.stringify(comparedHotels),
+          );
+          updateCompareNotification(
+            `${hotelName}이(가) 비교함에서 제거되었습니다.`,
+            comparedHotels.length,
+          );
+
+          addButton.querySelector(
+            ".material-symbols-outlined",
+          ).textContent = "add_circle";
+          addButton.classList.remove("text-red-500"); // 제거 시 빨간색 표시 해제 (원한다면)
+        } else {
+          // 비교함에 없는 경우
+          console.log(
+            `${hotelName}이(가) 비교함에 없음. 추가 시도.`,
+          );
+          if (comparedHotels.length >= MAX_COMPARE_ITEMS) {
+            console.log(
+              `비교함 최대 개수 초과: ${MAX_COMPARE_ITEMS}개.`,
+            );
+            updateCompareNotification(
+              `비교함은 최대 ${MAX_COMPARE_ITEMS}개까지 가능합니다.`,
+              comparedHotels.length,
+            );
+            setTimeout(
+              () => updateCompareNotification(""),
+              3000,
+            ); // 3초 후 알림 숨김
+            return; // 3개 이상이면 추가하지 않고 함수 종료
+          }
+
+          comparedHotels.push(hotelName);
+          localStorage.setItem(
+            "comparedHotels",
+            JSON.stringify(comparedHotels),
+          );
+          updateCompareNotification(
+            `${hotelName}이(가) 비교함에 추가되었습니다.`,
+            comparedHotels.length,
+          );
+
+          addButton.querySelector(
+            ".material-symbols-outlined",
+          ).textContent = "check_circle";
+          addButton.classList.add("text-red-500"); // 추가 시 빨간색으로 표시 (원한다면)
+        }
+
+        // 알림 잠시 보였다가 사라지도록
+        setTimeout(() => updateCompareNotification(""), 3000);
+      });
+
+      // ---  비교함 기능 관련 코드 끝!  ---
+
+      // 모든 호텔 카드가 로드된 후 현재 comparedHotels 상태를 반영 (초기화)
+      function initializeHotelCompareButtons() {
+        // 모든 '비교함 담기' 버튼을 다시 찾아서 현재 비교함 상태를 반영
+        document.querySelectorAll(".hotel-card").forEach((card) => {
+          const addButton = card.querySelector(
+            ".group\\/btn-compare",
+          );
+          const hotelName =
+            card.querySelector(".hotel-name").textContent;
+          if (comparedHotels.includes(hotelName)) {
+            addButton.querySelector(
+              ".material-symbols-outlined",
+            ).textContent = "check_circle";
+            addButton.classList.add("text-red-500");
+          } else {
+            addButton.querySelector(
+              ".material-symbols-outlined",
+            ).textContent = "add_circle";
+            addButton.classList.remove("text-red-500");
+          }
+        });
+      }
+
+      // --- 숙소 데이터 정의 (중요!) ---
+
+      // 각 플래너에 대한 숙소 정보 배열
+      const allPlannerHotels = {
+        "2026 오사카 여름 여행": [
+          // 기존 오사카 숙소 1, 2
+          {
+            name: "우메다 그랜드 게이트웨이 호텔",
+            image: "https://github.com/lei-3m/AIBE5/blob/main/img/team1-2/room/osaka/ummeda.jpg?raw=true",
+            ratingStar: "★★★★☆",
+            ratingNum: "4.8",
+            개: "(1,248 개)",
+            locationDetail: "오사카역 · 도보 5분",
+            price: "₩195,000",
+            checkIn: "체크인 15:00",
+            checkOut: "체크아웃 11:00",
+            roomType: "트윈룸",
+            smoking: "금연실",
+            amenities: ["무료 Wi-Fi", "시티 뷰"],
+          },
+          {
+            name: "도톤보리 리버사이드 호텔",
+            image: "https://github.com/lei-3m/AIBE5/blob/main/img/team1-2/room/osaka/Dotonbori%20Riverside%202.jpg?raw=true",
+            ratingStar: "★★★★☆",
+            ratingNum: "4.5",
+            개: "(890 개)",
+            locationDetail: "오사카역 · 도보 2분",
+            price: "₩170,000",
+            checkIn: "체크인 16:00",
+            checkOut: "체크아웃 10:00",
+            roomType: "더블베드",
+            smoking: "흡연 가능",
+            amenities: ["레스토랑", "리버 뷰"],
+          },
+          {
+            name: "유니버셜 스튜디오 재팬 리슬 호텔",
+            image: "https://github.com/lei-3m/AIBE5/blob/main/img/team1-2/room/osaka/The%20Park%20Front%20Hotel%20at%20Universal%20Studios%20Japan2.jpg?raw=true",
+            ratingStar: "★★★★",
+            ratingNum: "4.5",
+            개: "(2500 개)",
+            locationDetail: "오사카역 · 도보 1분",
+            price: "₩195,000",
+            checkIn: "체크인 15:00",
+            checkOut: "체크아웃 11:00",
+            roomType: "컴포트 트윈룸",
+            smoking: "금연실",
+            amenities: [
+              "유니버셜 스튜디오 이용 가능",
+              "편의점",
+              "레스토랑",
+            ],
+          },
+          {
+            name: "오사카 그랑비아 호텔",
+            image: "https://github.com/lei-3m/AIBE5/blob/main/img/team1-2/room/osaka/Hotel%20Granvia%20Osaka2.jpg?raw=true",
+            ratingStar: "★★★★",
+            ratingNum: "4.3",
+            개: "(1800 개)",
+            locationDetail: "JR 오사카역 · 역과 직접 연결됨",
+            price: "₩220,000",
+            checkIn: "체크인 14:00",
+            checkOut: "체크아웃 12:00",
+            roomType: "컴포트 트윈룸",
+            smoking: "흡연 가능",
+            amenities: [
+              "역과 연결",
+              "레스토랑 다수",
+              "피트니스 센터",
+            ],
+          },
+          {
+            //  오사카 3번째 호텔 추가
+            name: "오사카 크로스 호텔",
+            image: "https://github.com/lei-3m/AIBE5/blob/main/img/team1-2/room/osaka/Cross%20Hotel%20Osaka2.jpg?raw=true",
+            ratingStar: "★★★★",
+            ratingNum: "4.4",
+            개: "(2100 개)",
+            locationDetail: "도톤보리 · 도보 3분",
+            price: "₩260,000",
+            checkIn: "체크인 15:00",
+            checkOut: "체크아웃 11:00",
+            roomType: "컴포트 트윈룸",
+            smoking: "금연실",
+            amenities: [
+              "도톤보리 접근성 우수",
+              "컨시어지 서비스",
+              "무료 Wi-Fi",
+            ],
+          },
+          {
+            //  오사카 4번째 호텔 추가
+            name: "오사카 센타라 그랜드 호텔",
+            image: "https://github.com/lei-3m/AIBE5/blob/main/img/team1-2/room/osaka/Centara%20Grand%20Hotel%20Osaka2.jpg?raw=true",
+            ratingStar: "★★★★★",
+            ratingNum: "4.6",
+            개: "(1500 개)",
+            locationDetail: "난바 · 도보 5분",
+            price: "₩320,000",
+            checkIn: "체크인 15:00",
+            checkOut: "체크아웃 12:00",
+            roomType: "디럭스 킹룸",
+            smoking: "금연실",
+            amenities: [
+              "루프탑 바",
+              "스파",
+              "피트니스 센터",
+              "난바 접근성 우수",
+            ],
+          },
+        ],
+
+        "삿포로 겨울 휴가": [
+          {
+            name: "삿포로 스노우 리조트 인",
+            image: "https://github.com/lei-3m/AIBE5/blob/main/img/team1-2/stay/sapporo/Sapporo%20Snow%20Resort%20Inn.jpg?raw=true",
+            ratingStar: "★★★★★",
+            ratingNum: "4.9",
+            개: "(800개)",
+            locationDetail: "삿포로 스키장 · 도보 2분",
+            price: "₩250,000",
+            checkIn: "체크인 16:00",
+            checkOut: "체크아웃 10:00",
+            roomType: "패밀리 스위트",
+            smoking: "금연실",
+            amenities: ["스키 장비 대여", "스파"],
+          },
+          {
+            name: "치토세 공항 호텔",
+            image: "https://github.com/lei-3m/AIBE5/blob/main/img/team1-2/stay/sapporo/Chitose%20Airport%20Hotel.jpg?raw=true",
+            ratingStar: "★★★☆☆",
+            ratingNum: "3.7",
+            개: "(300개)",
+            locationDetail: "치토세 공항 · 차량 10분",
+            price: "₩120,000",
+            checkIn: "체크인 14:00",
+            checkOut: "체크아웃 11:00",
+            roomType: "싱글룸",
+            smoking: "금연실",
+            amenities: ["무료 셔틀", "조식 제공"],
+          },
+          {
+            name: "삿포로 게이오 플라자 호텔",
+            image: "https://github.com/lei-3m/AIBE5/blob/main/img/team1-2/stay/sapporo/Keio%20Plaza%20Hotel%20Sapporo.jpg?raw=true",
+            ratingStar: "★★★★",
+            ratingNum: "4.2",
+            개: "(1600개)",
+            locationDetail: "삿포로역 · 도보 5분",
+            price: "₩190,000",
+            checkIn: "체크인 14:00",
+            checkOut: "체크아웃 11:00",
+            roomType: "컴포트 더블룸",
+            smoking: "금연실",
+            amenities: [
+              "실내 수영장",
+              "조식 뷔페",
+              "쇼핑 센터",
+            ],
+          },
+          {
+            name: "삿포로 로이스 호텔",
+            image: "https://github.com/lei-3m/AIBE5/blob/main/img/team1-2/stay/sapporo/Royce%20Hotel%20Sapporo.jpg?raw=true",
+            ratingStar: "★★★★",
+            ratingNum: "4.6",
+            개: "(2000개)",
+            locationDetail: "오도리 공원 · 도보 2분",
+            price: "₩250,000",
+            checkIn: "체크인 15:00",
+            checkOut: "체크아웃 12:00",
+            roomType: "컴포트 트윈룸",
+            smoking: "금연실",
+            amenities: ["오도리 공원 전망", "카페", "스파"],
+          },
+          {
+            name: "삿포로 오도리 티마크 시티 호텔",
+            image: "https://github.com/lei-3m/AIBE5/blob/main/img/team1-2/stay/sapporo/Tmark%20City%20Hotel%20Sapporo%20Odori.jpg?raw=true",
+            ratingStar: "★★★",
+            ratingNum: "4.0",
+            개: "(1200개)",
+            locationDetail: "스스키노 · 도보 3분",
+            price: "₩150,000",
+            checkIn: "체크인 15:00",
+            checkOut: "체크아웃 10:00",
+            roomType: "세미 더블룸",
+            smoking: "금연실",
+            amenities: ["온천", "코인 세탁실", "편의점"],
+          },
+          {
+            name: "삿포로 그랜드 호텔",
+            image: "https://github.com/lei-3m/AIBE5/blob/main/img/team1-2/stay/sapporo/Sapporo%20Grand%20Hotel.jpg?raw=true",
+            ratingStar: "★★★★",
+            ratingNum: "4.3",
+            개: "(1900개)",
+            locationDetail: "삿포로역 · 도보 7분",
+            price: "₩210,000",
+            checkIn: "체크인 14:00",
+            checkOut: "체크아웃 11:00",
+            roomType: "슈페리어 킹룸",
+            smoking: "흡연 가능",
+            amenities: [
+              "전통 있는 호텔",
+              "파인 다이닝",
+              "컨시어지 서비스",
+            ],
+          },
+        ],
+
+        "서울 비즈니스 위크": [
+          {
+            name: "강남 워크 스위트",
+            image: "https://github.com/lei-3m/AIBE5/blob/main/img/team1-2/stay/Seoul/Gangnam%20Work%20Suite.jpg?raw=true",
+            ratingStar: "★★★★☆",
+            ratingNum: "4.6",
+            개: "(500개)",
+            locationDetail: "강남역 · 도보 1분",
+            price: "₩180,000",
+            checkIn: "체크인 15:00",
+            checkOut: "체크아웃 11:00",
+            roomType: "트윈룸",
+            smoking: "금연실",
+            amenities: ["비즈니스 라운지", "피트니스 센터"],
+          },
+          {
+            name: "명동 시티 스테이",
+            image: "https://github.com/lei-3m/AIBE5/blob/main/img/team1-2/stay/Seoul/Myeongdong%20City%20Stay.jpg?raw=true",
+            ratingStar: "★★★★☆",
+            ratingNum: "4.3",
+            개: "(720개)",
+            locationDetail: "명동역 · 도보 3분",
+            price: "₩140,000",
+            checkIn: "체크인 14:00",
+            checkOut: "체크아웃 11:00",
+            roomType: "컴팩트 더블룸",
+            smoking: "금연실",
+            amenities: ["무료 Wi-Fi", "세탁 서비스"],
+          },
+          {
+            name: "서울 포시즌스 호텔",
+            image: "https://github.com/lei-3m/AIBE5/blob/main/img/team1-2/stay/Seoul/Four%20Seasons%20Hotel%20Seoul.jpg?raw=true",
+            ratingStar: "★★★★★",
+            ratingNum: "4.8",
+            개: "(3000개)",
+            locationDetail: "광화문 · 도보 1분",
+            price: "₩480,000",
+            checkIn: "체크인 15:00",
+            checkOut: "체크아웃 12:00",
+            roomType: "이그제큐티브 스위트룸",
+            smoking: "금연실",
+            amenities: [
+              "실내 수영장",
+              "스파",
+              "피트니스 센터",
+              "이그제큐티브 라운지",
+            ],
+          },
+          {
+            name: "롯데 L7 명동",
+            image: "https://github.com/lei-3m/AIBE5/blob/main/img/team1-2/stay/Seoul/L7%20Myeongdong%20by%20Lotte.jpg?raw=true",
+            ratingStar: "★★★★",
+            ratingNum: "4.4",
+            개: "(2200개)",
+            locationDetail: "명동 · 도보 1분",
+            price: "₩190,000",
+            checkIn: "체크인 15:00",
+            checkOut: "체크아웃 11:00",
+            roomType: "스탠다드 더블룸",
+            smoking: "금연실",
+            amenities: [
+              "루프탑 바",
+              "코인 세탁실",
+              "명동 접근성",
+            ],
+          },
+          {
+            name: "서울 강남 조선 팰리스",
+            image: "https://github.com/lei-3m/AIBE5/blob/main/img/team1-2/stay/Seoul/Josun%20Palace,%20a%20Luxury%20Collection%20Hotel,%20Seoul%20Gangnam.jpg?raw=true",
+            ratingStar: "★★★★★",
+            ratingNum: "4.7",
+            개: "(1700개)",
+            locationDetail: "강남 · 도보 5분",
+            price: "₩550,000",
+            checkIn: "체크인 15:00",
+            checkOut: "체크아웃 12:00",
+            roomType: "그랜드 마스터 킹",
+            smoking: "금연실",
+            amenities: [
+              "실내 수영장",
+              "피트니스 클럽",
+              "파인 다이닝",
+              "버틀러 서비스",
+            ],
+          },
+          {
+            name: "서울 신라호텔",
+            image: "https://github.com/lei-3m/AIBE5/blob/main/img/team1-2/stay/Seoul/The%20Shilla%20Seoul.jpg?raw=true",
+            ratingStar: "★★★★★",
+            ratingNum: "4.7",
+            개: "(2800개)",
+            locationDetail: "장충동 · 시티 뷰",
+            price: "₩420,000",
+            checkIn: "체크인 15:00",
+            checkOut: "체크아웃 11:00",
+            roomType: "비즈니스 디럭스 룸",
+            smoking: "금연실",
+            amenities: [
+              "야외 수영장",
+              "스파",
+              "면세점",
+              "공항 셔틀",
+            ],
+          },
+        ],
+
+        "제주 가족 주말 여행": [
+          {
+            name: "제주 오션 리조트",
+            image: "https://github.com/lei-3m/AIBE5/blob/main/img/team1-2/stay/Jeju/Jeju%20Ocean%20Resort.jpg?raw=true",
+            ratingStar: "★★★★★",
+            ratingNum: "4.7",
+            개: "(1000개)",
+            locationDetail: "중문 해변 · 도보 5분",
+            price: "₩220,000",
+            checkIn: "체크인 16:00",
+            checkOut: "체크아웃 11:00",
+            roomType: "디럭스 패밀리룸",
+            smoking: "금연실",
+            amenities: ["수영장", "키즈 클럽", "오션 뷰"],
+          },
+          {
+            name: "한라산 마운틴뷰 펜션",
+            image: "https://github.com/lei-3m/AIBE5/blob/main/img/team1-2/stay/Jeju/Hallasan%20Mountain%20View%20Pension.jpg?raw=true",
+            ratingStar: "★★★★☆",
+            ratingNum: "4.5",
+            개: "(450개)",
+            locationDetail: "한라산 등산로 · 차량 15분",
+            price: "₩110,000",
+            checkIn: "체크인 15:00",
+            checkOut: "체크아웃 10:00",
+            roomType: "패밀리 빌라",
+            smoking: "금연실",
+            amenities: ["무료 주차", "정원", "바비큐 시설"],
+          },
+          {
+            name: "제주 신라호텔",
+            image: "https://github.com/lei-3m/AIBE5/blob/main/img/team1-2/stay/Jeju/The%20Shilla%20Jeju.jpg?raw=true",
+            ratingStar: "★★★★★",
+            ratingNum: "4.6",
+            개: "(2300개)",
+            locationDetail: "중문 해변 · 오션프론트",
+            price: "₩350,000",
+            checkIn: "체크인 15:00",
+            checkOut: "체크아웃 12:00",
+            roomType: "테라스 룸",
+            smoking: "금연실",
+            amenities: [
+              "야외 수영장",
+              "전용 해변",
+              "키즈 놀이터",
+              "스파",
+            ],
+          },
+          {
+            name: "제주 롯데호텔",
+            image: "https://github.com/lei-3m/AIBE5/blob/main/img/team1-2/stay/Jeju/Lotte%20Hotel%20Jeju.jpg?raw=true",
+            ratingStar: "★★★★★",
+            ratingNum: "4.5",
+            개: "(1900개)",
+            locationDetail: "중문 해변 · 카지노 인접",
+            price: "₩300,000",
+            checkIn: "체크인 15:00",
+            checkOut: "체크아웃 11:00",
+            roomType: "스탠다드 마운틴 뷰",
+            smoking: "흡연 가능",
+            amenities: [
+              "풍차 정원",
+              "헬로키티 룸",
+              "워터파크",
+              "면세점",
+            ],
+          },
+          {
+            name: "그랜드 하얏트 제주",
+            image: "https://github.com/lei-3m/AIBE5/blob/main/img/team1-2/stay/Jeju/Grand%20Hyatt%20Jeju.jpg?raw=true",
+            ratingStar: "★★★★★",
+            ratingNum: "4.8",
+            개: "(2700개)",
+            locationDetail: "제주시 · 도심",
+            price: "₩400,000",
+            checkIn: "체크인 15:00",
+            checkOut: "체크아웃 12:00",
+            roomType: "코너 스위트",
+            smoking: "금연실",
+            amenities: [
+              "루프탑 인피니티 풀",
+              "스파",
+              "레스토랑 14곳",
+              "카지노",
+            ],
+          },
+        ],
+      };
+
+      // 플래너별 상세 정보 정의 (이전에 HTML data-*에 넣어뒀던 것들)
+      const allPlannerDetails = {
+        "2026 오사카 여름 여행": {
+          location: "일본, 오사카",
+          travelers: "2명",
+          stationInsights: [
+            {
+              name: "우메다",
+              percentage: "+15%",
+              color: "red",
+            },
+            {
+              name: "신오사카",
+              percentage: "-10%",
+              color: "emerald",
+            },
+            {
+              name: "텐노지",
+              percentage: "-22%",
+              color: "emerald",
+            },
+          ],
+          stations: [
+            "우메다 / 오사카",
+            "난바",
+            "신사이바시",
+            "신오사카",
+            "텐노지",
+          ],
+        },
+        "삿포로 겨울 휴가": {
+          location: "일본, 삿포로",
+          travelers: "3명",
+          stationInsights: [
+            { name: "삿포로", percentage: "+8%", color: "red" },
+            {
+              name: "스스키노",
+              percentage: "-5%",
+              color: "emerald",
+            },
+            {
+              name: "오타루",
+              percentage: "+12%",
+              color: "red",
+            },
+          ],
+          stations: [
+            "삿포로",
+            "오타루",
+            "스스키노",
+            "아사히카와",
+            "하코다테",
+          ],
+        },
+
+        "서울 비즈니스 위크": {
+          location: "대한민국, 서울",
+          travelers: "1명",
+          stationInsights: [
+            { name: "강남", percentage: "+20%", color: "red" },
+            {
+              name: "종로",
+              percentage: "-8%",
+              color: "emerald",
+            },
+            { name: "여의도", percentage: "+5%", color: "red" },
+          ],
+          stations: ["강남", "명동", "홍대", "종로", "여의도"],
+        },
+
+        "제주 가족 주말 여행": {
+          location: "대한민국, 제주",
+          travelers: "4명",
+          stationInsights: [
+            {
+              name: "제주시",
+              percentage: "+10%",
+              color: "red",
+            },
+            {
+              name: "서귀포",
+              percentage: "-15%",
+              color: "emerald",
+            },
+            { name: "애월", percentage: "+7%", color: "red" },
+          ],
+          stations: [
+            "제주시",
+            "서귀포",
+            "중문",
+            "애월",
+            "한라산 인근",
+          ],
+        },
+      };
+
+      // 현재 메인에 표시된 플래너 정보 저장 (초기값으로 오사카 데이터 활용)
+      let currentMainPlan = {
+        title: selectedMainTitle.textContent,
+        date: selectedMainDate.textContent,
+        location:
+          allPlannerDetails[selectedMainTitle.textContent]
+            .location, // allPlannerDetails에서 가져옴
+        travelers:
+          allPlannerDetails[selectedMainTitle.textContent]
+            .travelers, // allPlannerDetails에서 가져옴
+      };
+
+      // --- 함수: 숙소 카드 HTML을 생성하는 템플릿 ---
+      function createHotelCardHTML(hotel) {
+        // 어메니티(amenities) 배열을 HTML 문자열로 변환
+        const amenitiesHTML = hotel.amenities
+          .map(
+            (amenity) => `
+      <span class="hotel-amenity-item px-2 py-1 rounded bg-slate-100 dark:bg-white/5 text-[10px] font-bold text-slate-500 uppercase">
+        ${amenity}
+      </span>
+    `,
+          )
+          .join(""); // 배열의 모든 요소를 하나의 문자열로 합침
+
+        return `
+      <div class="hotel-card bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-2xl overflow-hidden flex flex-col md:flex-row shadow-sm hover:shadow-xl transition-all duration-300 group">
+        <div class="w-full md:w-[340px] h-64 md:h-auto relative shrink-0">
+          <div
+            class="absolute inset-0 bg-center bg-cover transition-transform duration-500 group-hover:scale-105"
+            style="background-image: url('${hotel.image}');"
+            data-hotel-image="${hotel.image}"
+          ></div>
+          <button
+            class="absolute top-4 right-4 z-10 size-10 flex items-center justify-center rounded-full bg-white/90 backdrop-blur-sm text-red-500 shadow-md transition-colors group/heart"
+          >
+            <span
+              class="material-symbols-outlined text-2xl group-active/heart:scale-125 transition-transform fill-1"
+              >favorite</span
+            >
+          </button>
+        </div>
+
+        <div class="flex-1 p-6 flex flex-col">
+          <div class="flex justify-between items-start mb-4">
+            <div class="space-y-1">
+              <h3 class="hotel-name text-xl font-extrabold group-hover:text-primary transition-colors">
+                ${hotel.name}
+              </h3>
+              <div
+                class="flex items-center gap-1.5 text-sm font-bold text-slate-600 dark:text-slate-300"
+              >
+                <span class="hotel-rating-stars text-yellow-500">${hotel.ratingStar}</span>
+                <span class="hotel-rating-num ml-1">${hotel.ratingNum}</span>
+                <span class="hotel-개 font-medium text-slate-400">
+                  ${hotel.개}
+                </span>
+              </div>
+              <div class="flex items-center gap-1 mt-2">
+                <span
+                  class="material-symbols-outlined text-primary text-xl font-bold"
+                  >location_on</span
+                >
+                <span
+                  class="hotel-location text-sm font-black text-slate-900 dark:text-white uppercase tracking-tight"
+                  >${hotel.locationDetail}</span
+                >
+              </div>
+            </div>
+            <div class="text-right">
+              <p class="hotel-price text-2xl font-black text-slate-900 dark:text-white">
+                ${hotel.price}
+              </p>
+              <p class="text-[10px] font-bold text-slate-400 uppercase">
+                1박 당
+              </p>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-y-3 mb-6">
+            <div
+              class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400"
+            >
+              <span
+                class="material-symbols-outlined text-slate-400 text-lg"
+                >login</span
+              >
+              <span class="hotel-checkin">${hotel.checkIn}</span>
+            </div>
+            <div
+              class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400"
+            >
+              <span
+                class="material-symbols-outlined text-slate-400 text-lg"
+                >logout</span
+              >
+              <span class="hotel-checkout">${hotel.checkOut}</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span
+                class="material-symbols-outlined text-primary text-lg"
+                >bed</span
+              >
+              <span
+                class="hotel-roomtype text-xs font-bold text-slate-700 dark:text-slate-300 bg-surface-gray dark:bg-white/5 px-2 py-0.5 rounded"
+                >${hotel.roomType}</span
+              >
+            </div>
+            <div class="flex items-center gap-2">
+              <span
+                class="material-symbols-outlined text-primary text-lg"
+                >smoke_free</span
+              >
+              <span
+                class="hotel-smoking text-xs font-bold text-slate-700 dark:text-slate-300 bg-surface-gray dark:bg-white/5 px-2 py-0.5 rounded"
+                >${hotel.smoking}</span
+              >
+            </div>
+          </div>
+          <div
+            class="mt-auto flex flex-col sm:flex-row sm:items-center justify-between pt-4 border-t border-slate-50 dark:border-white/5 gap-4"
+          >
+            <div class="flex gap-2" data-hotel-amenities-container>
+              ${amenitiesHTML} </div>
+            <div class="flex items-center gap-2">
+              <button
+                class="flex items-center gap-2 border-2 border-primary/20 hover:border-primary/40 text-primary font-bold py-2 px-4 rounded-xl text-sm transition-all group/btn-compare"
+              >
+                <span
+                  class="material-symbols-outlined text-xl group-active/btn-compare:scale-110 transition-transform"
+                  >add_circle</span
+                >
+                비교함 담기
+              </button>
+                <a
+                      href="detail.html"
+                class="bg-primary hover:bg-primary/90 text-white font-extrabold py-2.5 px-6 rounded-xl text-sm transition-all shadow-md shadow-primary/20"
+              >
+                상세 보기
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+      }
+
+      //  함수: 역별 가격 인사이트 업데이트
+      function updateStationInsights(plannerTitle) {
+        const plannerDetail = allPlannerDetails[plannerTitle];
+        if (!plannerDetail || !plannerDetail.stationInsights) {
+          stationInsightsContainer.innerHTML = ""; // 정보 없으면 비움
+          return;
+        }
+
+        let insightsHTML = "";
+        plannerDetail.stationInsights.forEach((insight, index) => {
+          const textColorClass =
+            insight.color === "red"
+              ? "text-red-500 bg-red-50"
+              : "text-emerald-500 bg-emerald-50";
+          insightsHTML += `
+              <div class="flex items-center gap-2 flex-shrink-0">
+                  <span class="text-xs font-bold text-slate-500">${insight.name} </span>
+                  <span class="text-xs font-black ${textColorClass} px-2 py-0.5 rounded-full">
+                      ${insight.percentage}
+                  </span>
+              </div>
+              ${index < plannerDetail.stationInsights.length - 1 ? '<div class="w-px h-4 bg-slate-200 dark:bg-white/10 hidden md:block"></div>' : ""}
+          `;
+        });
+        stationInsightsContainer.innerHTML = insightsHTML;
+      }
+
+      //  함수: 역 이름 체크박스 업데이트
+      function updateStationCheckboxes(plannerTitle) {
+        const plannerDetail = allPlannerDetails[plannerTitle];
+        if (!plannerDetail || !plannerDetail.stations) {
+          stationCheckboxesContainer.innerHTML = ""; // 정보 없으면 비움
+          return;
+        }
+
+        let checkboxesHTML = "";
+        plannerDetail.stations.forEach((stationName) => {
+          checkboxesHTML += `
+              <label class="flex items-center gap-3 cursor-pointer">
+                  <input
+                      class="h-4 w-4 rounded border-slate-300 text-primary focus:ring-primary/20"
+                      type="checkbox"
+                      value="${stationName}"
+                  />
+                  <span class="text-sm font-medium text-slate-600 dark:text-slate-400">
+                      ${stationName}
+                  </span>
+              </label>
+          `;
+        });
+        stationCheckboxesContainer.innerHTML = checkboxesHTML;
+
+        // 모든 체크박스의 첫 번째는 기본적으로 체크된 상태로
+        const firstCheckbox =
+          stationCheckboxesContainer.querySelector(
+            'input[type="checkbox"]',
+          );
+        if (firstCheckbox) {
+          firstCheckbox.checked = true;
+        }
+      }
+
+      // --- 함수: 현재 선택된 플래너에 따라 숙소 카드들을 업데이트 ---
+      function updateHotelCards(plannerTitle) {
+        const hotelsForPlanner =
+          allPlannerHotels[plannerTitle] || []; // 해당 플래너의 숙소 데이터 가져오기 (없으면 빈 배열)
+        hotelCardsContainer.innerHTML = ""; // 기존 숙소 카드들 모두 지우기
+
+        if (hotelsForPlanner.length === 0) {
+          hotelCardsContainer.innerHTML =
+            '<p class="text-slate-500 dark:text-slate-400">등록된 숙소가 없습니다.</p>';
+          return;
+        }
+
+        hotelsForPlanner.forEach((hotel) => {
+          const hotelCardHTML = createHotelCardHTML(hotel);
+          hotelCardsContainer.insertAdjacentHTML(
+            "beforeend",
+            hotelCardHTML,
+          ); // 새 카드 추가
+        });
+      }
+
+      // 초기 로딩 시 숙소 카드 업데이트
+      updateHotelCards(currentMainPlan.title);
+
+      // --- 이벤트 리스너들 ---
+      dropdownButton.addEventListener("click", () => {
+        dropdownContent.classList.toggle("hidden");
+        dropdownArrow.classList.toggle("rotate-180");
+      });
+
+      // 드롭다운 아이템 클릭 이벤트 처리
+      dropdownContent.addEventListener("click", (event) => {
+        const clickedItem = event.target.closest(".dropdown-item");
+
+        if (clickedItem) {
+          const newTitle = clickedItem.dataset.title;
+          const newDate = clickedItem.dataset.date;
+          const newLocation =
+            allPlannerDetails[newTitle].location; // allPlannerDetails에서 가져옴
+          const newTravelers =
+            allPlannerDetails[newTitle].travelers; // allPlannerDetails에서 가져옴
+
+          // 현재 메인에 있는 정보를 드롭다운 목록으로 다시 만들기
+          const oldItemHTML = `
+        <button
+          class="dropdown-item w-full flex items-center gap-3 px-6 py-3 hover:bg-slate-50 dark:hover:bg-white/5 text-left transition-colors"
+          data-title="${currentMainPlan.title}" data-date="${currentMainPlan.date}"
+          data-location="${currentMainPlan.location}" data-travelers="${currentMainPlan.travelers}"
+        >
+          <span class="material-symbols-outlined text-slate-400">calendar_today</span>
+          <div class="flex flex-col">
+            <span class="text-sm font-bold text-slate-700 dark:text-slate-200">${currentMainPlan.title}</span>
+            <span class="text-[10px] text-slate-400 font-medium">${currentMainPlan.date}</span>
+          </div>
+        </button>
+      `;
+
+          // 이전 메인 플래너를 드롭다운 목록에 다시 추가
+          const createNewPlannerDiv =
+            dropdownContent.querySelector("div.border-t");
+          if (createNewPlannerDiv) {
+            createNewPlannerDiv.insertAdjacentHTML(
+              "beforebegin",
+              oldItemHTML,
+            );
+          } else {
+            dropdownContent.insertAdjacentHTML(
+              "beforeend",
+              oldItemHTML,
+            );
+          }
+
+          // 메인 버튼 텍스트 업데이트
+          selectedMainTitle.textContent = newTitle;
+          selectedMainDate.textContent = newDate;
+
+          // 상세 정보 텍스트 업데이트!
+          detailLocation.textContent = newLocation;
+          detailDate.textContent = newDate;
+          detailTravelers.textContent = newTravelers;
+
+          // 숙소 카드 업데이트 함수 호출 (새로 추가!)
+          updateHotelCards(newTitle);
+
+          // 드롭다운 목록에서 클릭된 아이템 제거
+          clickedItem.remove();
+
+          // 현재 메인 플래너 정보 업데이트
+          currentMainPlan = {
+            title: newTitle,
+            date: newDate,
+            location: newLocation,
+            travelers: newTravelers,
+          };
+
+          // 드롭다운 닫기
+          dropdownContent.classList.add("hidden");
+          dropdownArrow.classList.remove("rotate-180");
+        }
+
+        updateHotelCards(newTitle); // <-- 여기도 이제 '새로운 버전'을 실행하게 됨
+      });
+
+      // 드롭다운 외부 클릭 시 닫는 이벤트
+      document.addEventListener("click", (event) => {
+        if (
+          !dropdownButton.contains(event.target) &&
+          !dropdownContent.contains(event.target)
+        ) {
+          if (!dropdownContent.classList.contains("hidden")) {
+            dropdownContent.classList.add("hidden");
+            dropdownArrow.classList.remove("rotate-180");
+          }
+        }
+      });
+
+      //가격설정 슬라이더
+
+      // 숫자를 '₩0,000' 형태로 포맷해주는 함수
+      function formatPriceDisplay(num) {
+        if (isNaN(num)) return ""; // 숫자가 아니면 빈 문자열 반환
+        return num.toLocaleString("ko-KR");
+      }
+
+      // 포맷된 문자열에서 숫자만 추출하는 함수
+      function parseFormattedPrice(str) {
+        // ',' 문자만 제거하고 숫자로 변환
+        const cleanedStr = str.replace(/[,]/g, "");
+        return parseFloat(cleanedStr);
+      }
+
+      function updateSliderHandlesAndFill() {
+        const minVal = parseFloat(minRangeSlider.value);
+        const maxVal = parseFloat(maxRangeSlider.value);
+
+        // Update input fields
+        minPriceInput.value = formatPriceDisplay(minVal); //  함수 사용
+        maxPriceInput.value = formatPriceDisplay(maxVal); // 함수 사용
+
+        // Calculate percentage for handle positions and fill
+        const rangeWidth = sliderMax - sliderMin;
+        const minPercent =
+          ((minVal - sliderMin) / rangeWidth) * 100;
+        const maxPercent =
+          ((maxVal - sliderMin) / rangeWidth) * 100;
+
+        // Update handle positions
+        minHandle.style.left = `${minPercent}%`;
+        maxHandle.style.left = `${maxPercent}%`;
+
+        // Update fill bar
+        sliderRangeFill.style.left = `${minPercent}%`;
+        sliderRangeFill.style.right = `${100 - maxPercent}%`;
+      }
+
+      // Event listener for min range slider
+      minRangeSlider.addEventListener("input", () => {
+        let minVal = parseFloat(minRangeSlider.value);
+        const maxVal = parseFloat(maxRangeSlider.value);
+
+        if (minVal > maxVal) {
+          minVal = maxVal;
+          minRangeSlider.value = maxVal;
+        }
+        updateSliderHandlesAndFill();
+      });
+
+      // Event listener for max range slider
+      maxRangeSlider.addEventListener("input", () => {
+        const minVal = parseFloat(minRangeSlider.value);
+        let maxVal = parseFloat(maxRangeSlider.value);
+
+        if (maxVal < minVal) {
+          maxVal = minVal;
+          maxRangeSlider.value = minVal;
+        }
+        updateSliderHandlesAndFill();
+      });
+
+      // Event listener for min price input
+      minPriceInput.addEventListener("change", () => {
+        // input에서 값을 가져올 때는 parseFormattedPrice 함수로 순수 숫자만 가져옴
+        let minVal = parseFormattedPrice(minPriceInput.value); //  함수 사용
+
+        // 유효성 검사 (숫자인지, 최소/최대 범위인지, 다른 슬라이더 안 넘는지)
+        if (isNaN(minVal) || minVal < sliderMin) minVal = sliderMin;
+        if (minVal > parseFormattedPrice(maxPriceInput.value))
+          minVal = parseFormattedPrice(maxPriceInput.value); //  다른 input 값도 파싱해서 비교
+
+        minRangeSlider.value = minVal; // 슬라이더 값 업데이트
+        updateSliderHandlesAndFill(); // 모든 UI 업데이트 (input 필드도 재포맷됨)
+      });
+
+      // Event listener for max price input
+      maxPriceInput.addEventListener("change", () => {
+        let maxVal = parseFormattedPrice(maxPriceInput.value); //  함수 사용
+
+        if (isNaN(maxVal) || maxVal > sliderMax) maxVal = sliderMax;
+        if (maxVal < parseFormattedPrice(minPriceInput.value))
+          maxVal = parseFormattedPrice(minPriceInput.value); //  다른 input 값도 파싱해서 비교
+
+        maxRangeSlider.value = maxVal; // 슬라이더 값 업데이트
+        updateSliderHandlesAndFill(); // 모든 UI 업데이트 (input 필드도 재포맷됨)
+      });
+
+      // Initial update when page loads
+      updateSliderHandlesAndFill();
+    });
+  </script>
+  <script src="../../js/auth.js"></script>
+  </body>
+</html>

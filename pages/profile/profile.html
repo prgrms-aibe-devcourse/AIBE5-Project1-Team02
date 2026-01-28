@@ -611,6 +611,344 @@
         </div>
 
         <div
+            id="editModal"
+            class="fixed inset-0 z-[100] hidden"
+            aria-labelledby="modal-title"
+            role="dialog"
+            aria-modal="true"
+        >
+            <div
+                class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm transition-opacity opacity-0"
+                id="modalBackdrop"
+            ></div>
+
+            <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+                <div
+                    class="flex min-h-full items-end justify-center p-0 text-center sm:items-center sm:p-0"
+                >
+                    <div
+                        class="relative transform overflow-hidden bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg rounded-t-2xl sm:rounded-2xl translate-y-full sm:translate-y-0 opacity-0"
+                        id="modalPanel"
+                    >
+                        <div class="px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                            <div class="flex justify-between items-center mb-5">
+                                <h3
+                                    class="text-xl font-bold text-slate-900"
+                                    id="modal-title"
+                                >
+                                    프로필 수정
+                                </h3>
+                                <button
+                                    onclick="toggleEditModal()"
+                                    class="text-slate-400 hover:text-slate-500"
+                                >
+                                    <span class="material-symbols-outlined"
+                                        >close</span
+                                    >
+                                </button>
+                            </div>
+                            <form
+                                id="profile-edit-form"
+                                onsubmit="handleProfileUpdate(event)"
+                                class="space-y-4"
+                            >
+                                <div>
+                                    <label
+                                        class="block text-sm font-medium text-slate-700 mb-1"
+                                        >이메일</label
+                                    >
+                                    <input
+                                        type="email"
+                                        id="edit-email"
+                                        value="yeobaek@example.com"
+                                        disabled
+                                        class="w-full px-4 py-2 bg-slate-100 border border-slate-200 rounded-xl text-slate-500"
+                                    />
+                                    <p class="text-xs text-slate-400 mt-1">
+                                        이메일은 변경할 수 없습니다.
+                                    </p>
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label
+                                            class="block text-sm font-medium text-slate-700 mb-1"
+                                            >이름</label
+                                        >
+                                        <input
+                                            type="text"
+                                            id="edit-name"
+                                            value="김여백"
+                                            class="w-full px-4 py-2 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary outline-none"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label
+                                            class="block text-sm font-medium text-slate-700 mb-1"
+                                            >생년월일</label
+                                        >
+                                        <input
+                                            type="date"
+                                            id="edit-birthdate"
+                                            value="1995-05-20"
+                                            class="w-full px-4 py-2 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary outline-none"
+                                        />
+                                    </div>
+                                </div>
+                                <div>
+                                    <label
+                                        class="block text-sm font-medium text-slate-700 mb-1"
+                                        >성별</label
+                                    >
+                                    <select
+                                        id="edit-gender"
+                                        class="w-full px-4 py-2 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary outline-none"
+                                    >
+                                        <option value="male" selected>
+                                            남성
+                                        </option>
+                                        <option value="female">여성</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label
+                                        class="block text-sm font-medium text-slate-700 mb-1"
+                                        >자기소개</label
+                                    >
+                                    <textarea
+                                        id="editBioInput"
+                                        rows="3"
+                                        class="w-full px-4 py-2 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary outline-none resize-none"
+                                    ></textarea>
+                                </div>
+
+                                <div class="pt-4 border-t border-slate-100">
+                                    <h4
+                                        class="text-sm font-bold text-slate-900 mb-4 flex items-center"
+                                    >
+                                        <span
+                                            class="material-symbols-outlined text-sm mr-1"
+                                            >lock</span
+                                        >
+                                        비밀번호 변경
+                                    </h4>
+                                    <div class="space-y-4">
+                                        <div>
+                                            <label
+                                                class="block text-xs font-medium text-slate-500 mb-1"
+                                                >현재 비밀번호</label
+                                            >
+                                            <input
+                                                type="password"
+                                                id="currentPasswordInput"
+                                                placeholder="현재 비밀번호 입력"
+                                                class="w-full px-4 py-2 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary outline-none"
+                                            />
+                                        </div>
+                                        <div class="grid grid-cols-2 gap-4">
+                                            <div>
+                                                <label
+                                                    class="block text-xs font-medium text-slate-500 mb-1"
+                                                    >새 비밀번호</label
+                                                >
+                                                <input
+                                                    type="password"
+                                                    id="newPasswordInput"
+                                                    placeholder="새 비밀번호"
+                                                    class="w-full px-4 py-2 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary outline-none"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label
+                                                    class="block text-xs font-medium text-slate-500 mb-1"
+                                                    >새 비밀번호 확인</label
+                                                >
+                                                <input
+                                                    type="password"
+                                                    id="confirmPasswordInput"
+                                                    placeholder="비밀번호 확인"
+                                                    class="w-full px-4 py-2 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary outline-none"
+                                                />
+                                            </div>
+                                        </div>
+                                        <p class="text-[10px] text-slate-400">
+                                            비밀번호 변경을 원하지 않으시면
+                                            빈칸으로 두세요.
+                                        </p>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div
+                            class="px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6 border-t border-slate-100"
+                        >
+                            <button
+                                type="submit"
+                                form="profile-edit-form"
+                                class="inline-flex w-full justify-center rounded-xl bg-primary px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-teal-700 sm:ml-3 sm:w-auto"
+                            >
+                                저장하기
+                            </button>
+                            <button
+                                type="button"
+                                class="mt-3 inline-flex w-full justify-center rounded-xl bg-white px-3 py-2 text-sm font-semibold text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 hover:bg-slate-50 sm:mt-0 sm:w-auto"
+                                onclick="toggleEditModal()"
+                            >
+                                취소
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div
+            id="personalityModal"
+            class="fixed inset-0 z-[100] hidden"
+            aria-labelledby="modal-title"
+            role="dialog"
+            aria-modal="true"
+        >
+            <div
+                class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm transition-opacity opacity-0"
+                id="personalityBackdrop"
+            ></div>
+            <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+                <div
+                    class="flex min-h-full items-center justify-center p-4 text-center sm:p-0"
+                >
+                    <div
+                        class="relative transform overflow-hidden bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-md rounded-2xl opacity-0 scale-95"
+                        id="personalityPanel"
+                    >
+                        <div
+                            class="relative h-32 p-6 flex flex-col justify-center text-white"
+                            style="
+                                background: linear-gradient(
+                                    to bottom right,
+                                    #6366f1,
+                                    #9333ea
+                                );
+                                color: white;
+                            "
+                        >
+                            <button
+                                onclick="togglePersonalityModal()"
+                                class="absolute top-4 right-4 p-1 hover:bg-white/20 rounded-full transition-colors"
+                            >
+                                <span
+                                    class="material-symbols-outlined text-white"
+                                    >close</span
+                                >
+                            </button>
+                            <div class="flex items-center space-x-2 mb-1">
+                                <span class="material-symbols-outlined text-2xl"
+                                    >psychology</span
+                                >
+                                <span class="text-sm font-medium opacity-90"
+                                    >여행 성향 분석</span
+                                >
+                            </div>
+                            <h2
+                                class="text-2xl font-bold"
+                                id="personality-modal-title"
+                            >
+                                확실한 분석가형
+                            </h2>
+                        </div>
+                        <div class="p-6">
+                            <div class="space-y-4">
+                                <div
+                                    class="bg-indigo-50 p-4 rounded-xl border border-indigo-100"
+                                >
+                                    <h4
+                                        class="font-bold text-indigo-900 mb-2 flex items-center"
+                                    >
+                                        <span
+                                            class="material-symbols-outlined text-sm mr-1"
+                                            >check_circle</span
+                                        >
+                                        이런 여행을 선호해요
+                                    </h4>
+                                    <ul
+                                        id="personality-modal-recommendations-list"
+                                        class="text-sm text-indigo-800 space-y-1 list-disc list-inside"
+                                    >
+                                        <li>분 단위로 쪼개진 엑셀 계획표</li>
+                                        <li>가성비와 효율성을 극대화한 동선</li>
+                                        <li>검증된 맛집과 명소 방문</li>
+                                    </ul>
+                                </div>
+
+                                <div>
+                                    <h4
+                                        class="font-bold text-slate-900 mb-2 text-sm"
+                                    >
+                                        상세 지표
+                                    </h4>
+                                    <div class="space-y-3">
+                                        <div>
+                                            <div
+                                                class="flex justify-between text-xs text-slate-500 mb-1"
+                                            >
+                                                <span
+                                                    >계획적
+                                                    <span
+                                                        id="planfulness-label"
+                                                    ></span
+                                                ></span>
+                                                <span
+                                                    >즉흥적
+                                                    <span
+                                                        id="impulsivity-label"
+                                                    ></span
+                                                ></span>
+                                            </div>
+                                            <div
+                                                class="h-2 bg-slate-100 rounded-full overflow-hidden"
+                                            >
+                                                <div
+                                                    id="planfulness-bar"
+                                                    class="h-full bg-indigo-500 w-[90%] rounded-full"
+                                                ></div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div
+                                                class="flex justify-between text-xs text-slate-500 mb-1"
+                                            >
+                                                <span
+                                                    >알뜰함
+                                                    <span
+                                                        id="frugality-label"
+                                                    ></span
+                                                ></span>
+                                                <span
+                                                    >럭셔리
+                                                    <span
+                                                        id="luxury-label"
+                                                    ></span
+                                                ></span>
+                                            </div>
+                                            <div
+                                                class="h-2 bg-slate-100 rounded-full overflow-hidden"
+                                            >
+                                                <div
+                                                    id="frugality-bar"
+                                                    class="h-full bg-indigo-500 w-[80%] rounded-full"
+                                                ></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div
             id="schedulePreviewModal"
             class="fixed inset-0 z-[150] hidden"
             aria-labelledby="modal-title"
@@ -874,11 +1212,142 @@
                             personalityStrengthsContainer.appendChild(span);
                         });
                     }
+
+                    // 추가된 부분: 모달 내용도 업데이트
+                    const personalityModalTitle = document.getElementById(
+                        "personality-modal-title",
+                    );
+                    if (personalityModalTitle) {
+                        personalityModalTitle.textContent = `${resultData.nickname}`;
+                    }
+
+                    const personalityModalRecommendationsList =
+                        document.getElementById(
+                            "personality-modal-recommendations-list",
+                        );
+                    if (personalityModalRecommendationsList) {
+                        personalityModalRecommendationsList.innerHTML = "";
+                        resultData.recommendations.forEach((rec) => {
+                            const li = document.createElement("li");
+                            li.textContent = rec;
+                            personalityModalRecommendationsList.appendChild(li);
+                        });
+                    }
+
+                    const planfulnessBar =
+                        document.getElementById("planfulness-bar");
+                    if (planfulnessBar && resultData.metrics) {
+                        planfulnessBar.style.width = `${resultData.metrics.planfulness}%`;
+                    }
+
+                    const frugalityBar =
+                        document.getElementById("frugality-bar");
+                    if (frugalityBar && resultData.metrics) {
+                        frugalityBar.style.width = `${resultData.metrics.frugality}%`;
+                    }
+
+                    const planfulnessLabel =
+                        document.getElementById("planfulness-label");
+                    const impulsivityLabel =
+                        document.getElementById("impulsivity-label");
+                    if (
+                        planfulnessLabel &&
+                        impulsivityLabel &&
+                        resultData.metrics
+                    ) {
+                        planfulnessLabel.textContent = `(${resultData.metrics.planfulness}%)`;
+                        impulsivityLabel.textContent = `(${100 - resultData.metrics.planfulness}%)`;
+                    }
+
+                    const frugalityLabel =
+                        document.getElementById("frugality-label");
+                    const luxuryLabel = document.getElementById("luxury-label");
+                    if (frugalityLabel && luxuryLabel && resultData.metrics) {
+                        frugalityLabel.textContent = `(${resultData.metrics.frugality}%)`;
+                        luxuryLabel.textContent = `(${100 - resultData.metrics.frugality}%)`;
+                    }
                 }
 
                 renderUserPlans();
                 renderUpcomingTrip();
+
+                // 비밀번호 확인 후 편집 모달 열기 로직 연결
+                const verifyBtn = document.getElementById(
+                    "verifyPasswordAndEditBtn",
+                );
+                if (verifyBtn) {
+                    verifyBtn.onclick = function () {
+                        // 실제 비밀번호 검증 로직은 생략하고 바로 넘어갑니다.
+                        closePasswordCheckModal();
+                        toggleEditModal();
+                    };
+                }
             });
+
+            // --- 추가된 모달 제어 함수들 ---
+
+            // 프로필 수정 모달
+            function toggleEditModal() {
+                const modal = document.getElementById("editModal");
+                const backdrop = document.getElementById("modalBackdrop");
+                const panel = document.getElementById("modalPanel");
+
+                if (modal.classList.contains("hidden")) {
+                    modal.classList.remove("hidden");
+                    setTimeout(() => {
+                        backdrop.classList.remove("opacity-0");
+                        panel.classList.remove(
+                            "translate-y-full",
+                            "opacity-0",
+                            "scale-95",
+                        );
+                    }, 10);
+                } else {
+                    backdrop.classList.add("opacity-0");
+                    panel.classList.add(
+                        "translate-y-full",
+                        "opacity-0",
+                        "scale-95",
+                    );
+                    setTimeout(() => {
+                        modal.classList.add("hidden");
+                    }, 300);
+                }
+            }
+
+            function handleProfileUpdate(event) {
+                event.preventDefault();
+                // 여기에 저장 로직 추가
+                alert("프로필이 수정되었습니다.");
+                toggleEditModal();
+            }
+
+            // 여행 성향 분석 모달
+            function togglePersonalityModal() {
+                const modal = document.getElementById("personalityModal");
+                const backdrop = document.getElementById("personalityBackdrop");
+                const panel = document.getElementById("personalityPanel");
+
+                if (modal.classList.contains("hidden")) {
+                    modal.classList.remove("hidden");
+                    setTimeout(() => {
+                        backdrop.classList.remove("opacity-0");
+                        panel.classList.remove("opacity-0", "scale-95");
+                    }, 10);
+                } else {
+                    backdrop.classList.add("opacity-0");
+                    panel.classList.add("opacity-0", "scale-95");
+                    setTimeout(() => {
+                        modal.classList.add("hidden");
+                    }, 300);
+                }
+            }
+
+            function showPersonalityInfo() {
+                togglePersonalityModal();
+            }
+
+            // --- 기존 함수들 (그대로 유지) ---
 
             function startNewPlan() {
                 localStorage.removeItem("tripPlanner_flightInfo");
