@@ -168,17 +168,22 @@ function toggleAddCountryModal() {
     }
 }
 
+// 프로필 수정 모달 토글
 function toggleEditModal() {
     const modal = document.getElementById("editModal");
     const backdrop = document.getElementById("modalBackdrop");
     const panel = document.getElementById("modalPanel");
 
     if (modal.classList.contains("hidden")) {
+        // 열기 로직
         modal.classList.remove("hidden");
-        // populateProfile is in auth.js and needs to be called
+
+        // auth.js에 있는 함수 호출 (데이터 채우기)
         if (typeof populateProfile === "function") {
             populateProfile();
         }
+
+        // 애니메이션
         setTimeout(() => {
             backdrop.classList.remove("opacity-0");
             panel.classList.remove(
@@ -188,19 +193,76 @@ function toggleEditModal() {
             );
         }, 10);
     } else {
+        // 닫기 로직
         backdrop.classList.add("opacity-0");
         panel.classList.add(
             "opacity-0",
             "translate-y-full",
             "sm:translate-y-0",
         );
-        document.getElementById("currentPasswordInput").value = "";
-        document.getElementById("newPasswordInput").value = "";
-        document.getElementById("confirmPasswordInput").value = "";
+
+        // 입력창 초기화
+        const currPw = document.getElementById("currentPasswordInput");
+        const newPw = document.getElementById("newPasswordInput");
+        const confPw = document.getElementById("confirmPasswordInput");
+        if (currPw) currPw.value = "";
+        if (newPw) newPw.value = "";
+        if (confPw) confPw.value = "";
+
+        // 애니메이션 후 hidden 처리
         setTimeout(() => {
             modal.classList.add("hidden");
         }, 300);
     }
+}
+
+// [수정됨] 프로필 저장 처리 함수
+function handleProfileUpdate(event) {
+    event.preventDefault(); // 폼 제출로 인한 새로고침 방지
+
+    // 1. 입력된 값 가져오기
+    const newName = document.getElementById("edit-name").value;
+    const newBio = document.getElementById("editBioInput").value;
+
+    // (선택사항) 생년월일, 성별 등도 필요하면 여기서 가져옵니다.
+    // const newBirthdate = document.getElementById("edit-birthdate").value;
+
+    // 2. 화면(DOM) 업데이트 (즉시 반영)
+    const bioDisplay = document.getElementById("profileBio");
+    const nameDisplay = document.getElementById("profile-display-name");
+
+    if (bioDisplay) {
+        bioDisplay.innerText = newBio; // 자기소개 텍스트 변경
+    }
+
+    // 이름 업데이트 시 옆에 있는 레벨 뱃지(span)가 사라지지 않도록 처리
+    if (nameDisplay) {
+        // h1 태그 안의 첫 번째 텍스트 노드(이름)만 변경하고 span(레벨)은 유지
+        if (nameDisplay.firstChild.nodeType === Node.TEXT_NODE) {
+            nameDisplay.firstChild.textContent = newName + " ";
+        } else {
+            // 만약 구조가 다르다면 span을 제외하고 텍스트만 넣는 방식 사용
+            const badge = nameDisplay.querySelector("span");
+            nameDisplay.innerText = newName + " ";
+            if (badge) nameDisplay.appendChild(badge);
+        }
+    }
+
+    // 3. 로컬 스토리지(LocalStorage) 업데이트 (새로고침 시 유지)
+    // 현재 로그인된 사용자 정보를 가져와서 수정 후 다시 저장
+    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+
+    if (loggedInUser) {
+        loggedInUser.name = newName;
+        loggedInUser.bio = newBio;
+        // loggedInUser.birthdate = newBirthdate; // 필요 시 추가
+
+        localStorage.setItem("loggedInUser", JSON.stringify(loggedInUser));
+    }
+
+    // 4. 알림 및 모달 닫기
+    alert("프로필이 성공적으로 수정되었습니다.");
+    toggleEditModal();
 }
 
 function togglePersonalityModal() {
@@ -376,7 +438,7 @@ function togglePassportExpansion() {
 }
 
 // -----------------------------------------------------------
-// [새로 추가된 부분] 비밀번호 확인 및 프로필 수정 모달 로직
+// [수정됨] 비밀번호 확인 및 프로필 수정 모달 로직
 // -----------------------------------------------------------
 
 // 1. 비밀번호 확인 모달 열기
@@ -388,12 +450,18 @@ function openPasswordCheckModal() {
     if (modal) {
         modal.classList.remove("hidden");
         setTimeout(() => {
-            backdrop.classList.remove("opacity-0");
-            panel.classList.remove("opacity-0", "scale-95");
-            panel.classList.add("opacity-100", "scale-100");
+            if (backdrop) backdrop.classList.remove("opacity-0");
+            if (panel) {
+                panel.classList.remove("opacity-0", "scale-95");
+                panel.classList.add("opacity-100", "scale-100");
+            }
         }, 10);
-    } else {
-        console.error("비밀번호 모달을 찾을 수 없습니다.");
+        // 입력창 초기화 및 포커스
+        const input = document.getElementById("passwordCheckInput");
+        if (input) {
+            input.value = "";
+            input.focus();
+        }
     }
 }
 
@@ -403,28 +471,29 @@ function closePasswordCheckModal() {
     const backdrop = document.getElementById("passwordCheckBackdrop");
     const panel = document.getElementById("passwordCheckPanel");
 
-    if (backdrop && panel) {
-        backdrop.classList.add("opacity-0");
+    if (backdrop) backdrop.classList.add("opacity-0");
+    if (panel) {
         panel.classList.remove("opacity-100", "scale-100");
         panel.classList.add("opacity-0", "scale-95");
-
-        setTimeout(() => {
-            if (modal) modal.classList.add("hidden");
-            // 입력 필드 초기화
-            const input = document.getElementById("passwordCheckInput");
-            if (input) input.value = "";
-        }, 300);
     }
+
+    setTimeout(() => {
+        if (modal) modal.classList.add("hidden");
+    }, 300);
 }
 
-// 3. 비밀번호 확인 로직
+// 3. 비밀번호 확인 로직 (확인 버튼 클릭 시 실행)
 function verifyPasswordAndEdit() {
     const passwordInput = document.getElementById("passwordCheckInput");
 
-    if (passwordInput && passwordInput.value.length > 0) {
-        closePasswordCheckModal(); // 비밀번호 모달 닫기
+    if (passwordInput && passwordInput.value.trim().length > 0) {
+        // 1) 비밀번호 확인 모달 닫기
+        closePasswordCheckModal();
+
+        // 2) 약간의 딜레이 후 프로필 수정 모달 열기
+        // (딜레이를 주어야 닫히는 애니메이션과 열리는 동작이 겹치지 않음)
         setTimeout(() => {
-            toggleEditModal(); // 프로필 수정 모달 열기
+            toggleEditModal();
         }, 300);
     } else {
         alert("비밀번호를 입력해주세요.");
@@ -444,31 +513,27 @@ window.addCountry = addCountry;
 window.updatePassportCounts = updatePassportCounts;
 window.initPassportGrid = initPassportGrid;
 window.togglePassportExpansion = togglePassportExpansion;
-// 새로 추가된 함수들도 등록
 window.openPasswordCheckModal = openPasswordCheckModal;
 window.closePasswordCheckModal = closePasswordCheckModal;
 window.verifyPasswordAndEdit = verifyPasswordAndEdit;
+window.handleProfileUpdate = handleProfileUpdate; // 새로 추가됨
 
-// 이벤트 리스너 등록
+// 이벤트 리스너 등록 (중복 방지를 위해 onclick 속성 사용)
 document.addEventListener("DOMContentLoaded", () => {
-    // 기존에 있던 requestEditProfileBtn 관련 리스너는 삭제함 (HTML onclick으로 대체)
-
-    const verifyPasswordAndEditBtn = document.getElementById(
-        "verifyPasswordAndEditBtn",
-    );
-    if (verifyPasswordAndEditBtn) {
-        verifyPasswordAndEditBtn.addEventListener(
-            "click",
-            verifyPasswordAndEdit,
-        );
+    // [중요] addEventListener 대신 onclick을 사용하여 중복 바인딩 방지
+    const verifyBtn = document.getElementById("verifyPasswordAndEditBtn");
+    if (verifyBtn) {
+        verifyBtn.onclick = verifyPasswordAndEdit;
     }
 
-    const passwordCheckInput = document.getElementById("passwordCheckInput");
-    if (passwordCheckInput) {
-        passwordCheckInput.addEventListener("keypress", (event) => {
+    // 엔터키 입력 처리
+    const passwordInput = document.getElementById("passwordCheckInput");
+    if (passwordInput) {
+        passwordInput.onkeypress = (event) => {
             if (event.key === "Enter") {
+                event.preventDefault(); // 폼 제출 방지
                 verifyPasswordAndEdit();
             }
-        });
+        };
     }
 });

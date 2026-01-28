@@ -1,0 +1,1225 @@
+<!doctype html>
+<html class="light" lang="ko">
+    <head>
+        <meta charset="utf-8" />
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <title>여백 - 숙소 비교하기</title>
+        <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+        <link
+            href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Noto+Sans+KR:wght@300;400;500;700&display=swap"
+            rel="stylesheet"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&display=swap"
+            rel="stylesheet"
+        />
+
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+            rel="stylesheet"
+        />
+        <style type="text/tailwindcss">
+            :root {
+                /* 원본 색상 변수 */
+                --triplet-blue: #4c6fff; /* 호버/선택 시 글씨색 */
+                --triplet-blue-light: rgba(76, 111, 255, 0.04);
+                --triplet-gray-50: #f9fafb;
+                --triplet-gray-100: #f3f4f6;
+                --triplet-gray-200: #e5e7eb; /* 호버 시 배경색: #e5e7eb */
+                --triplet-gray-400: #9ca3af;
+                --triplet-gray-600: #4b5563;
+                --triplet-gray-900: #111827; /* 기본 글씨색: #111827 */
+
+                /* 새로운 하이라이트/호버용 색상 변수 */
+                --highlight-hover-bg: var(
+                    --triplet-gray-200
+                ); /* 호버 시 배경색 #e5e7eb */
+                --highlight-selected-bg: #f6f8ff; /* 선택 시 배경색 #f6f8ff */
+                --highlight-text-color: var(
+                    --triplet-blue
+                ); /* 호버/선택 시 글씨색 #4c6fff */
+            }
+            body {
+                font-family: "Manrope", "Noto Sans KR", sans-serif;
+                background-color: var(--triplet-gray-50);
+                color: var(--triplet-gray-900);
+            }
+            .custom-scrollbar::-webkit-scrollbar {
+                height: 6px;
+            }
+            .custom-scrollbar::-webkit-scrollbar-track {
+                background: transparent;
+            }
+            .custom-scrollbar::-webkit-scrollbar-thumb {
+                background: var(--triplet-gray-200);
+                border-radius: 10px;
+            }
+            .sticky-col {
+                position: sticky;
+                left: 0;
+                z-index: 20;
+                background-color: white;
+            }
+            .star-rating {
+                color: #ffb800; /* 별 노란색 유지 */
+                font-variation-settings: "FILL" 1;
+            }
+            .remove-btn {
+                background: rgba(17, 24, 39, 0.6);
+                backdrop-filter: blur(4px);
+                transition: all 0.2s ease;
+            }
+            .remove-btn:hover {
+                background: rgba(239, 68, 68, 0.9);
+            }
+            .added-badge {
+                background: var(--triplet-blue);
+                color: white; /* 흰색 글씨 유지 */
+            }
+
+            /* ============================================================= */
+            /* 하이라이트 및 호버 스타일  
+      /* (JavaScript가 이 클래스들을 요소에 추가/제거) */
+            /* ============================================================= */
+
+            /* 1. 기본 글씨색 보장 (text-content-to-change가 붙은 텍스트는 초기 검정색 #111827) */
+            .text-content-to-change {
+                color: var(--triplet-gray-900); /* 초기 기본 글씨색은 검정 */
+            }
+
+            /* 2. 호버 (마우스 올렸을 때) 스타일 */
+            .hovered-column-header,
+            .hovered-column-data {
+                background-color: var(
+                    --highlight-hover-bg
+                ) !important; /* #e5e7eb */
+            }
+            /* 호버 시 글씨색 변경 (`text-content-to-change` 클래스가 붙은 요소만) */
+            .hovered-column-header .text-content-to-change,
+            .hovered-column-data .text-content-to-change,
+            .add-hotel-button.hovered-button .text-content-to-change {
+                color: var(--highlight-text-color) !important; /* #4c6fff */
+            }
+            /* 호버 시 배경이 투명도 있는 셀도 완전한 색상으로 덮어씌움 */
+            .hovered-column-header.bg-neutral-gray-50\/50,
+            .hovered-column-data.bg-neutral-gray-50\/50 {
+                background-color: var(--highlight-hover-bg) !important;
+            }
+
+            /* 3. 선택 (클릭했을 때) 스타일 */
+            .highlighted-column-header,
+            .highlighted-column-data {
+                background-color: var(
+                    --highlight-selected-bg
+                ) !important; /* #f6f8ff */
+            }
+            /* 선택 시 글씨색 변경 ( `text-content-to-change` 클래스가 붙은 요소만) */
+            .highlighted-column-header .text-content-to-change,
+            .highlighted-column-data .text-content-to-change,
+            .add-hotel-button.highlighted-button .text-content-to-change {
+                color: var(--highlight-text-color) !important; /* #4c6fff */
+            }
+            /* 선택 시 배경이 투명도 있는 셀도 완전한 색상으로 덮어씌움 */
+            .highlighted-column-header.bg-neutral-gray-50\/50,
+            .highlighted-column-data.bg-neutral-gray-50\/50 {
+                background-color: var(--highlight-selected-bg) !important;
+            }
+
+            /* 4. 클릭된 상태 유지 & 호버 방지 (클릭이 호버보다 우선순위를 가짐) */
+            .highlighted-column-header,
+            .highlighted-column-data {
+                position: relative;
+                z-index: 1; /* 호버보다 우선순위 높게 */
+            }
+            /* 클릭된 컬럼 위에서 마우스를 호버해도 클릭 스타일 유지 */
+            /* JavaScript에서 마우스오버 이벤트 처리 시 클릭 상태면 return해서 호버를 막음 */
+        </style>
+        <script id="tailwind-config">
+            tailwind.config = {
+                darkMode: "class",
+                theme: {
+                    extend: {
+                        colors: {
+                            primary: "#4C6FFF",
+                            "yeobaek-primary": "#3b82f6", // 여백 브랜드 컬러 추가
+                            "neutral-gray": {
+                                50: "#F9FAFB",
+                                100: "#F3F4F6",
+                                200: "#E5E7EB",
+                                400: "#9CA3AF",
+                                600: "#4B5563",
+                                900: "#111827",
+                            },
+                        },
+                        fontFamily: {
+                            sans: ["Manrope", "sans-serif"],
+                            serif: ["Noto Serif KR", "serif"], // 헤더용 폰트
+                        },
+                    },
+                },
+            };
+        </script>
+    </head>
+    <body class="transition-colors duration-200">
+        <div class="layout-container flex h-full min-h-screen flex-col">
+            <header
+                class="sticky top-0 z-[100] w-full border-b border-gray-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60"
+            >
+                <div
+                    class="w-full px-8 relative flex h-20 items-center justify-between max-w-[1440px] mx-auto"
+                >
+                    <a
+                        class="flex items-center space-x-2 transition-transform duration-300 hover:scale-105"
+                        href="../main/Main.html"
+                    >
+                        <img
+                            src="../../images/Logo.png"
+                            alt="여백 로고"
+                            class="h-9 w-9 rounded-full object-cover"
+                            onerror="this.style.display = 'none'"
+                        />
+                        <span
+                            class="font-serif text-neutral-gray-900 font-bold ml-2 text-xl"
+                            >여백</span
+                        >
+                    </a>
+
+                    <nav
+                        class="hidden md:flex items-center justify-center text-neutral-gray-600 gap-8 text-lg font-medium absolute left-1/2 -translate-x-1/2"
+                    >
+                        <a
+                            href="../plan/planner.html"
+                            class="group relative py-1 transition-colors hover:text-neutral-gray-900"
+                        >
+                            플래너
+                            <span
+                                class="absolute left-0 bottom-0 w-0 h-[2px] bg-yeobaek-primary transition-all duration-300 group-hover:w-full"
+                            ></span>
+                        </a>
+                        <a
+                            href="search.html"
+                            class="group relative py-1 transition-colors hover:text-neutral-gray-900"
+                        >
+                            숙소
+                            <span
+                                class="absolute left-0 bottom-0 w-0 h-[2px] bg-yeobaek-primary transition-all duration-300 group-hover:w-full"
+                            ></span>
+                        </a>
+                        <a
+                            href=""
+                            class="group relative py-1 transition-colors hover:text-neutral-gray-900"
+                        >
+                            여행기록
+                            <span
+                                class="absolute left-0 bottom-0 w-0 h-[2px] bg-yeobaek-primary transition-all duration-300 group-hover:w-full"
+                            ></span>
+                        </a>
+                    </nav>
+
+                    <div class="flex items-center gap-6">
+                        <a
+                            href="table.html"
+                            class="flex items-center gap-2 px-3 py-2 rounded-full hover:bg-neutral-gray-100 transition-colors text-neutral-gray-600 hover:text-yeobaek-primary font-bold text-sm group"
+                        >
+                            <span
+                                class="material-symbols-outlined text-[20px] text-neutral-gray-400 group-hover:text-yeobaek-primary transition-colors"
+                                >compare_arrows</span
+                            >
+                            <span
+                                >비교함 (<span
+                                    id="compare-counter-header"
+                                    class="tabular-nums"
+                                    >0</span
+                                >)</span
+                            >
+                        </a>
+
+                        <div id="auth-links" class="flex items-center gap-6">
+                            <a
+                                href="../auth/SignIn.html"
+                                class="text-sm font-medium text-neutral-gray-600 hover:text-neutral-gray-900 transition-colors"
+                            >
+                                로그인
+                            </a>
+                            <a
+                                href="../auth/SignUp.html"
+                                class="text-sm font-bold text-white bg-yeobaek-primary px-5 py-2.5 rounded-full shadow-md transition-all duration-200 hover:bg-blue-600 hover:shadow-lg hover:-translate-y-0.5 active:scale-95"
+                            >
+                                회원가입
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <main class="flex-1 flex flex-col items-center">
+                <div class="w-full max-w-[1200px] px-6 py-10">
+                    <div
+                        class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10"
+                    >
+                        <div class="flex flex-col gap-2">
+                            <h2
+                                class="text-2xl font-bold text-neutral-gray-900"
+                            >
+                                숙소 비교하기
+                            </h2>
+                            <p class="text-neutral-gray-600 text-sm">
+                                여행을 위한 최적의 숙소를 한눈에 비교해보세요.
+                                (최대 3개)
+                            </p>
+                        </div>
+                        <div
+                            class="hidden lg:flex items-center gap-2 text-xs text-neutral-gray-400 font-medium bg-white px-4 py-2 rounded-lg border border-neutral-gray-100"
+                        >
+                            <span class="material-symbols-outlined text-sm"
+                                >info</span
+                            >
+                            숙소를 삭제하려면 이미지 우측 상단의 'X'를
+                            클릭하세요.
+                        </div>
+                    </div>
+
+                    <div
+                        class="bg-white rounded-2xl border border-neutral-gray-200 overflow-hidden shadow-sm"
+                    >
+                        <div class="overflow-x-auto custom-scrollbar">
+                            <table
+                                class="comparison-table w-full text-left border-collapse min-w-[1000px]"
+                            >
+                                <thead>
+                                    <tr class="comparison-header-row bg-white">
+                                        <th
+                                            class="sticky-col p-8 w-[240px] border-b border-r border-neutral-gray-100 align-bottom"
+                                        >
+                                            <span
+                                                class="text-[11px] uppercase tracking-widest font-bold text-neutral-gray-400"
+                                                >비교 기준</span
+                                            >
+                                        </th>
+
+                                        <th
+                                            class="hotel-column-header p-6 min-w-[280px] border-b border-r border-neutral-gray-100 relative group"
+                                            data-column-index="1"
+                                            data-hotel-id="nikko-osaka-1"
+                                        >
+                                            <div class="flex flex-col gap-4">
+                                                <div
+                                                    class="relative overflow-hidden rounded-xl aspect-[4/3]"
+                                                >
+                                                    <img
+                                                        alt="우메다 그랜드 게이트웨이 호텔"
+                                                        class="w-full h-full object-cover"
+                                                        src="https://github.com/lei-3m/AIBE5/blob/main/img/team1-2/room/osaka/ummeda.jpg?raw=true"
+                                                    />
+                                                    <button
+                                                        class="remove-btn absolute top-2 right-2 size-7 rounded-full flex items-center justify-center text-white z-10"
+                                                    >
+                                                        <span
+                                                            class="material-symbols-outlined text-[18px]"
+                                                            >close</span
+                                                        >
+                                                    </button>
+                                                </div>
+                                                <div>
+                                                    <h3
+                                                        class="text-lg font-bold text-neutral-gray-900 text-content-to-change"
+                                                    >
+                                                        우메다 그랜드 게이트웨이
+                                                        호텔
+                                                    </h3>
+
+                                                    <p
+                                                        class="text-xs text-neutral-gray-400 mt-1 text-content-to-change"
+                                                    ></p>
+                                                </div>
+                                            </div>
+                                        </th>
+
+                                        <th
+                                            class="hotel-column-header p-6 min-w-[280px] border-b border-r border-neutral-gray-100 bg-neutral-gray-50/50 relative"
+                                            data-column-index="2"
+                                            data-hotel-id="swissotel-nankai"
+                                        >
+                                            <div class="flex flex-col gap-4">
+                                                <div
+                                                    class="relative overflow-hidden rounded-xl aspect-[4/3]"
+                                                >
+                                                    <img
+                                                        alt="도톤보리 리버사이드 호텔"
+                                                        class="w-full h-full object-cover"
+                                                        src="https://github.com/lei-3m/AIBE5/blob/main/img/team1-2/room/osaka/Dotonbori%20Riverside%202.jpg?raw=true"
+                                                    />
+                                                    <button
+                                                        class="remove-btn absolute top-2 right-2 size-7 rounded-full flex items-center justify-center text-white z-10"
+                                                    >
+                                                        <span
+                                                            class="material-symbols-outlined text-[18px]"
+                                                            >close</span
+                                                        >
+                                                    </button>
+                                                    <div
+                                                        class="absolute top-3 left-3 px-2 py-1 bg-primary text-white rounded text-[10px] font-bold uppercase tracking-wider"
+                                                    >
+                                                        Top Choice
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <h3
+                                                        class="text-lg font-bold text-neutral-gray-900 text-content-to-change"
+                                                    >
+                                                        도톤보리 리버사이드 호텔
+                                                    </h3>
+                                                    <p
+                                                        class="text-xs text-neutral-gray-400 mt-1 text-content-to-change"
+                                                    ></p>
+                                                </div>
+                                            </div>
+                                        </th>
+
+                                        <th
+                                            class="hotel-column-header p-6 min-w-[280px] border-b border-neutral-gray-100 relative"
+                                            data-column-index="3"
+                                            data-hotel-id="hotel-gracery-osaka"
+                                        >
+                                            <div class="flex flex-col gap-4">
+                                                <div
+                                                    class="relative overflow-hidden rounded-xl aspect-[4/3]"
+                                                >
+                                                    <img
+                                                        alt="유니버셜 스튜디오 재팬 더 파크 프론트 호텔"
+                                                        class="w-full h-full object-cover"
+                                                        src="https://github.com/lei-3m/AIBE5/blob/main/img/team1-2/room/osaka/The%20Park%20Front%20Hotel%20at%20Universal%20Studios%20Japan2.jpg?raw=true"
+                                                    />
+                                                    <button
+                                                        class="remove-btn absolute top-2 right-2 size-7 rounded-full flex items-center justify-center text-white z-10"
+                                                    >
+                                                        <span
+                                                            class="material-symbols-outlined text-[18px]"
+                                                            >close</span
+                                                        >
+                                                    </button>
+                                                </div>
+                                                <div>
+                                                    <h3
+                                                        class="text-lg font-bold text-neutral-gray-900 text-content-to-change"
+                                                    >
+                                                        유니버셜 스튜디오 재팬
+                                                        리슬 호텔
+                                                    </h3>
+                                                    <p
+                                                        class="text-xs text-neutral-gray-400 mt-1 text-content-to-change"
+                                                    ></p>
+                                                </div>
+                                            </div>
+                                        </th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr
+                                        class="comparison-data-row hover:bg-neutral-gray-50/30 transition-colors"
+                                    >
+                                        <td
+                                            class="comparison-criteria-label sticky-col p-8 border-r border-b border-neutral-gray-100"
+                                        >
+                                            <div class="flex flex-col gap-1">
+                                                <span
+                                                    class="text-sm font-bold text-neutral-gray-900"
+                                                    >가격</span
+                                                >
+                                                <span
+                                                    class="text-[10px] text-neutral-gray-400 uppercase font-medium"
+                                                    >1박 당</span
+                                                >
+                                            </div>
+                                        </td>
+
+                                        <td
+                                            class="hotel-data-cell p-8 border-b border-neutral-gray-100"
+                                            data-column-index="1"
+                                        >
+                                            <div
+                                                class="text-xl font-bold text-content-to-change"
+                                            >
+                                                ₩195,000
+                                            </div>
+                                            <p
+                                                class="text-xs text-neutral-gray-400 mt-1 text-content-to-change"
+                                            ></p>
+                                        </td>
+
+                                        <td
+                                            class="hotel-data-cell p-8 border-b border-neutral-gray-100"
+                                            data-column-index="2"
+                                        >
+                                            <div
+                                                class="text-xl font-bold text-content-to-change"
+                                            >
+                                                ₩170,000
+                                            </div>
+                                            <p
+                                                class="text-xs text-neutral-gray-400 mt-1 text-content-to-change"
+                                            ></p>
+                                        </td>
+
+                                        <td
+                                            class="hotel-data-cell p-8 border-b border-neutral-gray-100"
+                                            data-column-index="3"
+                                        >
+                                            <div
+                                                class="text-xl font-bold text-content-to-change"
+                                            >
+                                                ₩195,000
+                                            </div>
+                                            <p
+                                                class="text-xs text-neutral-gray-400 mt-1 text-content-to-change"
+                                            ></p>
+                                        </td>
+                                    </tr>
+
+                                    <tr
+                                        class="comparison-data-row hover:bg-neutral-gray-50/30 transition-colors"
+                                    >
+                                        <td
+                                            class="comparison-criteria-label sticky-col p-8 border-r border-b border-neutral-gray-100"
+                                        >
+                                            <div class="flex flex-col gap-1">
+                                                <span
+                                                    class="text-sm font-bold text-neutral-gray-900"
+                                                    >사용자 평점</span
+                                                >
+                                                <span
+                                                    class="text-[10px] text-neutral-gray-400 uppercase font-medium"
+                                                    >인증된 리뷰</span
+                                                >
+                                            </div>
+                                        </td>
+
+                                        <td
+                                            class="hotel-data-cell p-8 border-r border-b border-neutral-gray-100"
+                                            data-column-index="1"
+                                        >
+                                            <div class="flex flex-col gap-1">
+                                                <div class="flex text-sm">
+                                                    <span
+                                                        class="material-symbols-outlined star-rating text-lg"
+                                                        >star</span
+                                                    >
+                                                    <span
+                                                        class="material-symbols-outlined star-rating text-lg"
+                                                        >star</span
+                                                    >
+                                                    <span
+                                                        class="material-symbols-outlined star-rating text-lg"
+                                                        >star</span
+                                                    >
+                                                    <span
+                                                        class="material-symbols-outlined star-rating text-lg"
+                                                        >star</span
+                                                    >
+                                                    <span
+                                                        class="material-symbols-outlined star-rating text-lg"
+                                                        style="
+                                                            font-variation-settings: &quot;FILL&quot;
+                                                                0;
+                                                        "
+                                                        >star_half</span
+                                                    >
+                                                </div>
+                                                <span
+                                                    class="text-sm font-bold text-content-to-change"
+                                                    >4.8 / 5.0</span
+                                                >
+                                            </div>
+                                        </td>
+
+                                        <td
+                                            class="hotel-data-cell p-8 border-r border-b border-neutral-gray-100 bg-neutral-gray-50/50"
+                                            data-column-index="2"
+                                        >
+                                            <div class="flex flex-col gap-1">
+                                                <div class="flex text-sm">
+                                                    <span
+                                                        class="material-symbols-outlined star-rating text-lg"
+                                                        >star</span
+                                                    >
+                                                    <span
+                                                        class="material-symbols-outlined star-rating text-lg"
+                                                        >star</span
+                                                    >
+                                                    <span
+                                                        class="material-symbols-outlined star-rating text-lg"
+                                                        >star</span
+                                                    >
+                                                    <span
+                                                        class="material-symbols-outlined star-rating text-lg"
+                                                        >star</span
+                                                    >
+                                                    <span
+                                                        class="material-symbols-outlined star-rating text-lg"
+                                                        style="
+                                                            font-variation-settings: &quot;FILL&quot;
+                                                                0;
+                                                        "
+                                                        >star_half</span
+                                                    >
+                                                </div>
+                                                <span
+                                                    class="text-sm font-bold text-content-to-change"
+                                                    >4.5 / 5.0</span
+                                                >
+                                            </div>
+                                        </td>
+
+                                        <td
+                                            class="hotel-data-cell p-8 border-b border-neutral-gray-100"
+                                            data-column-index="3"
+                                        >
+                                            <div class="flex flex-col gap-1">
+                                                <div class="flex text-sm">
+                                                    <span
+                                                        class="material-symbols-outlined star-rating text-lg"
+                                                        >star</span
+                                                    >
+                                                    <span
+                                                        class="material-symbols-outlined star-rating text-lg"
+                                                        >star</span
+                                                    >
+                                                    <span
+                                                        class="material-symbols-outlined star-rating text-lg"
+                                                        >star</span
+                                                    >
+                                                    <span
+                                                        class="material-symbols-outlined star-rating text-lg"
+                                                        >star</span
+                                                    >
+                                                    <span
+                                                        class="material-symbols-outlined star-rating text-lg"
+                                                        style="
+                                                            font-variation-settings: &quot;FILL&quot;
+                                                                0;
+                                                        "
+                                                        >star_half</span
+                                                    >
+                                                </div>
+                                                <span
+                                                    class="text-sm font-bold text-content-to-change"
+                                                    >4.5 / 5.0</span
+                                                >
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <tr
+                                        class="comparison-data-row hover:bg-neutral-gray-50/30 transition-colors"
+                                    >
+                                        <td
+                                            class="comparison-criteria-label sticky-col p-8 border-r border-b border-neutral-gray-100"
+                                        >
+                                            <div class="flex flex-col gap-1">
+                                                <span
+                                                    class="text-sm font-bold text-neutral-gray-900"
+                                                    >객실 유형</span
+                                                >
+                                                <span
+                                                    class="text-[10px] text-neutral-gray-400 uppercase font-medium"
+                                                    >선택된 조건</span
+                                                >
+                                            </div>
+                                        </td>
+
+                                        <td
+                                            class="hotel-data-cell p-8 border-b border-neutral-gray-100"
+                                            data-column-index="1"
+                                        >
+                                            <p
+                                                class="text-sm font-medium text-content-to-change"
+                                            >
+                                                트윈룸
+                                            </p>
+                                            <p
+                                                class="text-xs text-neutral-gray-400 mt-1 text-content-to-change"
+                                            >
+                                                24m² • 시티 뷰
+                                            </p>
+                                        </td>
+
+                                        <td
+                                            class="hotel-data-cell p-8 border-b border-neutral-gray-100"
+                                            data-column-index="2"
+                                        >
+                                            <p
+                                                class="text-sm font-medium text-content-to-change"
+                                            >
+                                                더블베드
+                                            </p>
+                                            <p
+                                                class="text-xs text-neutral-gray-400 mt-1 text-content-to-change"
+                                            >
+                                                32m² • 리버 뷰
+                                            </p>
+                                        </td>
+
+                                        <td
+                                            class="hotel-data-cell p-8 border-b border-neutral-gray-100"
+                                            data-column-index="3"
+                                        >
+                                            <p
+                                                class="text-sm font-medium text-content-to-change"
+                                            >
+                                                컴포트 트윈룸
+                                            </p>
+                                            <p
+                                                class="text-xs text-neutral-gray-400 mt-1 text-content-to-change"
+                                            >
+                                                18m² • 컨시어지 서비스
+                                            </p>
+                                        </td>
+                                    </tr>
+
+                                    <tr
+                                        class="comparison-data-row hover:bg-neutral-gray-50/30 transition-colors"
+                                    >
+                                        <td
+                                            class="comparison-criteria-label sticky-col p-8 border-r border-b border-neutral-gray-100"
+                                        >
+                                            <div class="flex flex-col gap-1">
+                                                <span
+                                                    class="text-sm font-bold text-neutral-gray-900"
+                                                    >흡연 정책</span
+                                                >
+                                                <span
+                                                    class="text-[10px] text-neutral-gray-400 uppercase font-medium"
+                                                    >객실 제한 사항</span
+                                                >
+                                            </div>
+                                        </td>
+
+                                        <td
+                                            class="hotel-data-cell p-8 border-r border-b border-neutral-gray-100"
+                                            data-column-index="1"
+                                        >
+                                            <div
+                                                class="flex items-center gap-2 text-sm text-neutral-gray-600 text-content-to-change"
+                                            >
+                                                <span
+                                                    class="material-symbols-outlined text-green-500 text-lg"
+                                                    >smoke_free</span
+                                                >
+                                                금연실
+                                            </div>
+                                        </td>
+
+                                        <td
+                                            class="hotel-data-cell p-8 border-r border-b border-neutral-gray-100"
+                                            data-column-index="2"
+                                        >
+                                            <div
+                                                class="flex items-center gap-2 text-sm text-neutral-gray-600 text-content-to-change"
+                                            >
+                                                <span
+                                                    class="material-symbols-outlined text-lg"
+                                                    >smoke_free</span
+                                                >
+                                                흡연 가능
+                                            </div>
+                                        </td>
+
+                                        <td
+                                            class="hotel-data-cell p-8 border-b border-neutral-gray-100"
+                                            data-column-index="3"
+                                        >
+                                            <div
+                                                class="flex items-center gap-2 text-sm text-neutral-gray-600 text-content-to-change"
+                                            >
+                                                <span
+                                                    class="material-symbols-outlined text-green-500 text-lg"
+                                                    >smoke_free</span
+                                                >
+                                                금연실
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <tr
+                                        class="comparison-data-row hover:bg-neutral-gray-50/30 transition-colors"
+                                    >
+                                        <td
+                                            class="comparison-criteria-label sticky-col p-8 border-r border-neutral-gray-100"
+                                        >
+                                            <div class="flex flex-col gap-1">
+                                                <span
+                                                    class="text-sm font-bold text-neutral-gray-900"
+                                                    >역과의 거리</span
+                                                >
+                                                <span
+                                                    class="text-[10px] text-neutral-gray-400 uppercase font-medium"
+                                                    >도보 거리</span
+                                                >
+                                            </div>
+                                        </td>
+
+                                        <td
+                                            class="hotel-data-cell p-8 border-neutral-gray-100"
+                                            data-column-index="1"
+                                        >
+                                            <p
+                                                class="text-sm font-medium text-content-to-change"
+                                            >
+                                                도보 5분
+                                            </p>
+                                            <p
+                                                class="text-xs text-neutral-gray-400 mt-1 text-content-to-change"
+                                            >
+                                                오사카역
+                                            </p>
+                                        </td>
+
+                                        <td
+                                            class="hotel-data-cell p-8 border-neutral-gray-100"
+                                            data-column-index="2"
+                                        >
+                                            <p
+                                                class="text-sm font-medium text-content-to-change text-content-to-change"
+                                            >
+                                                도보 2분
+                                            </p>
+                                            <p
+                                                class="text-xs text-neutral-gray-400 mt-1 text-content-to-change"
+                                            >
+                                                오사카역
+                                            </p>
+                                        </td>
+
+                                        <td
+                                            class="hotel-data-cell p-8 border-neutral-gray-100"
+                                            data-column-index="3"
+                                        >
+                                            <p
+                                                class="text-sm font-medium text-content-to-change"
+                                            >
+                                                도보 1분
+                                            </p>
+                                            <p
+                                                class="text-xs text-neutral-gray-400 mt-1 text-content-to-change"
+                                            >
+                                                오사카역
+                                            </p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div
+                        class="flex flex-col sm:flex-row justify-between items-center gap-6 mt-12 p-8 bg-white rounded-2xl border border-neutral-gray-200 shadow-lg border-l-4 border-l-primary"
+                    >
+                        <div class="flex flex-col gap-1">
+                            <div class="flex items-center gap-2">
+                                <span
+                                    class="flex size-2 bg-primary rounded-full"
+                                ></span>
+                                <h4 class="text-neutral-gray-900 font-bold">
+                                    결정을 내리셨나요?
+                                </h4>
+                            </div>
+                            <p
+                                class="text-xs text-neutral-gray-400 font-medium ml-4"
+                            >
+                                실시간 예약 현황에 따라 가격이 변동될 수
+                                있습니다. (3개 숙소 비교 중)
+                            </p>
+                        </div>
+                        <div class="flex gap-3">
+                            <button
+                                class="flex items-center gap-2 px-6 h-12 rounded-xl text-neutral-gray-600 text-sm font-bold hover:bg-neutral-gray-100 transition-all border border-neutral-gray-200"
+                            >
+                                초기화
+                            </button>
+                            <button
+                                class="flex items-center gap-2 px-10 h-12 rounded-xl bg-primary text-white text-sm font-bold shadow-lg shadow-primary/20 hover:bg-primary/90 hover:-translate-y-0.5 transition-all"
+                            >
+                                <span>선택 완료</span>
+                                <span class="material-symbols-outlined text-sm"
+                                    >arrow_forward</span
+                                >
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <footer class="bg-gray-100 py-8 border-t border-gray-200 mt-auto">
+                <div
+                    class="container mx-auto text-center text-gray-500 text-sm"
+                >
+                    © 2026 여백. All rights reserved.
+                </div>
+            </footer>
+        </div>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                checkLoginStatus();
+                // 1. 헤더의 비교함 숫자 업데이트 로직 추가
+                const headerCompareCounter = document.getElementById(
+                    "compare-counter-header",
+                );
+
+                function updateHeaderCompareCount() {
+                    // localStorage에서 'comparedHotels' 키의 값을 가져옴 (없으면 빈 배열)
+                    const comparedHotels = JSON.parse(
+                        localStorage.getItem("comparedHotels") || "[]",
+                    );
+                    if (headerCompareCounter) {
+                        headerCompareCounter.textContent =
+                            comparedHotels.length;
+                    }
+                }
+
+                // 페이지 로드 시 즉시 실행
+                updateHeaderCompareCount();
+
+                // 2. 기존 비교 테이블 로직
+                const comparisonTable =
+                    document.querySelector(".comparison-table");
+                if (!comparisonTable) {
+                    console.error(
+                        "Comparison table not found. JavaScript will not function.",
+                    );
+                    return;
+                }
+
+                // '숙소 추가하기' 컬럼의 HTML 콘텐츠
+                const addPlaceholderContentHTML = (columnIndex) => `
+    <button type="button"
+            class="add-hotel-button w-full h-full flex flex-col items-center justify-center p-2
+                   rounded-xl text-neutral-gray-400 hover:text-primary-dark hover:border-primary-dark
+                   transition-colors cursor-pointer"
+            data-target-column-index="${columnIndex}"
+            style="min-height: 160px; background-color: transparent; border: 2px dashed var(--triplet-gray-200);"
+    >
+      <span class="material-symbols-outlined text-3xl">add_circle</span>
+      <span class="text-xs font-semibold text-content-to-change">숙소 추가하기</span>
+    </button>
+  `;
+
+                // --- 헬퍼 함수: 하이라이트 클래스 적용/제거 ---
+                // columnIndex: 타겟 컬럼 인덱스
+                // type: 'highlighted' (클릭 시) 또는 'hovered' (호버 시)
+                // add: true (추가) 또는 false (제거)
+                function toggleColumnClasses(columnIndex, type, add) {
+                    const headerClass = `${type}-column-header`;
+                    const dataClass = `${type}-column-data`;
+                    const buttonClass = `${type}-button`; // add-hotel-button 내부에 적용될 클래스
+
+                    // <thead>의 <th> (헤더 컬럼) 처리
+                    const header = comparisonTable.querySelector(
+                        `th[data-column-index="${columnIndex}"]`,
+                    );
+                    if (header) {
+                        if (add) header.classList.add(headerClass);
+                        else header.classList.remove(headerClass);
+
+                        // 헤더에 있는 숙소 추가 버튼에도 클래스 적용
+                        const button =
+                            header.querySelector(".add-hotel-button");
+                        if (button) {
+                            if (add) button.classList.add(buttonClass);
+                            else button.classList.remove(buttonClass);
+                        }
+                    }
+
+                    // <tbody>의 모든 해당 <td> (데이터 셀) 처리
+                    const dataCells = comparisonTable.querySelectorAll(
+                        `td[data-column-index="${columnIndex}"]`,
+                    );
+                    dataCells.forEach((cell) => {
+                        if (add) cell.classList.add(dataClass);
+                        else cell.classList.remove(dataClass);
+                    });
+                }
+
+                // 모든 클릭 하이라이트 제거
+                function clearAllClickHighlights() {
+                    comparisonTable
+                        .querySelectorAll(".highlighted-column-header")
+                        .forEach((el) =>
+                            el.classList.remove("highlighted-column-header"),
+                        );
+                    comparisonTable
+                        .querySelectorAll(".highlighted-column-data")
+                        .forEach((el) =>
+                            el.classList.remove("highlighted-column-data"),
+                        );
+                    comparisonTable
+                        .querySelectorAll(
+                            ".add-hotel-button.highlighted-button",
+                        )
+                        .forEach((el) =>
+                            el.classList.remove("highlighted-button"),
+                        );
+                }
+
+                // 모든 호버 하이라이트 제거
+                function clearAllHoverHighlights() {
+                    comparisonTable
+                        .querySelectorAll(".hovered-column-header")
+                        .forEach((el) =>
+                            el.classList.remove("hovered-column-header"),
+                        );
+                    comparisonTable
+                        .querySelectorAll(".hovered-column-data")
+                        .forEach((el) =>
+                            el.classList.remove("hovered-column-data"),
+                        );
+                    comparisonTable
+                        .querySelectorAll(".add-hotel-button.hovered-button")
+                        .forEach((el) => el.classList.remove("hovered-button"));
+                }
+
+                let currentlyClickedColumnIndex = null; // 현재 클릭되어 하이라이트된 컬럼의 인덱스 저장
+                let currentHoveredColumnIndex = null; // 현재 마우스가 올라간 (호버된) 컬럼의 인덱스 저장
+
+                // --- 이벤트 리스너 ---
+                comparisonTable.addEventListener("click", (event) => {
+                    // ===========================================
+                    // 1. X 버튼 클릭 처리 ( `<tbody>` 데이터 삭제 로직 강화 )
+                    // ===========================================
+                    const clickedRemoveButton =
+                        event.target.closest(".remove-btn");
+                    if (clickedRemoveButton) {
+                        const hotelColumnHeader = clickedRemoveButton.closest(
+                            ".hotel-column-header",
+                        );
+                        if (!hotelColumnHeader) {
+                            console.error(
+                                "Clicked remove button is not within a hotel column header.",
+                            );
+                            return;
+                        }
+
+                        const columnIndexToTransform =
+                            hotelColumnHeader.dataset.columnIndex;
+                        if (!columnIndexToTransform) {
+                            console.error(
+                                "Column index not found for transformation.",
+                            );
+                            return;
+                        }
+
+                        console.log(
+                            `컬럼 인덱스 ${columnIndexToTransform}를 '숙소 추가하기' 컬럼으로 변경합니다.`,
+                        );
+
+                        // 기존 하이라이트 제거
+                        clearAllClickHighlights();
+                        clearAllHoverHighlights(); // X 버튼 클릭 시 호버도 제거
+                        currentlyClickedColumnIndex = null;
+
+                        // <thead>의 해당 <th>를 '숙소 추가하기' 컬럼으로
+                        hotelColumnHeader.classList.remove(
+                            "hotel-column-header",
+                            "group",
+                            "bg-neutral-gray-50/50",
+                        );
+                        hotelColumnHeader.classList.add(
+                            "add-hotel-placeholder-col",
+                            "bg-neutral-gray-50/20",
+                        );
+                        hotelColumnHeader.removeAttribute("data-hotel-id");
+                        hotelColumnHeader.innerHTML = addPlaceholderContentHTML(
+                            columnIndexToTransform,
+                        );
+
+                        // <tbody>의 해당 <td>들을 제대로 찾아 내용을 비우고 클래스도 제거
+                        const dataRows = comparisonTable.querySelectorAll(
+                            "tbody .comparison-data-row",
+                        );
+                        dataRows.forEach((row) => {
+                            const targetCell = row.querySelector(
+                                `.hotel-data-cell[data-column-index="${columnIndexToTransform}"]`,
+                            );
+                            if (targetCell) {
+                                targetCell.classList.remove(
+                                    "bg-neutral-gray-50/50",
+                                    "text-primary",
+                                    "text-primary\/70",
+                                    "highlighted-column-data",
+                                    "hovered-column-data",
+                                );
+                                targetCell.innerHTML = ""; // 내용을 비워서 공란으로 만듬
+                            }
+                        });
+
+                        console.log(
+                            `컬럼 인덱스 ${columnIndexToTransform}의 내용이 변경되었습니다. 컬럼 수는 유지됩니다.`,
+                        );
+                        return;
+                    }
+
+                    // ===========================================
+                    // 2. '숙소 추가하기' 버튼 클릭 처리
+                    // ===========================================
+                    const clickedAddButton =
+                        event.target.closest(".add-hotel-button");
+                    if (clickedAddButton) {
+                        const targetPageUrl = "search.html"; // URL: 이동하고 싶은 페이지 주소
+                        console.log(
+                            `'숙소 추가하기' 버튼 클릭! ${targetPageUrl}로 이동합니다.`,
+                        );
+                        window.location.href = targetPageUrl;
+                        return;
+                    }
+
+                    // ===========================================
+                    // 3. 컬럼 클릭 하이라이트 처리
+                    // ===========================================
+                    const clickableElement = event.target.closest(
+                        "th.hotel-column-header, th.add-hotel-placeholder-col, td.hotel-data-cell",
+                    );
+                    const isCriteriaLabel = event.target.closest(
+                        ".comparison-criteria-label",
+                    );
+
+                    if (clickableElement && !isCriteriaLabel) {
+                        const columnIndex =
+                            clickableElement.dataset.columnIndex;
+
+                        if (columnIndex) {
+                            if (currentlyClickedColumnIndex === columnIndex) {
+                                // 이미 클릭된 컬럼을 다시 클릭 -> 하이라이트 해제
+                                clearAllClickHighlights();
+                                currentlyClickedColumnIndex = null;
+                                console.log(
+                                    `컬럼 인덱스 ${columnIndex}의 클릭 하이라이트가 해제되었습니다.`,
+                                );
+                            } else {
+                                // 다른 컬럼을 클릭 -> 기존 클릭 하이라이트 제거 후 새로 적용
+                                clearAllClickHighlights(); // 모든 클릭 하이라이트 제거
+                                clearAllHoverHighlights(); // 클릭하면 호버도 지워야 함
+
+                                toggleColumnClasses(
+                                    columnIndex,
+                                    "highlighted",
+                                    true,
+                                );
+                                currentlyClickedColumnIndex = columnIndex;
+                                console.log(
+                                    `컬럼 인덱스 ${columnIndex}가 클릭되어 하이라이트되었습니다.`,
+                                );
+                            }
+                        }
+                    }
+                });
+
+                // ===========================================
+                // 컬럼 호버 하이라이트 처리
+                // ===========================================
+                comparisonTable.addEventListener("mouseover", (event) => {
+                    const hoverableElement = event.target.closest(
+                        "th.hotel-column-header, th.add-hotel-placeholder-col, td.hotel-data-cell",
+                    );
+                    const isCriteriaLabel = event.target.closest(
+                        ".comparison-criteria-label",
+                    );
+
+                    if (hoverableElement && !isCriteriaLabel) {
+                        const columnIndex =
+                            hoverableElement.dataset.columnIndex;
+
+                        // 이미 클릭되어 하이라이트된 컬럼이라면 호버 효과를 주지 않음
+                        if (currentlyClickedColumnIndex === columnIndex) {
+                            return;
+                        }
+
+                        // 현재 호버 중인 컬럼이 아닌 새로운 컬럼 위에 마우스가 올라왔을 때만 호버 효과 적용
+                        // (기존 호버 효과 제거 후 새로 적용)
+                        if (
+                            columnIndex &&
+                            columnIndex !== currentHoveredColumnIndex
+                        ) {
+                            clearAllHoverHighlights(); // 이전 호버 효과 제거
+                            toggleColumnClasses(columnIndex, "hovered", true); // 새 컬럼에 호버 효과 적용
+                            currentHoveredColumnIndex = columnIndex;
+                            console.log(
+                                `컬럼 인덱스 ${columnIndex}가 호버되었습니다.`,
+                            );
+                        }
+                    } else {
+                        // 마우스가 유효한 컬럼 요소가 아닌 곳에 있을 경우 (ex: Comparison Criteria 라벨, 테이블 밖)
+                        // 현재 호버 중인 컬럼이 클릭된 컬럼이 아니라면 호버 효과 제거
+                        if (
+                            currentHoveredColumnIndex &&
+                            currentlyClickedColumnIndex !==
+                                currentHoveredColumnIndex
+                        ) {
+                            clearAllHoverHighlights();
+                            currentHoveredColumnIndex = null;
+                        }
+                    }
+                });
+
+                comparisonTable.addEventListener("mouseout", (event) => {
+                    const toElement = event.relatedTarget
+                        ? event.relatedTarget.closest(
+                              "th.hotel-column-header, th.add-hotel-placeholder-col, td.hotel-data-cell, .remove-btn, .add-hotel-button",
+                          )
+                        : null;
+
+                    // 마우스가 완전히 테이블 밖으로 나가거나, 다른 유효한 컬럼 요소로 이동하지 않았을 때 호버 효과 제거
+                    // (X 버튼이나 숙소 추가 버튼은 같은 컬럼 안으로 간주)
+                    if (!toElement) {
+                        // 마우스가 테이블 밖으로 나감
+                        if (
+                            currentHoveredColumnIndex &&
+                            currentlyClickedColumnIndex !==
+                                currentHoveredColumnIndex
+                        ) {
+                            clearAllHoverHighlights();
+                            currentHoveredColumnIndex = null;
+                        }
+                    } else {
+                        // 마우스가 다른 요소로 이동
+                        const targetColumnIndex = toElement.dataset
+                            ? toElement.dataset.columnIndex
+                            : null;
+                        const isStillInsideCurrentColumn =
+                            targetColumnIndex === currentHoveredColumnIndex ||
+                            event.target.closest(
+                                `th[data-column-index="${currentHoveredColumnIndex}"], td[data-column-index="${currentHoveredColumnIndex}"]`,
+                            );
+
+                        // 여전히 호버된 컬럼의 범위 내부에 있다면 호버 유지 (X 버튼, 추가 버튼 포함)
+                        if (!isStillInsideCurrentColumn) {
+                            if (
+                                currentHoveredColumnIndex &&
+                                currentlyClickedColumnIndex !==
+                                    currentHoveredColumnIndex
+                            ) {
+                                clearAllHoverHighlights();
+                                currentHoveredColumnIndex = null;
+                            }
+                        }
+                    }
+                });
+
+                // ===========================================
+                // 초기 로딩 시 이미 존재하는 '숙소 추가하기' 헤더 처리 (클릭 가능하게)
+                // ===========================================
+                const initialAddHeaders = comparisonTable.querySelectorAll(
+                    "th.add-hotel-placeholder-col",
+                );
+                initialAddHeaders.forEach((initialAddHeader) => {
+                    // <button>이 없는 경우에만 새로 넣어줌 (HTML에 이미 <button>이 있으면 덮어쓰지 않음)
+                    if (!initialAddHeader.querySelector(".add-hotel-button")) {
+                        initialAddHeader.innerHTML = addPlaceholderContentHTML(
+                            initialAddHeader.dataset.columnIndex,
+                        );
+                    }
+                });
+            });
+        </script>
+        <script src="../../js/auth.js"></script>
+    </body>
+</html>
