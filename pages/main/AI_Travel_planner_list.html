@@ -5,6 +5,25 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>여백 - 일정 찾기</title>
         <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://cdn.tailwindcss.com?plugins=forms,typography,container-queries"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            primary: "#00897b",
+                            background: "#f3f4f6",
+                        },
+                        fontFamily: {
+                            // 여기서 'Noto Sans KR'을 기본 폰트로 설정합니다.
+                            display: ["Noto Sans KR", "sans-serif"],
+                            sans: ["Noto Sans KR", "sans-serif"], 
+                        },
+                    },
+                },
+            };
+        </script>
+
         <link
             href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap"
             rel="stylesheet"
@@ -238,9 +257,7 @@
                     <!-- 카드 공통 템플릿: 이미지(16:9) + 내용 동일 -->
 
                     <!-- 1) 제주 -->
-                    <article
-                        class="bg-white rounded-2xl border border-stone-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow group flex flex-col h-full"
-                    >
+                <article class="bg-white rounded-2xl border border-stone-100 overflow-hidden shadow-sm hover:shadow-xl hover:border-primary hover:-translate-y-1 transition-all duration-300 group flex flex-col h-full cursor-pointer">
                         <div
                             class="relative aspect-[16/9] bg-stone-200 overflow-hidden"
                         >
@@ -427,9 +444,7 @@
                     </article>
 
                     <!-- 2) 도쿄 -->
-                    <article
-                        class="bg-white rounded-2xl border border-stone-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow group flex flex-col h-full"
-                    >
+<article class="bg-white rounded-2xl border border-stone-100 overflow-hidden shadow-sm hover:shadow-xl hover:border-primary hover:-translate-y-1 transition-all duration-300 group flex flex-col h-full cursor-pointer">
                         <div
                             class="relative aspect-[16/9] bg-stone-200 overflow-hidden"
                         >
@@ -616,9 +631,7 @@
                     </article>
 
                     <!-- 3) 오사카 -->
-                    <article
-                        class="bg-white rounded-2xl border border-stone-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow group flex flex-col h-full"
-                    >
+<article class="bg-white rounded-2xl border border-stone-100 overflow-hidden shadow-sm hover:shadow-xl hover:border-primary hover:-translate-y-1 transition-all duration-300 group flex flex-col h-full cursor-pointer">
                         <div
                             class="relative aspect-[16/9] bg-stone-200 overflow-hidden"
                         >
@@ -805,9 +818,7 @@
                     </article>
 
                     <!-- 4) 후쿠오카 -->
-                    <article
-                        class="bg-white rounded-2xl border border-stone-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow group flex flex-col h-full"
-                    >
+<article class="bg-white rounded-2xl border border-stone-100 overflow-hidden shadow-sm hover:shadow-xl hover:border-primary hover:-translate-y-1 transition-all duration-300 group flex flex-col h-full cursor-pointer">
                         <div
                             class="relative aspect-[16/9] bg-stone-200 overflow-hidden"
                         >
@@ -994,9 +1005,7 @@
                     </article>
 
                     <!-- 5) 타이베이 (✅ 여기: 마지막 카드도 동일 템플릿/크기) -->
-                    <article
-                        class="bg-white rounded-2xl border border-stone-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow group flex flex-col h-full"
-                    >
+<article class="bg-white rounded-2xl border border-stone-100 overflow-hidden shadow-sm hover:shadow-xl hover:border-primary hover:-translate-y-1 transition-all duration-300 group flex flex-col h-full cursor-pointer">
                         <div
                             class="relative aspect-[16/9] bg-stone-200 overflow-hidden"
                         >
