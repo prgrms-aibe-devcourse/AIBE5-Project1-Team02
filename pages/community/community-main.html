@@ -13,6 +13,7 @@
       rel="stylesheet"
     />
     <!--테일윈드 경로-->
+    <link rel="stylesheet" href="../../styles.css" />
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <!--MAP API KEY-->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB0XMMZaEehZifAghQxs-uj87OhbctmPUE&libraries=places&loading=async"></script>
@@ -22,7 +23,7 @@
         theme: {
           extend: {
             colors: {
-              primary: "#7c3aed",
+              primary: "#008774",
               "primary-hover": "#6d28d9",
               secondary: "#f76f5e",
               accent: "#ffda66",
@@ -89,6 +90,81 @@
   <body
     class="bg-background-light dark:bg-background-dark text-text-main-light dark:text-text-main-dark font-display antialiased flex flex-col min-h-screen transition-colors duration-300"
   >
+  <header
+            class="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+        >
+            <div
+                class="w-full px-8 relative flex h-20 items-center justify-between"
+            >
+                <a
+                    class="flex items-center space-x-2 transition-transform duration-300 hover:scale-105"
+                    href="Main.html"
+                >
+                    <img
+                        src="../../images/Logo.png"
+                        alt="여백 로고"
+                        class="h-9 w-9 rounded-full object-cover"
+                    />
+                    <span
+                        class="font-serif text-foreground font-bold ml-2 text-xl"
+                        >여백</span
+                    >
+                </a>
+
+                <nav
+                    class="flex items-center justify-center text-muted-foreground gap-8 text-lg font-medium"
+                    style="
+                        position: absolute;
+                        left: 50%;
+                        transform: translateX(-50%);
+                    "
+                >
+                    <a
+                        href="../plan/planner.html"
+                        class="group relative py-1 transition-colors hover:text-foreground"
+                    >
+                        플래너
+                        <span
+                            class="absolute left-0 bottom-0 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full"
+                        ></span>
+                    </a>
+                    <a
+                        href="../stay/search.html"
+                        class="group relative py-1 transition-colors hover:text-foreground"
+                    >
+                        숙소
+                        <span
+                            class="absolute left-0 bottom-0 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full"
+                        ></span>
+                    </a>
+                    <a
+                        href="../community/community-main.html"
+                        class="group relative py-1 transition-colors hover:text-foreground"
+                    >
+                        여행기록
+                        <span
+                            class="absolute left-0 bottom-0 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full"
+                        ></span>
+                    </a>
+                </nav>
+
+                <div id="auth-links" class="flex items-center gap-6">
+                    <a
+                        href="../auth/SignIn.html"
+                        class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                        로그인
+                    </a>
+                    <a
+                        href="../auth/SignUp.html"
+                        class="text-sm font-bold text-white bg-primary px-5 py-2.5 rounded-full shadow-md transition-all duration-200 hover:bg-indigo-700 hover:shadow-lg hover:-translate-y-0.5 active:scale-95"
+                    >
+                        회원가입
+                    </a>
+                </div>
+            </div>
+        </header>
+
     <div
       class="flex flex-1 max-w-[1440px] mx-auto w-full pt-6 pb-20 px-4 lg:px-10 gap-8 items-start"
     >
@@ -1974,5 +2050,12 @@
         </div>
       </div>
     </div>
+            <footer class="bg-muted py-8">
+            <div
+                class="container mx-auto text-center text-muted-foreground text-sm"
+            >
+                © 2026 여백. All rights reserved.
+            </div>
+        </footer>
   </body>
 </html>
