@@ -35,9 +35,22 @@
                         fontFamily: {
                             sans: ["Pretendard", "sans-serif"],
                         },
-                        animation: {
-                            "bounce-short": "bounce 1s infinite",
+                keyframes: {
+                    "gentle-bounce": {
+                        "0%, 100%": {
+                            transform: "translateY(-10%)", // 기존 -25%에서 -10%로 축소 
+                            "animation-timing-function": "cubic-bezier(0.8, 0, 1, 1)"
                         },
+                        "50%": {
+                            transform: "translateY(0)",
+                            "animation-timing-function": "cubic-bezier(0, 0, 0.2, 1)"
+                        }
+                    }
+                },
+                animation: {
+                    // 위에서 만든 gentle-bounce를 사용하도록 변경
+                    "bounce-short": "gentle-bounce 1s infinite",
+                },
                     },
                 },
             };
@@ -70,34 +83,36 @@
                 transform: translateY(-50%);
                 cursor: pointer;
             }
+            /* [수정] 선택된 카드 스타일 (초록색 테마 적용) */
             .flight-card.selected {
-                border-color: #4f46e5;
-                background-color: #eef2ff;
+                border-color: #00897b;       /* 테두리: 진한 초록 */
+                background-color: #e0f2f1;   /* 배경: 아주 연한 민트 */
                 box-shadow:
-                    0 4px 6px -1px rgba(79, 70, 229, 0.1),
-                    0 2px 4px -1px rgba(79, 70, 229, 0.06);
+                    0 4px 6px -1px rgba(0, 137, 123, 0.2),
+                    0 2px 4px -1px rgba(0, 137, 123, 0.1);
             }
+
+            /* [수정] 선택된 버튼 스타일 */
             .flight-card.selected button {
-                background-color: #4f46e5;
+                background-color: #00897b;
                 color: white;
-                border-color: #4f46e5;
+                border-color: #00897b;
             }
+
             select.custom-sort {
                 background-position: right 0px center;
                 padding-right: 1.5rem;
             }
 
-            /* --- 수정된 부분 시작 --- */
             /* 기본 상태: 아이콘 배경을 흰색으로 설정 */
             .flight-card .flight-icon-container {
                 background-color: #ffffff;
             }
 
-            /* 선택된 상태: 아이콘 배경을 카드의 보라색 배경과 동일하게 설정 */
+            /* [수정] 선택된 상태 아이콘 배경 (카드 배경과 깔맞춤) */
             .flight-card.selected .flight-icon-container {
-                background-color: #eef2ff; /* bg-indigo-50 색상 */
+                background-color: #e0f2f1; 
             }
-            /* --- 수정된 부분 끝 --- */
         </style>
     </head>
     <body class="text-gray-800 flex flex-col min-h-screen">
@@ -157,10 +172,9 @@
                             >출발지</label
                         >
                         <div class="relative">
-                            <span
-                                class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 material-symbols-outlined text-lg"
-                                >flight_takeoff</span
-                            >
+                            <span class="absolute left-3 inset-y-0 flex items-center pointer-events-none text-slate-400 material-symbols-outlined text-lg">
+                                flight_takeoff
+                            </span>
                             <select
                                 id="input-origin"
                                 class="w-full pl-10 pr-8 py-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-800 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none appearance-none transition-all cursor-pointer"
@@ -172,10 +186,7 @@
                                 <option value="BKK">방콕 (BKK)</option>
                                 <option value="JFK">뉴욕 (JFK)</option>
                             </select>
-                            <span
-                                class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 material-symbols-outlined pointer-events-none"
-                                >expand_more</span
-                            >
+  
                         </div>
                     </div>
 
@@ -185,10 +196,9 @@
                             >도착지</label
                         >
                         <div class="relative">
-                            <span
-                                class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 material-symbols-outlined text-lg"
-                                >flight_land</span
-                            >
+                            <span class="absolute left-3 inset-y-0 flex items-center pointer-events-none text-slate-400 material-symbols-outlined text-lg">
+                                flight_land
+                            </span>
                             <select
                                 id="input-dest"
                                 class="w-full pl-10 pr-8 py-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-800 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none appearance-none transition-all cursor-pointer"
@@ -202,10 +212,7 @@
                                 <option value="JFK">뉴욕 (JFK)</option>
                                 <option value="CDG">파리 (CDG)</option>
                             </select>
-                            <span
-                                class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 material-symbols-outlined pointer-events-none"
-                                >expand_more</span
-                            >
+
                         </div>
                     </div>
 
