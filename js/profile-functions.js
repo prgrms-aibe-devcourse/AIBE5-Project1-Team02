@@ -254,7 +254,7 @@ function handleProfileUpdate(event) {
 
     if (loggedInUser) {
         loggedInUser.name = newName;
-        loggedInUser.bio = newBio;
+        loggedInUser.selfIntroduction = newBio; // This line updates the bio
         // loggedInUser.birthdate = newBirthdate; // 필요 시 추가
 
         localStorage.setItem("loggedInUser", JSON.stringify(loggedInUser));
