@@ -1,5 +1,5 @@
 <!doctype html>
-<html class="light overflow-y-scroll" lang="en">
+<html class="light overflow-y-scroll" lang="ko">
   <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
@@ -12,9 +12,9 @@
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
       rel="stylesheet"
     />
+    <!--테일윈드 경로-->
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <!-- Google Maps API 키를 여기에 입력하세요. (Maps JavaScript API 및 Places API) -->
-    <!-- Libraries=places는 Places API를 활성화합니다. -->
+    <!--MAP API KEY-->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB0XMMZaEehZifAghQxs-uj87OhbctmPUE&libraries=places&loading=async"></script>
     <script>
       tailwind.config = {
@@ -74,14 +74,13 @@
       #star-visual-display {
         display: flex;
         align-items: center;
-        gap: 2px; /* Adjust as needed */
+        gap: 2px;
       }
       .star-icon {
-        font-size: 2rem; /* Adjust size as needed */
-        color: #d1d5db; /* Default empty star color */
+        font-size: 2rem;
+        color: #d1d5db;
         transition: all 0.2s ease-in-out;
       }
-      /* For partially filled stars, controlled by JS background-clip */
       .star-icon[style*="background-clip"] {
         color: transparent;
       }
@@ -166,6 +165,7 @@
           </div>
         </div>
       </aside>
+
       <main class="flex-1 flex flex-col min-w-0 min-h-screen">
         <div
           class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8"
@@ -189,19 +189,19 @@
           <div
             class="flex flex-col sm:flex-row items-end sm:items-center gap-3 shrink-0"
           >
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-3 z-20">
               <span
                 class="text-sm font-medium text-text-muted-light dark:text-text-muted-dark hidden sm:inline"
-                >정렬 기준:</span
+                >정렬:</span
               >
               <div class="relative">
                 <select
                   id="sort-select"
-                  class="appearance-none bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark rounded-xl py-2.5 pl-4 pr-10 text-sm font-semibold text-text-main-light dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent cursor-pointer shadow-sm min-w-[160px]"
+                  class="appearance-none bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark rounded-xl py-2.5 pl-4 pr-10 text-sm font-semibold text-text-main-light dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent cursor-pointer shadow-sm min-w-[140px]"
                 >
-                  <option value="popular">가장 인기 있는</option>
-                  <option value="latest">최신</option>
-                  <option value="rating">최고 평점</option>
+                  <option value="popular">인기순</option>
+                  <option value="latest">최신순</option>
+                  <option value="rating">평점순</option>
                 </select>
                 <div
                   class="pointer-events-none absolute inset-y-0 right-0 flex items-center justify-center w-8 text-text-muted-light"
@@ -211,14 +211,69 @@
                   >
                 </div>
               </div>
-              <button
-                id="my-posts-button"
-                class="flex items-center gap-2 bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark px-4 py-2.5 rounded-xl shadow-sm text-sm font-semibold text-text-main-light dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-              >
-                <span class="material-symbols-outlined text-[20px]">person</span
-                >내 글 보기
-              </button>
+
+              <div class="relative" id="user-filter-container">
+                <button
+                  id="user-filter-button"
+                  class="flex items-center justify-between gap-2 bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark px-4 py-2.5 rounded-xl shadow-sm text-sm font-semibold text-text-main-light dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors min-w-[140px]"
+                >
+                  <span class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[20px]"
+                      >folder_open</span
+                    >
+                    <span id="user-filter-label">전체</span>
+                  </span>
+                  <span class="material-symbols-outlined text-sm"
+                    >expand_more</span
+                  >
+                </button>
+
+                <div
+                  id="user-filter-menu"
+                  class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-surface-dark border border-border-light dark:border-border-dark rounded-xl shadow-xl overflow-hidden z-30"
+                >
+                  <div class="py-1">
+                    <button
+                      data-filter="all"
+                      class="w-full text-left px-4 py-2.5 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-2 text-gray-700 dark:text-gray-200"
+                    >
+                      <span class="material-symbols-outlined text-[18px]"
+                        >grid_view</span
+                      >
+                      전체 글 보기
+                    </button>
+                    <button
+                      data-filter="my"
+                      class="w-full text-left px-4 py-2.5 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-2 text-gray-700 dark:text-gray-200"
+                    >
+                      <span class="material-symbols-outlined text-[18px]"
+                        >edit_note</span
+                      >
+                      내가 쓴 글
+                    </button>
+                    <button
+                      data-filter="bookmark"
+                      class="w-full text-left px-4 py-2.5 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-2 text-gray-700 dark:text-gray-200"
+                    >
+                      <span class="material-symbols-outlined text-[18px]"
+                        >bookmark</span
+                      >
+                      북마크한 글
+                    </button>
+                    <button
+                      data-filter="like"
+                      class="w-full text-left px-4 py-2.5 text-sm hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-2 text-gray-700 dark:text-gray-200"
+                    >
+                      <span class="material-symbols-outlined text-[18px]"
+                        >favorite</span
+                      >
+                      좋아요한 글
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
+
             <button
               id="open-write-modal-button"
               class="flex items-center gap-2 bg-primary hover:bg-primary-hover text-white px-5 py-2.5 rounded-xl shadow-lg shadow-primary/30 transition-all active:scale-95 font-bold text-sm whitespace-nowrap"
@@ -229,6 +284,7 @@
             </button>
           </div>
         </div>
+
         <div
           class="flex lg:hidden gap-2 overflow-x-auto pb-4 mb-2 no-scrollbar"
         >
@@ -238,10 +294,12 @@
             <span class="material-symbols-outlined text-[18px]">tune</span> 필터
           </button>
         </div>
+
         <div
           id="plan-grid"
           class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 auto-rows-fr"
         ></div>
+
         <div class="flex justify-center mt-12">
           <button
             id="load-more-button"
@@ -252,6 +310,7 @@
         </div>
       </main>
     </div>
+
     <div
       id="community-write-modal"
       class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden"
@@ -317,7 +376,6 @@
                 class="font-bold text-lg text-primary w-12 text-center"
                 >0.0</span
               >
-              <!-- 별 아이콘들 (새로 추가) -->
               <div id="star-visual-display">
                 <span class="star-icon">★</span>
                 <span class="star-icon">★</span>
@@ -561,28 +619,261 @@
         </div>
       </div>
     </div>
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        // 임시로 현재 유저를 설정합니다. (실제 구현에서는 로그인 시스템과 연동 필요)
-        localStorage.setItem(
-          "currentUser",
-          JSON.stringify({ id: "user1", name: "사라 젠킨스" }),
-        );
 
+    <script>
+      (function () {
+        const dummyUser = {
+          id: "user_test_123",
+          name: "테스트 여행자",
+          email: "test@example.com",
+        };
+
+        if (!localStorage.getItem("currentUser")) {
+          localStorage.setItem("currentUser", JSON.stringify(dummyUser));
+        }
+      })();
+
+      document.addEventListener("DOMContentLoaded", function () {
         let allPostsData = [];
         let currentFilteredPosts = [];
         const initialVisibleCount = 9;
         let isExpanded = false;
-        let showOnlyMyPosts = false;
+
+        // ★ [변경] userFilterType: 'all', 'my', 'bookmark', 'like' 중 하나
+        let userFilterType = "all";
+        let selectedPlanId = null;
 
         const planContainer = document.getElementById("plan-grid");
         const loadMoreBtn = document.getElementById("load-more-button");
         const sortSelect = document.getElementById("sort-select");
         const resetBtn = document.getElementById("reset-filters");
-        const myPostsBtn = document.getElementById("my-posts-button");
+
+        // ★ [변경] 내 활동 드롭다운 관련 요소
+        const userFilterBtn = document.getElementById("user-filter-button");
+        const userFilterMenu = document.getElementById("user-filter-menu");
+        const userFilterLabel = document.getElementById("user-filter-label");
+        const userFilterContainer = document.getElementById(
+          "user-filter-container",
+        );
+
         const tagFilterContainer = document.getElementById(
           "tag-filter-container",
         );
+
+        // --- 상세 모달 관련 변수 및 요소 ---
+        const postDetailModal = document.getElementById("postDetailModal");
+        const closeDetailModalBtn = document.getElementById(
+          "close-detail-modal-button",
+        );
+        const detailThumbnail = document.getElementById("detailThumbnail");
+        const detailThumbnailContainer = document.getElementById(
+          "detailThumbnailContainer",
+        );
+        const detailAuthor = document.getElementById("detailAuthor");
+        const detailAuthorInitial = document.getElementById(
+          "detailAuthorInitial",
+        );
+        const detailDate = document.getElementById("detailDate");
+        const detailTitle = document.getElementById("detailTitle");
+        const detailContent = document.getElementById("detailContent");
+        const detailRatingText = document.getElementById("detailRatingText");
+        const detailStarDisplay = document.getElementById("detailStarDisplay");
+        const detailTagsContainer = document.getElementById(
+          "detailTagsContainer",
+        );
+        const detailRouteContainer = document.getElementById(
+          "detailRouteContainer",
+        );
+        const detailMap = document.getElementById("detailMap");
+        const detailRouteList = document.getElementById("detailRouteList");
+
+        let detailMapInstance = null;
+        let detailMarkers = [];
+        let detailPolyline = null;
+        let currentDetailPost = null;
+
+        closeDetailModalBtn.addEventListener("click", () => {
+          postDetailModal.classList.add("hidden");
+          document.body.classList.remove("overflow-hidden");
+        });
+
+        // --- 상세 모달 렌더링 함수 ---
+        function openPostDetailModal(post) {
+          currentDetailPost = post;
+
+          // 1. 썸네일 이미지
+          if (post.thumbnail) {
+            detailThumbnail.src = post.thumbnail;
+            detailThumbnailContainer.classList.remove("hidden");
+          } else {
+            detailThumbnailContainer.classList.add("hidden");
+          }
+
+          // 2. 작성자 정보
+          detailAuthor.textContent = post.author || "익명";
+          detailAuthorInitial.textContent = (post.author || "U")
+            .charAt(0)
+            .toUpperCase();
+
+          // 3. 날짜
+          try {
+            const postDate = new Date(post.date);
+            detailDate.textContent = postDate.toLocaleDateString("ko-KR");
+          } catch (e) {
+            detailDate.textContent = "날짜 정보 없음";
+          }
+
+          // 4. 제목
+          detailTitle.textContent = post.title;
+
+          // 5. 내용
+          detailContent.textContent = post.content;
+
+          // 6. 별점 ⭐
+          const rating = parseFloat(post.rating) || 0; // 문자열이든 숫자든 안전하게 변환
+          detailRatingText.textContent = rating.toFixed(1);
+          displayStarRating(rating);
+
+          // 7. 태그 🏷️
+          detailTagsContainer.innerHTML = "";
+          if (post.tags && post.tags.length > 0) {
+            post.tags.forEach((tag) => {
+              const tagElement = document.createElement("span");
+              tagElement.className =
+                "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-3 py-1 rounded-full text-sm font-medium";
+              tagElement.textContent = `#${tag}`;
+              detailTagsContainer.appendChild(tagElement);
+            });
+          }
+
+          // 8. 여행 경로 🗺️
+          if (post.routeData && post.routeData.length > 0) {
+            detailRouteContainer.classList.remove("hidden");
+            displayDetailRoute(post.routeData);
+          } else {
+            detailRouteContainer.classList.add("hidden");
+          }
+
+          // 9. 좋아요/북마크 상태 (구현 필요 시 추가)
+          // ...
+
+          // 10. 모달 열기
+          postDetailModal.classList.remove("hidden");
+          document.body.classList.add("overflow-hidden");
+          // 모달 최상단으로 스크롤
+          postDetailModal.querySelector(".overflow-y-auto").scrollTo(0, 0);
+        }
+
+        function displayStarRating(rating) {
+          detailStarDisplay.innerHTML = "";
+          const fullStars = Math.floor(rating);
+          const hasHalfStar = rating % 1 >= 0.5;
+
+          for (let i = 0; i < 5; i++) {
+            const star = document.createElement("span");
+            star.className = "material-symbols-outlined text-2xl";
+
+            if (i < fullStars) {
+              star.classList.add("text-accent", "fill-current");
+              star.textContent = "star";
+            } else if (i === fullStars && hasHalfStar) {
+              star.classList.add("text-accent");
+              star.style.background =
+                "linear-gradient(90deg, #ffda66 50%, #d1d5db 50%)";
+              star.style.webkitBackgroundClip = "text";
+              star.style.webkitTextFillColor = "transparent";
+              star.textContent = "star";
+            } else {
+              star.classList.add("text-gray-300");
+              star.textContent = "star";
+            }
+            detailStarDisplay.appendChild(star);
+          }
+        }
+
+        function displayDetailRoute(routeData) {
+          detailRouteList.innerHTML = "";
+          routeData.forEach((place, index) => {
+            const li = document.createElement("li");
+            li.className =
+              "flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800";
+            li.innerHTML = `
+              <span class="flex items-center justify-center size-6 rounded-full bg-primary text-white text-xs font-bold">${index + 1}</span>
+              <div class="flex-1">
+                <p class="font-semibold text-sm">${place.place_name}</p>
+                <p class="text-xs text-text-muted-light dark:text-text-muted-dark">${place.address || ""}</p>
+              </div>
+            `;
+            detailRouteList.appendChild(li);
+          });
+
+          setTimeout(() => {
+            if (typeof google === "undefined" || !google.maps) {
+              detailMap.innerHTML = `<div class="w-full h-full flex items-center justify-center bg-gray-100 dark:bg-gray-800 text-red-500">지도를 로드할 수 없습니다. API 키를 확인해주세요.</div>`;
+              return;
+            }
+
+            if (!detailMapInstance) {
+              detailMapInstance = new google.maps.Map(detailMap, {
+                zoom: 12,
+                center: { lat: routeData[0].lat, lng: routeData[0].lng },
+                disableDefaultUI: true,
+                zoomControl: true,
+              });
+            }
+
+            if (detailMarkers)
+              detailMarkers.forEach((marker) => marker.setMap(null));
+            detailMarkers = [];
+            if (detailPolyline) detailPolyline.setMap(null);
+
+            const bounds = new google.maps.LatLngBounds();
+            const path = [];
+
+            routeData.forEach((place, index) => {
+              const position = { lat: place.lat, lng: place.lng };
+
+              const marker = new google.maps.Marker({
+                position: position,
+                map: detailMapInstance,
+                label: {
+                  text: (index + 1).toString(),
+                  color: "white",
+                },
+                title: place.place_name,
+              });
+
+              const infoWindow = new google.maps.InfoWindow({
+                content: `<div class="font-bold">${place.place_name}</div>`,
+              });
+
+              marker.addListener("click", () => {
+                infoWindow.open(detailMapInstance, marker);
+              });
+
+              detailMarkers.push(marker);
+              path.push(position);
+              bounds.extend(position);
+            });
+
+            if (routeData.length > 1) {
+              detailMapInstance.fitBounds(bounds);
+            } else if (routeData.length === 1) {
+              detailMapInstance.setCenter(bounds.getCenter());
+              detailMapInstance.setZoom(14);
+            }
+
+            if (path.length > 1) {
+              detailPolyline = new google.maps.Polyline({
+                path: path,
+                strokeColor: "#db4040",
+                strokeOpacity: 0.8,
+                strokeWeight: 4,
+                map: detailMapInstance,
+              });
+            }
+          }, 100);
+        }
 
         function initializeAndLoadPosts() {
           const staticPosts = [
@@ -602,9 +893,30 @@
               destination: "교토",
               liked: false,
               bookmarked: false,
-              routeData: [],
+              routeData: [
+                {
+                  id: "kyoto_1",
+                  place_name: "금각사 (Kinkaku-ji)",
+                  address: "1 Kinkakujicho, Kita Ward, Kyoto",
+                  lat: 35.0394,
+                  lng: 135.7292,
+                },
+                {
+                  id: "kyoto_2",
+                  place_name: "기온 거리 (Gion District)",
+                  address: "Gionmachi, Higashiyama Ward, Kyoto",
+                  lat: 35.0033,
+                  lng: 135.7783,
+                },
+                {
+                  id: "kyoto_3",
+                  place_name: "니시키 시장 (Nishiki Market)",
+                  address: "Nakagyo Ward, Kyoto",
+                  lat: 35.005,
+                  lng: 135.764,
+                },
+              ],
             },
-
             {
               id: "static-3",
               title: "프라하 배낭여행",
@@ -621,7 +933,22 @@
               destination: "프라하",
               liked: false,
               bookmarked: false,
-              routeData: [],
+              routeData: [
+                {
+                  id: "prague_1",
+                  place_name: "프라하 성 (Prague Castle)",
+                  address: "Hradčany, 119 08 Prague 1",
+                  lat: 50.0908,
+                  lng: 14.4005,
+                },
+                {
+                  id: "prague_2",
+                  place_name: "카를교 (Charles Bridge)",
+                  address: "Karlův most, 110 00 Prague 1",
+                  lat: 50.0865,
+                  lng: 14.4112,
+                },
+              ],
             },
             {
               id: "static-4",
@@ -639,7 +966,22 @@
               destination: "세부",
               liked: false,
               bookmarked: false,
-              routeData: [],
+              routeData: [
+                {
+                  id: "cebu_1",
+                  place_name: "마젤란의 십자가 (Magellan's Cross)",
+                  address: "Plaza Sugbo, Cebu City",
+                  lat: 10.2929,
+                  lng: 123.9022,
+                },
+                {
+                  id: "cebu_2",
+                  place_name: "탑스힐 전망대 (Tops Lookout)",
+                  address: "Busay, Cebu City",
+                  lat: 10.3703,
+                  lng: 123.8711,
+                },
+              ],
             },
             {
               id: "static-5",
@@ -657,7 +999,24 @@
               destination: "타이베이",
               liked: false,
               bookmarked: false,
-              routeData: [],
+              routeData: [
+                {
+                  id: "taipei_1",
+                  place_name: "타이베이 101",
+                  address:
+                    "No. 7, Section 5, Xinyi Road, Xinyi District, Taipei",
+                  lat: 25.0339,
+                  lng: 121.5645,
+                },
+                {
+                  id: "taipei_2",
+                  place_name: "국립고궁박물원",
+                  address:
+                    "No. 221, Sec 2, Zhi Shan Rd, Shilin District, Taipei",
+                  lat: 25.102,
+                  lng: 121.548,
+                },
+              ],
             },
             {
               id: "static-6",
@@ -675,7 +1034,22 @@
               destination: "나고야",
               liked: false,
               bookmarked: false,
-              routeData: [],
+              routeData: [
+                {
+                  id: "nagoya_1",
+                  place_name: "나고야 성 (Nagoya Castle)",
+                  address: "1-1 Honmaru, Naka Ward, Nagoya",
+                  lat: 35.1856,
+                  lng: 136.8996,
+                },
+                {
+                  id: "nagoya_2",
+                  place_name: "지브리 파크 (Ghibli Park)",
+                  address: "1533-1 Ibaragabasama, Nagakute, Aichi",
+                  lat: 35.173,
+                  lng: 137.107,
+                },
+              ],
             },
           ];
           const savedPosts =
@@ -705,35 +1079,51 @@
           tagFilterContainer.addEventListener("change", () => updateGallery());
         }
 
+        // ★ [수정] 갤러리 업데이트 로직 - 필터 조건 추가 (My/Bookmark/Like)
         function updateGallery(resetUi = true) {
           if (resetUi) isExpanded = false;
+
           const selectedDestinations = Array.from(
             document.querySelectorAll('input[name="destination"]:checked'),
           ).map((cb) => cb.value);
+
           const selectedTags = Array.from(
             document.querySelectorAll('input[name="tag"]:checked'),
           ).map((cb) => cb.value);
-          let currentUser = null;
-          try {
-            currentUser = JSON.parse(localStorage.getItem("currentUser"));
-          } catch {}
+
+          // 수정: 로그인 정보를 가져오되, 없으면 빈 객체라도 반환해서 에러 방지
+
+          const savedUser =
+            JSON.parse(localStorage.getItem("currentUser")) ||
+            JSON.parse(localStorage.getItem("loggedInUser"));
+
+          const currentUser = savedUser || { id: null };
 
           currentFilteredPosts = allPostsData.filter((post) => {
-            if (
-              showOnlyMyPosts &&
-              (!currentUser || post.authorId !== currentUser.id)
-            )
-              return false;
+            if (userFilterType === "my") {
+              // 이제 currentUser가 존재하므로 id 비교가 가능합니다.
+
+              return post.authorId === currentUser.id;
+            } else if (userFilterType === "bookmark") {
+              if (!post.bookmarked) return false;
+            } else if (userFilterType === "like") {
+              if (!post.liked) return false;
+            }
+
+            // 2. 여행지 필터
             const destMatch =
               selectedDestinations.length === 0 ||
               (post.tags &&
                 selectedDestinations.some((destination) =>
                   post.tags.includes(destination),
                 ));
+
+            // 3. 태그 필터
             const tagMatch =
               selectedTags.length === 0 ||
               (post.tags &&
                 post.tags.some((tag) => selectedTags.includes(tag)));
+
             return destMatch && tagMatch;
           });
 
@@ -754,11 +1144,20 @@
           const postsToDisplay = isExpanded
             ? currentFilteredPosts
             : currentFilteredPosts.slice(0, initialVisibleCount);
+
           if (postsToDisplay.length === 0) {
-            planContainer.innerHTML = `<div class="col-span-full text-center py-10 text-text-muted-light">${showOnlyMyPosts ? "작성한 글이 없습니다." : "조건에 맞는 여행 계획이 없습니다."}</div>`;
+            let emptyMsg = "조건에 맞는 여행 계획이 없습니다.";
+            if (userFilterType === "my") emptyMsg = "작성한 글이 없습니다.";
+            else if (userFilterType === "bookmark")
+              emptyMsg = "북마크한 글이 없습니다.";
+            else if (userFilterType === "like")
+              emptyMsg = "좋아요한 글이 없습니다.";
+
+            planContainer.innerHTML = `<div class="col-span-full text-center py-20 flex flex-col items-center gap-4 text-text-muted-light"><span class="material-symbols-outlined text-4xl">travel_explore</span><span>${emptyMsg}</span></div>`;
             loadMoreBtn.style.display = "none";
             return;
           }
+
           postsToDisplay.forEach((post) => {
             planContainer.appendChild(createPlanCardElement(post));
           });
@@ -773,15 +1172,43 @@
           }
         }
 
+        function getPostDuration(post) {
+          if (post.duration) return `${post.duration}일`;
+          const planId = post.linkedPlanId || post.tripPlanId;
+          if (planId) {
+            try {
+              const user =
+                JSON.parse(localStorage.getItem("loggedInUser")) ||
+                JSON.parse(localStorage.getItem("currentUser"));
+              if (user && user.email) {
+                const plans =
+                  JSON.parse(localStorage.getItem(`tripPlans_${user.email}`)) ||
+                  [];
+                const plan = plans.find((p) => p.id === planId);
+                if (plan && plan.startDate && plan.endDate) {
+                  const start = new Date(plan.startDate);
+                  const end = new Date(plan.endDate);
+                  const diffTime = Math.abs(end - start);
+                  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                  return `${diffDays + 1}일`;
+                }
+              }
+            } catch (e) {}
+          }
+          return "여행 미지정";
+        }
+
         function createPlanCardElement(post) {
           const article = document.createElement("article");
           article.dataset.id = post.id;
           article.className =
-            "plan-card group flex flex-col bg-surface-light dark:bg-surface-dark rounded-xl overflow-hidden border border-border-light dark:border-border-dark shadow-soft hover:shadow-soft-hover h-full relative";
+            "plan-card group flex flex-col bg-surface-light dark:bg-surface-dark rounded-xl overflow-hidden border border-border-light dark:border-border-dark shadow-soft hover:shadow-soft-hover h-full";
+
           const likesCount =
             post.likes > 1000
               ? `${(post.likes / 1000).toFixed(1)}k`
               : post.likes;
+
           const isBookmarked = post.bookmarked
             ? "material-symbols-outlined text-[20px] fill-current text-primary"
             : "material-symbols-outlined text-[20px]";
@@ -789,28 +1216,37 @@
             ? "material-symbols-outlined text-[20px] fill-current text-secondary"
             : "material-symbols-outlined text-[20px]";
 
+          // The card is now split into a clickable top part and a footer with action buttons
           article.innerHTML = `
+            <div data-action="view-detail" class="cursor-pointer flex flex-col flex-1">
               <div class="relative h-56 overflow-hidden">
-                 <div class="absolute top-3 left-3 bg-black/40 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full z-10 flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">schedule</span>${post.duration ? `${post.duration}일` : "여행 미지정"}</div>
-                <button data-action="bookmark" class="absolute top-3 right-3 p-2 bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-full text-white hover:text-primary transition-colors z-10"><span class="${isBookmarked}">bookmark</span></button>
-                <a href="community-post.html?id=${post.id}" class="absolute inset-0"></a>
+                <div class="absolute top-3 left-3 bg-black/40 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full z-10 flex items-center gap-1">
+                  <span class="material-symbols-outlined text-[14px]">schedule</span>${getPostDuration(post)}
+                </div>
                 <img alt="${post.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" src="${post.thumbnail}" onerror="this.src = 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=400&h=300&fit=crop'" />
               </div>
               <div class="p-5 flex flex-col flex-1">
                 <div class="flex justify-between items-start mb-2">
-                   <div class="flex items-center gap-1 text-primary text-xs font-bold uppercase tracking-wider bg-primary/10 px-2 py-0.5 rounded-md">${post.tags && post.tags.length > 0 ? post.tags[0] : "일반"}</div>
+                  <div class="flex items-center gap-1 text-primary text-xs font-bold uppercase tracking-wider bg-primary/10 px-2 py-0.5 rounded-md">${post.tags && post.tags.length > 0 ? post.tags[0] : "일반"}</div>
                   <div class="flex items-center gap-1 text-accent text-sm font-bold"><span class="material-symbols-outlined text-[18px] fill-current">star</span><span>${post.rating || 0}</span></div>
                 </div>
-                <a href="community-post.html?id=${post.id}"><h3 class="text-lg font-bold text-text-main-light dark:text-white leading-tight mb-2 group-hover:text-primary transition-colors cursor-pointer">${post.title}</h3></a>
-                <p class="text-sm text-text-muted-light dark:text-text-muted-dark line-clamp-2 mb-4">${post.content}</p>
-                <div class="mt-auto flex items-center justify-between pt-4 border-t border-border-light dark:border-border-dark">
-                  <div class="flex items-center gap-2">
-                    <div class="size-8 rounded-full bg-gray-200 overflow-hidden"><img src="https://i.pravatar.cc/150?u=${post.authorId}" alt="User" /></div>
-                    <span class="text-sm font-medium text-text-main-light dark:text-white">${post.author}</span>
-                  </div>
+                <h3 class="text-lg font-bold text-text-main-light dark:text-white leading-tight mb-2 group-hover:text-primary transition-colors">${post.title}</h3>
+                <p class="text-sm text-text-muted-light dark:text-text-muted-dark line-clamp-2 mb-4 flex-1">${post.content}</p>
+              </div>
+            </div>
+            <div class="p-5 pt-4 border-t border-border-light dark:border-border-dark">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <div class="size-8 rounded-full bg-gray-200 overflow-hidden"><img src="https://i.pravatar.cc/150?u=${post.authorId}" alt="User" /></div>
+                  <span class="text-sm font-medium text-text-main-light dark:text-white">${post.author}</span>
+                </div>
+                <div class="flex items-center">
+                  <button data-action="bookmark" class="p-2 rounded-full text-text-muted-light hover:text-primary transition-colors"><span class="${isBookmarked}">bookmark</span></button>
                   <button data-action="like" class="flex items-center gap-1.5 text-text-muted-light hover:text-secondary transition-colors"><span class="${isLiked}">favorite</span><span class="text-xs font-bold">${likesCount}</span></button>
                 </div>
-              </div>`;
+              </div>
+            </div>
+          `;
           return article;
         }
 
@@ -820,66 +1256,123 @@
             cb.addEventListener("change", () => updateGallery()),
           );
         sortSelect.addEventListener("change", () => updateGallery());
+
+        // 필터 리셋 버튼
         resetBtn.addEventListener("click", () => {
           document
             .querySelectorAll('input[type="checkbox"]')
             .forEach((cb) => (cb.checked = false));
           sortSelect.value = "popular";
-          showOnlyMyPosts = false;
-          myPostsBtn.classList.remove("bg-primary", "text-white");
+
+          // 내 활동 필터 초기화
+          userFilterType = "all";
+          userFilterLabel.textContent = "전체";
+          userFilterBtn.classList.remove("text-primary");
+
           updateGallery();
         });
+
         loadMoreBtn.addEventListener("click", () => {
           isExpanded = !isExpanded;
           renderPlans();
         });
-        myPostsBtn.addEventListener("click", () => {
-          showOnlyMyPosts = !showOnlyMyPosts;
-          myPostsBtn.classList.toggle("bg-primary", showOnlyMyPosts);
-          myPostsBtn.classList.toggle("text-white", showOnlyMyPosts);
-          updateGallery();
+
+        // ★ [추가] 내 활동 드롭다운 이벤트 핸들링
+        userFilterBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          userFilterMenu.classList.toggle("hidden");
         });
+
+        // 드롭다운 메뉴 아이템 클릭
+        userFilterMenu.querySelectorAll("button").forEach((btn) => {
+          btn.addEventListener("click", (e) => {
+            const filter = e.target.closest("button").dataset.filter;
+            userFilterType = filter;
+
+            // 버튼 텍스트 업데이트 및 UI 변경
+            if (filter === "all") userFilterLabel.textContent = "전체";
+            else if (filter === "my")
+              userFilterLabel.textContent = "내가 쓴 글";
+            else if (filter === "bookmark")
+              userFilterLabel.textContent = "북마크";
+            else if (filter === "like") userFilterLabel.textContent = "좋아요";
+
+            if (filter !== "all") userFilterBtn.classList.add("text-primary");
+            else userFilterBtn.classList.remove("text-primary");
+
+            userFilterMenu.classList.add("hidden");
+            updateGallery();
+          });
+        });
+
+        // 외부 클릭 시 드롭다운 닫기
+        document.addEventListener("click", (e) => {
+          if (!userFilterContainer.contains(e.target)) {
+            userFilterMenu.classList.add("hidden");
+          }
+        });
+
+        // 카드 내 인터랙션 (좋아요/북마크)
         planContainer.addEventListener("click", (e) => {
-          const button = e.target.closest("button[data-action]");
-          if (!button) return;
+          console.log("Card container clicked.");
+
           const card = e.target.closest(".plan-card");
+          if (!card) {
+            console.log("Click was outside a card. Ignoring.");
+            return;
+          }
+          console.log("Card element found:", card);
+
           const postId = card.dataset.id;
+          console.log("Extracted postId:", postId);
+          if (!postId) {
+            console.error("Card is missing a data-id attribute!");
+            return;
+          }
+
           const post = allPostsData.find((p) => p.id === postId);
-          if (!post) return;
-          if (button.dataset.action === "like") {
-            post.liked = !post.liked;
-            post.likes = (post.likes || 0) + (post.liked ? 1 : -1);
-          } else if (button.dataset.action === "bookmark") {
-            post.bookmarked = !post.bookmarked;
+          if (!post) {
+            console.error(
+              "Could not find post with ID in allPostsData:",
+              postId,
+            );
+            return;
           }
-          localStorage.setItem("communityPosts", JSON.stringify(allPostsData));
-          updateGallery(false);
-        });
-        function checkForEdit() {
-          const postIdToEdit = localStorage.getItem("editPostId");
-          if (postIdToEdit) {
-            const postToEdit = allPostsData.find((p) => p.id === postIdToEdit);
-            if (postToEdit) {
-              editPostId = postIdToEdit; // Set the global editPostId
-              postTitleInput.value = postToEdit.title;
-              postContentTextarea.value = postToEdit.content;
-              setTags(postToEdit.tags || []);
-              setRating(postToEdit.rating || 0.0);
-              setRouteData(postToEdit.routeData || []);
-              setThumbnail(postToEdit.thumbnail || "");
-              document.getElementById("write-modal-title").textContent =
-                "게시글 수정";
-              communityWriteModal.classList.remove("hidden");
-              document.body.classList.add("overflow-hidden");
+          console.log("Found post object:", post);
+
+          const viewDetailElement = e.target.closest(
+            "[data-action='view-detail']",
+          );
+          if (viewDetailElement) {
+            console.log("view-detail action detected. Opening modal...");
+            openPostDetailModal(post);
+            return;
+          }
+          console.log("Not a view-detail action.");
+
+          const button = e.target.closest("button[data-action]");
+          if (button) {
+            console.log("Action button clicked:", button.dataset.action);
+            if (button.dataset.action === "like") {
+              post.liked = !post.liked;
+              post.likes = (post.likes || 0) + (post.liked ? 1 : -1);
+            } else if (button.dataset.action === "bookmark") {
+              post.bookmarked = !post.bookmarked;
             }
-            localStorage.removeItem("editPostId");
+            localStorage.setItem(
+              "communityPosts",
+              JSON.stringify(allPostsData),
+            );
+            updateGallery(false);
+          } else {
+            console.log("No action button found on the click path.");
           }
-        }
+        });
 
         initializeAndLoadPosts();
         updateGallery();
-        checkForEdit(); // Check for edit after initialization
 
+        // --- 글쓰기 모달 로직 (기존과 동일) ---
         const communityWriteModal = document.getElementById(
           "community-write-modal",
         );
@@ -927,41 +1420,33 @@
           rating = 0;
         let routeData = [],
           tempRouteData = [];
+        let map = null,
+          markers = [],
+          polyline = null;
         let tags = [];
         let currentTagInput = "";
         let thumbnail = "";
 
         function setRating(newRating) {
-          // 2-1. 값 저장 및 표시
-          rating = parseFloat(newRating).toFixed(1); // 소수점 1자리까지
+          rating = parseFloat(newRating); // 숫자로 저장 (문자열 아님!)
           starRatingSlider.value = rating;
-          starRatingDisplay.textContent = rating; // 숫자 업데이트
+          starRatingDisplay.textContent = rating.toFixed(1); // 표시할 때만 소수점 1자리
 
-          // 2-2. 별 아이콘들 가져오기
           const starIcons = document.querySelectorAll(
             "#star-visual-display .star-icon",
           );
           const ratingValue = parseFloat(rating);
 
-          // 2-3. 각 별마다 처리
           starIcons.forEach((star, index) => {
-            // 예: rating = 3.7이면
-            // index 0,1,2 → 완전히 채움
-            // index 3 → 70% 채움
-            // index 4 → 빈 별
-
             if (index < Math.floor(ratingValue)) {
-              // 완전히 채워진 별 (예: 0,1,2번째 별)
-              star.style.color = "#FFD700"; // 금색
+              star.style.color = "#FFD700";
             } else if (index < ratingValue) {
-              // 부분적으로 채워진 별 (예: 3번째 별)
-              const percentage = (ratingValue - index) * 100; // 70%
+              const percentage = (ratingValue - index) * 100;
               star.style.background = `linear-gradient(90deg, #FFD700 ${percentage}%, #d1d5db ${percentage}%)`;
               star.style.webkitBackgroundClip = "text";
               star.style.webkitTextFillColor = "transparent";
             } else {
-              // 빈 별 (예: 4번째 별)
-              star.style.color = "#d1d5db"; // 회색
+              star.style.color = "#d1d5db";
               star.style.background = "none";
               star.style.webkitTextFillColor = "inherit";
             }
@@ -999,6 +1484,7 @@
         openWriteModalBtn.addEventListener("click", () => {
           communityWriteModal.classList.remove("hidden");
           document.body.classList.add("overflow-hidden");
+
           editPostId = null;
           postTitleInput.value = "";
           postContentTextarea.value = "";
@@ -1008,7 +1494,90 @@
           setThumbnail("");
           document.getElementById("write-modal-title").textContent =
             "게시글 작성";
+
+          selectedPlanId = null;
+          document.getElementById("selected-plan-name").textContent =
+            "여행 계획을 선택하세요";
+          document
+            .getElementById("selected-plan-name")
+            .classList.remove("text-primary", "font-bold");
+          document
+            .getElementById("clear-selected-plan")
+            .classList.add("hidden");
+
+          loadUserPlans();
         });
+
+        function loadUserPlans() {
+          const dropdown = document.getElementById("plan-selector-dropdown");
+          dropdown.innerHTML = "";
+
+          let currentUser = null;
+          try {
+            currentUser =
+              JSON.parse(localStorage.getItem("loggedInUser")) ||
+              JSON.parse(localStorage.getItem("currentUser"));
+          } catch {}
+
+          if (!currentUser || (!currentUser.email && !currentUser.id)) {
+            dropdown.innerHTML =
+              '<div class="p-3 text-sm text-gray-500">로그인이 필요합니다.</div>';
+            return;
+          }
+
+          const email = currentUser.email || currentUser.id;
+          const userPlansKey = `tripPlans_${email}`;
+          const plans = JSON.parse(localStorage.getItem(userPlansKey) || "[]");
+
+          if (plans.length === 0) {
+            dropdown.innerHTML =
+              '<div class="p-3 text-sm text-gray-500">저장된 여행 계획이 없습니다.</div>';
+            return;
+          }
+
+          plans.forEach((plan) => {
+            const item = document.createElement("div");
+            item.className =
+              "p-3 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer flex justify-between items-center";
+            item.innerHTML = `<span class="text-sm font-medium text-gray-800 dark:text-gray-200">${plan.name}</span><span class="text-xs text-gray-500">${plan.startDate || ""}</span>`;
+            item.onclick = () => {
+              selectedPlanId = plan.id;
+              document.getElementById("selected-plan-name").textContent =
+                plan.name;
+              document
+                .getElementById("selected-plan-name")
+                .classList.add("text-primary", "font-bold");
+              document
+                .getElementById("clear-selected-plan")
+                .classList.remove("hidden");
+              dropdown.classList.add("hidden");
+            };
+            dropdown.appendChild(item);
+          });
+        }
+
+        document
+          .getElementById("select-plan-button")
+          .addEventListener("click", (e) => {
+            if (e.target.closest("#clear-selected-plan")) return;
+            const dropdown = document.getElementById("plan-selector-dropdown");
+            dropdown.classList.toggle("hidden");
+          });
+
+        document
+          .getElementById("clear-selected-plan")
+          .addEventListener("click", (e) => {
+            e.stopPropagation();
+            selectedPlanId = null;
+            document.getElementById("selected-plan-name").textContent =
+              "여행 계획을 선택하세요";
+            document
+              .getElementById("selected-plan-name")
+              .classList.remove("text-primary", "font-bold");
+            document
+              .getElementById("clear-selected-plan")
+              .classList.add("hidden");
+          });
 
         closeWriteModalBtn.addEventListener("click", () => {
           communityWriteModal.classList.add("hidden");
@@ -1053,61 +1622,48 @@
           setThumbnail(e.target.value),
         );
 
-        // --- [수정] Google Maps 변수 및 로직 시작 ---
-        let map = null;
-        let placesService = null; // 구글 장소 검색 서비스
-        let markers = [];
-        let polyline = null;
-        let infoWindow = null;
+        let placesService; // ps 대신
+        let infoWindow; // 정보창 추가
 
-        // 모달 열기 버튼 (Google Maps 초기화)
         openMapModalBtn.addEventListener("click", () => {
           mapModal.classList.remove("hidden");
-
           try {
             if (
               typeof google === "undefined" ||
               typeof google.maps === "undefined"
             ) {
-              throw new Error("Google Maps script not loaded");
+              throw new Error("Google Maps API not loaded.");
             }
-
-            // 지도가 아직 생성되지 않았으면 생성
             if (!map) {
-              const seoul = { lat: 37.5665, lng: 126.9780 }; // 서울 시청 좌표
-
+              // 지도 초기화
               map = new google.maps.Map(mapContainer, {
-                center: seoul,
+                center: { lat: 37.566826, lng: 126.9786567 },
                 zoom: 12,
-                mapTypeControl: false,
               });
 
+              // Places Service 초기화
               placesService = new google.maps.places.PlacesService(map);
+
+              // InfoWindow 초기화
               infoWindow = new google.maps.InfoWindow();
 
-              // 경로를 그릴 Polyline 설정 (직선 연결)
+              // Polyline 초기화
               polyline = new google.maps.Polyline({
                 strokeColor: "#db4040",
                 strokeOpacity: 0.8,
-                strokeWeight: 4,
+                strokeWeight: 3,
+                map: map,
               });
-              polyline.setMap(map);
             }
-
-            tempRouteData = [...routeData]; // 기존 저장된 경로 불러오기
+            tempRouteData = [...routeData];
             updateRouteUI();
-
-            // 모달이 뜰 때 지도가 깨지는 현상 방지 (resize 트리거)
             setTimeout(() => {
-              google.maps.event.trigger(map, "resize");
-              if (tempRouteData.length > 0) updateRouteUI();
-              else map.setCenter({ lat: 37.5665, lng: 126.9780 });
-            }, 100);
-          } catch (e) {
-            mapContainer.innerHTML = `<div class="p-4 text-center text-red-500">지도 로딩 실패: API 키를 확인해주세요.<br>(${e.message})</div>`;
+              if (map) google.maps.event.trigger(map, "resize");
+            }, 0);
+          } catch (error) {
+            mapContainer.innerHTML = `<div class="p-4 text-center text-red-500">지도 로딩 실패: ${error.message}</div>`;
           }
         });
-
         closeMapModalBtn.addEventListener("click", () =>
           mapModal.classList.add("hidden"),
         );
@@ -1125,7 +1681,6 @@
             removePlaceFromRoute(e.target.dataset.id);
         });
 
-        // [함수] 장소 검색 (Google Places API - TextSearch)
         function searchPlaces() {
           if (!placesService)
             return alert("지도 서비스가 초기화되지 않았습니다.");
@@ -1160,28 +1715,22 @@
             }
           });
         }
-
-        // [함수] 검색 결과 목록 표시
         function displaySearchResults(places) {
           searchResultsList.innerHTML = "";
           places.forEach((place, i) => {
             const li = document.createElement("li");
-            // 카카오와 달리 구글은 formatted_address를 사용
             const address = place.formatted_address || "주소 정보 없음";
 
             li.innerHTML = `
-              <div class="p-2 hover:bg-gray-100 cursor-pointer border-b border-gray-100">
-                <span class="font-semibold block text-sm">${i + 1}. ${place.name}</span>
-                <div class="text-xs text-gray-500 mt-1">${address}</div>
-              </div>`;
+      <div class="p-2 hover:bg-gray-100 cursor-pointer border-b border-gray-100">
+        <span class="font-semibold block text-sm">${i + 1}. ${place.name}</span>
+        <div class="text-xs text-gray-500 mt-1">${address}</div>
+      </div>`;
 
-            // 항목 클릭 시 경로에 추가
             li.onclick = () => addPlaceToRoute(place);
             searchResultsList.appendChild(li);
           });
         }
-
-        // [함수] 경로에 장소 추가 (데이터 구조 정규화)
         function addPlaceToRoute(place) {
           // 중복 체크 (place_id 기준)
           if (tempRouteData.find((p) => p.id === place.place_id)) return;
@@ -1199,14 +1748,10 @@
           tempRouteData.push(placeData);
           updateRouteUI();
         }
-
-        // [함수] 경로에서 장소 삭제
         function removePlaceFromRoute(placeId) {
           tempRouteData = tempRouteData.filter((p) => p.id !== placeId);
           updateRouteUI();
         }
-
-        // [함수] 지도 및 UI 업데이트 (마커, 폴리라인, 리스트)
         function updateRouteUI() {
           // 1. 리스트 초기화
           selectedRouteList.innerHTML = "";
@@ -1225,10 +1770,10 @@
               li.className =
                 "p-2 flex justify-between items-center border-b border-gray-100";
               li.innerHTML = `
-                <span class="text-sm"><span class="font-bold text-primary mr-2">${i + 1}</span>${place.place_name}</span>
-                <button data-id="${place.id}" class="text-red-500 hover:bg-red-50 p-1 rounded">
-                  <span class="material-symbols-outlined text-[16px]">close</span>
-                </button>`;
+        <span class="text-sm"><span class="font-bold text-primary mr-2">${i + 1}</span>${place.place_name}</span>
+        <button data-id="${place.id}" class="text-red-500 hover:bg-red-50 p-1 rounded">
+          <span class="material-symbols-outlined text-[16px]">close</span>
+        </button>`;
               selectedRouteList.appendChild(li);
 
               // 2-2. 마커 생성
@@ -1267,72 +1812,167 @@
             polyline.setPath(path);
           }
         }
-        // --- [수정] Google Maps 로직 끝 ---
 
         submitPostBtn.addEventListener("click", () => {
+          const title = postTitleInput.value;
+          const content = postContentTextarea.value;
+          if (!title.trim() || !content.trim())
+            return alert("제목과 내용을 입력해주세요.");
+
+          // 기본값 설정
+          let currentUser = { name: "익명", id: "anonymous" };
           try {
-            const title = postTitleInput.value;
-            const content = postContentTextarea.value;
-            if (!title.trim() || !content.trim())
-              return alert("제목과 내용을 입력해주세요.");
-            let currentUser = { name: "익명", id: "anonymous" };
-            try {
-              currentUser =
-                JSON.parse(localStorage.getItem("currentUser")) || currentUser;
-            } catch {}
+            // 저장된 유저 정보가 있다면 갱신
+            const savedUser =
+              JSON.parse(localStorage.getItem("currentUser")) ||
+              JSON.parse(localStorage.getItem("loggedInUser"));
+            if (savedUser) currentUser = savedUser;
+          } catch {}
 
-            const postData = {
-              title,
-              content,
-              tags,
-              rating,
-              routeData,
-              thumbnail,
-            };
+          const postData = {
+            title,
+            content,
+            tags,
+            rating,
+            routeData,
+            thumbnail,
+            linkedPlanId: selectedPlanId,
+            // ★ 중요: 여기서 authorId가 필터의 기준이 됩니다.
+            author: currentUser.name,
+            authorId: currentUser.id,
+            id: `post-${Date.now()}`,
+            date: new Date().toISOString(),
+            likes: 0,
+            liked: false,
+            bookmarked: false,
+          };
 
-            // 태그 중 알려진 대륙과 일치하는 것이 있으면 대륙을 추론합니다.
-            const knownContinents = ["유럽", "아시아", "북미"];
-            const inferredContinent = tags.find((tag) =>
-              knownContinents.includes(tag),
-            );
-            if (inferredContinent) {
-              postData.continent = inferredContinent;
-            }
+          const knownContinents = ["유럽", "아시아", "북미"];
+          const inferredContinent = tags.find((tag) =>
+            knownContinents.includes(tag),
+          );
+          if (inferredContinent) postData.continent = inferredContinent;
 
-            if (editPostId) {
-              const index = allPostsData.findIndex((p) => p.id === editPostId);
-              if (index > -1)
-                allPostsData[index] = { ...allPostsData[index], ...postData };
-            } else {
-              allPostsData.unshift({
-                ...postData,
-                id: `post-${Date.now()}`,
-                author: currentUser.name,
-                authorId: currentUser.id,
-                date: new Date().toISOString(),
-                likes: 0,
-                liked: false,
-                bookmarked: false,
-              });
-            }
-            localStorage.setItem(
-              "communityPosts",
-              JSON.stringify(allPostsData),
-            );
-            populateTagFilters();
-            alert(
-              editPostId
-                ? "게시글이 수정되었습니다."
-                : "게시글이 작성되었습니다.",
-            );
-            closeWriteModalBtn.click();
-            updateGallery(true);
-          } catch (error) {
-            console.error("게시글 작성 중 오류 발생:", error);
-            alert("게시글 작성 중 오류가 발생했습니다: " + error.message);
+          if (editPostId) {
+            const index = allPostsData.findIndex((p) => p.id === editPostId);
+            if (index > -1)
+              allPostsData[index] = { ...allPostsData[index], ...postData };
+          } else {
+            allPostsData.unshift(postData); // postData에 모든 정보가 포함되므로 바로 추가
           }
+          localStorage.setItem("communityPosts", JSON.stringify(allPostsData));
+          populateTagFilters();
+          alert(
+            editPostId
+              ? "게시글이 수정되었습니다."
+              : "게시글이 작성되었습니다.",
+          );
+          closeWriteModalBtn.click();
+          updateGallery(true);
         });
       });
     </script>
+    <!-- Post Detail Modal -->
+    <div
+      id="postDetailModal"
+      class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 hidden"
+    >
+      <div
+        class="bg-surface-light dark:bg-surface-dark rounded-xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col relative"
+      >
+        <button
+          id="close-detail-modal-button"
+          class="absolute top-4 right-4 p-2 rounded-full bg-black/20 hover:bg-black/40 text-white z-10 transition-colors"
+        >
+          <span class="material-symbols-outlined text-3xl">close</span>
+        </button>
+
+        <div class="flex-1 overflow-y-auto custom-scrollbar">
+          <div
+            id="detailThumbnailContainer"
+            class="w-full h-64 md:h-80 bg-gray-200 dark:bg-gray-700 hidden"
+          >
+            <img
+              id="detailThumbnail"
+              src=""
+              alt="Post thumbnail"
+              class="w-full h-full object-cover"
+            />
+          </div>
+
+          <div class="p-8 md:p-10">
+            <div class="flex items-center gap-4 mb-4">
+              <div
+                class="size-12 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center text-xl font-bold text-white"
+              >
+                <span id="detailAuthorInitial">U</span>
+              </div>
+              <div>
+                <p
+                  id="detailAuthor"
+                  class="font-bold text-text-main-light dark:text-white text-lg"
+                >
+                  Author
+                </p>
+                <p
+                  id="detailDate"
+                  class="text-sm text-text-muted-light dark:text-text-muted-dark"
+                >
+                  Date
+                </p>
+              </div>
+            </div>
+
+            <h1
+              id="detailTitle"
+              class="text-3xl md:text-4xl font-black text-text-main-light dark:text-white tracking-tight leading-tight mb-5"
+            >
+              Post Title
+            </h1>
+
+            <div
+              class="flex flex-wrap items-center gap-x-6 gap-y-3 mb-6 pb-6 border-b border-border-light dark:border-border-dark"
+            >
+              <div class="flex items-center gap-2">
+                <span
+                  class="material-symbols-outlined text-accent fill-current text-2xl"
+                  >star</span
+                >
+                <span id="detailRatingText" class="text-lg font-bold">0.0</span>
+                <div id="detailStarDisplay" class="flex items-center">
+                  <!-- Stars will be dynamically inserted here -->
+                </div>
+              </div>
+              <div
+                id="detailTagsContainer"
+                class="flex flex-wrap gap-2 items-center"
+              >
+                <!-- Tags will be dynamically inserted here -->
+              </div>
+            </div>
+
+            <div
+              id="detailContent"
+              class="prose prose-lg dark:prose-invert max-w-none text-text-main-light dark:text-text-main-dark leading-relaxed mb-10"
+            >
+              <p>Post content goes here...</p>
+            </div>
+
+            <div id="detailRouteContainer" class="hidden">
+              <h2 class="text-2xl font-bold mb-4">여행 경로</h2>
+              <div class="flex flex-col md:flex-row gap-6">
+                <div
+                  id="detailMap"
+                  class="w-full md:w-2/3 h-80 rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-700 border border-border-light dark:border-border-dark"
+                >
+                  <!-- Map will be initialized here -->
+                </div>
+                <ul id="detailRouteList" class="w-full md:w-1/3 space-y-3"></ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
