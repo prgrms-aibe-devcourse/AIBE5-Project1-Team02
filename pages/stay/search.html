@@ -4,7 +4,7 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>여백 - 역 기반 숙소 검색</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-
+    <link rel="stylesheet" href="../../styles.css" />
     <link rel="dns-prefetch" href="https://github.com" />
 
     <link
@@ -29,10 +29,10 @@
             colors: {
               primary: "#4C6FFF", // 기존 페이지의 Primary Color 유지
               "background-light": "#F8FAFC",
-              "background-dark": "#0F172A",
               "surface-gray": "#F1F5F9",
+              "yeobaek-primary": "#008774"
               // 여백 브랜드 컬러 (헤더용)
-              "yeobaek-primary": "#3b82f6",
+
             },
             fontFamily: {
               display: ["Manrope", "sans-serif"],
@@ -166,90 +166,91 @@
   </head>
 
   <body
-    class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white antialiased"
+    class="bg-background-light font-display text-slate-900 antialiased"
   >
     <div class="flex min-h-screen flex-col relative">
-      <header
-        class="sticky top-0 z-50 w-full border-b border-gray-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60"
+<header
+  class="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+>
+  <nav class="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">
+    <div class="hidden gap-8 font-medium text-slate-500 md:flex pointer-events-auto text-lg">
+      <a
+        href="../plan/planner.html"
+        class="relative py-1 transition-colors group hover:text-slate-900"
       >
-        <div
-          class="w-full px-8 relative flex h-20 items-center justify-between max-w-[1440px] mx-auto"
+        플래너
+        <span
+          class="absolute bottom-0 left-0 h-[2px] w-0 bg-yeobaek-primary transition-all duration-300 group-hover:w-full"
+        ></span>
+      </a>
+      <a
+        href="search.html"
+        class="relative py-1 transition-colors group hover:text-slate-900"
+      >
+        숙소
+        <span
+          class="absolute bottom-0 left-0 h-[2px] w-0 bg-yeobaek-primary transition-all duration-300 group-hover:w-full"
+        ></span>
+      </a>
+      <a
+        href=""
+        class="relative py-1 transition-colors group hover:text-slate-900"
+      >
+        여행기록
+        <span
+          class="absolute bottom-0 left-0 h-[2px] w-0 bg-yeobaek-primary transition-all duration-300 group-hover:w-full"
+        ></span>
+      </a>
+    </div>
+  </nav>
+
+  <div class="relative z-10 flex h-20 w-full items-center justify-between px-8 pointer-events-none">
+    
+    <a
+      class="flex items-center space-x-2 transition-transform duration-300 hover:scale-105 pointer-events-auto"
+      href="../main/Main.html"
+    >
+      <img
+        src="../../images/Logo.png"
+        alt="여백 로고"
+        class="object-cover rounded-full h-9 w-9"
+        onerror="this.style.display = 'none'"
+      />
+      <span class="ml-2 text-xl font-bold font-serif text-slate-900">여백</span>
+    </a>
+
+    <div class="flex items-center gap-6 pointer-events-auto">
+      <a
+        href="table.html"
+        class="flex items-center gap-2 px-3 py-2 text-sm font-bold transition-colors rounded-full group text-slate-600 hover:bg-slate-100 hover:text-yeobaek-primary"
+      >
+        <span
+          class="material-symbols-outlined text-[20px] text-slate-400 transition-colors group-hover:text-yeobaek-primary"
+          >compare_arrows</span
         >
-          <a
-            class="flex items-center space-x-2 transition-transform duration-300 hover:scale-105"
-            href="../main/Main.html"
-          >
-            <img
-              src="../../images/Logo.png"
-              alt="여백 로고"
-              class="h-9 w-9 rounded-full object-cover"
-              onerror="this.style.display = 'none'"
-            />
-            <span
-              class="font-serif text-slate-900 font-bold ml-2 text-xl"
-              >여백</span
-            >
-          </a>
+        <span
+          >비교함 (<span id="compare-counter-main" class="tabular-nums">0</span
+          >)</span
+        >
+      </a>
 
-          <nav
-            class="hidden md:flex items-center justify-center text-slate-500 gap-8 text-lg font-medium absolute left-1/2 -translate-x-1/2"
-          >
-            <a
-              href="../plan/planner.html"
-              class="group relative py-1 transition-colors hover:text-slate-900"
-            >
-              플래너
-              <span
-                class="absolute left-0 bottom-0 w-0 h-[2px] bg-yeobaek-primary transition-all duration-300 group-hover:w-full"
-              ></span>
-            </a>
-            <a
-              href="search.html"
-              class="group relative py-1 transition-colors hover:text-slate-900"
-            >
-              숙소
-              <span
-                class="absolute left-0 bottom-0 w-0 h-[2px] bg-yeobaek-primary transition-all duration-300 group-hover:w-full"
-              ></span>
-            </a>
-            <a
-              href=""
-              class="group relative py-1 transition-colors hover:text-slate-900"
-            >
-              여행기록
-              <span
-                class="absolute left-0 bottom-0 w-0 h-[2px] bg-yeobaek-primary transition-all duration-300 group-hover:w-full"
-              ></span>
-            </a>
-          </nav>
-
-          <div class="flex items-center gap-6">
-            
-            <a 
-              href="table.html" 
-              class="flex items-center gap-2 px-3 py-2 rounded-full hover:bg-slate-100 transition-colors text-slate-600 hover:text-yeobaek-primary font-bold text-sm group"
-            >
-              <span class="material-symbols-outlined text-[20px] text-slate-400 group-hover:text-yeobaek-primary transition-colors">compare_arrows</span>
-              <span>비교함 (<span id="compare-counter-main" class="tabular-nums">0</span>)</span>
-            </a>
-
-            <div id="auth-links" class="flex items-center gap-6">
-              <a
-                href="../auth/SignIn.html"
-                class="text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors"
-              >
-                로그인
-              </a>
-              <a
-                href="../auth/SignUp.html"
-                class="text-sm font-bold text-white bg-yeobaek-primary px-5 py-2.5 rounded-full shadow-md transition-all duration-200 hover:bg-blue-600 hover:shadow-lg hover:-translate-y-0.5 active:scale-95"
-              >
-                회원가입
-              </a>
-            </div>
-          </div>
-        </div>
-      </header>
+      <div id="auth-links" class="flex items-center gap-6">
+        <a
+          href="../auth/SignIn.html"
+          class="text-sm font-medium transition-colors text-slate-500 hover:text-slate-900"
+        >
+          로그인
+        </a>
+        <a
+          href="../auth/SignUp.html"
+          class="px-5 py-2.5 text-sm font-bold text-white transition-all duration-200 rounded-full shadow-md bg-yeobaek-primary hover:bg-blue-600 hover:shadow-lg hover:-translate-y-0.5 active:scale-95"
+        >
+          회원가입
+        </a>
+      </div>
+    </div>
+  </div>
+</header>
       <div
         class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-white/10 px-4 lg:px-20 py-8"
       >
@@ -728,13 +729,13 @@
       </div>
     </main>
 
-    <footer class="bg-gray-100 py-8 border-t border-gray-200 mt-auto">
-      <div
-        class="container mx-auto text-center text-gray-500 text-sm"
-      >
-        © 2026 여백. All rights reserved.
-      </div>
-    </footer>
+        <footer class="bg-muted py-8">
+            <div
+                class="container mx-auto text-center text-muted-foreground text-sm"
+            >
+                © 2026 여백. All rights reserved.
+            </div>
+        </footer>
   </div>
 
   <div
