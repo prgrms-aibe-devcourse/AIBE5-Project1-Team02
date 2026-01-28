@@ -13,6 +13,10 @@
             href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
             rel="stylesheet"
         />
+        <link
+            href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"
+            rel="stylesheet"
+        />
         <link rel="stylesheet" href="../../styles.css" />
         <script>
             tailwind.config = {
@@ -20,7 +24,7 @@
                     extend: {
                         colors: {
                             primary: "#00897b",
-                            "background-light": "#F8F9FA",
+                            background: "#f3f4f6",
                         },
                         fontFamily: {
                             display: ["Noto Sans KR", "sans-serif"],
@@ -35,6 +39,7 @@
         <style type="text/tailwindcss">
             body {
                 font-family: "Noto Sans KR", sans-serif;
+                background-color: #f3f4f6;
             }
             .material-symbols-outlined {
                 font-variation-settings:
@@ -43,19 +48,96 @@
                     "GRAD" 0,
                     "opsz" 24;
             }
+
+            /* --- 일정 팝업 전용 스타일 --- */
+            .custom-scrollbar::-webkit-scrollbar {
+                width: 4px;
+            }
+            .custom-scrollbar::-webkit-scrollbar-track {
+                background: transparent;
+            }
+            .custom-scrollbar::-webkit-scrollbar-thumb {
+                background: #cbd5e1;
+                border-radius: 10px;
+            }
+
+            /* 핀 디자인 */
+            .map-pin {
+                position: absolute;
+                width: 36px;
+                height: 36px;
+                margin-left: -18px;
+                margin-top: -18px;
+                border-radius: 50% 50% 50% 0;
+                transform: rotate(-45deg);
+                border: 3px solid white;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 20;
+                transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                opacity: 0;
+                scale: 0.5;
+            }
+            .map-pin.visible {
+                opacity: 1;
+                scale: 1;
+            }
+            .map-pin span {
+                transform: rotate(45deg);
+                color: white;
+                font-weight: 800;
+                font-size: 14px;
+            }
+
+            /* 맵 경로 (SVG) */
+            .route-path {
+                opacity: 0;
+                transition: opacity 0.4s ease;
+            }
+            .route-path.visible {
+                opacity: 1;
+            }
+
+            /* 아코디언 애니메이션 */
+            .accordion-content {
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.3s ease-out;
+            }
+            .accordion-item.active .accordion-content {
+                max-height: 1000px;
+                transition: max-height 0.5s ease-in;
+            }
+            .accordion-item.active .arrow-icon {
+                transform: rotate(180deg);
+            }
+
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(10px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
         </style>
     </head>
 
-    <body
-        class="bg-background-light text-slate-900 transition-colors duration-300 min-h-screen"
-    >
+    <body class="text-slate-900 transition-colors duration-300 min-h-screen">
         <header
-            class="sticky top-0 z-50 w-full border-b border-border/40 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60"
+            class="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
         >
             <div
                 class="w-full px-8 relative flex h-20 items-center justify-between"
             >
-                <a class="flex items-center space-x-2" href="../main/Main.html">
+                <a
+                    class="flex items-center space-x-2 transition-transform duration-300 hover:scale-105"
+                    href="../main/Main.html"
+                >
                     <img
                         src="../../images/Logo.png"
                         alt="여백 로고"
@@ -68,37 +150,58 @@
                 </a>
 
                 <nav
-                    class="flex items-center justify-center text-slate-500 gap-6 text-lg font-medium"
+                    class="flex items-center justify-center text-muted-foreground gap-8 text-lg font-medium"
                     style="
                         position: absolute;
                         left: 50%;
                         transform: translateX(-50%);
                     "
                 >
-                    <a class="hover:text-primary transition-colors" href=""
-                        >플래너</a
+                    <a
+                        href="../plan/planner.html"
+                        class="group relative py-1 transition-colors hover:text-foreground"
                     >
-                    <a class="hover:text-primary transition-colors" href=""
-                        >숙소</a
+                        플래너
+                        <span
+                            class="absolute left-0 bottom-0 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full"
+                        ></span>
+                    </a>
+                    <a
+                        href="../stay/search.html"
+                        class="group relative py-1 transition-colors hover:text-foreground"
                     >
-                    <a class="hover:text-primary transition-colors" href=""
-                        >여행기록</a
+                        숙소
+                        <span
+                            class="absolute left-0 bottom-0 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full"
+                        ></span>
+                    </a>
+                    <a
+                        href=""
+                        class="group relative py-1 transition-colors hover:text-foreground"
                     >
+                        여행기록
+                        <span
+                            class="absolute left-0 bottom-0 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full"
+                        ></span>
+                    </a>
                 </nav>
 
-                <div id="auth-links" class="flex items-center gap-4">
-                    <a href="../auth/SignIn.html" class="text-sm font-medium"
-                        >로그인</a
+                <div id="auth-links" class="flex items-center gap-6">
+                    <a
+                        href="../auth/SignIn.html"
+                        class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
                     >
+                        로그인
+                    </a>
                     <a
                         href="../auth/SignUp.html"
-                        class="text-sm font-medium bg-primary text-white px-4 py-2 rounded-md hover:bg-teal-700 transition-colors"
-                        >회원가입</a
+                        class="text-sm font-bold text-white bg-primary px-5 py-2.5 rounded-full shadow-md transition-all duration-200 hover:bg-indigo-700 hover:shadow-lg hover:-translate-y-0.5 active:scale-95"
                     >
+                        회원가입
+                    </a>
                 </div>
             </div>
         </header>
-
         <main class="container mx-auto max-w-6xl px-4 py-8 pb-24">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
                 <div class="lg:col-span-2">
@@ -106,7 +209,11 @@
                         class="bg-white rounded-3xl shadow-xl overflow-hidden mb-8 transition-colors duration-300 h-full"
                     >
                         <div
-                            class="relative h-32 bg-gradient-to-r from-teal-400 to-primary"
+                            style="
+                                position: relative;
+                                height: 128px;
+                                background-color: #008774;
+                            "
                         ></div>
                         <div class="px-6 pb-6 relative">
                             <div
@@ -118,15 +225,15 @@
                                         alt="Profile"
                                         class="w-24 h-24 rounded-2xl border-4 border-white shadow-md bg-white"
                                     />
-                                    <div
-                                        onclick="togglePremiumModal()"
+                                    <a
+                                        href="../profile/view_personality_card.html"
                                         class="absolute -bottom-2 -right-2 bg-white p-1.5 rounded-xl shadow-sm border border-slate-100 cursor-pointer hover:scale-110 transition-transform"
                                     >
                                         <span
                                             class="material-symbols-outlined text-yellow-500 text-xl"
                                             >workspace_premium</span
                                         >
-                                    </div>
+                                    </a>
                                 </div>
                                 <button
                                     id="requestEditProfileBtn"
@@ -182,15 +289,15 @@
                                         >
                                     </div>
                                     <span
+                                        id="personality-type-display"
                                         class="text-xs font-medium text-indigo-400 bg-white px-2 py-1 rounded-lg"
                                         >분석가형</span
                                     >
                                 </div>
-                                <div class="flex space-x-2">
-                                    <span
-                                        class="px-2 py-1 bg-white/60 rounded-lg text-xs font-medium text-indigo-700"
-                                        >#계획적</span
-                                    >
+                                <div
+                                    id="personality-strengths-container"
+                                    class="flex space-x-2"
+                                >
                                     <span
                                         class="px-2 py-1 bg-white/60 rounded-lg text-xs font-medium text-indigo-700"
                                         >#가성비</span
@@ -220,29 +327,9 @@
                             다가오는 여행
                         </h3>
                         <div
+                            id="upcoming-trip-container"
                             class="bg-slate-50 rounded-2xl p-4 border border-slate-100"
-                        >
-                            <div class="flex justify-between items-start mb-2">
-                                <span
-                                    class="text-xs font-bold bg-primary/10 text-primary px-2 py-1 rounded-lg"
-                                    >D-12</span
-                                >
-                                <span class="text-xs text-slate-400"
-                                    >2026.02.07</span
-                                >
-                            </div>
-                            <div class="font-bold text-lg text-slate-900 mb-1">
-                                🇯🇵 도쿄 벚꽃 여행
-                            </div>
-                            <p class="text-xs text-slate-500 mb-3">
-                                숙소 예약 완료, 환전 필요
-                            </p>
-                            <button
-                                class="w-full py-2 bg-white border border-slate-200 rounded-xl text-xs font-bold hover:bg-slate-50 transition-colors"
-                            >
-                                일정 확인하기
-                            </button>
-                        </div>
+                        ></div>
                     </section>
 
                     <section
@@ -318,7 +405,7 @@
                         id="tab-plans"
                         class="flex-shrink-0 px-4 py-2 bg-primary text-white rounded-xl text-sm font-bold shadow-md shadow-teal-500/20 transition-all"
                     >
-                        여행 기록 (2)
+                        여행 계획 (2)
                     </button>
                     <button
                         onclick="switchTab('posts')"
@@ -338,9 +425,7 @@
 
                 <div id="content-plans" class="space-y-4 animate-fade-in">
                     <button
-                        onclick="
-                            alert('새 여행 계획 작성 페이지로 이동합니다.')
-                        "
+                        onclick="startNewPlan()"
                         class="w-full py-3 rounded-xl border-2 border-dashed border-slate-300 text-slate-500 font-bold hover:border-primary hover:text-primary transition-colors flex items-center justify-center"
                     >
                         <span class="material-symbols-outlined mr-2"
@@ -348,52 +433,6 @@
                         >
                         새 여행 계획 만들기
                     </button>
-                    <div
-                        class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between hover:scale-[1.02] transition-transform cursor-pointer"
-                        onclick="alert('여행 계획 상세 페이지로 이동합니다.')"
-                    >
-                        <div class="flex items-center space-x-4">
-                            <div
-                                class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center text-2xl"
-                            >
-                                🇯🇵
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-slate-900">
-                                    오사카 먹방 여행
-                                </h3>
-                                <p class="text-xs text-slate-500 mt-1">
-                                    2026.02.10 - 2026.02.14 · 4박 5일
-                                </p>
-                            </div>
-                        </div>
-                        <span class="material-symbols-outlined text-slate-400"
-                            >chevron_right</span
-                        >
-                    </div>
-                    <div
-                        class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between hover:scale-[1.02] transition-transform cursor-pointer"
-                        onclick="alert('여행 계획 상세 페이지로 이동합니다.')"
-                    >
-                        <div class="flex items-center space-x-4">
-                            <div
-                                class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center text-2xl"
-                            >
-                                🇫🇷
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-slate-900">
-                                    파리 예술 기행
-                                </h3>
-                                <p class="text-xs text-slate-500 mt-1">
-                                    2026.05.01 - 2026.05.10 · 9박 10일
-                                </p>
-                            </div>
-                        </div>
-                        <span class="material-symbols-outlined text-slate-400"
-                            >chevron_right</span
-                        >
-                    </div>
                 </div>
 
                 <div
@@ -499,8 +538,10 @@
             </section>
         </main>
 
-        <footer class="bg-slate-100 py-8 border-t border-slate-200 mt-8">
-            <div class="container mx-auto text-center text-slate-400 text-sm">
+        <footer class="bg-muted py-8">
+            <div
+                class="container mx-auto text-center text-muted-foreground text-sm"
+            >
                 © 2026 여백. All rights reserved.
             </div>
         </footer>
@@ -614,8 +655,7 @@
                                 <div>
                                     <label
                                         class="block text-sm font-medium text-slate-700 mb-1"
-                                        >이메일</label
-                                    >
+                                        >이메일</label>
                                     <input
                                         type="email"
                                         id="edit-email"
@@ -631,8 +671,7 @@
                                     <div>
                                         <label
                                             class="block text-sm font-medium text-slate-700 mb-1"
-                                            >이름</label
-                                        >
+                                            >이름</label>
                                         <input
                                             type="text"
                                             id="edit-name"
@@ -643,8 +682,7 @@
                                     <div>
                                         <label
                                             class="block text-sm font-medium text-slate-700 mb-1"
-                                            >생년월일</label
-                                        >
+                                            >생년월일</label>
                                         <input
                                             type="date"
                                             id="edit-birthdate"
@@ -656,8 +694,7 @@
                                 <div>
                                     <label
                                         class="block text-sm font-medium text-slate-700 mb-1"
-                                        >성별</label
-                                    >
+                                        >성별</label>
                                     <select
                                         id="edit-gender"
                                         class="w-full px-4 py-2 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary outline-none"
@@ -672,8 +709,7 @@
                                 <div>
                                     <label
                                         class="block text-sm font-medium text-slate-700 mb-1"
-                                        >자기소개</label
-                                    >
+                                        >자기소개</label>
                                     <textarea
                                         id="editBioInput"
                                         rows="3"
@@ -695,8 +731,7 @@
                                         <div>
                                             <label
                                                 class="block text-xs font-medium text-slate-500 mb-1"
-                                                >현재 비밀번호</label
-                                            >
+                                                >현재 비밀번호</label>
                                             <input
                                                 type="password"
                                                 id="currentPasswordInput"
@@ -708,8 +743,7 @@
                                             <div>
                                                 <label
                                                     class="block text-xs font-medium text-slate-500 mb-1"
-                                                    >새 비밀번호</label
-                                                >
+                                                    >새 비밀번호</label>
                                                 <input
                                                     type="password"
                                                     id="newPasswordInput"
@@ -720,8 +754,7 @@
                                             <div>
                                                 <label
                                                     class="block text-xs font-medium text-slate-500 mb-1"
-                                                    >새 비밀번호 확인</label
-                                                >
+                                                    >새 비밀번호 확인</label>
                                                 <input
                                                     type="password"
                                                     id="confirmPasswordInput"
@@ -762,110 +795,6 @@
         </div>
 
         <div
-            id="addCountryModal"
-            class="fixed inset-0 z-[110] hidden"
-            aria-labelledby="add-country-modal-title"
-            role="dialog"
-            aria-modal="true"
-        >
-            <div
-                class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm transition-opacity opacity-0"
-                id="addCountryBackdrop"
-            ></div>
-
-            <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
-                <div
-                    class="flex min-h-full items-end justify-center p-0 text-center sm:items-center sm:p-0"
-                >
-                    <div
-                        class="relative transform overflow-hidden bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-md rounded-t-2xl sm:rounded-2xl translate-y-full sm:translate-y-0 opacity-0"
-                        id="addCountryPanel"
-                    >
-                        <div class="px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
-                            <div class="flex justify-between items-center mb-5">
-                                <h3
-                                    class="text-xl font-bold text-slate-900"
-                                    id="add-country-modal-title"
-                                >
-                                    여행지 추가
-                                </h3>
-                                <button
-                                    onclick="toggleAddCountryModal()"
-                                    class="text-slate-400 hover:text-slate-500"
-                                >
-                                    <span class="material-symbols-outlined"
-                                        >close</span
-                                    >
-                                </button>
-                            </div>
-                            <p class="text-sm text-slate-500 mb-4">
-                                다녀오신 여행지를 선택하여 여권에 도장을
-                                찍어보세요!
-                            </p>
-
-                            <div class="mb-4">
-                                <label
-                                    class="block text-sm font-medium text-slate-700 mb-1"
-                                    >여행 시기</label
-                                >
-                                <div class="flex space-x-2">
-                                    <select
-                                        id="travelYearInput"
-                                        class="w-1/2 px-4 py-2 bg-slate-50 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary outline-none cursor-pointer appearance-none"
-                                    >
-                                        <option value="2026">2026년</option>
-                                        <option value="2025">2025년</option>
-                                        <option value="2024">2024년</option>
-                                        <option value="2023">2023년</option>
-                                        <option value="2022">2022년</option>
-                                        <option value="2021">2021년</option>
-                                        <option value="2020">2020년</option>
-                                    </select>
-                                    <select
-                                        id="travelMonthInput"
-                                        class="w-1/2 px-4 py-2 bg-slate-50 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary outline-none cursor-pointer appearance-none"
-                                    >
-                                        <option value="01">1월</option>
-                                        <option value="02">2월</option>
-                                        <option value="03">3월</option>
-                                        <option value="04">4월</option>
-                                        <option value="05">5월</option>
-                                        <option value="06">6월</option>
-                                        <option value="07">7월</option>
-                                        <option value="08">8월</option>
-                                        <option value="09">9월</option>
-                                        <option value="10">10월</option>
-                                        <option value="11">11월</option>
-                                        <option value="12">12월</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="mb-4 relative">
-                                <span
-                                    class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
-                                    >search</span
-                                >
-                                <input
-                                    type="text"
-                                    id="countrySearchInput"
-                                    placeholder="나라 이름을 검색해보세요..."
-                                    class="w-full pl-10 pr-4 py-3 bg-slate-50 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary outline-none"
-                                    onkeyup="filterCountries()"
-                                />
-                            </div>
-
-                            <div
-                                id="countryListGrid"
-                                class="grid grid-cols-3 gap-3 max-h-[40vh] overflow-y-auto pr-1"
-                            ></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div
             id="personalityModal"
             class="fixed inset-0 z-[100] hidden"
             aria-labelledby="modal-title"
@@ -885,7 +814,15 @@
                         id="personalityPanel"
                     >
                         <div
-                            class="relative h-32 bg-gradient-to-br from-indigo-500 to-purple-600 p-6 flex flex-col justify-center text-white"
+                            class="relative h-32 p-6 flex flex-col justify-center text-white"
+                            style="
+                                background: linear-gradient(
+                                    to bottom right,
+                                    #6366f1,
+                                    #9333ea
+                                );
+                                color: white;
+                            "
                         >
                             <button
                                 onclick="togglePersonalityModal()"
@@ -904,7 +841,12 @@
                                     >여행 성향 분석</span
                                 >
                             </div>
-                            <h2 class="text-2xl font-bold">확실한 분석가형</h2>
+                            <h2
+                                class="text-2xl font-bold"
+                                id="personality-modal-title"
+                            >
+                                확실한 분석가형
+                            </h2>
                         </div>
                         <div class="p-6">
                             <div class="space-y-4">
@@ -921,6 +863,7 @@
                                         이런 여행을 선호해요
                                     </h4>
                                     <ul
+                                        id="personality-modal-recommendations-list"
                                         class="text-sm text-indigo-800 space-y-1 list-disc list-inside"
                                     >
                                         <li>분 단위로 쪼개진 엑셀 계획표</li>
@@ -940,13 +883,24 @@
                                             <div
                                                 class="flex justify-between text-xs text-slate-500 mb-1"
                                             >
-                                                <span>계획적</span>
-                                                <span>즉흥적</span>
+                                                <span
+                                                    >계획적
+                                                    <span
+                                                        id="planfulness-label"
+                                                    ></span
+                                                ></span>
+                                                <span
+                                                    >즉흥적
+                                                    <span
+                                                        id="impulsivity-label"
+                                                    ></span
+                                                ></span>
                                             </div>
                                             <div
                                                 class="h-2 bg-slate-100 rounded-full overflow-hidden"
                                             >
                                                 <div
+                                                    id="planfulness-bar"
                                                     class="h-full bg-indigo-500 w-[90%] rounded-full"
                                                 ></div>
                                             </div>
@@ -955,13 +909,24 @@
                                             <div
                                                 class="flex justify-between text-xs text-slate-500 mb-1"
                                             >
-                                                <span>알뜰함</span>
-                                                <span>럭셔리</span>
+                                                <span
+                                                    >알뜰함
+                                                    <span
+                                                        id="frugality-label"
+                                                    ></span
+                                                ></span>
+                                                <span
+                                                    >럭셔리
+                                                    <span
+                                                        id="luxury-label"
+                                                    ></span
+                                                ></span>
                                             </div>
                                             <div
                                                 class="h-2 bg-slate-100 rounded-full overflow-hidden"
                                             >
                                                 <div
+                                                    id="frugality-bar"
                                                     class="h-full bg-indigo-500 w-[80%] rounded-full"
                                                 ></div>
                                             </div>
@@ -976,72 +941,1196 @@
         </div>
 
         <div
-            id="premiumModal"
-            class="fixed inset-0 z-[100] hidden"
+            id="schedulePreviewModal"
+            class="fixed inset-0 z-[150] hidden"
             aria-labelledby="modal-title"
             role="dialog"
             aria-modal="true"
         >
             <div
-                class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm transition-opacity opacity-0"
-                id="premiumBackdrop"
+                class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity"
+                onclick="closeScheduleModal()"
             ></div>
+
             <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
                 <div class="flex min-h-full items-center justify-center p-4">
                     <div
-                        id="premiumPanel"
-                        class="bg-white rounded-2xl p-6 shadow-xl opacity-0 scale-95 transition-all max-w-sm w-full relative"
+                        class="relative w-full max-w-6xl h-[85vh] bg-white rounded-3xl shadow-2xl flex flex-col overflow-hidden transform transition-all"
                     >
                         <button
-                            onclick="togglePremiumModal()"
-                            class="absolute top-4 right-4 text-slate-400 hover:text-slate-600"
+                            onclick="closeScheduleModal()"
+                            class="absolute top-4 right-4 z-50 p-2 bg-white/80 hover:bg-white rounded-full text-slate-500 hover:text-red-500 shadow-sm transition-colors"
                         >
-                            <span class="material-symbols-outlined">close</span>
+                            <span class="material-symbols-outlined text-xl"
+                                >close</span
+                            >
                         </button>
-                        <div class="text-center">
-                            <span
-                                class="material-symbols-outlined text-yellow-500 text-5xl mb-4"
-                                >workspace_premium</span
+
+                        <div class="flex h-full">
+                            <aside
+                                class="w-[420px] bg-white border-r border-slate-200 flex flex-col z-20 h-full"
                             >
-                            <h3 class="text-xl font-bold mb-2">
-                                프리미엄 멤버십
-                            </h3>
-                            <p class="text-slate-500 text-sm mb-4">
-                                더 많은 여행 기록 기능과 통계를<br />이용해보세요!
-                            </p>
-                            <button
-                                class="w-full bg-primary text-white py-2 rounded-xl font-bold hover:bg-teal-700 transition-colors"
+                                <div
+                                    class="p-6 pb-4 bg-white z-10 border-b border-slate-100"
+                                >
+                                    <div class="mb-4">
+                                        <span
+                                            class="inline-block px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-[11px] font-bold mb-2"
+                                            >Travel Plan</span
+                                        >
+                                        <h1
+                                            class="text-2xl font-extrabold text-slate-900 tracking-tight leading-tight"
+                                            id="preview-trip-title"
+                                        >
+                                            여행 제목
+                                        </h1>
+                                        <p
+                                            class="text-sm text-slate-500 font-medium mt-1"
+                                            id="preview-trip-dates"
+                                        >
+                                            날짜 정보
+                                        </p>
+                                    </div>
+
+                                    <div
+                                        class="flex p-1 bg-slate-100 rounded-xl"
+                                    >
+                                        <button
+                                            onclick="
+                                                switchPreviewTab('schedule')
+                                            "
+                                            id="preview-tab-schedule"
+                                            class="flex-1 py-2.5 rounded-lg text-sm font-bold bg-white text-slate-800 shadow-sm transition-all"
+                                        >
+                                            상세 일정
+                                        </button>
+                                        <button
+                                            onclick="switchPreviewTab('cost')"
+                                            id="preview-tab-cost"
+                                            class="flex-1 py-2.5 rounded-lg text-sm font-semibold text-slate-500 hover:text-slate-700 transition-all"
+                                        >
+                                            항공권 정보
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div
+                                    id="preview-content-schedule"
+                                    class="flex-1 overflow-y-auto custom-scrollbar px-6 py-4 space-y-4 bg-white"
+                                ></div>
+
+                                <div
+                                    id="preview-content-cost"
+                                    class="hidden flex-1 overflow-y-auto custom-scrollbar px-6 py-4 space-y-4 bg-white"
+                                ></div>
+                            </aside>
+
+                            <section
+                                class="flex-1 relative bg-slate-100 overflow-hidden"
                             >
-                                자세히 보기
-                            </button>
+                                <div
+                                    class="absolute inset-0 bg-cover bg-center opacity-80"
+                                    style="
+                                        background-image: url(&quot;https://assets.website-files.com/63c5e2d6778f8c4c37976150/63c5e2d6778f8c14a5976214_map-placeholder.png&quot;);
+                                        filter: grayscale(20%);
+                                    "
+                                ></div>
+
+                                <svg
+                                    id="preview-map-svg"
+                                    class="absolute inset-0 w-full h-full pointer-events-none z-10"
+                                ></svg>
+                                <div
+                                    class="absolute inset-0 z-20 pointer-events-none"
+                                    id="preview-pins-container"
+                                ></div>
+
+                                <div
+                                    id="preview-map-legend"
+                                    class="absolute bottom-8 right-8 bg-white/90 backdrop-blur-md px-5 py-3 rounded-2xl shadow-lg border border-white/50 z-30 hidden transition-opacity"
+                                ></div>
+                            </section>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
+        <div
+            id="addCountryModal"
+            class="fixed inset-0 z-[100] hidden"
+            aria-labelledby="modal-title"
+            role="dialog"
+            aria-modal="true"
+        >
+            <div
+                id="addCountryBackdrop"
+                class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm transition-opacity opacity-0"
+                onclick="toggleAddCountryModal()"
+            ></div>
+            <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+                <div
+                    class="flex min-h-full items-end justify-center text-center sm:items-center sm:p-0"
+                >
+                    <div
+                        id="addCountryPanel"
+                        class="relative transform overflow-hidden bg-white text-left shadow-xl transition-all w-full sm:my-8 sm:w-full sm:max-w-2xl rounded-t-2xl sm:rounded-2xl opacity-0 translate-y-full sm:translate-y-0"
+                    >
+                        <div
+                            class="p-6 border-b border-slate-200 flex justify-between items-center"
+                        >
+                            <h3 class="text-lg font-bold text-slate-900">
+                                새 여행지 추가
+                            </h3>
+                            <button
+                                type="button"
+                                class="p-2 -m-2 rounded-full hover:bg-slate-100"
+                                onclick="toggleAddCountryModal()"
+                            >
+                                <span
+                                    class="material-symbols-outlined text-slate-500"
+                                    >close</span
+                                >
+                            </button>
+                        </div>
+                        <div class="p-6">
+                            <div
+                                class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"
+                            >
+                                <input
+                                    type="text"
+                                    id="countrySearchInput"
+                                    onkeyup="filterCountries()"
+                                    placeholder="도시 이름 검색..."
+                                    class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary outline-none"
+                                />
+                                <div class="grid grid-cols-2 gap-2">
+                                    <select
+                                        id="travelYearInput"
+                                        class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary outline-none"
+                                    >
+                                        <option value="2026">2026</option>
+                                        <option value="2025">2025</option>
+                                        <option value="2024">2024</option>
+                                        <option value="2023">2023</option>
+                                        <option value="2022">2022</option>
+                                        <option value="2021">2021</option>
+                                        <option value="2020">2020</option>
+                                    </select>
+                                    <select
+                                        id="travelMonthInput"
+                                        class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary outline-none"
+                                    >
+                                        <option value="01">1월</option>
+                                        <option value="02">2월</option>
+                                        <option value="03">3월</option>
+                                        <option value="04">4월</option>
+                                        <option value="05">5월</option>
+                                        <option value="06">6월</option>
+                                        <option value="07">7월</option>
+                                        <option value="08">8월</option>
+                                        <option value="09">9월</option>
+                                        <option value="10">10월</option>
+                                        <option value="11">11월</option>
+                                        <option value="12">12월</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div
+                                id="countryListGrid"
+                                class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4 max-h-[40vh] overflow-y-auto custom-scrollbar pr-2"
+                            ></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div
+            id="detail-modal"
+            class="hidden fixed inset-0 z-[200] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
+        >
+            <div
+                class="bg-white w-full max-w-2xl h-[95vh] rounded-3xl shadow-2xl flex flex-col relative overflow-hidden border border-slate-200 animate-[fadeIn_0.2s_ease-out]"
+            >
+                <button
+                    onclick="closeDetail()"
+                    class="absolute top-6 right-6 z-20 w-10 h-10 bg-black/30 hover:bg-black/50 text-white rounded-full flex items-center justify-center backdrop-blur-md transition-all shadow-lg cursor-pointer"
+                >
+                    <span class="material-symbols-outlined text-[24px]"
+                        >close</span
+                    >
+                </button>
+
+                <div
+                    id="detail-content"
+                    class="flex-1 overflow-y-auto custom-scrollbar bg-white pb-10"
+                ></div>
+            </div>
+        </div>
         <script src="../../js/auth.js"></script>
+        <script src="../../js/data.js"></script>
         <script src="../../js/profile-functions.js"></script>
         <script>
+            // --- 기존 마이페이지 스크립트 ---
             document.addEventListener("DOMContentLoaded", () => {
-                // Check login status, defined in auth.js
-                if (typeof checkLoginStatus === "function") {
-                    checkLoginStatus();
-                }
-
-                // Populate profile details, defined in auth.js
-                if (typeof populateProfile === "function") {
-                    populateProfile();
-                }
-
-                // Initialize passport grid, defined in profile-functions.js
-                if (typeof updatePassportCounts === "function") {
+                if (typeof checkLoginStatus === "function") checkLoginStatus();
+                if (typeof populateProfile === "function") populateProfile();
+                if (typeof updatePassportCounts === "function")
                     updatePassportCounts();
+                if (typeof initPassportGrid === "function") initPassportGrid();
+
+                const myTravelType = localStorage.getItem("myTravelType");
+                if (myTravelType && enneagramTypes[myTravelType]) {
+                    const resultData = enneagramTypes[myTravelType];
+                    const personalityTypeDisplay = document.getElementById(
+                        "personality-type-display",
+                    );
+                    if (personalityTypeDisplay)
+                        personalityTypeDisplay.textContent =
+                            resultData.nickname;
+
+                    const personalityStrengthsContainer =
+                        document.getElementById(
+                            "personality-strengths-container",
+                        );
+                    if (personalityStrengthsContainer) {
+                        personalityStrengthsContainer.innerHTML = "";
+                        resultData.strengths.forEach((strength) => {
+                            const span = document.createElement("span");
+                            span.className =
+                                "px-2 py-1 bg-white/60 rounded-lg text-xs font-medium text-indigo-700";
+                            span.textContent = `#${strength}`;
+                            personalityStrengthsContainer.appendChild(span);
+                        });
+                    }
+
+                    // 추가된 부분: 모달 내용도 업데이트
+                    const personalityModalTitle = document.getElementById(
+                        "personality-modal-title",
+                    );
+                    if (personalityModalTitle) {
+                        personalityModalTitle.textContent = `${resultData.nickname}`;
+                    }
+
+                    const personalityModalRecommendationsList =
+                        document.getElementById(
+                            "personality-modal-recommendations-list",
+                        );
+                    if (personalityModalRecommendationsList) {
+                        personalityModalRecommendationsList.innerHTML = "";
+                        resultData.recommendations.forEach((rec) => {
+                            const li = document.createElement("li");
+                            li.textContent = rec;
+                            personalityModalRecommendationsList.appendChild(li);
+                        });
+                    }
+
+                    const planfulnessBar =
+                        document.getElementById("planfulness-bar");
+                    if (planfulnessBar && resultData.metrics) {
+                        planfulnessBar.style.width = `${resultData.metrics.planfulness}%`;
+                    }
+
+                    const frugalityBar =
+                        document.getElementById("frugality-bar");
+                    if (frugalityBar && resultData.metrics) {
+                        frugalityBar.style.width = `${resultData.metrics.frugality}%`;
+                    }
+
+                    const planfulnessLabel =
+                        document.getElementById("planfulness-label");
+                    const impulsivityLabel =
+                        document.getElementById("impulsivity-label");
+                    if (
+                        planfulnessLabel &&
+                        impulsivityLabel &&
+                        resultData.metrics
+                    ) {
+                        planfulnessLabel.textContent = `(${resultData.metrics.planfulness}%)`;
+                        impulsivityLabel.textContent = `(${100 - resultData.metrics.planfulness}%)`;
+                    }
+
+                    const frugalityLabel =
+                        document.getElementById("frugality-label");
+                    const luxuryLabel = document.getElementById("luxury-label");
+                    if (frugalityLabel && luxuryLabel && resultData.metrics) {
+                        frugalityLabel.textContent = `(${resultData.metrics.frugality}%)`;
+                        luxuryLabel.textContent = `(${100 - resultData.metrics.frugality}%)`;
+                    }
                 }
-                if (typeof initPassportGrid === "function") {
-                    initPassportGrid();
+
+                renderUserPlans();
+                renderUpcomingTrip();
+
+                // 비밀번호 확인 후 편집 모달 열기 로직 연결
+                const verifyBtn = document.getElementById(
+                    "verifyPasswordAndEditBtn",
+                );
+                if (verifyBtn) {
+                    verifyBtn.onclick = function () {
+                        // 실제 비밀번호 검증 로직은 생략하고 바로 넘어갑니다.
+                        closePasswordCheckModal();
+                        toggleEditModal();
+                    };
                 }
             });
+
+            // --- 추가된 모달 제어 함수들 ---
+
+            // 프로필 수정 모달
+            function toggleEditModal() {
+                const modal = document.getElementById("editModal");
+                const backdrop = document.getElementById("modalBackdrop");
+                const panel = document.getElementById("modalPanel");
+
+                if (modal.classList.contains("hidden")) {
+                    modal.classList.remove("hidden");
+                    setTimeout(() => {
+                        backdrop.classList.remove("opacity-0");
+                        panel.classList.remove(
+                            "translate-y-full",
+                            "opacity-0",
+                            "scale-95",
+                        );
+                    }, 10);
+                } else {
+                    backdrop.classList.add("opacity-0");
+                    panel.classList.add(
+                        "translate-y-full",
+                        "opacity-0",
+                        "scale-95",
+                    );
+                    setTimeout(() => {
+                        modal.classList.add("hidden");
+                    }, 300);
+                }
+            }
+
+
+
+            // 여행 성향 분석 모달
+            function togglePersonalityModal() {
+                const modal = document.getElementById("personalityModal");
+                const backdrop = document.getElementById("personalityBackdrop");
+                const panel = document.getElementById("personalityPanel");
+
+                if (modal.classList.contains("hidden")) {
+                    modal.classList.remove("hidden");
+                    setTimeout(() => {
+                        backdrop.classList.remove("opacity-0");
+                        panel.classList.remove("opacity-0", "scale-95");
+                    }, 10);
+                } else {
+                    backdrop.classList.add("opacity-0");
+                    panel.classList.add("opacity-0", "scale-95");
+                    setTimeout(() => {
+                        modal.classList.add("hidden");
+                    }, 300);
+                }
+            }
+
+            function showPersonalityInfo() {
+                togglePersonalityModal();
+            }
+
+            // --- 기존 함수들 (그대로 유지) ---
+
+            function startNewPlan() {
+                localStorage.removeItem("tripPlanner_flightInfo");
+                const loggedInUser = JSON.parse(
+                    localStorage.getItem("loggedInUser"),
+                );
+                const draftKey =
+                    loggedInUser && loggedInUser.email
+                        ? `tripPlanner_draft_${loggedInUser.email}`
+                        : "tripPlanner_draft_guest";
+                localStorage.removeItem(draftKey);
+                window.location.href = "../plan/planner.html";
+            }
+
+            function renderUpcomingTrip() {
+                const upcomingTripContainer = document.getElementById(
+                    "upcoming-trip-container",
+                );
+                const loggedInUser = JSON.parse(
+                    localStorage.getItem("loggedInUser"),
+                );
+
+                if (!loggedInUser || !loggedInUser.email) {
+                    upcomingTripContainer.innerHTML = `<p class="text-center text-slate-500 py-4">로그인 후 다가오는 여행을 확인할 수 있습니다.</p>`;
+                    return;
+                }
+
+                const userPlansKey = `tripPlans_${loggedInUser.email}`;
+                const savedPlans =
+                    JSON.parse(localStorage.getItem(userPlansKey)) || [];
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+
+                const upcomingTrips = savedPlans
+                    .filter((plan) => {
+                        if (!plan.startDate) return false;
+                        const startDate = new Date(plan.startDate);
+                        startDate.setHours(0, 0, 0, 0);
+                        return startDate >= today;
+                    })
+                    .sort(
+                        (a, b) =>
+                            new Date(a.startDate).getTime() -
+                            new Date(b.startDate).getTime(),
+                    );
+
+                if (upcomingTrips.length === 0) {
+                    upcomingTripContainer.innerHTML = `<p class="text-center text-slate-500 py-4">일정이 없습니다.</p>`;
+                    return;
+                }
+
+                const soonestTrip = upcomingTrips[0];
+                const startDateObj = new Date(soonestTrip.startDate);
+                const endDateObj = new Date(soonestTrip.endDate);
+                const timeDiff = startDateObj.getTime() - today.getTime();
+                const daysRemaining = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                const dDayText =
+                    daysRemaining === 0 ? "D-Day" : `D-${daysRemaining}`;
+                const dDayClass =
+                    daysRemaining <= 7
+                        ? "bg-red-100 text-red-700"
+                        : "bg-primary/10 text-primary";
+                const tripDurationTimeDiff =
+                    endDateObj.getTime() - startDateObj.getTime();
+                const tripDurationDays =
+                    tripDurationTimeDiff / (1000 * 3600 * 24);
+                const nights = Math.max(0, Math.round(tripDurationDays));
+                const days = nights + 1;
+                const formatDate = (date) =>
+                    date.toISOString().split("T")[0].replace(/-/g, ".");
+
+                // ★ 버튼 클릭 시 openScheduleModal 호출 ★
+                upcomingTripContainer.innerHTML = `
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="text-xs font-bold px-2 py-1 rounded-lg ${dDayClass}">${dDayText}</span>
+                        <span class="text-xs text-slate-400">${formatDate(startDateObj)}</span>
+                    </div>
+                    <div class="font-bold text-lg text-slate-900 mb-1">
+                        ${getCountryEmoji(soonestTrip.departure)} ${soonestTrip.name}
+                    </div>
+                    <p class="text-xs text-slate-500 mb-3">
+                        ${formatDate(startDateObj)} - ${formatDate(endDateObj)} · ${nights}박 ${days}일
+                    </p>
+                    <button
+                        class="w-full py-2 bg-white border border-slate-200 rounded-xl text-xs font-bold hover:bg-slate-50 transition-colors"
+                        onclick="openScheduleModal('${soonestTrip.id}')"
+                    >
+                        일정 확인하기
+                    </button>
+                `;
+            }
+
+            function renderUserPlans() {
+                const loggedInUser = JSON.parse(
+                    localStorage.getItem("loggedInUser"),
+                );
+                const userPlansContainer =
+                    document.getElementById("content-plans");
+                const tabPlansButton = document.getElementById("tab-plans");
+
+                const newPlanButtonHtml =
+                    userPlansContainer.innerHTML.split("</button>")[0] +
+                    "</button>";
+                userPlansContainer.innerHTML = newPlanButtonHtml;
+
+                if (!loggedInUser || !loggedInUser.email) {
+                    if (tabPlansButton)
+                        tabPlansButton.innerText = `여행 계획 (0)`;
+                    userPlansContainer.innerHTML +=
+                        '<p class="text-center text-slate-500 py-4">로그인 필요</p>';
+                    return;
+                }
+
+                const userPlansKey = `tripPlans_${loggedInUser.email}`;
+                const savedPlans =
+                    JSON.parse(localStorage.getItem(userPlansKey)) || [];
+
+                if (tabPlansButton)
+                    tabPlansButton.innerText = `여행 계획 (${savedPlans.length})`;
+
+                if (savedPlans.length > 0) {
+                    savedPlans.sort(
+                        (a, b) => new Date(a.startDate) - new Date(b.startDate),
+                    );
+                    savedPlans.forEach((plan) => {
+                        const startDate = new Date(plan.startDate);
+                        const endDate = new Date(plan.endDate);
+                        const dayDiff =
+                            (endDate.getTime() - startDate.getTime()) /
+                            (1000 * 3600 * 24);
+                        const nights = Math.max(0, Math.round(dayDiff));
+                        const days = nights + 1;
+                        const departureEmoji = getCountryEmoji(plan.departure);
+
+                        const imageHtml = plan.departure
+                            ? `<div class="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center text-2xl">${departureEmoji}</div>`
+                            : `<div class="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center text-2xl">✈️</div>`;
+
+                        const planHtml = `
+                            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between hover:scale-[1.02] transition-transform cursor-pointer"
+                                onclick="window.location.href = '../plan/planner.html?id=${plan.id}'">
+                                <div class="flex items-center space-x-4">
+                                    ${imageHtml}
+                                    <div>
+                                        <h3 class="font-bold text-slate-900">${plan.name}</h3>
+                                        <p class="text-xs text-slate-500 mt-1">${plan.startDate} - ${plan.endDate} · ${nights}박 ${days}일</p>
+                                    </div>
+                                </div>
+                                <span class="material-symbols-outlined text-slate-400">chevron_right</span>
+                            </div>`;
+                        userPlansContainer.innerHTML += planHtml;
+                    });
+                }
+            }
+
+            function getCountryEmoji(countryName) {
+                if (!countryName) return "✈️";
+                const countryMap = {
+                    일본: "🇯🇵",
+                    프랑스: "🇫🇷",
+                    한국: "🇰🇷",
+                    미국: "🇺🇸",
+                    영국: "🇬🇧",
+                    스페인: "🇪🇸",
+                    이탈리아: "🇮🇹",
+                    독일: "🇩🇪",
+                    태국: "🇹🇭",
+                    베트남: "🇻🇳",
+                    싱가포르: "🇸🇬",
+                    호주: "🇦🇺",
+                    대만: "🇹🇼",
+                    중국: "🇨🇳",
+                    그리스: "🇬🇷",
+                    몰디브: "🇲🇻",
+                    스위스: "🇨🇭",
+                    UAE: "🇦🇪",
+                };
+                const mainCountry = countryName.split(" ")[0];
+                return countryMap[mainCountry] || "✈️";
+            }
+
+            function switchTab(tabId) {
+                ["plans", "posts", "reviews"].forEach((id) => {
+                    document
+                        .getElementById(`content-${id}`)
+                        .classList.add("hidden");
+                    const btn = document.getElementById(`tab-${id}`);
+                    btn.classList.remove(
+                        "bg-primary",
+                        "text-white",
+                        "shadow-md",
+                        "font-bold",
+                    );
+                    btn.classList.add(
+                        "bg-white",
+                        "text-slate-600",
+                        "font-medium",
+                        "border",
+                        "border-slate-200",
+                    );
+                });
+
+                document
+                    .getElementById(`content-${tabId}`)
+                    .classList.remove("hidden");
+                const activeBtn = document.getElementById(`tab-${tabId}`);
+                activeBtn.classList.remove(
+                    "bg-white",
+                    "text-slate-600",
+                    "font-medium",
+                    "border",
+                    "border-slate-200",
+                );
+                activeBtn.classList.add(
+                    "bg-primary",
+                    "text-white",
+                    "shadow-md",
+                    "font-bold",
+                );
+            }
+
+            // --- ★ 일정 미리보기 및 상세 보기 팝업 관련 로직 ★ ---
+
+            // 1. 상세 보기용 더미 데이터
+            const BASE_PLACE_DETAILS = {
+                phone: "+82-2-1234-5678",
+                hours: "09:00 - 18:00",
+                rating: 4.5,
+                reviewCount: 234,
+                tags: ["인기", "사진 명소", "가족 여행", "데이트"],
+                reviews: [
+                    {
+                        id: "1",
+                        author: "여행러버",
+                        rating: 5,
+                        date: "2026-01-15",
+                        content:
+                            "정말 멋진 곳이었어요! 사진 찍기에도 좋고 주변에 맛집도 많아요. 강력 추천합니다!",
+                    },
+                    {
+                        id: "2",
+                        author: "세계여행가",
+                        rating: 4,
+                        date: "2026-01-10",
+                        content:
+                            "기대했던 것보다 좋았습니다. 다만 사람이 많아서 조금 붐볐어요.",
+                    },
+                    {
+                        id: "3",
+                        author: "가족여행",
+                        rating: 5,
+                        date: "2026-01-05",
+                        content:
+                            "아이들과 함께 가기 정말 좋은 곳이에요. 시설도 깨끗하고 직원분들도 친절하셨습니다.",
+                    },
+                ],
+                facilities: [
+                    "주차 가능",
+                    "와이파이",
+                    "휠체어 접근",
+                    "반려동물 동반 가능",
+                ],
+            };
+
+            const FIXED_COORDS = {
+                에펠탑: { top: "20%", left: "10%" },
+                "도쿄 타워": { top: "40%", left: "90%" },
+                "스위스 알프스": { top: "15%", left: "45%" },
+                산토리니: { top: "45%", left: "55%" },
+                "사그라다 파밀리아": { top: "40%", left: "20%" },
+                "몰디브 해변": { top: "85%", left: "70%" },
+                "로마 콜로세움": { top: "35%", left: "50%" },
+                두바이: { top: "55%", left: "65%" },
+                "현지 맛집": { top: "65%", left: "30%" },
+                박물관: { top: "25%", left: "75%" },
+                "기념품 가게": { top: "75%", left: "60%" },
+                카페: { top: "50%", left: "50%" },
+                공원: { top: "35%", left: "25%" },
+            };
+
+            function getPlaceCoordinates(name, location) {
+                const cleanName = name ? name.trim() : "";
+                const cleanLoc = location ? location.trim() : "";
+                if (FIXED_COORDS[cleanName]) return FIXED_COORDS[cleanName];
+                const seedString = cleanLoc || cleanName || "default";
+                let hash = 0;
+                for (let i = 0; i < seedString.length; i++) {
+                    const char = seedString.charCodeAt(i);
+                    hash = (hash << 5) - hash + char;
+                    hash = hash & hash;
+                }
+                hash = Math.abs(hash);
+                const left = 10 + (hash % 81);
+                const top = 15 + ((hash * 7) % 76);
+                return { top: `${top}%`, left: `${left}%` };
+            }
+
+            function getDayColor(index) {
+                const hue = (index * 137.5) % 360;
+                return `hsl(${hue}, 70%, 50%)`;
+            }
+
+            let currentPreviewPlan = null;
+
+            function openScheduleModal(planId) {
+                const loggedInUser = JSON.parse(
+                    localStorage.getItem("loggedInUser"),
+                );
+                if (!loggedInUser) return;
+                const userPlansKey = `tripPlans_${loggedInUser.email}`;
+                const savedPlans = JSON.parse(
+                    localStorage.getItem(userPlansKey) || "[]",
+                );
+
+                currentPreviewPlan = savedPlans.find((p) => p.id === planId);
+
+                if (currentPreviewPlan) {
+                    if (currentPreviewPlan.schedule) {
+                        currentPreviewPlan.schedule.forEach((day) => {
+                            day.items.sort((a, b) =>
+                                a.startTime.localeCompare(b.startTime),
+                            );
+                        });
+                    }
+
+                    renderPreviewBasicInfo();
+                    renderPreviewItinerary();
+                    renderPreviewMap();
+                    renderPreviewFlightInfo();
+
+                    document
+                        .getElementById("schedulePreviewModal")
+                        .classList.remove("hidden");
+                }
+            }
+
+            function closeScheduleModal() {
+                document
+                    .getElementById("schedulePreviewModal")
+                    .classList.add("hidden");
+                currentPreviewPlan = null;
+            }
+
+            function renderPreviewBasicInfo() {
+                document.getElementById("preview-trip-title").textContent =
+                    currentPreviewPlan.name;
+                if (
+                    currentPreviewPlan.startDate &&
+                    currentPreviewPlan.endDate
+                ) {
+                    const s = new Date(currentPreviewPlan.startDate);
+                    const e = new Date(currentPreviewPlan.endDate);
+                    const nights = Math.round((e - s) / (1000 * 3600 * 24));
+                    document.getElementById("preview-trip-dates").textContent =
+                        `${currentPreviewPlan.startDate} - ${currentPreviewPlan.endDate} · ${nights}박 ${nights + 1}일`;
+                }
+            }
+
+            function renderPreviewItinerary() {
+                const container = document.getElementById(
+                    "preview-content-schedule",
+                );
+                container.innerHTML = "";
+                if (
+                    !currentPreviewPlan.schedule ||
+                    currentPreviewPlan.schedule.length === 0
+                ) {
+                    container.innerHTML = `<p class="text-center text-gray-400 py-10">일정이 없습니다.</p>`;
+                    return;
+                }
+
+                currentPreviewPlan.schedule.forEach((day, idx) => {
+                    const dayNum = idx + 1;
+                    const color = getDayColor(idx);
+                    const lightBg = `hsl(${(idx * 137.5) % 360}, 70%, 96%)`;
+                    const dateStr = day.date || `Day ${dayNum}`;
+
+                    const dayHtml = `
+                    <div class="accordion-item ${idx === 0 ? "active" : ""} bg-white border border-slate-100 rounded-[24px] overflow-hidden shadow-sm mb-4" data-day="${dayNum}">
+                        <button class="w-full flex items-center justify-between p-5 hover:bg-slate-50 transition-colors" onclick="togglePreviewDay(${dayNum})">
+                            <div class="flex items-center gap-4">
+                                <span class="w-10 h-10 rounded-full text-white flex items-center justify-center text-sm font-bold shadow-lg" style="background-color: ${color}">${dayNum}</span>
+                                <div class="text-left">
+                                    <h3 class="text-[15px] font-bold text-slate-800">${dayNum}일차</h3>
+                                    <p class="text-[11px] text-slate-400">${dateStr}</p>
+                                </div>
+                            </div>
+                            <span class="material-symbols-outlined text-slate-400 arrow-icon transition-transform">expand_more</span>
+                        </button>
+                        
+                        <div class="accordion-content" style="background-color: ${lightBg}">
+                            <div class="p-4 space-y-3 relative">
+                                <div class="absolute left-[29px] top-6 bottom-6 w-0.5 border-l-2 border-dotted border-slate-300 z-0"></div>
+                                ${day.items
+                                    .map(
+                                        (item, i) => `
+                                    <div class="relative z-10 pl-10">
+                                        <div onclick="openPlaceDetail(${idx}, ${i})"
+                                            class="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm flex gap-3 cursor-pointer hover:border-slate-300 hover:shadow-md transition-all group">
+                                            <div class="flex flex-col items-center gap-1 min-w-[50px]">
+                                                <div class="p-2 rounded-xl" style="background-color: ${color}20; color: ${color}">
+                                                    <span class="material-symbols-outlined text-[20px]">${item.place.category === "custom" ? "edit_location" : "location_on"}</span>
+                                                </div>
+                                                <span class="text-[11px] font-bold text-slate-400">${item.startTime}</span>
+                                            </div>
+                                            <div class="flex-1 min-w-0 py-0.5">
+                                                <h4 class="text-[14px] font-bold text-slate-800 truncate leading-tight group-hover:text-blue-600 transition-colors">${item.place.name}</h4>
+                                                <div class="flex items-center gap-1 mt-1">
+                                                    <span class="material-symbols-outlined text-[12px] text-slate-400">public</span>
+                                                    <p class="text-[12px] text-slate-500 truncate font-medium">${item.place.country || "위치 정보 없음"}</p>
+                                                </div>
+                                                ${
+                                                    item.memo
+                                                        ? `
+                                                    <div class="mt-2 text-[11px] bg-slate-50 p-2 rounded-lg text-slate-600 border border-slate-100 flex items-start gap-1.5">
+                                                        <span class="material-symbols-outlined text-[14px] text-slate-400 mt-[1px]">description</span>
+                                                        <span class="break-words leading-relaxed">${item.memo}</span>
+                                                    </div>
+                                                `
+                                                        : ""
+                                                }
+                                            </div>
+                                            <div class="flex items-center text-slate-300">
+                                                <span class="material-symbols-outlined text-[18px]">chevron_right</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `,
+                                    )
+                                    .join("")}
+                            </div>
+                        </div>
+                    </div>`;
+                    container.insertAdjacentHTML("beforeend", dayHtml);
+                });
+            }
+
+            function renderPreviewMap() {
+                const pinsContainer = document.getElementById(
+                    "preview-pins-container",
+                );
+                const svgContainer = document.getElementById("preview-map-svg");
+                const legendContainer =
+                    document.getElementById("preview-map-legend");
+
+                pinsContainer.innerHTML = "";
+                svgContainer.innerHTML = "";
+                legendContainer.innerHTML = "";
+                svgContainer.setAttribute("viewBox", "0 0 100 100");
+                svgContainer.setAttribute("preserveAspectRatio", "none");
+
+                if (!currentPreviewPlan.schedule) return;
+
+                const legendP = document.createElement("p");
+                legendP.className =
+                    "text-[12px] font-bold text-slate-600 flex items-center";
+                legendContainer.classList.remove("hidden");
+
+                currentPreviewPlan.schedule.forEach((day, dayIdx) => {
+                    const dayNum = dayIdx + 1;
+                    const color = getDayColor(dayIdx);
+
+                    const legendSpan = document.createElement("span");
+                    legendSpan.innerHTML = `<span class="inline-block w-2 h-2 rounded-full ${dayIdx === 0 ? "mr-1" : "ml-3 mr-1"}" style="background-color: ${color}"></span>${dayNum}일차`;
+                    legendP.appendChild(legendSpan);
+
+                    const pinsGroup = document.createElement("div");
+                    pinsGroup.id = `preview-pins-day${dayNum}`;
+                    pinsGroup.className = `transition-opacity duration-300 ${dayIdx === 0 ? "" : "opacity-0"}`;
+                    pinsContainer.appendChild(pinsGroup);
+
+                    let pathData = "";
+                    day.items.forEach((item, itemIdx) => {
+                        const coords = getPlaceCoordinates(
+                            item.place.name,
+                            item.place.country,
+                        );
+                        const pin = document.createElement("div");
+                        pin.className = `map-pin ${dayIdx === 0 ? "visible" : ""}`;
+                        pin.style.top = coords.top;
+                        pin.style.left = coords.left;
+                        pin.style.backgroundColor = color;
+                        pin.style.borderColor = color;
+                        pin.innerHTML = `<span>${itemIdx + 1}</span>`;
+                        pinsGroup.appendChild(pin);
+
+                        const x = parseFloat(coords.left);
+                        const y = parseFloat(coords.top);
+                        pathData +=
+                            itemIdx === 0 ? `M ${x} ${y}` : ` L ${x} ${y}`;
+                    });
+
+                    if (day.items.length >= 2) {
+                        const path = document.createElementNS(
+                            "http://www.w3.org/2000/svg",
+                            "path",
+                        );
+                        path.setAttribute("id", `preview-route-day${dayNum}`);
+                        path.setAttribute(
+                            "class",
+                            `route-path ${dayIdx === 0 ? "visible" : ""}`,
+                        );
+                        path.setAttribute("d", pathData);
+                        path.setAttribute("fill", "none");
+                        path.setAttribute("stroke", color);
+                        path.setAttribute("stroke-width", "1.5");
+                        path.style.vectorEffect = "non-scaling-stroke";
+                        path.setAttribute("stroke-dasharray", "4 4");
+                        svgContainer.appendChild(path);
+                    }
+                });
+                legendContainer.appendChild(legendP);
+            }
+
+            function renderPreviewFlightInfo() {
+                const container = document.getElementById(
+                    "preview-content-cost",
+                );
+                const info = currentPreviewPlan.flightInfo;
+                const fmtPrice = (n) =>
+                    new Intl.NumberFormat("ko-KR").format(n);
+
+                if (!info) {
+                    container.innerHTML = `<div class="p-10 text-center text-slate-400 flex flex-col items-center mt-10">
+                        <div class="bg-slate-100 p-4 rounded-full mb-4">
+                            <span class="material-symbols-outlined text-3xl text-slate-300">flight_off</span>
+                        </div>
+                        <p class="font-bold text-slate-600 mb-1">항공권 정보가 없습니다</p>
+                        <p class="text-xs">여행 계획 단계에서 항공권을 선택해주세요.</p>
+                    </div>`;
+                    return;
+                }
+
+                const getBoldColorClass = (originalColorStr) => {
+                    if (!originalColorStr) return "bg-slate-700 text-white";
+                    if (originalColorStr.includes("sky"))
+                        return "bg-sky-300 text-white shadow-sm shadow-sky-200";
+                    if (originalColorStr.includes("red"))
+                        return "bg-red-300 text-white shadow-sm shadow-red-200";
+                    if (originalColorStr.includes("orange"))
+                        return "bg-orange-300 text-white shadow-sm shadow-orange-200";
+                    if (originalColorStr.includes("green"))
+                        return "bg-green-300 text-white shadow-sm shadow-green-200";
+                    return "bg-slate-700 text-white";
+                };
+
+                const renderCard = (type, flightData) => {
+                    if (!flightData) return "";
+                    const isOut = type === "가는 편";
+                    const themeColor = isOut
+                        ? "text-blue-600"
+                        : "text-indigo-600";
+                    const badgeBg = isOut ? "bg-blue-600" : "bg-indigo-600";
+                    const softBg = isOut ? "bg-blue-50" : "bg-indigo-50";
+                    const airlineLogoClass = getBoldColorClass(
+                        flightData.airline.color,
+                    );
+
+                    return `
+                    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm relative overflow-hidden group hover:border-slate-300 transition-all">
+                        <div class="absolute -right-6 -top-6 w-24 h-24 ${softBg} rounded-full opacity-50 group-hover:scale-110 transition-transform"></div>
+                        
+                        <div class="flex justify-between items-start mb-6 relative z-10">
+                            <div class="flex items-center gap-2">
+                                <span class="px-2 py-1 ${badgeBg} text-white text-[10px] font-bold rounded uppercase tracking-wider">${type}</span>
+                                <span class="text-xs text-slate-500 font-bold">${flightData.date || (isOut ? info.startDate : info.endDate)}</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-sm font-bold text-slate-700">${flightData.airline.name}</span>
+                                <div class="w-7 h-7 rounded-full ${airlineLogoClass} flex items-center justify-center text-[10px] font-bold tracking-tighter">${flightData.airline.code}</div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between relative z-10 mb-5 px-2">
+                            <div class="text-center w-20">
+                                <div class="text-2xl font-black text-slate-800 tracking-tight">${flightData.depTime}</div>
+                                <div class="text-xs font-bold text-slate-400 mt-1 bg-slate-100 px-2 py-0.5 rounded-md inline-block">${flightData.depCode}</div>
+                            </div>
+                            
+                            <div class="flex-1 px-2 flex flex-col items-center justify-center w-full">
+                                <div class="text-[11px] text-slate-500 font-bold mb-2">${flightData.duration || "00시간 00분"}</div>
+                                <div class="w-full relative flex items-center justify-center">
+                                    <div class="absolute inset-x-0 h-[2px] bg-slate-200"></div>
+                                    <span class="material-symbols-outlined text-slate-400 text-lg rotate-90 bg-white px-1 relative z-10">flight</span>
+                                </div>
+                                <div class="text-[10px] ${themeColor} font-bold mt-2">직항</div>
+                            </div>
+
+                            <div class="text-center w-20">
+                                <div class="text-2xl font-black text-slate-800 tracking-tight">${flightData.arrTime}</div>
+                                <div class="text-xs font-bold text-slate-400 mt-1 bg-slate-100 px-2 py-0.5 rounded-md inline-block">${flightData.arrCode}</div>
+                            </div>
+                        </div>
+
+                        <div class="border-t border-dashed border-slate-200 pt-3 flex justify-between items-center relative z-10">
+                            <span class="text-xs text-slate-500 font-medium">1인 항공운임</span>
+                            <span class="text-sm font-bold text-slate-800">${fmtPrice(flightData.price)}원</span>
+                        </div>
+                    </div>`;
+                };
+
+                container.innerHTML = `
+                    <div class="space-y-4" style="animation: fadeIn 0.5s ease-out">
+                        ${renderCard("가는 편", info.outbound)}
+                        ${renderCard("오는 편", info.inbound)}
+
+                        <div class="bg-slate-900 text-white p-6 rounded-2xl shadow-lg mt-6 relative overflow-hidden">
+                            <div class="absolute right-0 top-0 w-32 h-32 bg-white/5 rounded-full blur-2xl pointer-events-none"></div>
+                            
+                            <div class="flex justify-between items-center mb-4 border-b border-white/10 pb-4">
+                                <span class="text-sm text-slate-300 font-medium">탑승객</span>
+                                <span class="font-bold">성인 ${info.passengers}명</span>
+                            </div>
+                            
+                            <div class="flex justify-between items-end relative z-10">
+                                <div class="flex flex-col">
+                                    <span class="text-xs text-slate-400 mb-1">총 결제 금액 (세금포함)</span>
+                                    <div class="text-3xl font-extrabold tracking-tight">${fmtPrice(info.totalPrice)}원</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-4 pb-4">
+                            <p class="text-[11px] text-slate-400 leading-relaxed">
+                                * 상기 시간은 현지 시간 기준입니다.<br>
+                                * 항공사 사정에 의해 예고 없이 변경될 수 있습니다.
+                            </p>
+                        </div>
+                    </div>
+                `;
+            }
+
+            function switchPreviewTab(tabName) {
+                const isSchedule = tabName === "schedule";
+                const sBtn = document.getElementById("preview-tab-schedule");
+                const cBtn = document.getElementById("preview-tab-cost");
+
+                sBtn.className = isSchedule
+                    ? "flex-1 py-2.5 rounded-lg text-sm font-bold bg-white text-slate-800 shadow-sm transition-all"
+                    : "flex-1 py-2.5 rounded-lg text-sm font-semibold text-slate-500 hover:text-slate-700 transition-all";
+                cBtn.className = !isSchedule
+                    ? "flex-1 py-2.5 rounded-lg text-sm font-bold bg-white text-slate-800 shadow-sm transition-all"
+                    : "flex-1 py-2.5 rounded-lg text-sm font-semibold text-slate-500 hover:text-slate-700 transition-all";
+
+                document
+                    .getElementById("preview-content-schedule")
+                    .classList.toggle("hidden", !isSchedule);
+                document
+                    .getElementById("preview-content-cost")
+                    .classList.toggle("hidden", isSchedule);
+            }
+
+            function togglePreviewDay(day) {
+                const item = document.querySelector(
+                    `.accordion-item[data-day="${day}"]`,
+                );
+                const isActive = item.classList.toggle("active");
+                const route = document.getElementById(
+                    `preview-route-day${day}`,
+                );
+                const pinsGroup = document.getElementById(
+                    `preview-pins-day${day}`,
+                );
+
+                if (isActive) {
+                    if (route) route.classList.add("visible");
+                    if (pinsGroup) {
+                        pinsGroup.classList.remove("opacity-0");
+                        pinsGroup
+                            .querySelectorAll(".map-pin")
+                            .forEach((p) => p.classList.add("visible"));
+                    }
+                } else {
+                    if (route) route.classList.remove("visible");
+                    if (pinsGroup) {
+                        pinsGroup.classList.add("opacity-0");
+                        pinsGroup
+                            .querySelectorAll(".map-pin")
+                            .forEach((p) => p.classList.remove("visible"));
+                    }
+                }
+            }
+
+            // ★★★ 상세 보기 모달 관련 함수 ★★★
+            function openPlaceDetail(dayIdx, itemIdx) {
+                const item = currentPreviewPlan.schedule[dayIdx].items[itemIdx];
+                const place = item.place;
+                const modal = document.getElementById("detail-modal");
+                const content = document.getElementById("detail-content");
+
+                if (place.category === "custom") {
+                    content.innerHTML = `
+                    <div class="h-full flex flex-col items-center justify-center p-8 text-center bg-white">
+                        <div class="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mb-4 text-slate-300">
+                            <span class="material-symbols-outlined text-4xl">edit_off</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-800 mb-2">상세 정보 없음</h3>
+                        <p class="text-sm text-slate-500 leading-relaxed">
+                            사용자가 직접 추가한 일정입니다.
+                        </p>
+                    </div>
+                `;
+                } else {
+                    const details = {
+                        ...BASE_PLACE_DETAILS,
+                        name: place.name,
+                        image:
+                            place.image ||
+                            "https://assets.website-files.com/63c5e2d6778f8c4c37976150/63c5e2d6778f8c14a5976214_map-placeholder.png",
+                        address: `123 Travel Street, ${place.country}`,
+                        description: place.description || "",
+                    };
+
+                    content.innerHTML = `
+                    <div class="relative h-64 bg-slate-200">
+                        <img src="${details.image}" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                        <div class="absolute bottom-6 left-6 right-6 text-white">
+                            <h2 class="text-3xl font-bold leading-tight shadow-black drop-shadow-md">${details.name}</h2>
+                            <p class="text-sm opacity-90 mt-1 flex items-center gap-1">
+                                <span class="material-symbols-outlined text-sm">location_on</span> ${place.country}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="p-8 space-y-8 bg-white">
+                        <div class="space-y-4 text-sm text-gray-600 border-b border-gray-100 pb-8">
+                            <div class="flex items-center gap-3">
+                                <span class="material-symbols-outlined text-indigo-600">location_on</span>
+                                <span>${details.address}</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="material-symbols-outlined text-indigo-600">call</span>
+                                <span>${details.phone}</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="material-symbols-outlined text-indigo-600">schedule</span>
+                                <span>${details.hours}</span>
+                            </div>
+                            <div class="flex items-center gap-2 mt-2">
+                                <span class="flex text-orange-400">
+                                    <span class="material-symbols-outlined text-sm fill-current">star</span>
+                                </span>
+                                <span class="font-bold text-gray-800">${details.rating}</span>
+                                <span class="text-gray-400">(${details.reviewCount} reviews)</span>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-wrap gap-2">
+                            ${details.tags.map((tag) => `<span class="px-3 py-1 bg-gray-100 text-gray-600 text-xs rounded-full font-medium">#${tag}</span>`).join("")}
+                        </div>
+
+                        <div>
+                            <h3 class="font-bold text-gray-800 mb-3 text-sm uppercase flex items-center gap-2">
+                                <span class="w-1 h-4 bg-indigo-500 rounded-full"></span> 편의 시설
+                            </h3>
+                            <ul class="grid grid-cols-2 gap-y-2">
+                                ${details.facilities.map((f) => `<li class="flex items-center gap-2 text-sm text-gray-600"><span class="w-1.5 h-1.5 bg-indigo-300 rounded-full"></span>${f}</li>`).join("")}
+                            </ul>
+                        </div>
+
+                        <div>
+                            <h3 class="font-bold text-gray-800 mb-4 text-sm uppercase flex items-center gap-2">
+                                <span class="w-1 h-4 bg-orange-400 rounded-full"></span> 최근 리뷰
+                            </h3>
+                            <div class="space-y-3">
+                                ${details.reviews
+                                    .map(
+                                        (review) => `
+                                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100">
+                                        <div class="flex justify-between items-start mb-1">
+                                            <span class="font-bold text-sm text-gray-900">${review.author}</span>
+                                            <span class="text-xs text-gray-400">${review.date}</span>
+                                        </div>
+                                        <div class="flex text-orange-400 gap-0.5 mb-2 scale-75 origin-left">
+                                            ${Array(review.rating).fill('<span class="material-symbols-outlined text-xs fill-current">star</span>').join("")}
+                                        </div>
+                                        <p class="text-sm text-gray-600 leading-relaxed">${review.content}</p>
+                                    </div>
+                                `,
+                                    )
+                                    .join("")}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                }
+
+                modal.classList.remove("hidden");
+                content.scrollTop = 0;
+            }
+
+            function closeDetail() {
+                document.getElementById("detail-modal").classList.add("hidden");
+            }
         </script>
+        
     </body>
 </html>

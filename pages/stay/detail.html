@@ -1,0 +1,729 @@
+<!doctype html>
+<html class="light" lang="ko">
+    <head>
+        <meta charset="utf-8" />
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <title>여백 - 숙소 상세보기</title>
+        <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+        <link
+            href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;display=swap"
+            rel="stylesheet"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&display=swap"
+            rel="stylesheet"
+        />
+
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+            rel="stylesheet"
+        />
+        <script id="tailwind-config">
+            tailwind.config = {
+                darkMode: "class",
+                theme: {
+                    extend: {
+                        colors: {
+                            primary: "#4C6FFF", // 기존 페이지 포인트 컬러
+                            "yeobaek-primary": "#3b82f6", // 헤더용 브랜드 컬러
+                            "neutral-gray": "#F3F4F6",
+                            "text-main": "#1F2937",
+                            "text-muted": "#6B7280",
+                        },
+                        fontFamily: {
+                            sans: ["Manrope", "sans-serif"],
+                            serif: ["Noto Serif KR", "serif"], // 헤더용
+                        },
+                    },
+                },
+            };
+        </script>
+        <style type="text/tailwindcss">
+            body {
+                font-family: "Manrope", sans-serif;
+                @apply bg-[#F9FAFB] text-text-main;
+            }
+            .material-symbols-outlined {
+                font-variation-settings:
+                    "FILL" 0,
+                    "wght" 300,
+                    "GRAD" 0,
+                    "opsz" 24;
+            }
+            .filled-icon {
+                font-variation-settings: "FILL" 1;
+            }
+            .star-rating {
+                position: relative;
+                display: inline-block;
+                font-size: 20px;
+                color: #e5e7eb;
+            }
+            .star-rating::before {
+                content: "★★★★★";
+            }
+            .star-rating-fill {
+                position: absolute;
+                top: 0;
+                left: 0;
+                white-space: nowrap;
+                overflow: hidden;
+                color: #facc15;
+                content: "★★★★★";
+            }
+            #map-expansion:checked ~ #map-content {
+                max-height: 400px;
+                opacity: 1;
+                margin-top: 1rem;
+            }
+            #map-expansion:checked ~ label .expand-icon {
+                transform: rotate(180deg);
+            }
+        </style>
+    </head>
+    <body class="min-h-screen flex flex-col">
+        <header
+            class="sticky top-0 z-[110] w-full border-b border-gray-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60"
+        >
+            <div
+                class="w-full px-8 relative flex h-20 items-center justify-between max-w-[1440px] mx-auto"
+            >
+                <a
+                    class="flex items-center space-x-2 transition-transform duration-300 hover:scale-105"
+                    href="../main/Main.html"
+                >
+                    <img
+                        src="../../images/Logo.png"
+                        alt="여백 로고"
+                        class="h-9 w-9 rounded-full object-cover"
+                        onerror="this.style.display = 'none'"
+                    />
+                    <span
+                        class="font-serif text-slate-900 font-bold ml-2 text-xl"
+                        >여백</span
+                    >
+                </a>
+
+                <nav
+                    class="hidden md:flex items-center justify-center text-slate-500 gap-8 text-lg font-medium absolute left-1/2 -translate-x-1/2"
+                >
+                    <a
+                        href="../plan/planner.html"
+                        class="group relative py-1 transition-colors hover:text-slate-900"
+                    >
+                        플래너
+                        <span
+                            class="absolute left-0 bottom-0 w-0 h-[2px] bg-yeobaek-primary transition-all duration-300 group-hover:w-full"
+                        ></span>
+                    </a>
+                    <a
+                        href="../stay/search.html"
+                        class="group relative py-1 transition-colors hover:text-slate-900"
+                    >
+                        숙소
+                        <span
+                            class="absolute left-0 bottom-0 w-0 h-[2px] bg-yeobaek-primary transition-all duration-300 group-hover:w-full"
+                        ></span>
+                    </a>
+                    <a
+                        href=""
+                        class="group relative py-1 transition-colors hover:text-slate-900"
+                    >
+                        여행기록
+                        <span
+                            class="absolute left-0 bottom-0 w-0 h-[2px] bg-yeobaek-primary transition-all duration-300 group-hover:w-full"
+                        ></span>
+                    </a>
+                </nav>
+
+                <div class="flex items-center gap-6">
+                    <a
+                        href="table.html"
+                        class="flex items-center gap-2 px-3 py-2 rounded-full hover:bg-slate-100 transition-colors text-slate-600 hover:text-yeobaek-primary font-bold text-sm group"
+                    >
+                        <span
+                            class="material-symbols-outlined text-[20px] text-slate-400 group-hover:text-yeobaek-primary transition-colors"
+                            >compare_arrows</span
+                        >
+                        <span
+                            >비교함 (<span
+                                id="compare-counter-header"
+                                class="tabular-nums"
+                                >0</span
+                            >)</span
+                        >
+                    </a>
+
+                    <div id="auth-links" class="flex items-center gap-6">
+                        <a
+                            href="../auth/SignIn.html"
+                            class="text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors"
+                        >
+                            로그인
+                        </a>
+                        <a
+                            href="../auth/SignUp.html"
+                            class="text-sm font-bold text-white bg-yeobaek-primary px-5 py-2.5 rounded-full shadow-md transition-all duration-200 hover:bg-blue-600 hover:shadow-lg hover:-translate-y-0.5 active:scale-95"
+                        >
+                            회원가입
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <main class="max-w-7xl mx-auto px-6 py-8 flex-grow">
+            <div class="grid grid-cols-12 gap-4 mb-8">
+                <div
+                    class="col-span-12 lg:col-span-8 h-[450px] overflow-hidden rounded-2xl relative"
+                >
+                    <img
+                        alt="Main Hotel Image"
+                        class="w-full h-full object-cover"
+                        src="https://github.com/lei-3m/AIBE5/blob/main/img/team1-2/room/osaka/ummeda.jpg?raw=true"
+                    />
+                </div>
+
+                <div class="col-span-12 lg:col-span-4 flex flex-col gap-4">
+                    <div class="flex items-center justify-between">
+                        <span
+                            class="text-xs font-bold uppercase tracking-widest text-text-muted"
+                            >이용자 사진</span
+                        >
+                        <button
+                            class="text-xs font-bold text-primary hover:underline"
+                        >
+                            전체보기 (124)
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3 h-full">
+                        <div class="rounded-xl overflow-hidden h-[185px]">
+                            <img
+                                alt="User photo 1"
+                                class="w-full h-full object-cover"
+                                src="https://github.com/lei-3m/AIBE5/blob/main/img/team1-2/room/osaka/user/0e649625-cf57-4738-8aee-430c0a966c70.png?raw=true"
+                            />
+                        </div>
+                        <div class="rounded-xl overflow-hidden h-[185px]">
+                            <img
+                                alt="User photo 2"
+                                class="w-full h-full object-cover"
+                                src="https://github.com/lei-3m/AIBE5/blob/main/img/team1-2/room/osaka/user/unnamed2.jpg?raw=true"
+                            />
+                        </div>
+                        <div class="rounded-xl overflow-hidden h-[185px]">
+                            <img
+                                alt="User photo 3"
+                                class="w-full h-full object-cover"
+                                src="https://github.com/lei-3m/AIBE5/blob/main/img/team1-2/room/osaka/user/39a93185-cdb5-4c3e-b381-af73006613b6.png?raw=true"
+                            />
+                        </div>
+                        <div class="rounded-xl overflow-hidden h-[185px]">
+                            <img
+                                alt="User photo 4"
+                                class="w-full h-full object-cover"
+                                src="https://github.com/lei-3m/AIBE5/blob/main/img/team1-2/room/osaka/user/db784e0c-db75-46fb-a4d2-186db68946fe.png?raw=true"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-10">
+                <h1 class="text-4xl font-extrabold mb-4">
+                    우메다 그랜드 게이트웨이 호텔
+                </h1>
+                <div class="flex flex-col gap-4">
+                    <div class="flex flex-wrap items-center gap-x-6 gap-y-2">
+                        <div class="flex items-center gap-2">
+                            <div class="star-rating">
+                                <div
+                                    class="star-rating-fill"
+                                    style="width: 90%"
+                                >
+                                    ★★★★★
+                                </div>
+                            </div>
+                            <span class="font-bold text-lg ml-1">4.8</span>
+                            <span class="text-text-muted">(1,248 개)</span>
+                        </div>
+                        <div
+                            class="hidden md:block w-[1px] h-4 bg-gray-300"
+                        ></div>
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="flex items-center gap-1.5 text-text-main font-bold"
+                            >
+                                <span
+                                    class="material-symbols-outlined text-xl text-primary filled-icon"
+                                    >train</span
+                                >
+                                <span>오사카역 · 도보 5분</span>
+                            </div>
+                            <div class="relative inline-block">
+                                <input
+                                    class="hidden peer"
+                                    id="map-expansion"
+                                    type="checkbox"
+                                />
+                                <label
+                                    class="text-sm font-bold text-[#4C6FFF] hover:underline cursor-pointer flex items-center gap-0.5 select-none"
+                                    for="map-expansion"
+                                >
+                                    지도 보기
+                                    <span
+                                        class="material-symbols-outlined text-sm expand-icon transition-transform duration-200"
+                                        >expand_more</span
+                                    >
+                                </label>
+                                <div
+                                    class="max-h-0 opacity-0 overflow-hidden transition-all duration-300 ease-in-out absolute left-0 top-full mt-0 w-[360px] z-50"
+                                    id="map-content"
+                                >
+                                    <div
+                                        class="bg-white border border-gray-200 rounded-2xl shadow-xl p-2"
+                                    >
+                                        <div
+                                            class="bg-gray-50 w-full h-48 rounded-xl relative overflow-hidden border border-gray-100"
+                                        >
+                                            <div
+                                                class="absolute inset-0 opacity-20"
+                                            >
+                                                <div
+                                                    class="absolute top-1/4 left-0 w-full h-[2px] bg-gray-400 -rotate-12"
+                                                ></div>
+                                                <div
+                                                    class="absolute top-0 left-1/3 w-[2px] h-full bg-gray-400 rotate-6"
+                                                ></div>
+                                                <div
+                                                    class="absolute bottom-1/3 left-0 w-full h-[2px] bg-gray-400 rotate-3"
+                                                ></div>
+                                            </div>
+                                            <div
+                                                class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center"
+                                            >
+                                                <div
+                                                    class="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white shadow-lg ring-4 ring-white"
+                                                >
+                                                    <span
+                                                        class="material-symbols-outlined text-sm filled-icon"
+                                                        >hotel</span
+                                                    >
+                                                </div>
+                                                <span
+                                                    class="text-[10px] font-extrabold bg-white px-2 py-0.5 rounded-full mt-1 border border-gray-100 shadow-sm"
+                                                    >호텔</span
+                                                >
+                                            </div>
+                                            <div
+                                                class="absolute top-1/4 left-1/4 flex flex-col items-center"
+                                            >
+                                                <div
+                                                    class="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center text-white shadow-lg ring-4 ring-white"
+                                                >
+                                                    <span
+                                                        class="material-symbols-outlined text-sm filled-icon"
+                                                        >train</span
+                                                    >
+                                                </div>
+                                                <span
+                                                    class="text-[10px] font-extrabold bg-white px-2 py-0.5 rounded-full mt-1 border border-gray-100 shadow-sm"
+                                                    >오사카역</span
+                                                >
+                                            </div>
+                                            <div
+                                                class="absolute top-[40%] left-[38%] w-12 h-[2px] border-t-2 border-dashed border-primary rotate-[30deg]"
+                                            ></div>
+                                        </div>
+                                        <div class="p-3">
+                                            <p
+                                                class="text-[10px] text-text-muted font-bold uppercase tracking-widest"
+                                            >
+                                                결정 지원 정보
+                                            </p>
+                                            <p
+                                                class="text-xs font-medium text-text-main mt-1"
+                                            >
+                                                우에노역 이리야 출구에서 280m.
+                                                평탄한 도보 경로입니다.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+                <div class="lg:col-span-2 space-y-12">
+                    <section>
+                        <h2 class="text-lg font-bold mb-6">주요 정보</h2>
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                            <div
+                                class="bg-white border border-gray-100 p-4 rounded-xl shadow-sm"
+                            >
+                                <span
+                                    class="material-symbols-outlined text-text-muted mb-2"
+                                    >schedule</span
+                                >
+                                <p
+                                    class="text-[10px] uppercase font-bold text-text-muted tracking-tighter"
+                                >
+                                    체크인/아웃
+                                </p>
+                                <p class="text-sm font-bold">15:00 / 11:00</p>
+                            </div>
+                            <div
+                                class="bg-white border border-gray-100 p-4 rounded-xl shadow-sm"
+                            >
+                                <span
+                                    class="material-symbols-outlined text-text-muted mb-2"
+                                    >bed</span
+                                >
+                                <p
+                                    class="text-[10px] uppercase font-bold text-text-muted tracking-tighter"
+                                >
+                                    트윈룸
+                                </p>
+                                <p class="text-sm font-bold">이용 가능</p>
+                            </div>
+                            <div
+                                class="bg-white border border-gray-100 p-4 rounded-xl shadow-sm"
+                            >
+                                <span
+                                    class="material-symbols-outlined text-text-muted mb-2"
+                                    >smoke_free</span
+                                >
+                                <p
+                                    class="text-[10px] uppercase font-bold text-text-muted tracking-tighter"
+                                >
+                                    흡연 정책
+                                </p>
+                                <p class="text-sm font-bold">금연실</p>
+                            </div>
+                            <div
+                                class="bg-white border border-gray-100 p-4 rounded-xl shadow-sm"
+                            >
+                                <span
+                                    class="material-symbols-outlined text-text-muted mb-2"
+                                    >wifi</span
+                                >
+                                <p
+                                    class="text-[10px] uppercase font-bold text-text-muted tracking-tighter"
+                                >
+                                    연결성
+                                </p>
+                                <p class="text-sm font-bold">무료 Wi-Fi</p>
+                            </div>
+                        </div>
+                    </section>
+                    <section>
+                        <div class="flex items-center justify-between mb-6">
+                            <h2 class="text-lg font-bold">여행자 리뷰</h2>
+                            <a
+                                class="text-sm font-bold text-primary hover:underline"
+                                href="#"
+                                >모든 리뷰 보기</a
+                            >
+                        </div>
+                        <div class="space-y-4">
+                            <div
+                                class="p-5 bg-white border border-gray-100 rounded-2xl shadow-sm"
+                            >
+                                <div class="flex gap-0.5 mb-2">
+                                    <span class="text-yellow-400 text-sm"
+                                        >★★★★★</span
+                                    >
+                                </div>
+                                <p
+                                    class="text-sm text-text-main leading-relaxed italic"
+                                >
+                                    생각보다 깨끗하고 역하고 가까워서 시간
+                                    효율적으로 쓰기 좋음.
+                                </p>
+                                <p
+                                    class="mt-3 text-xs font-bold text-text-muted"
+                                >
+                                    male****
+                                </p>
+                            </div>
+                            <div
+                                class="p-5 bg-white border border-gray-100 rounded-2xl shadow-sm"
+                            >
+                                <div class="flex gap-0.5 mb-2">
+                                    <span class="text-yellow-400 text-sm"
+                                        >★★★★</span
+                                    ><span class="text-gray-200 text-sm"
+                                        >★</span
+                                    >
+                                </div>
+                                <p
+                                    class="text-sm text-text-main leading-relaxed italic"
+                                >
+                                    방이 생각보다 작긴 했는데 친구랑 같이
+                                    여행가서 묵기에 괜찮았어요. 방도 깔끔하고요.
+                                    역하고 가깝다길래 시끄러울 줄 알았는데
+                                    조용해요. 여행하는동안 엄청 돌아다녀서
+                                    다리아팠는데 역하고 접근성도 괜찮고 직원들도
+                                    친절했습니다. 근데 온수가 좀 빨리빨리
+                                    안나와요.
+                                </p>
+                                <p
+                                    class="mt-3 text-xs font-bold text-text-muted"
+                                >
+                                    lili****
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <div class="lg:col-span-1">
+                    <div class="sticky top-24">
+                        <div
+                            class="bg-white border border-gray-200 rounded-3xl p-8 shadow-sm"
+                        >
+                            <div class="mb-8">
+                                <div
+                                    class="flex items-center justify-between mb-2"
+                                >
+                                    <p
+                                        class="text-sm font-bold text-text-muted"
+                                    >
+                                        트윈룸
+                                    </p>
+                                    <span
+                                        class="bg-green-100 text-green-700 px-2 py-0.5 rounded text-[10px] font-black uppercase"
+                                        >최저가</span
+                                    >
+                                </div>
+                                <div class="flex items-baseline gap-1">
+                                    <span
+                                        class="text-4xl font-extrabold tracking-tight"
+                                        >₩195,000</span
+                                    >
+                                    <span class="text-text-muted font-medium"
+                                        >/1박</span
+                                    >
+                                </div>
+                                <p class="text-xs text-text-muted mt-1 italic">
+                                    세금 및 수수료 포함
+                                </p>
+                            </div>
+                            <div class="space-y-4">
+                                <button
+                                    class="w-full bg-primary hover:bg-[#3d5ed9] text-white font-bold py-4 rounded-2xl transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2"
+                                >
+                                    <span
+                                        class="material-symbols-outlined text-xl"
+                                        >calendar_add_on</span
+                                    >
+                                    플래너에 추가
+                                </button>
+
+                                <div class="flex items-center gap-3">
+                                    <button
+                                        class="flex-1 flex items-center justify-center gap-2 py-3 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors"
+                                    >
+                                        <span
+                                            class="material-symbols-outlined text-pink-500"
+                                            >favorite</span
+                                        >
+                                        <span class="text-sm font-bold"
+                                            >좋아요</span
+                                        >
+                                    </button>
+
+                                    <button
+                                        id="addToCompareBtn"
+                                        class="flex-1 flex items-center justify-center gap-2 py-3 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors"
+                                    >
+                                        <span
+                                            class="material-symbols-outlined text-primary"
+                                            >compare_arrows</span
+                                        >
+                                        <span class="text-sm font-bold"
+                                            >비교함 담기</span
+                                        >
+                                    </button>
+                                </div>
+                            </div>
+                            <div
+                                class="mt-8 pt-8 border-t border-gray-100 space-y-3"
+                            >
+                                <p
+                                    class="text-[10px] font-bold text-text-muted uppercase tracking-widest"
+                                >
+                                    예약 가능 사이트
+                                </p>
+                                <div
+                                    class="flex items-center justify-between py-2 border-b border-gray-50"
+                                >
+                                    <span class="text-sm font-semibold"
+                                        >공식 웹사이트</span
+                                    >
+                                    <span class="text-sm font-bold"
+                                        >₩195,000</span
+                                    >
+                                </div>
+                                <div
+                                    class="flex items-center justify-between py-2 border-b border-gray-50"
+                                >
+                                    <span class="text-sm font-semibold"
+                                        >예약 포털 A</span
+                                    >
+                                    <span
+                                        class="text-sm font-bold text-text-muted"
+                                        >₩210,000</span
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="bg-gray-100 py-8 border-t border-gray-200 mt-20">
+            <div class="container mx-auto text-center text-gray-500 text-sm">
+                © 2026 여백. All rights reserved.
+            </div>
+        </footer>
+        <div
+            id="toast-message"
+            class="fixed bottom-5 left-1/2 -translate-x-1/2 bg-gray-900 text-white px-4 py-3 rounded-lg shadow-lg opacity-0 transition-opacity duration-300 pointer-events-none z-50"
+        ></div>
+
+        <div
+            id="toast-message"
+            class="fixed bottom-8 left-1/2 -translate-x-1/2 z-[100] opacity-0 transition-opacity duration-300 pointer-events-none"
+        >
+            <div
+                class="bg-[#1F2937] text-white px-5 py-3 rounded-full shadow-2xl flex items-center gap-3"
+            >
+                <span
+                    class="material-symbols-outlined text-green-400 text-sm filled-icon"
+                    >check_circle</span
+                >
+                <span class="text-sm font-medium" id="toast-text-content"
+                    >비교함에 추가되었습니다</span
+                >
+                <a
+                    href="table.html"
+                    class="text-sm font-bold text-primary hover:underline ml-1"
+                    >[비교함 보기]</a
+                >
+            </div>
+        </div>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                checkLoginStatus();
+                // 알림 토스트 요소 가져오기
+                const toastMessage = document.getElementById("toast-message");
+                // 헤더의 비교함 카운터 요소 가져오기
+                const headerCompareCounter = document.getElementById(
+                    "compare-counter-header",
+                );
+
+                // --- 초기화: 페이지 로드 시 헤더의 비교함 숫자 업데이트 ---
+                updateHeaderCompareCount();
+
+                // 헤더 숫자 업데이트 함수
+                function updateHeaderCompareCount() {
+                    const comparedHotels = JSON.parse(
+                        localStorage.getItem("comparedHotels") || "[]",
+                    );
+                    if (headerCompareCounter) {
+                        headerCompareCounter.textContent =
+                            comparedHotels.length;
+                    }
+                }
+
+                // 알림을 띄우는 함수 (재사용 가능하도록)
+                function showToast(message, duration = 3000) {
+                    const toastContent =
+                        document.getElementById("toast-text-content");
+                    if (toastContent) toastContent.textContent = message;
+
+                    toastMessage.classList.remove(
+                        "opacity-0",
+                        "pointer-events-none",
+                    );
+                    toastMessage.classList.add("opacity-100");
+
+                    setTimeout(() => {
+                        toastMessage.classList.remove("opacity-100");
+                        toastMessage.classList.add(
+                            "opacity-0",
+                            "pointer-events-none",
+                        );
+                    }, duration);
+                }
+
+                // --- 1. '플래너에 추가' 버튼 클릭 이벤트 ---
+                const addToPlannerButton =
+                    document.querySelector("button.bg-primary");
+                if (addToPlannerButton) {
+                    addToPlannerButton.addEventListener("click", () => {
+                        showToast("성공적으로 플래너에 추가되었습니다!");
+                        console.log("플래너에 추가되었습니다.");
+                    });
+                }
+
+                // --- 2. '비교함 담기' 버튼 클릭 이벤트 ---
+                // ID 선택자로 명확하게 버튼을 찾습니다.
+                // (HTML에서 해당 버튼에 id="addToCompareBtn"을 추가해두었습니다)
+                const compareButton =
+                    document.getElementById("addToCompareBtn") ||
+                    document.querySelector(
+                        "button.flex-1.flex.items-center.justify-center.gap-2.py-3:last-child",
+                    );
+
+                if (compareButton) {
+                    compareButton.addEventListener("click", () => {
+                        // 현재 숙소의 고유한 정보 (하드코딩 된 예시)
+                        const currentHotelName =
+                            "우메다 그랜드 게이트웨이 호텔";
+
+                        // 로컬 스토리지 읽기
+                        let comparedHotels = JSON.parse(
+                            localStorage.getItem("comparedHotels") || "[]",
+                        );
+
+                        // 이미 비교함에 있는 숙소인지 확인
+                        const isAlreadyAdded =
+                            comparedHotels.includes(currentHotelName);
+
+                        if (isAlreadyAdded) {
+                            showToast("이미 비교함에 담겨 있습니다.");
+                            return;
+                        }
+
+                        // 비교함에 3개까지 담을 수 있도록 제한
+                        if (comparedHotels.length >= 3) {
+                            showToast(
+                                "비교함은 최대 3개까지만 담을 수 있습니다.",
+                            );
+                            return;
+                        }
+
+                        // 새로운 숙소를 비교함에 추가
+                        comparedHotels.push(currentHotelName);
+                        localStorage.setItem(
+                            "comparedHotels",
+                            JSON.stringify(comparedHotels),
+                        );
+
+                        // **중요: 헤더의 카운터 즉시 업데이트**
+                        updateHeaderCompareCount();
+
+                        showToast(
+                            `'${currentHotelName}'이(가) 비교함에 담겼습니다.`,
+                        );
+                    });
+                }
+            });
+        </script>
+        <script src="../../js/auth.js"></script>
+    </body>
+</html>

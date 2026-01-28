@@ -1,0 +1,1150 @@
+<!doctype html>
+<html lang="ko" class="light">
+    <head>
+        <meta charset="utf-8" />
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <title>항공권 검색 - PINPOINT</title>
+
+        <link href="https://fonts.googleapis.com" rel="preconnect" />
+        <link
+            crossorigin=""
+            href="https://fonts.gstatic.com"
+            rel="preconnect"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800&display=swap"
+            rel="stylesheet"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="../../styles.css" />
+
+        <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+        <script>
+            tailwind.config = {
+                darkMode: "class",
+                theme: {
+                    extend: {
+                        colors: {
+                            primary: "#00897b",
+                            "primary-dark": "#00897b",
+                            secondary: "#f4f4f5",
+                        },
+                        fontFamily: {
+                            sans: ["Pretendard", "sans-serif"],
+                        },
+                keyframes: {
+                    "gentle-bounce": {
+                        "0%, 100%": {
+                            transform: "translateY(-10%)", // 기존 -25%에서 -10%로 축소 
+                            "animation-timing-function": "cubic-bezier(0.8, 0, 1, 1)"
+                        },
+                        "50%": {
+                            transform: "translateY(0)",
+                            "animation-timing-function": "cubic-bezier(0, 0, 0.2, 1)"
+                        }
+                    }
+                },
+                animation: {
+                    // 위에서 만든 gentle-bounce를 사용하도록 변경
+                    "bounce-short": "gentle-bounce 1s infinite",
+                },
+                    },
+                },
+            };
+        </script>
+        <style>
+            body {
+                background-color: #f3f4f6;
+            }
+
+            ::-webkit-scrollbar {
+                width: 8px;
+            }
+            ::-webkit-scrollbar-track {
+                background: transparent;
+            }
+            ::-webkit-scrollbar-thumb {
+                background: #cbd5e1;
+                border-radius: 4px;
+            }
+            ::-webkit-scrollbar-thumb:hover {
+                background: #94a3b8;
+            }
+            input[type="date"] {
+                position: relative;
+            }
+            input[type="date"]::-webkit-calendar-picker-indicator {
+                position: absolute;
+                right: 10px;
+                top: 50%;
+                transform: translateY(-50%);
+                cursor: pointer;
+            }
+            /* [수정] 선택된 카드 스타일 (초록색 테마 적용) */
+            .flight-card.selected {
+                border-color: #00897b;       /* 테두리: 진한 초록 */
+                background-color: #e0f2f1;   /* 배경: 아주 연한 민트 */
+                box-shadow:
+                    0 4px 6px -1px rgba(0, 137, 123, 0.2),
+                    0 2px 4px -1px rgba(0, 137, 123, 0.1);
+            }
+
+            /* [수정] 선택된 버튼 스타일 */
+            .flight-card.selected button {
+                background-color: #00897b;
+                color: white;
+                border-color: #00897b;
+            }
+
+            select.custom-sort {
+                background-position: right 0px center;
+                padding-right: 1.5rem;
+            }
+
+            /* 기본 상태: 아이콘 배경을 흰색으로 설정 */
+            .flight-card .flight-icon-container {
+                background-color: #ffffff;
+            }
+
+            /* [수정] 선택된 상태 아이콘 배경 (카드 배경과 깔맞춤) */
+            .flight-card.selected .flight-icon-container {
+                background-color: #e0f2f1; 
+            }
+        </style>
+    </head>
+    <body class="text-gray-800 flex flex-col min-h-screen">
+                <header class="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+            <div class="w-full px-8 relative flex h-20 items-center justify-between">
+                
+                <a class="flex items-center space-x-2 transition-transform duration-300 hover:scale-105" href="Main.html">
+                    <img
+                        src="../../images/Logo.png"
+                        alt="여백 로고"
+                        class="h-9 w-9 rounded-full object-cover"
+                    />
+                    <span class="font-serif text-foreground font-bold ml-2 text-xl">여백</span>
+                </a>
+
+                <nav
+                    class="flex items-center justify-center text-muted-foreground gap-8 text-lg font-medium"
+                    style="position: absolute; left: 50%; transform: translateX(-50%);"
+                >
+                    <a href="../plan/planner.html" class="group relative py-1 transition-colors hover:text-foreground">
+                        플래너
+                        <span class="absolute left-0 bottom-0 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                    <a href="" class="group relative py-1 transition-colors hover:text-foreground">
+                        숙소
+                        <span class="absolute left-0 bottom-0 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                    <a href="" class="group relative py-1 transition-colors hover:text-foreground">
+                        여행기록
+                        <span class="absolute left-0 bottom-0 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+                </nav>
+
+                <div id="auth-links" class="flex items-center gap-6">
+                    <a href="../auth/SignIn.html" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                        로그인
+                    </a>
+                    <a
+                        href="../auth/SignUp.html"
+                        class="text-sm font-bold text-white bg-primary px-5 py-2.5 rounded-full shadow-md transition-all duration-200 hover:bg-indigo-700 hover:shadow-lg hover:-translate-y-0.5 active:scale-95"
+                    >
+                        회원가입
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <div
+            class="bg-white border-b border-slate-200 shadow-sm relative z-40 transition-all duration-300"
+            id="search-section"
+        >
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-end">
+                    <div class="lg:col-span-2">
+                        <label
+                            class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1"
+                            >출발지</label
+                        >
+                        <div class="relative">
+                            <span class="absolute left-3 inset-y-0 flex items-center pointer-events-none text-slate-400 material-symbols-outlined text-lg">
+                                flight_takeoff
+                            </span>
+                            <select
+                                id="input-origin"
+                                class="w-full pl-10 pr-8 py-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-800 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none appearance-none transition-all cursor-pointer"
+                            >
+                                <option value="ICN">서울/인천 (ICN)</option>
+                                <option value="GMP">서울/김포 (GMP)</option>
+                                <option value="NRT">도쿄/나리타 (NRT)</option>
+                                <option value="KIX">오사카 (KIX)</option>
+                                <option value="BKK">방콕 (BKK)</option>
+                                <option value="JFK">뉴욕 (JFK)</option>
+                            </select>
+  
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-2">
+                        <label
+                            class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1"
+                            >도착지</label
+                        >
+                        <div class="relative">
+                            <span class="absolute left-3 inset-y-0 flex items-center pointer-events-none text-slate-400 material-symbols-outlined text-lg">
+                                flight_land
+                            </span>
+                            <select
+                                id="input-dest"
+                                class="w-full pl-10 pr-8 py-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-800 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none appearance-none transition-all cursor-pointer"
+                            >
+                                <option value="NRT" selected>
+                                    도쿄/나리타 (NRT)
+                                </option>
+                                <option value="KIX">오사카 (KIX)</option>
+                                <option value="BKK">방콕 (BKK)</option>
+                                <option value="DAD">다낭 (DAD)</option>
+                                <option value="JFK">뉴욕 (JFK)</option>
+                                <option value="CDG">파리 (CDG)</option>
+                            </select>
+
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-3">
+                        <label
+                            class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1"
+                            >가는 날 (Departure)</label
+                        >
+                        <div class="relative">
+                            <input
+                                type="date"
+                                id="input-start-date"
+                                class="w-full pl-3 pr-2 py-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-800 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all cursor-pointer"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-3">
+                        <label
+                            class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1"
+                            >오는 날 (Return)</label
+                        >
+                        <div class="relative">
+                            <input
+                                type="date"
+                                id="input-end-date"
+                                class="w-full pl-3 pr-2 py-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-800 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all cursor-pointer"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-1">
+                        <label
+                            class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1"
+                            >인원</label
+                        >
+                        <input
+                            type="number"
+                            id="input-passengers"
+                            min="1"
+                            max="9"
+                            value="2"
+                            class="w-full px-2 py-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-800 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all text-center"
+                        />
+                    </div>
+
+                    <div class="lg:col-span-1">
+                        <button
+                            onclick="app.handleSearchClick()"
+                            class="w-full py-3 bg-primary hover:bg-primary-dark text-white rounded-xl font-bold shadow-lg shadow-primary/25 transition-all active:scale-95 flex items-center justify-center"
+                        >
+                            <span class="material-symbols-outlined"
+                                >search</span
+                            >
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex-grow w-full py-8 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-6xl mx-auto">
+                <div
+                    class="flex flex-col lg:flex-row justify-center gap-8 items-start"
+                >
+                    <div class="w-full max-w-3xl flex-1 flex flex-col gap-6">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h1
+                                    class="text-2xl font-bold text-slate-900 flex items-center gap-2"
+                                    id="search-title"
+                                >
+                                    가는 편 선택
+                                </h1>
+                                <p
+                                    class="text-slate-500 text-sm mt-1"
+                                    id="search-subtitle"
+                                ></p>
+                            </div>
+
+                            <div class="flex items-center gap-2">
+                                <span class="text-sm text-slate-500 font-medium"
+                                    >정렬:</span
+                                >
+                                <select
+                                    id="sort-select"
+                                    onchange="app.handleSortChange(this.value)"
+                                    class="custom-sort border-none bg-transparent py-0 pl-2 pr-8 text-sm font-bold text-primary focus:ring-0 cursor-pointer hover:text-primary-dark transition-colors"
+                                >
+                                    <option value="time">
+                                        시간순 (빠른순)
+                                    </option>
+                                    <option value="price">최저가순</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div
+                            id="flight-list-container"
+                            class="flex flex-col gap-4"
+                        ></div>
+                    </div>
+
+                    <div class="relative w-full lg:w-[350px] shrink-0 lg:mt-20">
+                        <div
+                            class="absolute -top-10 right-1 w-full flex justify-end"
+                        >
+                            <button
+                                onclick="
+                                    if (
+                                        confirm(
+                                            '작성 중인 내용이 저장되지 않습니다.\n계획 페이지로 돌아가시겠습니까?',
+                                        )
+                                    )
+                                        location.href = 'planner.html';
+                                "
+                                class="text-sm font-medium text-slate-400 hover:text-slate-600 transition-colors flex items-center gap-1 py-1"
+                            >
+                                <span>계획으로 돌아가기</span>
+                                <span
+                                    class="material-symbols-outlined text-[16px]"
+                                    >arrow_outward</span
+                                >
+                            </button>
+                        </div>
+
+                        <div
+                            id="trip-summary"
+                            class="hidden bg-white rounded-2xl p-6 border border-slate-200 shadow-sm animate-[fadeIn_0.5s_ease-out] sticky top-24"
+                        >
+                            <h3
+                                class="text-lg font-bold text-slate-900 mb-4 border-b border-slate-100 pb-3"
+                            >
+                                나의 여정
+                            </h3>
+
+                            <div
+                                id="summary-outbound"
+                                class="mb-4 hidden animate-[fadeIn_0.3s_ease-out]"
+                            >
+                                <div
+                                    class="flex justify-between items-center mb-1"
+                                >
+                                    <span
+                                        class="text-xs font-bold text-primary bg-primary/5 px-2 py-1 rounded"
+                                        >가는 편</span
+                                    >
+                                    <span
+                                        class="text-xs text-slate-500 font-medium"
+                                        id="summ-out-date"
+                                    ></span>
+                                </div>
+                                <div
+                                    class="flex justify-between items-center mt-2"
+                                >
+                                    <div
+                                        class="font-bold text-slate-800"
+                                        id="summ-out-airline"
+                                    ></div>
+                                    <div
+                                        class="text-sm text-slate-500"
+                                        id="summ-out-time"
+                                    ></div>
+                                </div>
+                                <div
+                                    class="text-xs text-slate-400 mt-1"
+                                    id="summ-out-route"
+                                ></div>
+                                <div
+                                    class="flex justify-end mt-2 pt-2 border-t border-dashed border-slate-100"
+                                >
+                                    <span
+                                        class="text-sm font-semibold text-slate-700"
+                                        id="summ-out-price"
+                                    ></span>
+                                </div>
+                            </div>
+
+                            <div
+                                id="summary-inbound"
+                                class="mb-4 hidden animate-[fadeIn_0.3s_ease-out]"
+                            >
+                                <div
+                                    class="flex justify-between items-center mb-1"
+                                >
+                                    <span
+                                        class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded"
+                                        >오는 편</span
+                                    >
+                                    <span
+                                        class="text-xs text-slate-500 font-medium"
+                                        id="summ-in-date"
+                                    ></span>
+                                </div>
+                                <div
+                                    class="flex justify-between items-center mt-2"
+                                >
+                                    <div
+                                        class="font-bold text-slate-800"
+                                        id="summ-in-airline"
+                                    ></div>
+                                    <div
+                                        class="text-sm text-slate-500"
+                                        id="summ-in-time"
+                                    ></div>
+                                </div>
+                                <div
+                                    class="text-xs text-slate-400 mt-1"
+                                    id="summ-in-route"
+                                ></div>
+                                <div
+                                    class="flex justify-end mt-2 pt-2 border-t border-dashed border-slate-100"
+                                >
+                                    <span
+                                        class="text-sm font-semibold text-slate-700"
+                                        id="summ-in-price"
+                                    ></span>
+                                </div>
+                            </div>
+
+                            <div
+                                class="border-t-2 border-slate-100 pt-4 mt-4 flex justify-between items-center"
+                            >
+                                <div class="flex flex-col">
+                                    <span
+                                        class="text-sm font-medium text-slate-500"
+                                        >예상 총액</span
+                                    >
+                                    <span
+                                        class="text-xs text-slate-400"
+                                        id="summ-pax-info"
+                                    ></span>
+                                </div>
+                                <span
+                                    class="text-xl font-extrabold text-primary"
+                                    id="summ-total-price"
+                                    >0원</span
+                                >
+                            </div>
+
+                            <div class="mt-4 flex gap-3">
+                                <button
+                                    id="btn-next-step"
+                                    onclick="app.goToNextStep()"
+                                    class="hidden w-full py-3 bg-primary hover:bg-primary-dark text-white rounded-xl font-bold shadow-lg shadow-primary/25 transition-all active:scale-95 flex items-center justify-center gap-2"
+                                >
+                                    <span>다음: 오는 편 선택</span>
+                                    <span
+                                        class="material-symbols-outlined text-sm"
+                                        >arrow_downward</span
+                                    >
+                                </button>
+
+                                <button
+                                    id="btn-back-step"
+                                    onclick="app.goBackStep()"
+                                    class="hidden py-3 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 rounded-xl font-bold transition-all active:scale-95 flex items-center justify-center gap-2"
+                                >
+                                    <span
+                                        class="material-symbols-outlined text-sm"
+                                        >arrow_upward</span
+                                    >
+                                    <span>이전 단계</span>
+                                </button>
+
+                                <button
+                                    id="btn-confirm-trip"
+                                    onclick="app.finishSelection()"
+                                    class="hidden py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold shadow-lg shadow-slate-900/10 transition-all active:scale-95 flex items-center justify-center gap-2"
+                                >
+                                    <span>일정 확정</span>
+                                    <span
+                                        class="material-symbols-outlined text-sm"
+                                        >check</span
+                                    >
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer class="bg-muted py-8">
+            <div
+                class="container mx-auto text-center text-muted-foreground text-sm"
+            >
+                © 2026 여백. All rights reserved.
+            </div>
+        </footer>
+        <script>
+            const AIRLINES = [
+                {
+                    code: "KE",
+                    name: "대한항공",
+                    color: "bg-sky-100 text-sky-700 border-sky-200",
+                },
+                {
+                    code: "OZ",
+                    name: "아시아나",
+                    color: "bg-red-50 text-red-700 border-red-100",
+                },
+                {
+                    code: "7C",
+                    name: "제주항공",
+                    color: "bg-orange-50 text-orange-600 border-orange-100",
+                },
+                {
+                    code: "LJ",
+                    name: "진에어",
+                    color: "bg-green-50 text-green-600 border-green-100",
+                },
+                {
+                    code: "TW",
+                    name: "티웨이",
+                    color: "bg-red-50 text-red-600 border-red-100",
+                },
+            ];
+
+            const app = {
+                state: {
+                    step: "outbound",
+                    origin: "",
+                    destination: "",
+                    startDate: "",
+                    endDate: "",
+                    passengers: 2,
+                    selectedOutbound: null,
+                    selectedInbound: null,
+                    sortBy: "time",
+                },
+
+                init() {
+                    const requestStr =
+                        sessionStorage.getItem("planner_request");
+
+                    if (requestStr) {
+                        const request = JSON.parse(requestStr);
+                        sessionStorage.removeItem("planner_request");
+
+                        if (request.mode === "NEW") {
+                            this.state = {
+                                ...this.state,
+                                origin: "",
+                                destination: "NRT",
+                                startDate: "",
+                                endDate: "",
+                                selectedOutbound: null,
+                                selectedInbound: null,
+                                step: "outbound",
+                            };
+                            sessionStorage.removeItem("flightSearchState");
+                        } else {
+                            // 기존 데이터 복구
+                            this.state = {
+                                ...this.state,
+                                origin:
+                                    this.findCodeByText(request.origin) ||
+                                    "ICN",
+                                destination:
+                                    this.findCodeByText(request.destination) ||
+                                    "NRT",
+                                startDate: request.startDate,
+                                endDate: request.endDate,
+                                // ★ [추가] 받아온 항공권 정보를 state에 적용
+                                selectedOutbound: request.selectedFlights
+                                    ? request.selectedFlights.outbound
+                                    : null,
+                                selectedInbound: request.selectedFlights
+                                    ? request.selectedFlights.inbound
+                                    : null,
+                                // 이미 둘 다 선택되어 있다면 'inbound' 단계나 완료 상태로 보여주는 게 자연스러움
+                                step:
+                                    request.selectedFlights &&
+                                    request.selectedFlights.inbound
+                                        ? "inbound"
+                                        : "outbound",
+                            };
+                        }
+
+                        this.restoreInputs();
+                        this.updateUI();
+
+                        if (this.state.startDate && this.state.endDate) {
+                            // 리스트를 렌더링하고
+                            this.handleSearchClick(true);
+                            // ★ [추가] 선택된 항공권 정보를 요약창(우측 패널)에도 반영
+                            this.updateSummary();
+                        }
+                    } else {
+                        // (기존 새로고침 로직 유지)
+                        const savedState =
+                            sessionStorage.getItem("flightSearchState");
+                        if (savedState) {
+                            this.state = JSON.parse(savedState);
+                            this.restoreInputs();
+                            this.updateUI();
+                            if (this.state.sortBy)
+                                document.getElementById("sort-select").value =
+                                    this.state.sortBy;
+                            if (this.state.step === "outbound") {
+                                this.renderList(
+                                    this.state.origin,
+                                    this.state.destination,
+                                    false,
+                                );
+                            } else {
+                                this.renderList(
+                                    this.state.destination,
+                                    this.state.origin,
+                                    true,
+                                );
+                            }
+                            this.updateSummary();
+                        } else {
+                            const today = new Date();
+                            const threeDaysLater = new Date(today);
+                            threeDaysLater.setDate(today.getDate() + 3);
+                            document.getElementById(
+                                "input-start-date",
+                            ).valueAsDate = today;
+                            document.getElementById(
+                                "input-end-date",
+                            ).valueAsDate = threeDaysLater;
+                            this.handleSearchClick(true);
+                        }
+                    }
+                },
+
+                // ★ [헬퍼 함수 추가] 텍스트(서울/인천)로 코드(ICN) 찾기 (간이 구현)
+                findCodeByText(text) {
+                    if (!text) return null;
+                    // 실제 서비스에선 매핑 테이블 필요. 여기선 간단히 예외처리
+                    if (text.includes("인천")) return "ICN";
+                    if (text.includes("김포")) return "GMP";
+                    if (text.includes("나리타") || text.includes("도쿄"))
+                        return "NRT";
+                    if (text.includes("오사카")) return "KIX";
+                    if (text.includes("방콕")) return "BKK";
+                    if (text.includes("뉴욕")) return "JFK";
+                    if (text.includes("다낭")) return "DAD";
+                    if (text.includes("파리")) return "CDG";
+                    return null;
+                },
+
+                restoreInputs() {
+                    // 값이 없으면 빈 문자열 할당하여 input 초기화
+                    document.getElementById("input-origin").value =
+                        this.state.origin || "ICN";
+                    document.getElementById("input-dest").value =
+                        this.state.destination || "NRT";
+                    document.getElementById("input-start-date").value =
+                        this.state.startDate || "";
+                    document.getElementById("input-end-date").value =
+                        this.state.endDate || "";
+                    document.getElementById("input-passengers").value =
+                        this.state.passengers || 2;
+                },
+
+                saveState() {
+                    sessionStorage.setItem(
+                        "flightSearchState",
+                        JSON.stringify(this.state),
+                    );
+                },
+
+                handleSortChange(value) {
+                    this.state.sortBy = value;
+                    this.saveState();
+
+                    if (this.state.step === "outbound") {
+                        this.renderList(
+                            this.state.origin,
+                            this.state.destination,
+                            false,
+                        );
+                    } else {
+                        this.renderList(
+                            this.state.destination,
+                            this.state.origin,
+                            true,
+                        );
+                    }
+                },
+
+                handleSearchClick(isInitial = false) {
+                    const originVal =
+                        document.getElementById("input-origin").value;
+                    const destVal = document.getElementById("input-dest").value;
+                    const startVal =
+                        document.getElementById("input-start-date").value;
+                    const endVal =
+                        document.getElementById("input-end-date").value;
+                    const paxVal =
+                        parseInt(
+                            document.getElementById("input-passengers").value,
+                        ) || 1;
+
+                    // ★ 빈 값 체크 강화
+                    if (!originVal || !destVal || !startVal || !endVal) {
+                        if (!isInitial) alert("모든 정보를 입력해주세요.");
+                        return;
+                    }
+
+                    if (originVal === destVal) {
+                        alert("출발지와 도착지는 같을 수 없습니다.");
+                        return;
+                    }
+                    if (startVal > endVal) {
+                        alert("오는 날은 가는 날보다 빠를 수 없습니다.");
+                        document.getElementById("input-end-date").value =
+                            startVal;
+                        return;
+                    }
+
+                    const isConditionChanged =
+                        this.state.origin !== originVal ||
+                        this.state.destination !== destVal ||
+                        this.state.startDate !== startVal ||
+                        this.state.endDate !== endVal ||
+                        this.state.passengers !== paxVal;
+
+                    if (!isInitial && isConditionChanged) {
+                        if (
+                            !confirm(
+                                "검색 조건이 변경되어 기존 선택이 초기화됩니다. 계속하시겠습니까?",
+                            )
+                        )
+                            return;
+                        this.state.selectedOutbound = null;
+                        this.state.selectedInbound = null;
+                        this.state.step = "outbound";
+                    }
+
+                    this.state.origin = originVal;
+                    this.state.destination = destVal;
+                    this.state.startDate = startVal;
+                    this.state.endDate = endVal;
+                    this.state.passengers = paxVal;
+
+                    if (this.state.selectedOutbound === null) {
+                        this.state.step = "outbound";
+                    }
+
+                    this.saveState();
+                    this.updateUI();
+
+                    if (this.state.step === "outbound") {
+                        this.renderList(
+                            this.state.origin,
+                            this.state.destination,
+                            false,
+                        );
+                    } else {
+                        this.renderList(
+                            this.state.destination,
+                            this.state.origin,
+                            true,
+                        );
+                    }
+                    this.updateSummary();
+                },
+
+                generateFlights(from, to, isReturn = false) {
+                    const results = [];
+                    const count = 6;
+
+                    for (let i = 0; i < count; i++) {
+                        const baseIndex = i % AIRLINES.length;
+                        const airlineIndex = isReturn
+                            ? AIRLINES.length - 1 - baseIndex
+                            : baseIndex;
+
+                        const airline = AIRLINES[airlineIndex];
+
+                        const startHour = isReturn ? 8 + i * 2 : 7 + i * 2;
+                        const startMin = i % 2 === 0 ? "00" : "30";
+                        const durationMin = 130 + i * 5;
+                        const depTime = `${startHour.toString().padStart(2, "0")}:${startMin}`;
+
+                        let endTotalMin =
+                            startHour * 60 + parseInt(startMin) + durationMin;
+                        let endHour = Math.floor(endTotalMin / 60) % 24;
+                        let endMin = endTotalMin % 60;
+                        const arrTime = `${endHour.toString().padStart(2, "0")}:${endMin.toString().padStart(2, "0")}`;
+
+                        let priceMod = 0;
+                        if (i === 0) priceMod = 20000;
+                        if (i === 1) priceMod = -30000;
+                        if (i === 2) priceMod = 50000;
+                        if (i === 3) priceMod = 40000;
+                        if (i === 4) priceMod = 0;
+                        if (i === 5) priceMod = -20000;
+
+                        let basePrice = 300000 + priceMod;
+                        if (airline.code === "KE" || airline.code === "OZ")
+                            basePrice += 60000;
+
+                        results.push({
+                            id: (isReturn ? "in-" : "out-") + i,
+                            airline: airline,
+                            depCode: from,
+                            arrCode: to,
+                            depTime: depTime,
+                            arrTime: arrTime,
+                            duration: `${Math.floor(durationMin / 60)}시간 ${durationMin % 60}분`,
+                            price: basePrice,
+                        });
+                    }
+                    return results;
+                },
+
+                renderList(from, to, isReturn) {
+                    const container = document.getElementById(
+                        "flight-list-container",
+                    );
+                    container.innerHTML = "";
+
+                    let flights = this.generateFlights(from, to, isReturn);
+
+                    if (this.state.sortBy === "price") {
+                        flights.sort((a, b) => a.price - b.price);
+                    } else {
+                        flights.sort((a, b) =>
+                            a.depTime.localeCompare(b.depTime),
+                        );
+                    }
+
+                    const currentSelected = isReturn
+                        ? this.state.selectedInbound
+                        : this.state.selectedOutbound;
+
+                    flights.forEach((flight) => {
+                        const isSelected =
+                            currentSelected &&
+                            currentSelected.depTime === flight.depTime &&
+                            currentSelected.airline.code ===
+                                flight.airline.code;
+
+                        const flightJson = encodeURIComponent(
+                            JSON.stringify(flight),
+                        );
+                        const selectedClass = isSelected
+                            ? "selected"
+                            : "border-slate-200";
+
+                        const buttonText = isSelected ? "선택됨" : "선택";
+                        const buttonClass = isSelected
+                            ? "bg-primary text-white border-primary"
+                            : "bg-white border-2 border-slate-200 hover:border-primary hover:text-primary text-slate-600";
+
+                        const html = `
+                <div class="flight-card bg-white rounded-2xl p-5 border-2 ${selectedClass} shadow-sm hover:shadow-md transition-all group animate-[fadeIn_0.5s_ease-out]">
+                    <div class="flex flex-col md:flex-row gap-6 items-center">
+                        <div class="flex items-center gap-4 w-full md:w-1/4">
+                            <div class="size-12 rounded-full flex items-center justify-center font-bold border ${flight.airline.color}">
+                                ${flight.airline.code}
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-900">${flight.airline.name}</h4>
+                                <span class="text-xs text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">Economy</span>
+                            </div>
+                        </div>
+                        <div class="flex-1 w-full flex items-center justify-between gap-4 text-center">
+                            <div class="text-left md:text-center">
+                                <p class="text-xl font-bold text-slate-900">${flight.depTime}</p>
+                                <p class="text-xs text-slate-400">${flight.depCode}</p>
+                            </div>
+                            
+                            <div class="flex flex-col items-center flex-1 px-4">
+                                <p class="text-xs text-slate-500 mb-2">${flight.duration}</p>
+                                <div class="relative w-full flex items-center justify-center h-6">
+                                    <div class="absolute w-full h-px bg-slate-300 top-1/2 -translate-y-1/2"></div>
+                                    <div class="px-2 relative z-10 transition-colors duration-200 flight-icon-container">
+                                        <span class="material-symbols-outlined text-slate-400 text-lg rotate-90">flight</span>
+                                    </div>
+                                </div>
+                                <p class="text-xs text-green-600 font-medium mt-2">직항</p>
+                            </div>
+
+                            <div class="text-right md:text-center">
+                                <p class="text-xl font-bold text-slate-900">${flight.price.toLocaleString()}원</p>
+                                <p class="text-xs text-slate-400">1인 / 편도</p>
+                            </div>
+                        </div>
+                        <div class="w-full md:w-auto flex items-center justify-end min-w-[100px]">
+                            <button onclick="app.selectFlight('${flightJson}')" 
+                                class="px-6 py-2.5 rounded-xl font-bold text-sm transition-colors shadow-sm ${buttonClass}">
+                                ${buttonText}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+                        container.insertAdjacentHTML("beforeend", html);
+                    });
+                },
+
+                selectFlight(flightStr) {
+                    const flight = JSON.parse(decodeURIComponent(flightStr));
+
+                    if (this.state.step === "outbound") {
+                        this.state.selectedOutbound = flight;
+                    } else {
+                        this.state.selectedInbound = flight;
+                    }
+
+                    this.saveState();
+                    this.updateSummary();
+
+                    if (this.state.step === "outbound") {
+                        this.renderList(
+                            this.state.origin,
+                            this.state.destination,
+                            false,
+                        );
+                    } else {
+                        this.renderList(
+                            this.state.destination,
+                            this.state.origin,
+                            true,
+                        );
+                    }
+                },
+
+                goToNextStep() {
+                    if (!this.state.selectedOutbound) {
+                        alert("가는 편 항공권을 먼저 선택해주세요.");
+                        return;
+                    }
+                    this.state.step = "inbound";
+                    this.saveState();
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                    this.updateUI();
+                    this.renderList(
+                        this.state.destination,
+                        this.state.origin,
+                        true,
+                    );
+                    this.updateSummary();
+                },
+
+                goBackStep() {
+                    this.state.step = "outbound";
+                    this.saveState();
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                    this.updateUI();
+                    this.renderList(
+                        this.state.origin,
+                        this.state.destination,
+                        false,
+                    );
+                    this.updateSummary();
+                },
+
+                updateUI() {
+                    const titleEl = document.getElementById("search-title");
+                    const subtitleEl =
+                        document.getElementById("search-subtitle");
+
+                    const getCityName = (code) => {
+                        const selOrigin =
+                            document.getElementById("input-origin");
+                        const selDest = document.getElementById("input-dest");
+                        let text = code;
+                        [...selOrigin.options, ...selDest.options].forEach(
+                            (opt) => {
+                                if (opt.value === code) text = opt.text;
+                            },
+                        );
+                        return text;
+                    };
+
+                    const originName = getCityName(this.state.origin);
+                    const destName = getCityName(this.state.destination);
+
+                    if (this.state.step === "outbound") {
+                        titleEl.innerHTML = `가는 편 선택 <span class="text-sm text-slate-400 font-normal ml-2">(${this.state.startDate})</span> <span class="px-2 py-0.5 rounded-md bg-primary/10 text-primary text-xs font-bold tracking-wide ml-2">OUTBOUND</span>`;
+                        subtitleEl.innerHTML = `${originName} <span class="material-symbols-outlined text-[12px] align-middle px-1">arrow_forward</span> ${destName}`;
+                    } else {
+                        titleEl.innerHTML = `오는 편 선택 <span class="text-sm text-slate-400 font-normal ml-2">(${this.state.endDate})</span> <span class="px-2 py-0.5 rounded-md bg-indigo-100 text-indigo-600 text-xs font-bold tracking-wide ml-2">INBOUND</span>`;
+                        subtitleEl.innerHTML = `${destName} <span class="material-symbols-outlined text-[12px] align-middle px-1">arrow_forward</span> ${originName}`;
+                    }
+                },
+
+                updateSummary() {
+                    const container = document.getElementById("trip-summary");
+                    container.classList.remove("hidden");
+
+                    let totalPrice = 0;
+                    const pax = this.state.passengers;
+                    document.getElementById("summ-pax-info").innerText =
+                        `(성인 ${pax}명)`;
+
+                    if (this.state.selectedOutbound) {
+                        const out = this.state.selectedOutbound;
+                        const outEl =
+                            document.getElementById("summary-outbound");
+                        outEl.classList.remove("hidden");
+
+                        document.getElementById("summ-out-date").innerText =
+                            this.state.startDate;
+                        document.getElementById("summ-out-airline").innerText =
+                            out.airline.name;
+                        document.getElementById("summ-out-time").innerText =
+                            `${out.depTime} - ${out.arrTime}`;
+                        document.getElementById("summ-out-route").innerText =
+                            `${out.depCode} -> ${out.arrCode}`;
+                        const outTotal = out.price * pax;
+                        document.getElementById("summ-out-price").innerText =
+                            `+ ${outTotal.toLocaleString()}원`;
+                        totalPrice += outTotal;
+                    } else {
+                        document
+                            .getElementById("summary-outbound")
+                            .classList.add("hidden");
+                    }
+
+                    if (this.state.selectedInbound) {
+                        const inbound = this.state.selectedInbound;
+                        const inEl = document.getElementById("summary-inbound");
+                        inEl.classList.remove("hidden");
+
+                        document.getElementById("summ-in-date").innerText =
+                            this.state.endDate;
+                        document.getElementById("summ-in-airline").innerText =
+                            inbound.airline.name;
+                        document.getElementById("summ-in-time").innerText =
+                            `${inbound.depTime} - ${inbound.arrTime}`;
+                        document.getElementById("summ-in-route").innerText =
+                            `${inbound.depCode} -> ${inbound.arrCode}`;
+                        const inTotal = inbound.price * pax;
+                        document.getElementById("summ-in-price").innerText =
+                            `+ ${inTotal.toLocaleString()}원`;
+                        totalPrice += inTotal;
+                    } else {
+                        document
+                            .getElementById("summary-inbound")
+                            .classList.add("hidden");
+                    }
+
+                    document.getElementById("summ-total-price").innerText =
+                        totalPrice.toLocaleString() + "원";
+
+                    const btnNext = document.getElementById("btn-next-step");
+                    const btnBack = document.getElementById("btn-back-step");
+                    const btnConfirm =
+                        document.getElementById("btn-confirm-trip");
+
+                    btnNext.classList.add("hidden");
+                    btnBack.classList.add("hidden");
+                    btnConfirm.classList.add("hidden");
+
+                    btnBack.classList.remove("w-full", "flex-1");
+                    btnConfirm.classList.remove("flex-1");
+
+                    if (this.state.step === "outbound") {
+                        if (this.state.selectedOutbound) {
+                            btnNext.classList.remove("hidden");
+                        }
+                    } else {
+                        btnBack.classList.remove("hidden");
+
+                        if (this.state.selectedInbound) {
+                            btnBack.classList.add("flex-1");
+                            btnConfirm.classList.remove("hidden");
+                            btnConfirm.classList.add(
+                                "flex-1",
+                                "animate-bounce-short",
+                            );
+                        } else {
+                            btnBack.classList.add("w-full");
+                        }
+                    }
+                },
+
+                finishSelection() {
+                    if (!this.state.selectedOutbound) {
+                        alert("항공권이 선택되지 않았습니다.");
+                        return;
+                    }
+                    const out = this.state.selectedOutbound;
+
+                    const getCityText = (code) => {
+                        const selOrigin =
+                            document.getElementById("input-origin");
+                        const selDest = document.getElementById("input-dest");
+                        const allOpts = [
+                            ...selOrigin.options,
+                            ...selDest.options,
+                        ];
+                        const matched = allOpts.find(
+                            (opt) => opt.value === code,
+                        );
+                        return matched ? matched.text : code;
+                    };
+
+                    const originText = getCityText(out.depCode);
+                    const destText = getCityText(out.arrCode);
+
+                    const flightData = {
+                        startDate: this.state.startDate,
+                        endDate: this.state.endDate,
+                        departure: originText,
+                        destination: destText,
+                        outbound: this.state.selectedOutbound,
+                        inbound: this.state.selectedInbound,
+                        totalPrice: parseInt(
+                            document
+                                .getElementById("summ-total-price")
+                                .innerText.replace(/[^0-9]/g, ""),
+                        ),
+                        passengers: this.state.passengers,
+                    };
+
+                    localStorage.setItem(
+                        "tripPlanner_flightInfo",
+                        JSON.stringify(flightData),
+                    );
+                    alert(
+                        "항공권 선택이 완료되었습니다! 여행 계획 페이지로 이동합니다.",
+                    );
+
+                    // Requirement 3: 플래너로 이동 (플래너에서 flightInfo를 감지하여 업데이트)
+                    window.location.href = "planner.html";
+                },
+            };
+
+            app.init();
+        </script>
+        <script src="../../js/auth.js"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", checkLoginStatus);
+        </script>
+    </body>
+</html>

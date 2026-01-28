@@ -6,6 +6,10 @@
         <title>여백</title>
         <script src="https://cdn.tailwindcss.com"></script>
         <link rel="stylesheet" href="../../styles.css" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+            rel="stylesheet"
+        />
 
         <style>
             /* Reset and Base Styles */
@@ -39,7 +43,6 @@
                     sans-serif;
                 line-height: 1.6;
                 color: #111827;
-                /* 배경색: 연한 회색 */
                 background-color: #f3f4f6;
                 min-height: 100vh;
                 margin: 0;
@@ -89,21 +92,18 @@
             /* 항공권 그리드 설정 */
             #flightsGrid.flights-grid {
                 display: grid !important;
-                /* PC 화면: 3개씩 나열 */
                 grid-template-columns: repeat(3, 1fr) !important;
                 gap: 2rem !important;
                 width: 100% !important;
                 margin-top: 1rem;
             }
 
-            /* 태블릿 화면 */
             @media (max-width: 1024px) {
                 #flightsGrid.flights-grid {
                     grid-template-columns: repeat(2, 1fr) !important;
                 }
             }
 
-            /* 모바일 화면 */
             @media (max-width: 768px) {
                 #flightsGrid.flights-grid {
                     grid-template-columns: 1fr !important;
@@ -273,7 +273,7 @@
                 box-shadow: 0 6px 16px rgba(255, 107, 0, 0.4);
             }
 
-            /* [수정됨] Modal Styles (블러 효과 추가) */
+            /* Modal Styles */
             .modal {
                 display: none;
                 position: fixed;
@@ -281,12 +281,9 @@
                 left: 0;
                 width: 100%;
                 height: 100%;
-                background: rgba(0, 0, 0, 0.5); /* 어두운 배경 */
-
-                /* 블러 효과 추가: 뒷배경을 흐릿하게 만듦 */
+                background: rgba(0, 0, 0, 0.5);
                 backdrop-filter: blur(5px);
                 -webkit-backdrop-filter: blur(5px);
-
                 z-index: 10000;
                 justify-content: center;
                 align-items: center;
@@ -298,14 +295,13 @@
             }
 
             .modal-content {
-                background: white; /* 팝업 카드는 흰색 유지 */
+                background: white;
                 border-radius: 1rem;
                 max-width: 800px;
                 width: 100%;
                 max-height: 90vh;
                 overflow-y: auto;
                 position: relative;
-                /* 그림자를 조금 더 진하게 주어 배경과 분리감 형성 */
                 box-shadow:
                     0 20px 25px -5px rgba(0, 0, 0, 0.1),
                     0 10px 10px -5px rgba(0, 0, 0, 0.04);
@@ -659,7 +655,7 @@
             .popular-card-new:hover {
                 transform: translateY(-8px);
                 box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
-                border-color: var(--pm-color-primary);
+                border-color: #3b82f6;
             }
 
             /* Rank Box */
@@ -851,6 +847,33 @@
                 gap: 0.25rem;
             }
 
+            /* Favorite Button (에니어그램 카드용) */
+            .favorite-btn {
+                position: absolute;
+                top: 1rem;
+                right: 1rem;
+                background: rgba(255, 255, 255, 0.3);
+                backdrop-filter: blur(10px);
+                color: white;
+                padding: 0.5rem;
+                border-radius: 50%;
+                border: none;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                z-index: 10;
+            }
+
+            .favorite-btn:hover {
+                background: white;
+                color: #ef4444;
+                transform: scale(1.1);
+            }
+
+            .favorite-btn svg {
+                width: 20px;
+                height: 20px;
+            }
+
             /* Header Buttons */
             .btnIcon1 {
                 background-color: #008774 !important;
@@ -874,6 +897,91 @@
                 transform: scale(1.02);
             }
 
+            /* ===== 🎯 [추가됨] 에니어그램 추천 스타일 ===== */
+            #enneagram-recommendations-section {
+                display: none;
+            }
+
+            #enneagram-recommendations-section.show {
+                display: block;
+            }
+
+            .enneagram-section-bg {
+                background: transparent;
+                padding: 4rem 0;
+                margin-bottom: 2rem;
+            }
+
+            .enneagram-badge {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+                background: linear-gradient(to right, #008774, #0891b2);
+                color: white;
+                padding: 0.5rem 1.25rem;
+                border-radius: 2rem;
+                font-size: 0.875rem;
+                font-weight: 700;
+                margin-bottom: 1rem;
+                box-shadow: 0 2px 8px rgba(19, 182, 236, 0.3);
+            }
+
+            .material-symbols-outlined {
+                font-variation-settings:
+                    "FILL" 0,
+                    "wght" 400,
+                    "GRAD" 0,
+                    "opsz" 24;
+            }
+
+            .material-symbols-outlined.fill-1 {
+                font-variation-settings:
+                    "FILL" 1,
+                    "wght" 400,
+                    "GRAD" 0,
+                    "opsz" 24;
+            }
+
+            #recommendationsGrid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 2rem;
+                margin-top: 2rem;
+            }
+
+            .group:hover h3 {
+                color: #008774 !important;
+            }
+
+            .border-primary {
+                border-color: #008774 !important;
+            }
+
+            .custom-scrollbar::-webkit-scrollbar {
+                width: 4px;
+            }
+            .custom-scrollbar::-webkit-scrollbar-track {
+                background: transparent;
+            }
+            .custom-scrollbar::-webkit-scrollbar-thumb {
+                background: #e2e8f0;
+                border-radius: 10px;
+            }
+
+            #destinationModal {
+                z-index: 10001;
+            }
+            #imageGalleryModal {
+                z-index: 10002;
+            }
+            .gallery-image {
+                cursor: pointer;
+                transition: transform 0.3s;
+            }
+            .gallery-image:hover {
+                transform: scale(1.05);
+            }
+
             /* Responsive */
             @media (max-width: 1600px) {
                 .pm-container {
@@ -889,9 +997,15 @@
                 .popular-grid {
                     grid-template-columns: repeat(2, 1fr);
                 }
+                #recommendationsGrid {
+                    grid-template-columns: repeat(2, 1fr);
+                }
             }
             @media (max-width: 768px) {
                 .popular-grid {
+                    grid-template-columns: 1fr;
+                }
+                #recommendationsGrid {
                     grid-template-columns: 1fr;
                 }
             }
@@ -912,7 +1026,10 @@
             <div
                 class="w-full px-8 relative flex h-20 items-center justify-between"
             >
-                <a class="flex items-center space-x-2" href="Main.html">
+                <a
+                    class="flex items-center space-x-2 transition-transform duration-300 hover:scale-105"
+                    href="Main.html"
+                >
                     <img
                         src="../../images/Logo.png"
                         alt="여백 로고"
@@ -925,7 +1042,7 @@
                 </a>
 
                 <nav
-                    class="flex items-center justify-center text-muted-foreground gap-6 text-lg font-medium"
+                    class="flex items-center justify-center text-muted-foreground gap-8 text-lg font-medium"
                     style="
                         position: absolute;
                         left: 50%;
@@ -933,31 +1050,47 @@
                     "
                 >
                     <a
-                        class="transition-colors hover:text-foreground/80 text-foreground/60 hover:text-foreground transition-colors"
                         href="../plan/planner.html"
-                        >플래너</a
+                        class="group relative py-1 transition-colors hover:text-foreground"
                     >
+                        플래너
+                        <span
+                            class="absolute left-0 bottom-0 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full"
+                        ></span>
+                    </a>
                     <a
-                        class="transition-colors hover:text-foreground/80 text-foreground/60 hover:text-foreground transition-colors"
-                        href=""
-                        >숙소</a
+                        href="../stay/search.html"
+                        class="group relative py-1 transition-colors hover:text-foreground"
                     >
+                        숙소
+                        <span
+                            class="absolute left-0 bottom-0 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full"
+                        ></span>
+                    </a>
                     <a
-                        class="transition-colors hover:text-foreground/80 text-foreground/60 hover:text-foreground transition-colors"
                         href=""
-                        >여행기록</a
+                        class="group relative py-1 transition-colors hover:text-foreground"
                     >
+                        여행기록
+                        <span
+                            class="absolute left-0 bottom-0 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full"
+                        ></span>
+                    </a>
                 </nav>
 
-                <div id="auth-links" class="flex items-center gap-4">
-                    <a href="../auth/SignIn.html" class="text-sm font-medium"
-                        >로그인</a
+                <div id="auth-links" class="flex items-center gap-6">
+                    <a
+                        href="../auth/SignIn.html"
+                        class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
                     >
+                        로그인
+                    </a>
                     <a
                         href="../auth/SignUp.html"
-                        class="text-sm font-medium bg-primary text-primary-foreground px-4 py-2 rounded-md"
-                        >회원가입</a
+                        class="text-sm font-bold text-white bg-primary px-5 py-2.5 rounded-full shadow-md transition-all duration-200 hover:bg-indigo-700 hover:shadow-lg hover:-translate-y-0.5 active:scale-95"
                     >
+                        회원가입
+                    </a>
                 </div>
             </div>
         </header>
@@ -1006,7 +1139,8 @@
                             "
                         >
                             <a
-                                href="ai-wizard.html"
+                                href="#"
+                                id="personality-test-btn"
                                 class="btnIcon1"
                                 style="
                                     width: 265px;
@@ -1019,7 +1153,6 @@
                                     font-size: 16px;
                                     gap: 10px;
                                 "
-                                class="hover:opacity-90 transition-opacity font-medium text-base"
                             >
                                 <img
                                     src="../../images/main/ButtonIcon.png"
@@ -1041,7 +1174,7 @@
                             </a>
 
                             <a
-                                href="#popular-destinations"
+                                href="AI_Travel_planner.html"
                                 class="btnIcon2"
                                 style="
                                     width: 265px;
@@ -1073,6 +1206,261 @@
                     </div>
                 </div>
             </section>
+
+            <section
+                id="enneagram-recommendations-section"
+                class="enneagram-section-bg"
+            >
+                <div class="pm-container">
+                    <div style="text-align: center; margin-bottom: 3rem">
+                        <div class="enneagram-badge">
+                            <span>✨</span>
+                            AI 맞춤 추천
+                        </div>
+                        <h2 class="section-title">
+                            <span id="enneagramNickname">나를 위한</span> 맞춤
+                            추천
+                        </h2>
+                        <p class="section-subtitle" id="enneagramSubtitle">
+                            에니어그램 성향 기반 인기 여행지
+                        </p>
+                    </div>
+                    <!-- AI 맞춤 추천 여행지 그리드 (카드) -->
+                    <div id="recommendationsGrid"></div>
+                </div>
+            </section>
+
+            <div id="destinationModal" class="modal">
+                <div
+                    class="bg-white w-full max-w-6xl h-[85vh] rounded-xl shadow-2xl overflow-hidden flex flex-col relative"
+                >
+                    <div
+                        class="flex items-center justify-between px-8 py-4 border-b border-gray-200 shrink-0"
+                    >
+                        <div class="flex items-center gap-2">
+                            <span
+                                class="material-symbols-outlined"
+                                style="color: #008774"
+                                >auto_awesome</span
+                            >
+                            <span
+                                class="text-sm font-semibold uppercase tracking-wider"
+                                style="color: #008774"
+                                >AI 여행지 스포트라이트</span
+                            >
+                        </div>
+                        <button
+                            class="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                            onclick="closeEnneagramModal()"
+                        >
+                            <span class="material-symbols-outlined text-xl"
+                                >close</span
+                            >
+                        </button>
+                    </div>
+
+                    <div class="flex flex-1 overflow-hidden">
+                        <div
+                            class="w-1/2 overflow-y-auto custom-scrollbar p-8 border-r border-gray-200"
+                        >
+                            <div class="mb-6">
+                                <div
+                                    class="flex items-center gap-2 text-gray-500 text-sm mb-2"
+                                >
+                                    <span>여행지</span>
+                                    <span
+                                        class="material-symbols-outlined text-xs"
+                                        >chevron_right</span
+                                    >
+                                    <span id="modalCountry">일본</span>
+                                </div>
+                                <h1
+                                    class="text-4xl font-black leading-tight mb-2"
+                                    id="modalDestination"
+                                >
+                                    교토, 일본
+                                </h1>
+                                <div
+                                    class="flex items-center gap-1 text-yellow-400"
+                                >
+                                    <span
+                                        class="material-symbols-outlined fill-1"
+                                        >star</span
+                                    >
+                                    <span
+                                        class="material-symbols-outlined fill-1"
+                                        >star</span
+                                    >
+                                    <span
+                                        class="material-symbols-outlined fill-1"
+                                        >star</span
+                                    >
+                                    <span
+                                        class="material-symbols-outlined fill-1"
+                                        >star</span
+                                    >
+                                    <span class="material-symbols-outlined"
+                                        >star_half</span
+                                    >
+                                    <span
+                                        class="text-gray-500 text-sm ml-2 font-medium"
+                                        id="modalRating"
+                                        >4.8 (2.4k 리뷰)</span
+                                    >
+                                </div>
+                            </div>
+
+                            <div
+                                id="modalGallery"
+                                class="grid grid-cols-4 grid-rows-2 gap-3 aspect-video mb-8"
+                            ></div>
+
+                            <div class="mb-8">
+                                <h3
+                                    class="text-lg font-bold mb-4 flex items-center gap-2"
+                                >
+                                    <span
+                                        class="material-symbols-outlined"
+                                        style="color: #008774"
+                                        >psychology</span
+                                    >
+                                    왜 당신에게 맞을까요
+                                </h3>
+                                <div
+                                    class="flex flex-wrap gap-2 mb-4"
+                                    id="modalTags"
+                                ></div>
+                                <p
+                                    class="text-gray-600 leading-relaxed text-sm"
+                                    id="modalDescription"
+                                ></p>
+                            </div>
+
+                            <div class="mb-8">
+                                <h3
+                                    class="text-lg font-bold mb-4 flex items-center gap-2"
+                                >
+                                    <span
+                                        class="material-symbols-outlined"
+                                        style="color: #008774"
+                                        >potted_plant</span
+                                    >
+                                    주요 명소
+                                </h3>
+                                <div
+                                    class="grid grid-cols-2 gap-4"
+                                    id="modalLandmarks"
+                                ></div>
+                            </div>
+
+                            <div>
+                                <h3 class="text-lg font-bold mb-3">
+                                    여행지 소개
+                                </h3>
+                                <p
+                                    class="text-gray-600 leading-relaxed text-sm"
+                                    id="modalAbout"
+                                ></p>
+                            </div>
+                        </div>
+
+                        <div class="w-1/2 flex flex-col bg-gray-50">
+                            <div
+                                class="flex-1 overflow-y-auto custom-scrollbar p-8"
+                            >
+                                <div
+                                    class="flex items-center justify-between mb-8"
+                                >
+                                    <h3 class="text-xl font-bold">
+                                        추천 항공편
+                                    </h3>
+                                    <span
+                                        class="text-xs font-bold uppercase tracking-widest px-2 py-1 rounded"
+                                        style="
+                                            color: #008774;
+                                            background: rgba(19, 182, 236, 0.1);
+                                        "
+                                        >최저가</span
+                                    >
+                                </div>
+                                <div class="space-y-4" id="modalFlights"></div>
+                            </div>
+                            <div
+                                class="p-6 bg-white border-t border-gray-200 shrink-0"
+                            >
+                                <div class="flex gap-3">
+                                    <button
+                                        class="flex-1 text-white h-12 rounded-lg font-bold flex items-center justify-center gap-2 transition-all"
+                                        style="
+                                            background: #008774;
+                                            box-shadow: 0 10px 15px -3px
+                                                rgba(19, 182, 236, 0.25);
+                                        "
+                                    >
+                                        <span class="material-symbols-outlined"
+                                            >bookmark_add</span
+                                        >
+                                        내 여행에 저장
+                                    </button>
+                                    <button
+                                        class="px-6 border border-gray-200 hover:bg-gray-50 h-12 rounded-lg font-bold text-sm transition-colors"
+                                        onclick="closeEnneagramModal()"
+                                    >
+                                        닫기
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="imageGalleryModal" class="modal">
+                <button
+                    class="absolute top-6 right-6 p-3 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors z-10"
+                    onclick="closeImageGallery()"
+                >
+                    <span class="material-symbols-outlined text-2xl"
+                        >close</span
+                    >
+                </button>
+                <div
+                    class="relative w-full h-full flex items-center justify-center"
+                >
+                    <button
+                        class="absolute left-6 p-3 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors z-10"
+                        onclick="prevImage()"
+                    >
+                        <span class="material-symbols-outlined text-2xl"
+                            >chevron_left</span
+                        >
+                    </button>
+                    <div
+                        class="w-[800px] h-[600px] flex items-center justify-center"
+                    >
+                        <img
+                            id="galleryImage"
+                            src=""
+                            alt="Gallery Image"
+                            class="w-full h-full object-cover rounded-lg shadow-2xl"
+                        />
+                    </div>
+                    <button
+                        class="absolute right-6 p-3 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors z-10"
+                        onclick="nextImage()"
+                    >
+                        <span class="material-symbols-outlined text-2xl"
+                            >chevron_right</span
+                        >
+                    </button>
+                </div>
+                <div
+                    class="absolute bottom-6 left-1/2 -translate-x-1/2 text-white text-sm"
+                    id="imageCounter"
+                >
+                    1 / 5
+                </div>
+            </div>
 
             <section id="popular-destinations" class="popular-section-bg">
                 <div class="pm-container">
@@ -1181,14 +1569,6 @@
                     </div>
                 </div>
             </div>
-
-            <script src="../../js/data.js"></script>
-            <script src="../../js/trips.js"></script>
-            <script src="../../js/utils.js"></script>
-            <script>
-                // 항공권만 렌더링
-                renderFlights();
-            </script>
 
             <section class="py-20">
                 <div class="container mx-auto px-4">
@@ -1453,10 +1833,10 @@
         <script src="../../js/utils.js"></script>
         <script src="../../js/trips.js"></script>
         <script>
-            // 인기 여행지 렌더링
+            // 인기 여행지 및 항공권 렌더링
             renderPopularDestinations();
+            renderFlights();
 
-            // viewMoreDestinations 함수가 external script에 없다면 여기 정의해두세요.
             if (typeof viewMoreDestinations !== "function") {
                 function viewMoreDestinations() {
                     window.location.href = "results.html";
@@ -1467,6 +1847,41 @@
         <script src="../../js/auth.js"></script>
         <script>
             document.addEventListener("DOMContentLoaded", checkLoginStatus);
+        </script>
+
+        <script src="../../js/enneagram-recommendations.js"></script>
+
+        <!-- 🎯 AI 여행 성향 테스트 로그인 체크 -->
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const personalityTestBtn = document.getElementById(
+                    "personality-test-btn",
+                );
+
+                if (personalityTestBtn) {
+                    personalityTestBtn.addEventListener("click", function (e) {
+                        e.preventDefault(); // 기본 링크 동작 방지
+
+                        // 로그인 상태 확인
+                        const isLoggedIn =
+                            localStorage.getItem("isLoggedIn") === "true";
+                        const currentUser = JSON.parse(
+                            localStorage.getItem("loggedInUser") || "null",
+                        );
+
+                        if (isLoggedIn && currentUser) {
+                            // 로그인 되어 있으면 테스트 페이지로 이동
+                            window.location.href = "AI_Personality_test.html";
+                        } else {
+                            // 로그인 안 되어 있으면 알림 후 로그인 페이지로 이동
+                            alert(
+                                "AI 여행 성향 테스트는 로그인 후 이용하실 수 있습니다. 🔐\n\n로그인 페이지로 이동합니다!",
+                            );
+                            window.location.href = "../auth/SignIn.html";
+                        }
+                    });
+                }
+            });
         </script>
     </body>
 </html>
