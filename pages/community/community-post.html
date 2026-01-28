@@ -38,6 +38,16 @@
             <img id="post-thumbnail" src="" alt="Post thumbnail" class="w-full h-auto rounded-lg mb-4">
             <div id="post-content" class="prose max-w-none dark:prose-invert">
             </div>
+
+            <!-- Edit/Delete Buttons Container -->
+            <div id="edit-delete-buttons" class="mt-8 text-right hidden">
+                <button id="edit-button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2">
+                    수정
+                </button>
+                <button id="delete-button" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                    삭제
+                </button>
+            </div>
         </div>
     </div>
     <footer class="bg-gray-800 text-white py-4 mt-auto">
@@ -58,6 +68,9 @@
             const postThumbnailEl = document.getElementById('post-thumbnail');
             const postContentEl = document.getElementById('post-content');
             const postContainerEl = document.getElementById('post-container');
+            const editDeleteButtonsEl = document.getElementById('edit-delete-buttons');
+            const editButtonEl = document.getElementById('edit-button');
+            const deleteButtonEl = document.getElementById('delete-button');
 
             if (!postId) {
                 postContainerEl.innerHTML = '<p class="text-center text-red-500">게시물을 찾을 수 없습니다. (ID가 없습니다)</p>';
@@ -75,9 +88,29 @@
                 postDateEl.textContent = new Date(post.date).toLocaleDateString('ko-KR');
                 postThumbnailEl.src = post.thumbnail;
                 postThumbnailEl.alt = post.title;
-                // A simple way to display content, assuming it's plain text.
-                // For HTML content, you would use innerHTML, but be cautious of XSS.
                 postContentEl.innerHTML = post.content.replace(/\n/g, '<br>');
+
+                // Check if the current user is the author
+                const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+                if (currentUser && currentUser.id === post.authorId) {
+                    editDeleteButtonsEl.classList.remove('hidden');
+                }
+
+                editButtonEl.addEventListener('click', function () {
+                    // Save the post id to localStorage to be picked up by the main page
+                    localStorage.setItem('editPostId', postId);
+                    // Redirect to the main page
+                    window.location.href = 'community-main.html';
+                });
+
+                deleteButtonEl.addEventListener('click', function () {
+                    if (confirm('정말로 이 게시물을 삭제하시겠습니까?')) {
+                        const updatedPosts = posts.filter(p => p.id !== postId);
+                        localStorage.setItem('communityPosts', JSON.stringify(updatedPosts));
+                        alert('게시물이 삭제되었습니다.');
+                        window.location.href = 'community-main.html';
+                    }
+                });
 
             } else {
                 postContainerEl.innerHTML = `<p class="text-center text-red-500">게시물 (ID: ${postId})을 찾을 수 없습니다.</p>`;
