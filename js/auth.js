@@ -26,6 +26,7 @@ function handleSignUp(event) {
     }
 
     const user = {
+        id: email, // 고유 ID로 email 사용
         name,
         gender: gender.value,
         birthdate,

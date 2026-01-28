@@ -439,25 +439,17 @@
                     id="content-posts"
                     class="space-y-4 hidden animate-fade-in"
                 >
-                    <button
-                        onclick="alert('새 글 작성 페이지로 이동합니다.')"
+                    <a
+                        href="../community/community-main.html?action=new-post"
                         class="w-full py-3 rounded-xl border-2 border-dashed border-slate-300 text-slate-500 font-bold hover:border-primary hover:text-primary transition-colors flex items-center justify-center"
                     >
                         <span class="material-symbols-outlined mr-2"
                             >edit_square</span
                         >
                         새 글 작성하기
-                    </button>
-                    <div
-                        class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 cursor-pointer hover:bg-slate-50 transition-colors"
-                    >
-                        <h3 class="font-bold text-slate-900 mb-2">
-                            혼자 가는 오사카 여행 꿀팁 공유해요! 🍱
-                        </h3>
-                        <p class="text-sm text-slate-500 line-clamp-2">
-                            처음 혼자 해외여행을 가시는 분들을 위해 제가 겪었던
-                            시행착오...
-                        </p>
+                    </a>
+                    <div id="user-posts-container" class="space-y-4">
+                        <!-- 사용자 게시글이 여기에 렌더링됩니다 -->
                     </div>
                 </div>
 
@@ -1173,6 +1165,64 @@
         <script src="../../js/profile-functions.js"></script>
         <script>
             // --- 기존 마이페이지 스크립트 ---
+            // 사용자 커뮤니티 게시글을 렌더링하는 함수
+            function renderUserCommunityPosts() {
+                const userPostsContainer = document.getElementById("user-posts-container");
+                if (!userPostsContainer) return;
+
+                const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+                const tabPostsButton = document.getElementById("tab-posts");
+
+                // loggedInUser가 없거나, id와 email 모두 없을 경우
+                if (!loggedInUser || (!loggedInUser.id && !loggedInUser.email)) {
+                    if (tabPostsButton) tabPostsButton.innerText = `커뮤니티 글 (0)`;
+                    userPostsContainer.innerHTML = `<p class="text-center text-slate-500 py-4">로그인 후 작성한 글을 확인할 수 있습니다.</p>`;
+                    return;
+                }
+
+                // 게시글 필터링에 사용할 사용자 ID (id가 있으면 id 사용, 없으면 email 사용)
+                const userIdForFiltering = loggedInUser.id || loggedInUser.email;
+                if (!userIdForFiltering) { // 최종적으로도 ID를 얻지 못하면 종료
+                    if (tabPostsButton) tabPostsButton.innerText = `커뮤니티 글 (0)`;
+                    userPostsContainer.innerHTML = `<p class="text-center text-slate-500 py-4">로그인 후 작성한 글을 확인할 수 있습니다.</p>`;
+                    return;
+                }
+
+                const allCommunityPosts = JSON.parse(localStorage.getItem("communityPosts")) || [];
+                // 필터링 시 userIdForFiltering 사용
+                const userPosts = allCommunityPosts.filter(post => post.authorId === userIdForFiltering);
+
+                if (tabPostsButton) tabPostsButton.innerText = `커뮤니티 글 (${userPosts.length})`;
+
+                userPostsContainer.innerHTML = ""; // 기존 내용 초기화
+
+                if (userPosts.length === 0) {
+                    userPostsContainer.innerHTML = `<p class="text-center text-slate-500 py-4">작성한 커뮤니티 글이 없습니다.</p>`;
+                    return;
+                }
+
+                userPosts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()); // 최신순 정렬
+
+                userPosts.forEach(post => {
+                    const postElement = document.createElement("div");
+                    postElement.className = `
+                        bg-white p-5 rounded-2xl shadow-sm border border-slate-100 cursor-pointer hover:bg-slate-50 transition-colors
+                        hover:scale-[1.02] transition-transform
+                    `;
+                    postElement.innerHTML = `
+                        <h3 class="font-bold text-slate-900 mb-2">${post.title}</h3>
+                        <p class="text-sm text-slate-500 line-clamp-2">
+                            ${post.content}
+                        </p>
+                    `;
+                    // 클릭 시 community-main.html의 상세 보기로 이동
+                    postElement.onclick = () => {
+                        window.location.href = `../community/community-main.html?view-post=${post.id}`;
+                    };
+                    userPostsContainer.appendChild(postElement);
+                });
+            }
+
             document.addEventListener("DOMContentLoaded", () => {
                 if (typeof checkLoginStatus === "function") checkLoginStatus();
                 if (typeof populateProfile === "function") populateProfile();
@@ -1262,6 +1312,7 @@
 
                 renderUserPlans();
                 renderUpcomingTrip();
+                renderUserCommunityPosts(); // 추가
 
                 // 비밀번호 확인 후 편집 모달 열기 로직 연결
                 const verifyBtn = document.getElementById(
