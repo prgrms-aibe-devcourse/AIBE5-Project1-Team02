@@ -410,14 +410,14 @@
                     <button
                         onclick="switchTab('posts')"
                         id="tab-posts"
-                        class="flex-shrink-0 px-4 py-2 bg-white text-slate-600 rounded-xl text-sm font-medium border border-slate-200 hover:bg-slate-50 transition-all"
+                        class="flex-shrink-0 px-4 py-2 bg-white text-slate-600 rounded-xl text-sm font-medium border border-slate-200 transition-all"
                     >
                         커뮤니티 글 (5)
                     </button>
                     <button
                         onclick="switchTab('reviews')"
                         id="tab-reviews"
-                        class="flex-shrink-0 px-4 py-2 bg-white text-slate-600 rounded-xl text-sm font-medium border border-slate-200 hover:bg-slate-50 transition-all"
+                        class="flex-shrink-0 px-4 py-2 bg-white text-slate-600 rounded-xl text-sm font-medium border border-slate-200 transition-all"
                     >
                         리뷰 (12)
                     </button>
@@ -647,7 +647,8 @@
                                 <div>
                                     <label
                                         class="block text-sm font-medium text-slate-700 mb-1"
-                                        >이메일</label>
+                                        >이메일</label
+                                    >
                                     <input
                                         type="email"
                                         id="edit-email"
@@ -663,7 +664,8 @@
                                     <div>
                                         <label
                                             class="block text-sm font-medium text-slate-700 mb-1"
-                                            >이름</label>
+                                            >이름</label
+                                        >
                                         <input
                                             type="text"
                                             id="edit-name"
@@ -674,7 +676,8 @@
                                     <div>
                                         <label
                                             class="block text-sm font-medium text-slate-700 mb-1"
-                                            >생년월일</label>
+                                            >생년월일</label
+                                        >
                                         <input
                                             type="date"
                                             id="edit-birthdate"
@@ -686,7 +689,8 @@
                                 <div>
                                     <label
                                         class="block text-sm font-medium text-slate-700 mb-1"
-                                        >성별</label>
+                                        >성별</label
+                                    >
                                     <select
                                         id="edit-gender"
                                         class="w-full px-4 py-2 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary outline-none"
@@ -701,7 +705,8 @@
                                 <div>
                                     <label
                                         class="block text-sm font-medium text-slate-700 mb-1"
-                                        >자기소개</label>
+                                        >자기소개</label
+                                    >
                                     <textarea
                                         id="editBioInput"
                                         rows="3"
@@ -723,7 +728,8 @@
                                         <div>
                                             <label
                                                 class="block text-xs font-medium text-slate-500 mb-1"
-                                                >현재 비밀번호</label>
+                                                >현재 비밀번호</label
+                                            >
                                             <input
                                                 type="password"
                                                 id="currentPasswordInput"
@@ -735,7 +741,8 @@
                                             <div>
                                                 <label
                                                     class="block text-xs font-medium text-slate-500 mb-1"
-                                                    >새 비밀번호</label>
+                                                    >새 비밀번호</label
+                                                >
                                                 <input
                                                     type="password"
                                                     id="newPasswordInput"
@@ -746,7 +753,8 @@
                                             <div>
                                                 <label
                                                     class="block text-xs font-medium text-slate-500 mb-1"
-                                                    >새 비밀번호 확인</label>
+                                                    >새 비밀번호 확인</label
+                                                >
                                                 <input
                                                     type="password"
                                                     id="confirmPasswordInput"
@@ -1167,32 +1175,47 @@
             // --- 기존 마이페이지 스크립트 ---
             // 사용자 커뮤니티 게시글을 렌더링하는 함수
             function renderUserCommunityPosts() {
-                const userPostsContainer = document.getElementById("user-posts-container");
+                const userPostsContainer = document.getElementById(
+                    "user-posts-container",
+                );
                 if (!userPostsContainer) return;
 
-                const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+                const loggedInUser = JSON.parse(
+                    localStorage.getItem("loggedInUser"),
+                );
                 const tabPostsButton = document.getElementById("tab-posts");
 
                 // loggedInUser가 없거나, id와 email 모두 없을 경우
-                if (!loggedInUser || (!loggedInUser.id && !loggedInUser.email)) {
-                    if (tabPostsButton) tabPostsButton.innerText = `커뮤니티 글 (0)`;
+                if (
+                    !loggedInUser ||
+                    (!loggedInUser.id && !loggedInUser.email)
+                ) {
+                    if (tabPostsButton)
+                        tabPostsButton.innerText = `커뮤니티 글 (0)`;
                     userPostsContainer.innerHTML = `<p class="text-center text-slate-500 py-4">로그인 후 작성한 글을 확인할 수 있습니다.</p>`;
                     return;
                 }
 
                 // 게시글 필터링에 사용할 사용자 ID (id가 있으면 id 사용, 없으면 email 사용)
-                const userIdForFiltering = loggedInUser.id || loggedInUser.email;
-                if (!userIdForFiltering) { // 최종적으로도 ID를 얻지 못하면 종료
-                    if (tabPostsButton) tabPostsButton.innerText = `커뮤니티 글 (0)`;
+                const userIdForFiltering =
+                    loggedInUser.id || loggedInUser.email;
+                if (!userIdForFiltering) {
+                    // 최종적으로도 ID를 얻지 못하면 종료
+                    if (tabPostsButton)
+                        tabPostsButton.innerText = `커뮤니티 글 (0)`;
                     userPostsContainer.innerHTML = `<p class="text-center text-slate-500 py-4">로그인 후 작성한 글을 확인할 수 있습니다.</p>`;
                     return;
                 }
 
-                const allCommunityPosts = JSON.parse(localStorage.getItem("communityPosts")) || [];
+                const allCommunityPosts =
+                    JSON.parse(localStorage.getItem("communityPosts")) || [];
                 // 필터링 시 userIdForFiltering 사용
-                const userPosts = allCommunityPosts.filter(post => post.authorId === userIdForFiltering);
+                const userPosts = allCommunityPosts.filter(
+                    (post) => post.authorId === userIdForFiltering,
+                );
 
-                if (tabPostsButton) tabPostsButton.innerText = `커뮤니티 글 (${userPosts.length})`;
+                if (tabPostsButton)
+                    tabPostsButton.innerText = `커뮤니티 글 (${userPosts.length})`;
 
                 userPostsContainer.innerHTML = ""; // 기존 내용 초기화
 
@@ -1201,9 +1224,12 @@
                     return;
                 }
 
-                userPosts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()); // 최신순 정렬
+                userPosts.sort(
+                    (a, b) =>
+                        new Date(b.date).getTime() - new Date(a.date).getTime(),
+                ); // 최신순 정렬
 
-                userPosts.forEach(post => {
+                userPosts.forEach((post) => {
                     const postElement = document.createElement("div");
                     postElement.className = `
                         bg-white p-5 rounded-2xl shadow-sm border border-slate-100 cursor-pointer hover:bg-slate-50 transition-colors
@@ -1357,8 +1383,6 @@
                     }, 300);
                 }
             }
-
-
 
             // 여행 성향 분석 모달
             function togglePersonalityModal() {
@@ -2182,6 +2206,5 @@
                 document.getElementById("detail-modal").classList.add("hidden");
             }
         </script>
-        
     </body>
 </html>
