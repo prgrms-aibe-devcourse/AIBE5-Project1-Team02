@@ -714,8 +714,8 @@
                     <div class="bg-white border-b border-gray-200 px-6 py-4 shadow-sm z-30">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center gap-4">
-                                <input type="text" value="${tripName}" onchange="Store.setState({ tripName: this.value })" class="text-2xl font-semibold text-gray-800 border-none outline-none focus:text-indigo-600 bg-transparent" placeholder="여행 이름 입력" />
-                                ${currentPlanId ? `<span class="px-3 py-1 bg-green-100 text-green-700 text-sm rounded-full">저장됨</span>` : ""}
+                                <input type="text" value="${tripName}" onchange="Store.setState({ tripName: this.value })" class="text-2xl font-semibold text-gray-800 border-1 border-white focus:border-primary rounded-md outline-none focus:text-black focus:ring-[#00897b] bg-transparent" placeholder="여행 이름 입력" />
+
                             </div>
                             <div class="flex gap-3">
                                 <button onclick="Store.setState({ showPlanList: !Store.state.showPlanList })" class="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">${Icons.List} 내 계획 (${savedPlans.length})</button>
