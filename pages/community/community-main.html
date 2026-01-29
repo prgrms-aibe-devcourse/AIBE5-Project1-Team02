@@ -788,6 +788,9 @@
         let currentDetailPost = null;
         let currentLinkedPlanData = null; // To store the plan object for the linked plan modal
 
+        const scheduleIframeModal = document.getElementById("scheduleIframeModal");
+        const scheduleIframe = document.getElementById("schedule-content-iframe");
+
         closeDetailModalBtn.addEventListener("click", () => {
           postDetailModal.classList.add("hidden");
           document.body.classList.remove("overflow-hidden");
@@ -1828,59 +1831,30 @@
             }
           });
 
-        // 연결된 여행 계획 모달 열기 버튼
+        // 연결된 여행 계획 모달 열기 버튼 (iframe으로 schedule.html 로드)
         openLinkedPlanDetailButton.addEventListener("click", () => {
-          if (currentLinkedPlanData) {
-            // 모달 데이터 채우기
-            linkedPlanTitle.textContent = currentLinkedPlanData.name;
-            linkedPlanDates.textContent = `${currentLinkedPlanData.startDate} ~ ${currentLinkedPlanData.endDate}`;
-
-            linkedPlanPlacesList.innerHTML = "";
-            // Add a check to ensure currentLinkedPlanData.places exists and is an array
-            if (
-              currentLinkedPlanData.places &&
-              Array.isArray(currentLinkedPlanData.places)
-            ) {
-              currentLinkedPlanData.places.forEach((place, idx) => {
-                const li = document.createElement("li");
-                li.className =
-                  "flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-xl";
-                li.innerHTML = `<span class="size-6 bg-primary text-white text-xs font-bold rounded-full flex items-center justify-center">${idx + 1}</span>
-                                        <div><p class="font-bold text-sm">${place.name}</p><p class="text-xs text-text-muted-light">${place.address}</p></div>`;
-                linkedPlanPlacesList.appendChild(li);
-              });
-            } else {
-              linkedPlanPlacesList.innerHTML =
-                '<li class="text-text-muted-light dark:text-text-muted-dark text-center py-4">연결된 계획에 장소 정보가 없습니다.</li>';
-            }
-
-            linkedPlanDetailModal.classList.remove("hidden");
-
-            // 지도 업데이트 (필요 시)
-            setTimeout(() => {
-              const centerLocation =
-                currentLinkedPlanData.places &&
-                currentLinkedPlanData.places.length > 0
-                  ? currentLinkedPlanData.places[0]?.location
-                  : { lat: 37.56, lng: 126.97 }; // Default center if no places or location
-
-              if (!linkedPlanMapInstance) {
-                linkedPlanMapInstance = new google.maps.Map(
-                  document.getElementById("linkedPlanMap"),
-                  {
-                    zoom: 12,
-                    center: centerLocation,
-                  },
-                );
-              } else if (centerLocation) {
-                // Check if centerLocation is valid before setting
-                linkedPlanMapInstance.setCenter(centerLocation);
-              }
-            }, 100);
+          if (currentLinkedPlanData && currentLinkedPlanData.id) {
+            
+            // schedule.html에 planId를 전달하여 로드
+            scheduleIframe.src = `../plan/schedule.html?id=${currentLinkedPlanData.id}`;
+            scheduleIframeModal.classList.remove("hidden");
+            document.body.classList.add("overflow-hidden"); // 배경 스크롤 방지
+          } else {
+            alert("연결된 여행 계획 정보를 찾을 수 없습니다.");
           }
         });
 
-        // 연결된 여행 계획 모달 닫기 버튼
+        // 연결된 여행 계획 모달 닫기 버튼 (iframe)
+        document.getElementById("closeScheduleIframeModal").addEventListener("click", () => {
+          
+          scheduleIframe.src = "about:blank"; // iframe 내용 초기화
+          scheduleIframeModal.classList.add("hidden");
+          document.body.classList.remove("overflow-hidden"); // 배경 스크롤 허용
+        });
+        
+        // 기존 linkedPlanDetailModal 닫기 버튼은 이제 새로운 iframe 모달에 영향을 주지 않지만,
+        // 혹시 모를 오작동 방지 및 명확성을 위해 기존 모달 닫기 버튼은 그대로 유지합니다.
+        // 이 버튼은 더 이상 실제 사용되지 않지만, HTML 구조는 남아있으므로 JS 코드도 유지합니다.
         closeLinkedPlanDetailModalBtn.addEventListener("click", () => {
           linkedPlanDetailModal.classList.add("hidden");
         });
@@ -2722,6 +2696,27 @@
       <div class="container mx-auto text-center text-muted-foreground text-sm">
         © 2026 여백. All rights reserved.
       </div>
+    <!-- New Iframe Modal for Schedule -->
+    <div
+      id="scheduleIframeModal"
+      class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-[52] hidden"
+    >
+      <div
+        class="bg-surface-light dark:bg-surface-dark rounded-xl max-w-7xl w-full h-[95vh] overflow-hidden flex flex-col relative"
+      >
+        <button
+          id="closeScheduleIframeModal"
+          class="absolute top-3 right-3 p-2 rounded-full bg-black/20 hover:bg-black/40 text-white z-10 transition-colors"
+        >
+          <span class="material-symbols-outlined text-3xl">close</span>
+        </button>
+        <iframe
+          id="schedule-content-iframe"
+          class="flex-1 w-full h-full"
+          frameborder="0"
+        ></iframe>
+      </div>
+    </div>
     </footer>
   </body>
 </html>
