@@ -296,13 +296,13 @@ AI 성향 기반 추천 루트입니다.
 │ │ └─ Logo.png
 │
 ├─ 📁 js
-│ ├─ auth.js # 로그인 / 인증 처리
-│ ├─ data.js # 공통 데이터 관리
-│ ├─ enneagram-recommendations.js # 성향 기반 추천 로직
-│ ├─ main.js # 메인 페이지 동작
-│ ├─ profile-functions.js # 프로필 기능
-│ ├─ trips.js # 여행 데이터 처리
-│ └─ utils.js # 공통 유틸
+│ ├─ auth.js
+│ ├─ data.js
+│ ├─ enneagram-recommendations.js
+│ ├─ main.js
+│ ├─ profile-functions.js
+│ ├─ trips.js
+│ └─ utils.js
 │
 ├─ 📁 pages
 │ ├─ 📁 auth
@@ -340,9 +340,11 @@ AI 성향 기반 추천 루트입니다.
 │ │ └─ view-personality-card.html
 │
 │ └─ 📁 stay
-│ ├─ detail.html # 숙소 상세
-│ ├─ search.html # 숙소 검색
-│ └─ table.html # 숙소 비교
+│ ├─ detail.html
+│ ├─ search.html
+│ └─ table.html
 │
-├─ 📄 styles.css # 공통 스타일
+├─ 📄 styles.css
 ├─ 📄 README.md
+
+---
