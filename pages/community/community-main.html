@@ -177,7 +177,7 @@
           <div class="group">
             <div class="flex items-center justify-between py-2 mb-2">
               <span
-                class="text-sm font-bold text-text-main-light dark:text-white uppercase tracking-wider"
+                class="text-sm font-bold text-primary dark:text-white uppercase tracking-wider"
                 >여행지</span
               >
             </div>
@@ -189,7 +189,7 @@
                   name="destination"
                   value="유럽"
                 /><span
-                  class="text-sm text-text-muted-light dark:text-text-muted-dark group-hover/item:text-primary transition-colors"
+                  class="text-sm dark:text-text-muted-dark group-hover/item:text-primary transition-colors"
                   >유럽</span
                 ></label
               >
@@ -200,7 +200,7 @@
                   name="destination"
                   value="아시아"
                 /><span
-                  class="text-sm text-text-muted-light dark:text-text-muted-dark group-hover/item:text-primary transition-colors"
+                  class="text-sm dark:text-text-muted-dark group-hover/item:text-primary transition-colors"
                   >아시아</span
                 ></label
               >
@@ -211,7 +211,7 @@
                   name="destination"
                   value="북미"
                 /><span
-                  class="text-sm text-text-muted-light dark:text-text-muted-dark group-hover/item:text-primary transition-colors"
+                  class="text-sm dark:text-text-muted-dark group-hover/item:text-primary transition-colors"
                   >북미</span
                 ></label
               >
@@ -221,7 +221,7 @@
           <div class="group">
             <div class="flex items-center justify-between py-2 mb-2">
               <span
-                class="text-sm font-bold text-text-main-light dark:text-white uppercase tracking-wider"
+                class="text-sm font-bold text-primary dark:text-white uppercase tracking-wider"
                 >테마</span
               >
             </div>
@@ -241,16 +241,13 @@
             <h1
               class="text-3xl md:text-4xl font-black text-text-main-light dark:text-white tracking-tight leading-tight mb-2"
             >
-              다음 <span class="text-primary">모험</span>을<br
-                class="hidden lg:block"
-              />
-              발견하세요
+              다음 <span class="text-primary">모험</span>을 발견하세요
             </h1>
             <p
               class="text-text-muted-light dark:text-text-muted-dark text-base md:text-lg max-w-xl"
             >
-              수천 개의 커뮤니티 여행 후기를 찾아보고 당신의 여행을 위한 완벽한
-              계획을 찾으세요.
+              수천 개의 커뮤니티 여행 후기를 찾아보고 <br />
+              당신의 여행을 위한 완벽한 계획을 찾으세요.
             </p>
           </div>
           <div
@@ -264,7 +261,7 @@
               <div class="relative">
                 <select
                   id="sort-select"
-                  class="appearance-none bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark rounded-xl py-2.5 pl-4 pr-10 text-sm font-semibold text-text-main-light dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent cursor-pointer shadow-sm min-w-[140px]"
+                  class="appearance-none bg-none dark:bg-surface-dark border border-border-light dark:border-border-dark rounded-xl py-2.5 pl-4 pr-10 text-sm font-semibold text-text-main-light dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent cursor-pointer shadow-sm min-w-[140px]"
                 >
                   <option value="popular">인기순</option>
                   <option value="latest">최신순</option>
@@ -1457,7 +1454,7 @@
             const label = document.createElement("label");
             label.className =
               "flex items-center gap-3 cursor-pointer group/item";
-            label.innerHTML = `<input type="checkbox" name="tag" value="${tag}" class="size-4 rounded border-gray-300 text-primary focus:ring-primary dark:bg-surface-dark dark:border-gray-600"><span class="text-sm text-text-muted-light dark:text-text-muted-dark group-hover/item:text-primary transition-colors">${tag}</span>`;
+            label.innerHTML = `<input type="checkbox" name="tag" value="${tag}" class="size-4 rounded border-gray-300 text-primary focus:ring-primary dark:bg-surface-dark dark:border-gray-600"><span class="text-sm dark:text-text-muted-dark group-hover/item:text-primary transition-colors">${tag}</span>`;
             tagFilterContainer.appendChild(label);
           });
           tagFilterContainer.addEventListener("change", () => updateGallery());
@@ -1621,9 +1618,7 @@
             <div class="p-5 pt-4 border-t border-border-light dark:border-border-dark">
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-2">
-                  <div class="size-8 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center text-sm font-bold text-white">
-                    <span class="profile-initial">${(post.author || "U").charAt(0).toUpperCase()}</span>
-                  </div>
+                  <div class="size-8 rounded-full bg-gray-200 overflow-hidden"><img src="https://i.pravatar.cc/150?u=${post.authorId}" alt="User" /></div>
                   <span class="text-sm font-medium text-text-main-light dark:text-white">${post.author}</span>
                 </div>
                 <div class="flex items-center">
