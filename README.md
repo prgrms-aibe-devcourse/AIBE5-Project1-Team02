@@ -281,3 +281,68 @@ AI 성향 기반 추천 루트입니다.
 9. 일정 완성 및 저장
 
 ---
+
+📦 Yeobaek
+├─ 📁 images
+│ ├─ 📁 main
+│ │ ├─ ArrowIcon.png
+│ │ ├─ ButtonIcon.png
+│ │ └─ ButtonIcon2.png
+│ ├─ 📁 profile
+│ │ ├─ Login_Background_image01.jpg
+│ │ ├─ Login_Background_image02.jpg
+│ │ ├─ Login_Background_image03.jpg
+│ │ ├─ Logo_Google.png
+│ │ └─ Logo.png
+│
+├─ 📁 js
+│ ├─ auth.js # 로그인 / 인증 처리
+│ ├─ data.js # 공통 데이터 관리
+│ ├─ enneagram-recommendations.js # 성향 기반 추천 로직
+│ ├─ main.js # 메인 페이지 동작
+│ ├─ profile-functions.js # 프로필 기능
+│ ├─ trips.js # 여행 데이터 처리
+│ └─ utils.js # 공통 유틸
+│
+├─ 📁 pages
+│ ├─ 📁 auth
+│ │ ├─ SignIn.html
+│ │ └─ SignUp.html
+│
+│ ├─ 📁 community
+│ │ ├─ 📁 community-image
+│ │ │ ├─ 교토.JPG
+│ │ │ ├─ 교토음식.JPG
+│ │ │ ├─ 나고야성.JPG
+│ │ │ ├─ 대만.JPG
+│ │ │ ├─ 세부.JPG
+│ │ │ ├─ 파리.JPG
+│ │ │ └─ 프라하.JPG
+│ │ ├─ community-main.html
+│ │ └─ community-post.html
+│
+│ ├─ 📁 main
+│ │ ├─ AI_Personality_test.html
+│ │ ├─ AI_Travel_planner.html
+│ │ ├─ AI_Travel_planner_list.html
+│ │ ├─ ai-personality-test.html
+│ │ ├─ ai-travel-recommend.html
+│ │ └─ Main.html
+│
+│ ├─ 📁 plan
+│ │ ├─ flight.html
+│ │ ├─ planner.html
+│ │ └─ schedule.html
+│
+│ ├─ 📁 profile
+│ │ ├─ profile.html
+│ │ ├─ view_personality_card.html
+│ │ └─ view-personality-card.html
+│
+│ └─ 📁 stay
+│ ├─ detail.html # 숙소 상세
+│ ├─ search.html # 숙소 검색
+│ └─ table.html # 숙소 비교
+│
+├─ 📄 styles.css # 공통 스타일
+├─ 📄 README.md
