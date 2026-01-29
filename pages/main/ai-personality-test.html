@@ -1,0 +1,1944 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI 여행 성향 테스트</title>
+    <script src="https://cdn.lordicon.com/lordicon.js"></script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700;800&display=swap");
+
+      /* CSS 변수 정의 */
+      :root {
+        --primary-color: #008774;
+        --secondary-color: #ff8c42;
+        --text-dark: #333333;
+        --text-light: #666666;
+        --bg-light: #f9fafb;
+        --border-color: #e5e7eb;
+      }
+
+      /* 모든 요소의 기본 마진, 패딩을 제거하고 box-sizing을 border-box로 설정 */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      /* body 기본 스타일: 폰트, 배경색, 텍스트 색상, 레이아웃 설정 */
+      body {
+        font-family: "Pretendard", sans-serif;
+        background-color: var(--bg-light);
+        color: var(--text-dark);
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        min-height: 100vh;
+
+        background-image: linear-gradient(
+          to bottom right,
+          rgba(0, 196, 180, 0.05),
+          #f9fafb,
+          rgba(255, 140, 66, 0.05)
+        );
+      }
+
+      /* 앱의 전체 컨테이너 스타일 */
+      .app-container {
+        width: 100%;
+        max-width: 768px; /* 최대 너비 설정 */
+        padding: 3rem 1.5rem; /* 상하좌우 패딩 */
+      }
+
+      /* 각 단계별 섹션 (초기에는 숨김) */
+      .step-section {
+        display: none;
+      }
+
+      /* 활성화된 단계 섹션 */
+      .step-section.active {
+        display: block;
+        animation: fadeIn 0.5s ease-in-out;
+      }
+
+      /* 페이드인 애니메이션 정의 */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* --- 인트로 섹션 --- */
+      /* 인트로 섹션 내용 중앙 정렬 */
+      .intro-content {
+        text-align: center;
+      }
+
+      /* 인트로 섹션 배지 스타일 */
+      .intro-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background-image: linear-gradient(
+          to right,
+          rgba(0, 196, 180, 0.1),
+          rgba(255, 140, 66, 0.1)
+        );
+        padding: 0.75rem 1.5rem;
+        border-radius: 9999px;
+        border: 2px solid rgba(0, 196, 180, 0.2);
+        margin-bottom: 2rem;
+      }
+
+      /* 인트로 배지 내 텍스트 스타일 */
+      .intro-badge span {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--primary-color);
+      }
+
+      /* 인트로 섹션 제목 (h1) 스타일 */
+      .intro-content h1 {
+        font-size: 3rem;
+        font-weight: 800;
+        margin-bottom: 1.5rem;
+      }
+
+      /* 인트로 섹션 설명 (p) 스타일 */
+      .intro-content p {
+        font-size: 1.25rem;
+        color: var(--text-light);
+        line-height: 1.6;
+        margin-bottom: 3rem;
+      }
+
+      /* 성향 미리보기 그리드 레이아웃 */
+      .personality-preview-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+        margin-bottom: 3rem;
+      }
+
+      /* 성향 미리보기 각 항목 스타일 */
+      .personality-preview-item {
+        background-color: white;
+        border-radius: 1rem;
+        padding: 1rem;
+        box-shadow:
+          0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s;
+      }
+      /* 호버 시 항목 위로 살짝 올라오는 효과 */
+      .personality-preview-item:hover {
+        transform: translateY(-5px);
+      }
+      /* 성향 이모지 스타일 */
+      .personality-preview-item .emoji {
+        font-size: 2.25rem;
+        margin-bottom: 0.5rem;
+      }
+      /* 성향 이름 스타일 */
+      .personality-preview-item .name {
+        font-size: 0.875rem;
+        font-weight: 700;
+      }
+
+      /* 시작 버튼 스타일 */
+      .start-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--primary-color);
+        color: white;
+        padding: 1rem 3rem;
+        border-radius: 9999px;
+        font-weight: 700;
+        font-size: 1.125rem;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s;
+        box-shadow: 0 10px 20px -5px rgba(0, 135, 116, 0.4); /* #008774에 맞게 조정 */
+      }
+      /* 시작 버튼 호버 시 효과 */
+      .start-button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 15px 25px -5px rgba(0, 135, 116, 0.5); /* #008774에 맞게 조정 */
+      }
+
+      /* --- 테스트 섹션 --- */
+      /* 진행률 바 컨테이너 */
+      .progress-bar-container {
+        margin-bottom: 2rem;
+      }
+      /* 진행률 레이블 (현재 질문/전체 질문, 백분율) */
+      .progress-bar-labels {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--text-light);
+      }
+      /* 진행률 백분율 텍스트 색상 */
+      #progress-percentage {
+        color: var(--primary-color);
+      }
+      /* 진행률 바의 배경 */
+      .progress-bar {
+        height: 0.5rem;
+        background-color: var(--border-color);
+        border-radius: 9999px;
+        overflow: hidden;
+      }
+      /* 진행률 바의 실제 채워지는 부분 */
+      .progress-bar-inner {
+        height: 100%;
+        background-image: linear-gradient(
+          to right,
+          var(--primary-color),
+          var(--secondary-color)
+        );
+        transition: width 0.3s ease-in-out;
+      }
+
+      /* 질문 컨테이너 스타일 */
+      .question-container {
+        background-color: white;
+        border-radius: 1.5rem;
+        box-shadow:
+          0 20px 25px -5px rgba(0, 0, 0, 0.1),
+          0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        padding: 2rem;
+        margin-bottom: 1.5rem;
+      }
+      /* 질문 제목 스타일 */
+      #question-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 2rem;
+        text-align: center;
+      }
+
+      /* 옵션 버튼 컨테이너 */
+      .options-container {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+      /* 각 옵션 버튼 스타일 */
+      .option-button {
+        width: 100%;
+        text-align: left;
+        padding: 1.5rem;
+        border-radius: 1rem;
+        border: 2px solid var(--border-color);
+        background-color: transparent;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+      /* 옵션 버튼 호버 시 테두리 및 배경색 변경 */
+      .option-button:hover {
+        border-color: var(--primary-color);
+        background-color: rgba(0, 196, 180, 0.05);
+      }
+      /* 옵션 번호 (동그라미) 스타일 */
+      .option-number {
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 9999px;
+        background-color: #f3f4f6;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 1rem;
+        flex-shrink: 0;
+        transition: all 0.2s;
+      }
+      /* 옵션 버튼 호버 시 옵션 번호 스타일 변경 */
+      .option-button:hover .option-number {
+        background-color: var(--primary-color);
+        color: white;
+      }
+      /* 옵션 텍스트 스타일 */
+      .option-text {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: var(--text-dark);
+      }
+
+      /* 이전 버튼 스타일 (초기에는 숨김) */
+      .prev-button {
+        display: none; /* Initially hidden */
+        align-items: center;
+        gap: 0.5rem;
+        background: none;
+        border: none;
+        color: var(--primary-color);
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      /* 이전 버튼 호버 시 밑줄 */
+      .prev-button:hover {
+        text-decoration: underline;
+      }
+
+      /* --- 결과 섹션 --- */
+
+      /* 카드 획득 화면 (최초 결과 화면) */
+      .acquisition-screen {
+        position: fixed;
+        inset: 0;
+        background-color: black;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        animation: fadeIn 0.3s;
+        overflow: hidden; /* 추가 */
+      }
+
+      /* 카드 획득 화면의 내용 컨테이너 */
+      .acquisition-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative; /* 별 배경 위에 오도록 z-index를 위해 추가 */
+        z-index: 1; /* 별 배경보다 위에 표시 */
+      }
+
+      /* 별 배경 스타일 */
+      .star-background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: black; /* 기본 배경은 검정색 */
+        background-image:
+          radial-gradient(circle at 15% 50%, rgba(255, 255, 255, 0.8) 0.5px, transparent 1px),
+          radial-gradient(circle at 70% 30%, rgba(255, 255, 255, 0.7) 0.5px, transparent 1px),
+          radial-gradient(circle at 40% 80%, rgba(255, 255, 255, 0.9) 1px, transparent 1.5px),
+          radial-gradient(circle at 85% 60%, rgba(255, 255, 255, 0.6) 1px, transparent 1.5px),
+          radial-gradient(circle at 25% 10%, rgba(255, 255, 255, 0.8) 0.8px, transparent 1.2px),
+          radial-gradient(circle at 5% 90%, rgba(255, 255, 255, 0.7) 0.7px, transparent 1.1px),
+          radial-gradient(circle at 60% 5%, rgba(255, 255, 255, 0.9) 1.2px, transparent 1.8px);
+        background-size: 150px 150px, 180px 180px, 200px 200px, 220px 220px, 160px 160px, 190px 190px, 210px 210px;
+        background-repeat: repeat;
+        opacity: 0.8; /* 기본 투명도 */
+        animation: star-twinkle 5s ease-in-out infinite alternate;
+        z-index: 0; /* acquisition-content 아래에 표시 */
+      }
+
+      @keyframes star-twinkle {
+          0%, 100% { opacity: 0.7; }
+          50% { opacity: 1; }
+      }
+
+      /* [수정] 유성 효과 컨테이너 */
+      .shooting-stars {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        pointer-events: none; /* 클릭 방해하지 않도록 설정 */
+        z-index: 0;
+      }
+
+      /* [수정] 개별 유성 스타일 */
+      .shooting-star {
+        position: absolute;
+        height: 2px;
+        /* 배경색: 꼬리가 자연스럽게 사라지도록 그라디언트 조정 */
+        background: linear-gradient(to right, transparent, rgba(255, 255, 255, 1)); /* 머리 쪽으로 떨어지게 변경 */
+        border-radius: 50%;
+        /* 초기 회전 각도 45도 (오른쪽 아래 대각선) */
+        transform: rotate(45deg); 
+        opacity: 0;
+        animation: shooting-star-anim linear infinite;
+      }
+
+      /* [수정] 유성 애니메이션: 대각선 아래로 떨어지게 변경 */
+      @keyframes shooting-star-anim {
+        0% {
+          opacity: 1;
+          transform: rotate(45deg) translateX(0);
+        }
+        100% {
+          opacity: 0;
+          /* 45도 기울어진 상태에서 X축으로 이동하면 대각선으로 떨어짐 */
+          transform: rotate(45deg) translateX(150vh); 
+        }
+      }
+
+      /* [수정] 로켓 스타일 (물리 효과 적용) */
+      .cat-rocket { /* 클래스 이름 다시 cat-rocket으로 변경 */
+        position: absolute;
+        font-size: 3rem;
+        filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.6));
+        z-index: 100; /* 다른 요소보다 위에 */
+        cursor: grab; /* 잡을 수 있다는 표시 */
+        user-select: none; /* 드래그 시 텍스트 선택 방지 */
+        touch-action: none; /* 모바일 터치 대응 */
+        /* 부드러운 움직임을 위해 transition 제거 (JS로 제어) */
+        will-change: transform;
+      }
+
+      /* 로켓을 잡았을 때 커서 모양 */
+      .cat-rocket:active {
+        cursor: grabbing;
+      }
+
+      /* [수정] 로켓 애니메이션: 동적 회전 각도를 받아 이동 */
+      /* 이 애니메이션은 이제 사용되지 않지만, 기존 CSS 구조 유지를 위해 남겨둠 */
+      @keyframes fly-rocket { 
+        0% {
+          transform: rotate(var(--rocket-rotation, 0deg)) translateX(0);
+        }
+        100% {
+          transform: rotate(var(--rocket-rotation, 0deg)) translateX(150vw);
+        }
+      }
+
+      /* 떠다니는 카드 효과를 위한 컨테이너 */
+      .floating-card-container {
+        margin-bottom: 2rem;
+      }
+
+      /* 카드 이미지 시각적 스타일 */
+      .card-visual {
+        width: 12rem; /* 192px */
+        height: 16rem; /* 256px */
+        border-radius: 1rem;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        color: white;
+      }
+
+      /* 카드 내 캐릭터 이모지 스타일 */
+      .card-character {
+        font-size: 5rem;
+      }
+
+      /* 카드 획득 화면 제목 */
+      .acquisition-title {
+        font-size: 3rem;
+        font-weight: 800;
+        color: white;
+        margin-bottom: 1rem;
+      }
+
+      /* 카드 획득 화면 부제목 */
+      .acquisition-subtitle {
+        font-size: 1.5rem;
+        color: #d1d5db; /* gray-300 */
+        margin-bottom: 2rem;
+      }
+
+      /* 카드 공개 버튼 스타일 */
+      .reveal-button {
+        background-color: var(--primary-color);
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 9999px;
+        font-weight: 700;
+        font-size: 1.125rem;
+        border: none;
+        cursor: pointer;
+        box-shadow:
+          0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s;
+      }
+      /* 카드 공개 버튼 호버 시 효과 */
+      .reveal-button:hover {
+        transform: scale(1.05);
+      }
+      /* 카드 공개 버튼 내 텍스트 애니메이션 */
+      .reveal-button span {
+        animation: pulse 1.5s infinite;
+      }
+
+      /* 펄스 애니메이션 정의 */
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.7;
+        }
+      }
+
+      /* 최종 결과 화면 컨테이너 */
+      .result-view {
+        text-align: center;
+      }
+
+      /* 결과 화면 헤더 */
+      .result-header {
+        margin-bottom: 2rem;
+      }
+
+      /* 결과 화면 제목 */
+      .result-title {
+        font-size: 2.25rem;
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+      }
+
+      /* 결과 화면 부제목 */
+      .result-subtitle {
+        font-size: 1.125rem;
+        color: var(--text-light);
+      }
+
+      /* 인터랙티브 카드 컨테이너 */
+      .interactive-card-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 2rem 0;
+        min-height: 580px; /* 최소 높이 설정 */
+        position: relative;
+        z-index: 10;
+        padding-bottom: 2rem;
+      }
+
+      /* 카드 3D 씬 설정 */
+      .card-scene {
+        width: 320px;
+        height: 560px;
+        perspective: 1500px; /* 3D 원근감 */
+      }
+
+      /* 카드 객체 (앞면/뒷면 포함) */
+      .card-object {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        transform-style: preserve-3d; /* 3D 변형 유지 */
+        transition: transform 0.8s cubic-bezier(0.25, 0.8, 0.25, 1); /* 변형 애니메이션 */
+        --flip-rotation: 0deg; /* 기본 뒤집기 회전 값 */
+        transform: rotateX(var(--rotate-x, 0deg))
+          rotateY(calc(var(--rotate-y, 0deg) + var(--flip-rotation)));
+        transform-origin: center center;
+      }
+
+      /* 카드가 뒤집혔을 때의 회전 값 */
+      .card-object.is-flipped {
+        --flip-rotation: 180deg; /* 뒤집혔을 때 회전 값 설정 */
+      }
+
+      /* 카드 앞면/뒷면 공통 스타일 */
+      .card-face {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        -webkit-backface-visibility: hidden; /* 뒷면 숨김 */
+        backface-visibility: hidden; /* 뒷면 숨김 */
+        border-radius: 1.5rem;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        overflow: hidden;
+        color: white;
+      }
+
+      /* 카드 앞면 스타일 */
+      .card-face--front {
+        border: 4px solid rgba(255, 255, 255, 0.3);
+      }
+
+      /* 스파클 효과 오버레이 */
+      .sparkle-overlay {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        pointer-events: none;
+      }
+
+      /* 개별 스파클 */
+      .card-sparkle {
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        background-color: white;
+        border-radius: 50%;
+        opacity: 0;
+        transform: scale(0);
+        animation: sparkle-animation 2s infinite;
+      }
+
+      /* 스파클 애니메이션 정의 */
+      @keyframes sparkle-animation {
+        0% {
+          opacity: 0;
+          transform: scale(0);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1.5);
+        }
+        100% {
+          opacity: 0;
+          transform: scale(0);
+        }
+      }
+
+      /* 홀로그래픽 효과 오버레이 */
+      .holographic-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          to top right,
+          transparent 0%,
+          rgba(255, 255, 255, 0.4) 50%,
+          transparent 100%
+        );
+        pointer-events: none;
+        mix-blend-mode: overlay;
+        opacity: 0.8;
+        transform: translateX(-100%);
+        animation: holographic-animation 3s infinite;
+        animation-delay: 1s;
+      }
+
+      /* 홀로그래픽 애니메이션 정의 */
+      @keyframes holographic-animation {
+        0% {
+          transform: translateX(-100%);
+        }
+        100% {
+          transform: translateX(100%);
+        }
+      }
+
+      /* 카드 테두리 */
+      .card-border {
+        position: absolute;
+        inset: 1rem;
+        border: 2px solid rgba(255, 255, 255, 0.4);
+        border-radius: 1rem;
+        pointer-events: none;
+      }
+
+      /* 카드 내용 스타일 */
+      .card-content {
+        position: relative;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        padding: 2rem;
+        text-align: center;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+      }
+
+      /* 카드 상단/하단 장식 */
+      .card-top-ornament,
+      .card-bottom-ornament {
+        font-size: 1.5rem;
+        opacity: 0.8;
+      }
+
+      /* 카드 메인 캐릭터 이모지 */
+      .card-character-main {
+        font-size: 8rem;
+        filter: drop-shadow(0 0 15px rgba(0, 0, 0, 0.5));
+      }
+
+      /* 카드 제목 그룹 */
+      .card-title-group {
+        margin-top: -1rem;
+      }
+
+      /* 카드 메인 유형 */
+      .card-main-type {
+        font-size: 3rem;
+        font-weight: 800;
+      }
+
+      /* 카드 메인 별명 */
+      .card-main-nickname {
+        font-size: 1.75rem;
+        font-weight: 700;
+        line-height: 1.2;
+      }
+
+      /* 카드 메인 부제목 */
+      .card-main-subtitle {
+        font-size: 1rem;
+        font-weight: 400;
+        opacity: 0.8;
+        font-style: italic;
+      }
+
+      /* 카드 뒷면 스타일 */
+      .card-face--back {
+        background-color: #f8fafc;
+        color: var(--text-dark);
+        transform: rotateY(180deg); /* 180도 회전하여 뒷면으로 표시 */
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      /* 카드 뒷면 내용 스크롤 가능 컨테이너 */
+      .card-back-content {
+        overflow-y: auto;
+        height: 100%;
+        max-height: 100%;
+        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none; /* Firefox */
+      }
+      .card-back-content::-webkit-scrollbar {
+        display: none; /* for Chrome, Safari, and Opera */
+      }
+
+      /* 카드 뒷면 헤더 */
+      .back-header {
+        text-align: center;
+        margin-bottom: 1rem;
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 1rem;
+      }
+
+      /* 카드 뒷면 캐릭터 이모지 */
+      .back-character {
+        font-size: 3rem;
+        margin-bottom: 0.5rem;
+      }
+      /* 카드 뒷면 유형 */
+      .back-type {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: var(--primary-color);
+      }
+      /* 카드 뒷면 별명 */
+      .back-nickname {
+        font-size: 1.25rem;
+        font-weight: 700;
+      }
+      /* 카드 뒷면 부제목 */
+      .back-subtitle {
+        font-size: 0.875rem;
+        color: var(--text-light);
+        font-style: italic;
+      }
+      /* 카드 뒷면 설명 */
+      .back-description {
+        font-size: 0.9rem;
+        text-align: center;
+        margin-bottom: 1rem;
+        color: var(--text-light);
+        font-style: italic;
+      }
+
+      /* 카드 뒷면 섹션 */
+      .back-section {
+        margin-bottom: 1rem;
+      }
+      /* 카드 뒷면 섹션 제목 */
+      .back-section-title {
+        font-size: 0.875rem;
+        font-weight: 700;
+        text-align: center;
+        color: var(--primary-color);
+        margin-bottom: 0.75rem;
+      }
+
+      /* 특징 그리드 레이아웃 */
+      .traits-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+      }
+      /* 각 특징 항목 */
+      .trait-item {
+        background-color: rgba(0, 196, 180, 0.1);
+        padding: 0.5rem;
+        border-radius: 0.5rem;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-align: center;
+      }
+
+      /* 강점 목록 */
+      .strengths-list {
+        list-style: none;
+        padding: 0;
+        text-align: center;
+      }
+      .strengths-list li {
+        font-size: 0.9rem;
+        margin-bottom: 0.25rem;
+      }
+      .strengths-list li::before {
+        content: "✨";
+        margin-right: 0.5rem;
+      }
+
+      /* 추천 여행지 목록 */
+      .recommendations-list {
+        text-align: center;
+        font-size: 0.9rem;
+        color: var(--text-light);
+        line-height: 1.5;
+      }
+      .recommendations-list span {
+        display: inline-block;
+        margin: 0 0.2rem;
+        background-color: #f1f5f9;
+        padding: 0.1rem 0.4rem;
+        border-radius: 0.25rem;
+      }
+
+      /* 결과 화면 내 재시작 버튼 */
+      #restart-btn {
+        width: 100%;
+        margin-top: 2rem;
+      }
+
+      /* 새로운 결과 상세 그리드 레이아웃 */
+      .result-details-grid {
+        display: grid;
+        grid-template-columns: 1fr; /* 기본적으로 단일 컬럼 */
+        gap: 1.5rem;
+        margin-top: 2rem;
+        max-width: 768px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      /* 768px 이상 화면에서 2단 컬럼으로 변경 */
+      @media (min-width: 768px) {
+        .result-details-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      /* 추천 패널 및 공유 패널 공통 스타일 */
+      .recommendation-panel,
+      .share-panel {
+        background-color: white;
+        border-radius: 1.5rem;
+        padding: 1.5rem;
+        box-shadow:
+          0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      }
+
+      /* 패널 제목 스타일 */
+      .panel-title {
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: var(--text-dark);
+        margin-bottom: 0.5rem;
+      }
+
+      /* 패널 부제목 스타일 */
+      .panel-subtitle {
+        font-size: 0.875rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+      }
+
+      /* 추천 목록 스타일 */
+      .recommendation-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      /* 각 추천 항목 스타일 */
+      .recommendation-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      /* 추천 번호 (동그라미) 스타일 */
+      .recommendation-number {
+        width: 1.5rem;
+        height: 1.5rem;
+        background-image: linear-gradient(
+          to right,
+          var(--primary-color),
+          var(--secondary-color)
+        );
+        border-radius: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 0.75rem;
+        font-weight: 700;
+        flex-shrink: 0;
+      }
+
+      /* 추천 항목 텍스트 스타일 */
+      .recommendation-item span {
+        color: var(--text-dark);
+        font-size: 0.9rem;
+      }
+
+      /* 공유 버튼 스타일 */
+      .share-button {
+        width: 100%;
+        background-image: linear-gradient(
+          to right,
+          var(--primary-color),
+          #00a89a
+        );
+        color: white;
+        padding: 0.75rem 1rem;
+        border-radius: 0.75rem;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 5px 10px rgba(0, 196, 180, 0.2);
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+      }
+
+      /* 공유 버튼 호버 시 효과 */
+      .share-button:hover {
+        box-shadow: 0 8px 15px rgba(0, 196, 180, 0.3);
+        transform: translateY(-2px);
+      }
+
+      /* 공유 텍스트 영역 */
+      .share-text-area {
+        text-align: center;
+      }
+
+      /* 성향 공유 배지 */
+      .personality-share-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        background-image: linear-gradient(
+          to right,
+          rgba(0, 196, 180, 0.1),
+          rgba(255, 140, 66, 0.1)
+        );
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.75rem;
+        border: 2px solid rgba(0, 196, 180, 0.2);
+        margin-top: 0.75rem;
+      }
+
+      /* 공유 배지 내 캐릭터 이모지 */
+      .share-character {
+        font-size: 1.875rem;
+      }
+
+      /* 공유 배지 내 텍스트 컨텐츠 */
+      .share-text-content {
+        text-align: left;
+      }
+
+      /* 공유 배지 내 유형 텍스트 */
+      .share-type {
+        font-size: 1.5rem;
+        font-weight: 700;
+        background-image: linear-gradient(
+          to right,
+          var(--primary-color),
+          var(--secondary-color)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        color: transparent; /* text-fill-color 미지원 브라우저 대체 */
+      }
+
+      /* 공유 배지 내 별명 텍스트 */
+      .share-nickname {
+        font-size: 0.75rem;
+        color: var(--text-light);
+      }
+
+      /* 추천받기 버튼 스타일 */
+      .get-recommendations-button {
+        width: 100%;
+        background-color: var(--primary-color);
+        color: white;
+        padding: 1.5rem;
+        border-radius: 9999px;
+        font-weight: 700;
+        font-size: 1.125rem;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 10px 20px -5px rgba(0, 135, 116, 0.4); /* #008774에 맞게 조정 */
+        transition: all 0.3s;
+        margin-top: 2.5rem;
+        margin-bottom: 1rem;
+      }
+
+      /* 추천받기 버튼 호버 시 효과 */
+      .get-recommendations-button:hover {
+        transform: scale(1.02);
+        box-shadow: 0 15px 25px -5px rgba(0, 135, 116, 0.5); /* #008774에 맞게 조정 */
+      }
+
+      /* --- 그라디언트 배경 --- */
+      /* 빨강-장미-핑크 그라디언트 */
+      .from-red-600-via-rose-600-to-pink-600-bg {
+        background-image: linear-gradient(
+          to bottom right,
+          #dc2626,
+          #e11d48,
+          #db2777
+        );
+      }
+      /* 주황-앰버-노랑 그라디언트 */
+      .from-orange-600-via-amber-600-to-yellow-600-bg {
+        background-image: linear-gradient(
+          to bottom right,
+          #ea580c,
+          #f59e0b,
+          #eab308
+        );
+      }
+      /* 노랑-앰버-주황 그라디언트 */
+      .from-yellow-600-via-amber-600-to-orange-600-bg {
+        background-image: linear-gradient(
+          to bottom right,
+          #eab308,
+          #f59e0b,
+          #ea580c
+        );
+      }
+      /* 보라-바이올렛-푸시아 그라디언트 */
+      .from-purple-600-via-violet-600-to-fuchsia-600-bg {
+        background-image: linear-gradient(
+          to bottom right,
+          #9333ea,
+          #8b5cf6,
+          #d946ef
+        );
+      }
+      /* 시안-파랑-인디고 그라디언트 */
+      .from-cyan-600-via-blue-600-to-indigo-600-bg {
+        background-image: linear-gradient(
+          to bottom right,
+          #0891b2,
+          #2563eb,
+          #4f46e5
+        );
+      }
+      /* 에메랄드-녹색-틸 그라디언트 */
+      .from-emerald-600-via-green-600-to-teal-600-bg {
+        background-image: linear-gradient(
+          to bottom right,
+          #059669,
+          #16a34a,
+          #0d9488
+        );
+      }
+      /* 앰버-노랑-라임 그라디언트 */
+      .from-amber-600-via-yellow-600-to-lime-600-bg {
+        background-image: linear-gradient(
+          to bottom right,
+          #f59e0b,
+          #eab308,
+          #84cc16
+        );
+      }
+      /* 빨강-주황-앰버 그라디언트 */
+      .from-red-600-via-orange-600-to-amber-600-bg {
+        background-image: linear-gradient(
+          to bottom right,
+          #dc2626,
+          #ea580c,
+          #f59e0b
+        );
+      }
+      /* 틸-시안-스카이 그라디언트 */
+      .from-teal-600-via-cyan-600-to-sky-600-bg {
+        background-image: linear-gradient(
+          to bottom right,
+          #0d9488,
+          #0891b2,
+          #0284c7
+        );
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app" class="app-container">
+      <section id="intro-section" class="step-section active">
+        <div class="intro-content">
+          <div class="intro-badge">
+            <lord-icon
+              src="https://cdn.lordicon.com/surjmvno.json"
+              trigger="loop"
+              delay="1000"
+              colors="primary:#f59e0b,secondary:#00c4b4"
+              style="width: 32px; height: 32px"
+            >
+            </lord-icon>
+            <span>AI 여행 성향 분석</span>
+          </div>
+          <h1>당신의 여행 스타일은?</h1>
+          <p>
+            9개 질문으로 알아보는 나의 여행 성향<br />맞춤 여행지와 여행 카드를
+            받아보세요!
+          </p>
+          <div id="personality-preview" class="personality-preview-grid"></div>
+          <button id="start-btn" class="start-button">
+            테스트 시작하기
+            <lord-icon
+              src="https://cdn.lordicon.com/dqrpfjei.json"
+              trigger="hover"
+              colors="primary:#ffffff"
+              style="width: 24px; height: 24px; margin-left: 8px"
+            >
+            </lord-icon>
+          </button>
+        </div>
+      </section>
+
+      <section id="test-section" class="step-section">
+        <div class="progress-bar-container">
+          <div class="progress-bar-labels">
+            <span id="progress-label">질문 1 / 9</span>
+            <span id="progress-percentage">11%</span>
+          </div>
+          <div class="progress-bar">
+            <div id="progress-bar-inner" class="progress-bar-inner"></div>
+          </div>
+        </div>
+        <div id="question-container" class="question-container">
+          <h2 id="question-title"></h2>
+          <div id="options-container" class="options-container"></div>
+        </div>
+        <button id="prev-btn" class="prev-button">
+          <lord-icon
+            src="https://cdn.lordicon.com/dqrpfjei.json"
+            trigger="hover"
+            target="button"
+            colors="primary:#00c4b4"
+            style="width: 20px; height: 20px; transform: rotate(180deg)"
+          >
+          </lord-icon>
+          이전 질문
+        </button>
+      </section>
+
+      <section id="result-section" class="step-section"></section>
+    </div>
+
+    <script>
+      // ------------------ DATA ------------------
+      // 테스트 질문과 각 질문에 대한 선택지 데이터를 담고 있는 배열입니다.
+      const questions = [
+        {
+          id: 1,
+          question: "여행지에 도착했을 때 가장 먼저 하고 싶은 것은?",
+          options: [
+            { text: "계획한 일정대로 바로 움직이기", type: 1 },
+            { text: "숙소에서 편하게 쉬기", type: 9 },
+            { text: "근처 핫플 찾아보기", type: 7 },
+            { text: "느낌가는 대로 산책하기", type: 4 },
+          ],
+        },
+        {
+          id: 2,
+          question: "여행 중 예상치 못한 일이 생기면?",
+          options: [
+            { text: "계획을 수정해서 해결한다", type: 1 },
+            { text: "도와줄 사람을 찾는다", type: 2 },
+            { text: "새로운 경험으로 받아들인다", type: 7 },
+            { text: "그냥 흘러가는 대로 둔다", type: 9 },
+          ],
+        },
+        {
+          id: 3,
+          question: "여행지에서 가장 중요한 것은?",
+          options: [
+            { text: "완벽한 계획과 일정", type: 1 },
+            { text: "현지인과의 교류", type: 2 },
+            { text: "새로운 경험과 도전", type: 7 },
+            { text: "편안한 휴식", type: 9 },
+          ],
+        },
+        {
+          id: 4,
+          question: "여행 사진을 찍을 때 당신은?",
+          options: [
+            { text: "인생샷을 위해 계획적으로", type: 3 },
+            { text: "자연스러운 순간을 포착", type: 4 },
+            { text: "유명한 명소 위주로", type: 6 },
+            { text: "그때그때 기분대로", type: 9 },
+          ],
+        },
+        {
+          id: 5,
+          question: "여행 동반자와 의견이 다를 때?",
+          options: [
+            { text: "타협점을 찾아 조율한다", type: 2 },
+            { text: "내 의견을 관철시킨다", type: 8 },
+            { text: "상대방 의견을 따른다", type: 9 },
+            { text: "각자 하고 싶은 걸 한다", type: 5 },
+          ],
+        },
+        {
+          id: 6,
+          question: "현지 음식을 먹을 때 당신은?",
+          options: [
+            { text: "유명한 맛집을 사전 조사", type: 1 },
+            { text: "현지인 추천을 따른다", type: 2 },
+            { text: "눈에 띄는 곳 아무데나", type: 7 },
+            { text: "안전한 메뉴를 선택", type: 6 },
+          ],
+        },
+        {
+          id: 7,
+          question: "여행의 목적은?",
+          options: [
+            { text: "성취감과 새로운 경험", type: 3 },
+            { text: "일상 탈출과 휴식", type: 9 },
+            { text: "지식과 문화 습득", type: 5 },
+            { text: "사람들과의 추억", type: 2 },
+          ],
+        },
+        {
+          id: 8,
+          question: "여행 예산을 정할 때?",
+          options: [
+            { text: "세부 항목별로 계획", type: 1 },
+            { text: "전체 금액만 정함", type: 7 },
+            { text: "최대한 아껴쓴다", type: 6 },
+            { text: "돈은 쓰려고 있는 것", type: 3 },
+          ],
+        },
+        {
+          id: 9,
+          question: "여행 중 가장 힘든 순간은?",
+          options: [
+            { text: "계획대로 안 될 때", type: 1 },
+            { text: "혼자 결정해야 할 때", type: 2 },
+            { text: "별 일 없이 지루할 때", type: 7 },
+            { text: "타인과 부딪힐 때", type: 9 },
+          ],
+        },
+      ];
+
+      // 각 Enneagram(애니어그램) 유형별 정보를 담고 있는 객체입니다.
+      // 유형별 별명, 설명, 특징, 강점, 여행 동기, 추천 여행지 등의 상세 데이터를 포함합니다.
+      const enneagramTypes = {
+        1: {
+          type: 1,
+          nickname: "완벽 루트 설계자",
+          subtitle: "The Perfect Route Designer",
+          character: "📐",
+          description:
+            "모든 것이 완벽해야 직성이 풀리는 당신! 일정부터 숙소까지 완벽하게 계획합니다.",
+          traits: ["완벽주의", "체계적", "책임감 강함", "정의로움"],
+          strengths: ["철저한 계획", "높은 기준", "안전한 여행"],
+          weaknesses: ["융통성 부족", "과도한 걱정", "스트레스"],
+          travelMotivation:
+            "완벽하게 계획된 여행으로 모든 것을 경험하고 싶어요",
+          recommendations: ["유럽 문화 투어", "역사 유적지", "박물관 탐방"],
+          color: "#DC2626",
+          gradient: "from-red-600-via-rose-600-to-pink-600",
+        },
+        2: {
+          type: 2,
+          nickname: "여행 메이트 천사",
+          subtitle: "The Travel Mate Angel",
+          character: "💝",
+          description:
+            "동행자의 행복이 곧 나의 행복! 모두를 챙기는 따뜻한 여행 동반자.",
+          traits: ["배려심 가득", "친절함", "감정 이입", "관계 중시"],
+          strengths: ["분위기 조율", "갈등 해결", "팀워크"],
+          weaknesses: ["자기 희생", "인정 욕구", "경계 설정 어려움"],
+          travelMotivation: "함께하는 사람들과 좋은 추억을 만들고 싶어요",
+          recommendations: ["단체 패키지 투어", "봉사 여행", "현지 교류"],
+          color: "#EA580C",
+          gradient: "from-orange-600-via-amber-600-to-yellow-600",
+        },
+        3: {
+          type: 3,
+          nickname: "인증샷 프로듀서",
+          subtitle: "The Proof-Shot Producer",
+          character: "🏆",
+          description:
+            "여행도 성공적이어야 해! 핫플만 골라가는 트렌디한 성취자.",
+          traits: ["목표 지향", "효율적", "이미지 중시", "경쟁심"],
+          strengths: ["빠른 실행력", "정보 수집", "SNS 마스터"],
+          weaknesses: ["진정성 부족", "과로", "비교 의식"],
+          travelMotivation: "멋진 여행으로 성공적인 경험을 만들고 싶어요",
+          recommendations: ["핫플 투어", "SNS 명소", "럭셔리 여행"],
+          color: "#EAB308",
+          gradient: "from-yellow-600-via-amber-600-to-orange-600",
+        },
+        4: {
+          type: 4,
+          nickname: "감성 아티스트",
+          subtitle: "The Emotional Artist",
+          character: "🎭",
+          description:
+            "평범한 건 NO! 나만의 특별한 여행으로 영감을 찾는 예술가.",
+          traits: ["개성 강함", "감성적", "창의적", "깊이 있음"],
+          strengths: ["독특한 발견", "예술적 감각", "진정성"],
+          weaknesses: ["감정 기복", "우울함", "현실 도피"],
+          travelMotivation: "나만의 특별하고 의미있는 순간을 찾고 싶어요",
+          recommendations: ["예술 투어", "감성 카페", "독특한 숙소"],
+          color: "#8B5CF6",
+          gradient: "from-purple-600-via-violet-600-to-fuchsia-600",
+        },
+        5: {
+          type: 5,
+          nickname: "정보 수집 덕후",
+          subtitle: "The Information Collector",
+          character: "🔍",
+          description:
+            "여행 전 리서치는 필수! 모든 것을 알고 가는 지식 탐구자.",
+          traits: ["관찰력 뛰어남", "분석적", "독립적", "호기심"],
+          strengths: ["깊은 이해", "전문 지식", "효율적 계획"],
+          weaknesses: ["과도한 분석", "사회성 부족", "실행 지연"],
+          travelMotivation: "새로운 지식과 경험으로 세상을 이해하고 싶어요",
+          recommendations: ["박물관 투어", "과학관", "도서관 여행"],
+          color: "#06B6D4",
+          gradient: "from-cyan-600-via-blue-600-to-indigo-600",
+        },
+        6: {
+          type: 6,
+          nickname: "안전 제일주의자",
+          subtitle: "The Safety First Traveler",
+          character: "🛡️",
+          description: "안전이 최우선! 철저한 준비로 불안을 없애는 신중파.",
+          traits: ["충성심", "책임감", "경계심", "준비성"],
+          strengths: ["위험 관리", "신뢰성", "팀워크"],
+          weaknesses: ["과도한 걱정", "의심", "결정 어려움"],
+          travelMotivation: "안전하고 믿을 수 있는 여행을 하고 싶어요",
+          recommendations: ["패키지 투어", "안전한 국가", "보험 완비"],
+          color: "#10B981",
+          gradient: "from-emerald-600-via-green-600-to-teal-600",
+        },
+        7: {
+          type: 7,
+          nickname: "모험 콜렉터",
+          subtitle: "The Adventure Collector",
+          character: "🎢",
+          description:
+            "이것도 저것도 다 하고 싶어! 끝없는 에너지의 즐거움 추구자.",
+          traits: ["낙천적", "열정적", "다재다능", "자유로움"],
+          strengths: ["긍정 에너지", "적응력", "재미 창출"],
+          weaknesses: ["과도한 계획", "집중력 부족", "깊이 부족"],
+          travelMotivation: "재미있고 신나는 모든 것을 경험하고 싶어요",
+          recommendations: ["액티비티 투어", "축제", "테마파크"],
+          color: "#F59E0B",
+          gradient: "from-amber-600-via-yellow-600-to-lime-600",
+        },
+        8: {
+          type: 8,
+          nickname: "무한 도전러",
+          subtitle: "The Infinite Challenger",
+          character: "⚡",
+          description: "두려움은 없다! 강렬한 경험을 추구하는 파워풀한 도전자.",
+          traits: ["자신감", "리더십", "직선적", "강인함"],
+          strengths: ["결단력", "추진력", "보호 본능"],
+          weaknesses: ["지배욕", "공격성", "취약성 회피"],
+          travelMotivation: "강렬하고 도전적인 경험으로 한계를 넘고 싶어요",
+          recommendations: ["익스트림 스포츠", "오지 탐험", "모험 여행"],
+          color: "#DC2626",
+          gradient: "from-red-600-via-orange-600-to-amber-600",
+        },
+        9: {
+          type: 9,
+          nickname: "평화 수호자",
+          subtitle: "The Peace Keeper",
+          character: "🕊️",
+          description:
+            "느긋하게 흐름대로! 평화롭고 조화로운 여행을 즐기는 힐러.",
+          traits: ["평화로움", "수용적", "느긋함", "중재자"],
+          strengths: ["갈등 해결", "적응력", "포용력"],
+          weaknesses: ["우유부단", "수동적", "자기 주장 부족"],
+          travelMotivation: "편안하고 평화로운 휴식으로 재충전하고 싶어요",
+          recommendations: ["힐링 여행", "자연 속 휴양", "요가 리트릿"],
+          color: "#14B8A6",
+          gradient: "from-teal-600-via-cyan-600-to-sky-600",
+        },
+      };
+
+      // ------------------ STATE ------------------
+      // 현재 앱의 단계를 나타냅니다 ('intro', 'test', 'result').
+      let currentStep = "intro";
+      // 현재 보여지는 질문의 인덱스를 나타냅니다.
+      let currentQuestion = 0;
+      // 사용자의 답변들을 저장하는 배열입니다.
+      let answers = [];
+      // 최종적으로 계산된 사용자의 여행 성향 유형을 나타냅니다.
+      let resultType = null;
+
+      // ------------------ DOM ELEMENTS ------------------
+      // 인트로 화면 섹션 DOM 엘리먼트
+      const introSection = document.getElementById("intro-section");
+      // 테스트 화면 섹션 DOM 엘리먼트
+      const testSection = document.getElementById("test-section");
+      // 결과 화면 섹션 DOM 엘리먼트
+      const resultSection = document.getElementById("result-section");
+
+      // 테스트 시작 버튼 DOM 엘리먼트
+      const startBtn = document.getElementById("start-btn");
+      // 이전 질문 버튼 DOM 엘리먼트
+      const prevBtn = document.getElementById("prev-btn");
+
+      // 성격 유형 미리보기 컨테이너 DOM 엘리먼트
+      const personalityPreview = document.getElementById("personality-preview");
+      // 진행률 레이블 (예: "질문 1 / 9") DOM 엘리먼트
+      const progressLabel = document.getElementById("progress-label");
+      // 진행률 백분율 (예: "11%") DOM 엘리먼트
+      const progressPercentage = document.getElementById("progress-percentage");
+      // 진행률 바의 내부 엘리먼트 (너비 조절로 진행률 시각화) DOM 엘리먼트
+      const progressBarInner = document.getElementById("progress-bar-inner");
+      // 질문 제목 DOM 엘리먼트
+      const questionTitle = document.getElementById("question-title");
+      // 질문 옵션(선택지) 컨테이너 DOM 엘리먼트
+      const optionsContainer = document.getElementById("options-container");
+
+      // ------------------ FUNCTIONS ------------------
+
+      // 현재 단계를 보여주고 다른 단계는 숨기는 함수입니다.
+      // 'intro', 'test', 'result' 세 가지 단계 중 하나를 인자로 받습니다.
+      function showStep(step) {
+        currentStep = step;
+        [introSection, testSection, resultSection].forEach((section) => {
+          section.classList.remove("active");
+        });
+
+        if (step === "intro") {
+          introSection.classList.add("active");
+        } else if (step === "test") {
+          testSection.classList.add("active");
+        } else if (step === "result") {
+          resultSection.classList.add("active");
+        }
+      }
+
+      // 인트로 화면의 성향 미리보기 섹션을 렌더링하는 함수입니다.
+      // enneagramTypes 객체의 데이터를 사용하여 각 성향별 이모지와 별명을 표시합니다.
+      function renderIntro() {
+        personalityPreview.innerHTML = "";
+        Object.values(enneagramTypes).forEach((type) => {
+          const previewItem = document.createElement("div");
+          previewItem.className = "personality-preview-item";
+          previewItem.innerHTML = `
+              <div class="emoji">${type.character}</div>
+              <div class="name">${type.nickname}</div>
+          `;
+          personalityPreview.appendChild(previewItem);
+        });
+      }
+
+      // 현재 질문과 해당 질문의 선택지들을 렌더링하고 진행 상태 바를 업데이트하는 함수입니다.
+      function renderQuestion() {
+        const question = questions[currentQuestion];
+
+        progressLabel.textContent = `질문 ${currentQuestion + 1} / ${questions.length}`;
+        const percentage = Math.round(
+          ((currentQuestion + 1) / questions.length) * 100,
+        );
+        progressPercentage.textContent = `${percentage}%`;
+        progressBarInner.style.width = `${percentage}%`;
+
+        questionTitle.textContent = question.question;
+
+        optionsContainer.innerHTML = "";
+        question.options.forEach((option, index) => {
+          const optionButton = document.createElement("button");
+          optionButton.className = "option-button";
+          optionButton.innerHTML = `
+              <div class="option-number">${index + 1}</div>
+              <span class="option-text">${option.text}</span>
+          `;
+          optionButton.addEventListener("click", () =>
+            handleAnswer(option.type),
+          );
+          optionsContainer.appendChild(optionButton);
+        });
+
+        prevBtn.style.display = currentQuestion > 0 ? "flex" : "none";
+      }
+
+      // 사용자가 질문에 답변을 선택했을 때 호출되는 함수입니다.
+      // 선택된 답변의 유형을 answers 배열에 추가하고, 다음 질문으로 넘어가거나 모든 질문이 완료되면 결과를 계산합니다.
+      function handleAnswer(type) {
+        answers.push(type);
+
+        if (currentQuestion < questions.length - 1) {
+          currentQuestion++;
+          renderQuestion();
+        } else {
+          calculateResult();
+          renderResult();
+          showStep("result");
+        }
+      }
+
+      // 이전 질문으로 돌아가는 함수입니다.
+      // answers 배열에서 마지막 답변을 제거하고 이전 질문을 렌더링합니다.
+      function handlePrevious() {
+        if (currentQuestion > 0) {
+          answers.pop();
+          currentQuestion--;
+          renderQuestion();
+        }
+      }
+
+      // 사용자의 답변을 기반으로 최종 성향 유형을 계산하는 함수입니다.
+      // answers 배열에 저장된 답변 유형들의 빈도를 세어 가장 많이 선택된 유형을 결과로 결정합니다.
+      function calculateResult() {
+        const typeCounts = answers.reduce((acc, val) => {
+          acc[val] = (acc[val] || 0) + 1;
+          return acc;
+        }, {});
+
+        resultType = Number(
+          Object.entries(typeCounts).sort((a, b) => b[1] - a[1])[0][0],
+        );
+
+        // [추가된 코드] 결과를 브라우저에 저장합니다 (키 이름: 'myTravelType')
+        localStorage.setItem('myTravelType', resultType);
+      }
+
+      // 테스트를 처음부터 다시 시작하기 위해 모든 상태를 초기화하고 인트로 화면으로 돌아가는 함수입니다.
+      function handleRestart() {
+        currentQuestion = 0;
+        answers = [];
+        resultType = null;
+        showStep("intro");
+      }
+
+      // 최종 결과를 렌더링하는 함수입니다.
+      // 먼저 카드 획득 화면을 보여준 후, 사용자가 버튼을 클릭하면 상세 결과 카드와 추천, 공유 옵션을 표시합니다.
+      function renderResult() {
+        const resultData = enneagramTypes[resultType];
+        resultSection.innerHTML = "";
+
+        const acquisitionScreen = document.createElement("div");
+        acquisitionScreen.className = "acquisition-screen";
+        acquisitionScreen.innerHTML = `
+          <div class="star-background"></div>
+          <div class="shooting-stars"></div>
+          <div class="acquisition-content">
+              <div class="floating-card-container">
+                  <div class="card-visual ${resultData.gradient}-bg">
+                      <div class="card-character">${resultData.character}</div>
+                  </div>
+              </div>
+              <h2 class="acquisition-title">카드를 획득했어요!</h2>
+              <p class="acquisition-subtitle">${resultData.nickname}</p>
+              <button class="reveal-button">
+                  <span>클릭하여 카드 확인하기</span>
+              </button>
+          </div>
+      `;
+        resultSection.appendChild(acquisitionScreen);
+
+        const shootingStarsContainer = acquisitionScreen.querySelector('.shooting-stars');
+        
+        // [수정된 유성 생성 로직]
+        const numberOfStars = 5; // 유성 개수를 5개로 재조정
+        for (let i = 0; i < numberOfStars; i++) {
+            const star = document.createElement('div');
+            star.className = 'shooting-star';
+            
+            // 위치 랜덤 설정 (화면 전체에서 나타나도록 left 값 되돌림)
+            const top = Math.random() * 50 - 20; // -20% ~ 30% (화면 위쪽)
+            const left = Math.random() * 120 - 10; // -10% ~ 110% (좌우 전체)
+            
+            const duration = Math.random() * 5 + 5; // 5 ~ 10초 (더 느리게)
+            const delay = Math.random() * 15; // 0 ~ 15초 딜레이로 빈도 줄임
+            const width = Math.random() * 100 + 80; // 길이 80px ~ 180px
+            
+            star.style.top = `${top}%`;
+            star.style.left = `${left}%`;
+            star.style.width = `${width}px`;
+            star.style.animationDuration = `${duration}s`;
+            star.style.animationDelay = `${delay}s`;
+            
+            shootingStarsContainer.appendChild(star);
+        }
+
+        // [수정] 고양이 로켓 생성 및 물리 엔진 적용
+        const rocket = document.createElement('div');
+        rocket.className = 'cat-rocket'; // 클래스 이름 cat-rocket 유지
+        rocket.innerHTML = '🚀'; // 로켓만 남김
+        shootingStarsContainer.appendChild(rocket);
+
+        // --- 물리 엔진 변수 설정 ---
+        let posX = Math.random() * window.innerWidth; // 초기 위치 X (화면 전체 랜덤)
+        let posY = Math.random() * (window.innerHeight / 3); // 초기 위치 Y (화면 상단 1/3 지점 랜덤)
+        let velX = (Math.random() - 0.5) * 2; // 초기 속도 X (더 느리게)
+        let velY = (Math.random() - 0.5) * 2; // 초기 속도 Y (더 느리게)
+        let rotation = 0;
+        
+        // 드래그 관련 변수
+        let isDragging = false;
+        let lastMouseX = 0;
+        let lastMouseY = 0;
+        let dragVelX = 0;
+        let dragVelY = 0;
+
+        // --- 애니메이션 루프 (매 프레임 실행) ---
+        function animateRocket() {
+            if (!isDragging) {
+                // 1. 위치 업데이트
+                posX += velX;
+                posY += velY;
+
+                // 2. 화면 경계 튕기기 (Bounce)
+                const rocketWidth = rocket.offsetWidth || 50;
+                const rocketHeight = rocket.offsetHeight || 50;
+                const maxX = window.innerWidth - rocketWidth;
+                const maxY = window.innerHeight - rocketHeight;
+
+                // 왼쪽 벽
+                if (posX <= 0) {
+                    posX = 0;
+                    velX *= -1; // 속도 반전
+                }
+                // 오른쪽 벽
+                if (posX >= maxX) {
+                    posX = maxX;
+                    velX *= -1;
+                }
+                // 천장
+                if (posY <= 0) {
+                    posY = 0;
+                    velY *= -1;
+                }
+                // 바닥
+                if (posY >= maxY) {
+                    posY = maxY;
+                    velY *= -1;
+                }
+
+                // 3. 이동 방향에 맞춰 회전 (이모지 🚀가 45도 기울어져 있으므로 보정)
+                // Math.atan2(y, x)는 라디안 값을 반환하므로 도로 변환
+                const angle = Math.atan2(velY, velX) * (180 / Math.PI);
+                rotation = angle + 45; // 이모지 기본 각도 보정
+            }
+
+            // 4. 스타일 적용 (GPU 가속 사용)
+            rocket.style.transform = `translate(${posX}px, ${posY}px) rotate(${rotation}deg)`;
+
+            // 다음 프레임 요청
+            requestAnimationFrame(animateRocket);
+        }
+
+        // --- 드래그 이벤트 핸들러 ---
+        rocket.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            lastMouseX = e.clientX;
+            lastMouseY = e.clientY;
+            // 잡는 순간 속도 0으로 (멈춤)
+            velX = 0;
+            velY = 0;
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+
+            // 현재 마우스 위치로 로켓 이동
+            const currentMouseX = e.clientX;
+            const currentMouseY = e.clientY;
+            
+            // 던지는 속도 계산 (현재 위치 - 이전 위치)
+            dragVelX = currentMouseX - lastMouseX;
+            dragVelY = currentMouseY - lastMouseY;
+
+            // 위치 업데이트
+            posX = currentMouseX - (rocket.offsetWidth / 2);
+            posY = currentMouseY - (rocket.offsetHeight / 2);
+
+            lastMouseX = currentMouseX;
+            lastMouseY = currentMouseY;
+            
+            // 드래그 중에는 마우스 이동 방향으로 회전
+            const angle = Math.atan2(dragVelY, dragVelX) * (180 / Math.PI);
+            rotation = angle + 45;
+        });
+
+        window.addEventListener('mouseup', () => {
+            if (!isDragging) return;
+            isDragging = false;
+            
+            // 손을 놓으면 마지막 마우스 이동 속도로 로켓 발사!
+            // 너무 빠르거나 느리지 않게 속도 제한 및 보정
+            velX = dragVelX * 0.2; // 약간의 감속 계수 (더 느리게)
+            velY = dragVelY * 0.2; // 약간의 감속 계수 (더 느리게)
+
+            // 정지 상태 방지 (너무 느리면 랜덤 속도 부여)
+            if (Math.abs(velX) < 1 && Math.abs(velY) < 1) {
+                 velX = (Math.random() - 0.5) * 2; // (더 느리게)
+                 velY = (Math.random() - 0.5) * 2; // (더 느리게)
+            }
+        });
+        
+        // 애니메이션 시작
+        requestAnimationFrame(animateRocket);
+
+        const cardVisual = acquisitionScreen.querySelector(".card-visual");
+        cardVisual.animate(
+          [
+            { transform: "scale(0) rotateY(0)", opacity: 0 },
+            { transform: "scale(1.2) rotateY(180deg)", opacity: 1 },
+            { transform: "scale(1) rotateY(360deg)", opacity: 1 },
+          ],
+          {
+            duration: 1500,
+            easing: "ease-in-out",
+          },
+        );
+
+        const resultView = document.createElement("div");
+        resultView.className = "result-view";
+        resultView.style.display = "none";
+        resultView.innerHTML = `
+          <div class="result-header">
+              <h1 class="result-title">당신의 여행 성향을 찾았어요!</h1>
+              <p class="result-subtitle">카드를 클릭하거나 드래그해서 돌려보세요</p>
+          </div>
+          <div class="interactive-card-container">
+              
+          </div>
+
+          <div class="result-details-grid">
+              <div class="recommendation-panel">
+                  <h3 class="panel-title">AI가 이렇게 추천했어요!</h3>
+                  <p class="panel-subtitle">당신의 성향에 딱 맞는 여행지</p>
+                  <div class="recommendation-list">
+                      ${resultData.recommendations
+                        .map(
+                          (rec, index) => `
+                          <div class="recommendation-item">
+                              <div class="recommendation-number">${index + 1}</div>
+                              <span>${rec}</span>
+                          </div>
+                      `,
+                        )
+                        .join("")}
+                  </div>
+              </div>
+
+              <div class="share-panel">
+                  <h3 class="panel-title">공유하기</h3>
+                  <button id="share-btn" class="share-button">
+                      <lord-icon
+                          src="https://cdn.lordicon.com/bxxnzvfm.json"
+                          trigger="hover"
+                          colors="primary:#ffffff"
+                          style="width:20px;height:20px;margin-right:8px;">
+                      </lord-icon>
+                      결과 공유하기
+                  </button>
+                  <div class="share-text-area">
+                      <p class="panel-subtitle">나의 여행 성향은!</p>
+                      <div class="personality-share-badge">
+                          <span class="share-character">${resultData.character}</span>
+                          <div class="share-text-content">
+                              <p class="share-type">유형 ${resultData.type}</p>
+                              <p class="share-nickname">${resultData.nickname}</p>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          
+          <button id="get-recommendations-btn" class="get-recommendations-button">
+              맞춤 여행 추천받기 →
+          </button>
+          <button id="restart-btn" class="start-button">다시 시작하기</button>
+      `;
+        resultSection.appendChild(resultView);
+
+        acquisitionScreen
+          .querySelector(".reveal-button")
+          .addEventListener("click", () => {
+            acquisitionScreen.style.display = "none";
+            resultView.style.display = "block";
+            renderFlippableCard(resultData);
+          });
+
+        document.getElementById("share-btn").addEventListener("click", () => {
+          const shareUrl = window.location.href;
+          const shareTitle = "AI 여행 성향 테스트";
+          const shareText = `내 여행 성향은 '${resultData.nickname}'! 당신의 성향도 알아보세요!`;
+
+          if (navigator.share) {
+            navigator
+              .share({
+                title: shareTitle,
+                text: shareText,
+                url: shareUrl,
+              })
+              .then(() => console.log("Successful share"))
+              .catch((error) => console.log("Error sharing", error));
+          } else {
+            navigator.clipboard
+              .writeText(shareUrl)
+              .then(() => {
+                alert("결과 URL이 클립보드에 복사되었어요!");
+              })
+              .catch((err) => {
+                console.error("Could not copy text: ", err);
+                alert("URL 복사에 실패했습니다.");
+              });
+          }
+        });
+
+        document
+          .getElementById("get-recommendations-btn")
+          .addEventListener("click", () => {
+            alert("맞춤 여행 추천받기 기능은 아직 개발 중입니다!");
+          });
+        document
+          .getElementById("restart-btn")
+          .addEventListener("click", handleRestart);
+      }
+
+      // 인터랙티브한 뒤집기 가능한 3D 결과 카드를 렌더링하고 관리하는 함수입니다.
+      // 스파클 및 틸트 효과를 포함하여 카드의 앞면(요약)과 뒷면(상세 정보)을 표시합니다.
+      function renderFlippableCard(data) {
+        const container = document.querySelector(".interactive-card-container");
+        container.innerHTML = `
+          <div class="card-scene">
+              <div class="card-object">
+                  <div class="card-face card-face--front ${data.gradient}-bg">
+                      <div class="card-border"></div>
+                      <div class="card-content">
+                          <div class="card-top-ornament">✦</div>
+                          <div class="card-character-main">${data.character}</div>
+                          <div class="card-title-group">
+                              <div class="card-main-type">${data.type}</div>
+                              <h2 class="card-main-nickname">${data.nickname}</h2>
+                              <p class="card-main-subtitle">${data.subtitle}</p>
+                          </div>
+                          <div class="card-bottom-ornament">✦</div>
+                      </div>
+                      <div class="sparkle-overlay"></div>
+                      <div class="holographic-overlay"></div>
+                  </div>
+                  <div class="card-face card-face--back">
+                      <div class="card-back-content">
+                          <div class="back-header">
+                              <div class="back-character">${data.character}</div>
+                              <div class="back-type">${data.type}</div>
+                              <h3 class="back-nickname">${data.nickname}</h3>
+                              <p class="back-subtitle">${data.subtitle}</p>
+                          </div>
+                          <p class="back-description">"${data.travelMotivation}"</p>
+                          <div class="back-section">
+                              <h4 class="back-section-title">주요 특징</h4>
+                              <div class="traits-grid">
+                                  ${data.traits.map((trait) => `<div class="trait-item">${trait}</div>`).join("")}
+                              </div>
+                          </div>
+                          <div class="back-section">
+                              <h4 class="back-section-title">여행 강점</h4>
+                              <ul class="strengths-list">
+                                  ${data.strengths.map((s) => `<li>${s}</li>`).join("")}
+                              </ul>
+                          </div>
+                          <div class="back-section">
+                              <h4 class="back-section-title">추천 여행 스타일</h4>
+                              <div class="recommendations-list">
+                                  ${data.recommendations.map((r) => `<span>#${r}</span>`).join(" ")}
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      `;
+
+        const cardObject = container.querySelector(".card-object");
+        const sparkleOverlay = container.querySelector(".sparkle-overlay");
+
+        for (let i = 0; i < 30; i++) {
+          const sparkle = document.createElement("div");
+          sparkle.className = "card-sparkle";
+          sparkle.style.left = `${Math.random() * 100}%`;
+          sparkle.style.top = `${Math.random() * 100}%`;
+          sparkle.style.animationDelay = `${Math.random() * 2}s`;
+          sparkleOverlay.appendChild(sparkle);
+        }
+
+        cardObject.addEventListener("click", () => {
+          cardObject.classList.toggle("is-flipped");
+
+          cardObject.style.setProperty("--rotate-x", "0deg");
+          cardObject.style.setProperty("--rotate-y", "0deg");
+        });
+
+        const cardScene = container.querySelector(".card-scene");
+        cardScene.addEventListener("mousemove", (e) => {
+          if (cardObject.classList.contains("is-flipped")) return;
+
+          const rect = cardScene.getBoundingClientRect();
+          const centerX = rect.left + rect.width / 2;
+          const centerY = rect.top + rect.height / 2;
+          const mouseX = e.clientX - centerX;
+          const mouseY = e.clientY - centerY;
+
+          const rotateX = (mouseY / rect.height) * -30; // Max rotation 15deg
+          const rotateY = (mouseX / rect.width) * 30; // Max rotation 15deg
+
+          cardObject.style.setProperty("--rotate-x", `${rotateX}deg`);
+          cardObject.style.setProperty("--rotate-y", `${rotateY}deg`);
+        });
+
+        cardScene.addEventListener("mouseleave", () => {
+          cardObject.style.setProperty("--rotate-x", "0deg");
+          cardObject.style.setProperty("--rotate-y", "0deg");
+        });
+      }
+
+      // ------------------ INITIALIZATION ------------------
+
+      // 시작 버튼 클릭 시 테스트 섹션으로 이동하고 첫 질문을 렌더링합니다.
+      startBtn.addEventListener("click", () => {
+        showStep("test");
+        renderQuestion();
+      });
+
+      // 이전 버튼 클릭 시 이전 질문으로 돌아갑니다.
+      prevBtn.addEventListener("click", handlePrevious);
+
+      // 페이지 로드 시 인트로 화면을 렌더링하고 표시합니다.
+      renderIntro();
+      showStep("intro");
+    </script>
+  </body>
+</html>

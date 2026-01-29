@@ -614,8 +614,8 @@
                                 </a>
                                 <nav class="flex items-center justify-center text-muted-foreground gap-8 text-lg font-medium" style="position: absolute; left: 50%; transform: translateX(-50%);">
                                     <a href="../plan/planner.html" class="group relative py-1 transition-colors hover:text-foreground">플래너<span class="absolute left-0 bottom-0 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full"></span></a>
-                                    <a href="" class="group relative py-1 transition-colors hover:text-foreground">숙소<span class="absolute left-0 bottom-0 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full"></span></a>
-                                    <a href="" class="group relative py-1 transition-colors hover:text-foreground">여행기록<span class="absolute left-0 bottom-0 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full"></span></a>
+                                    <a href="../stay/search.html" class="group relative py-1 transition-colors hover:text-foreground">숙소<span class="absolute left-0 bottom-0 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full"></span></a>
+                                    <a href="../community/community-main.html" class="group relative py-1 transition-colors hover:text-foreground">여행기록<span class="absolute left-0 bottom-0 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full"></span></a>
                                 </nav>
                                 <div id="auth-links" class="flex items-center gap-6">${authContent}</div>
                             </div>
@@ -714,8 +714,8 @@
                     <div class="bg-white border-b border-gray-200 px-6 py-4 shadow-sm z-30">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center gap-4">
-                                <input type="text" value="${tripName}" onchange="Store.setState({ tripName: this.value })" class="text-2xl font-semibold text-gray-800 border-none outline-none focus:text-indigo-600 bg-transparent" placeholder="여행 이름 입력" />
-                                ${currentPlanId ? `<span class="px-3 py-1 bg-green-100 text-green-700 text-sm rounded-full">저장됨</span>` : ""}
+                                <input type="text" value="${tripName}" onchange="Store.setState({ tripName: this.value })" class="text-2xl font-semibold text-gray-800 border-1 border-white focus:border-primary rounded-md outline-none focus:text-black focus:ring-[#00897b] bg-transparent" placeholder="여행 이름 입력" />
+
                             </div>
                             <div class="flex gap-3">
                                 <button onclick="Store.setState({ showPlanList: !Store.state.showPlanList })" class="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">${Icons.List} 내 계획 (${savedPlans.length})</button>
@@ -819,18 +819,38 @@
                             const startTime = item.startTime || "10:00";
                             const endTime = item.endTime || "12:00";
                             const isCustom = item.place.category === "custom";
+                            const actionIcon = isCustom ? Icons.Edit : Icons.Info;
                             const clickAction = isCustom
                                 ? `App.editManualItem('${item.id}')`
                                 : `App.showDetail('${placeJson}')`;
                             return `
-                        <div class="border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm flex mb-4 relative group min-h-[200px] hover:border-indigo-400 transition-colors">
-                            <div class="w-[200px] h-[200px] flex-shrink-0 p-2 relative">
+                        <div class="border border-gray-200 rounded-lg overflow-hidden bg-white shadow-sm flex mb-4 relative group min-h-[200px] hover:border-primary border-2transition-colors">
+                            <div class="w-[220px] h-[250px] p-3 flex-shrink-0 relative">
                                 <img src="${item.place.image}" class="w-full h-full object-cover rounded-lg" />
-                                <button onclick="${clickAction}" class="absolute bottom-3 right-3 p-1.5 bg-white rounded-full shadow hover:bg-gray-100 text-gray-600" title="${isCustom ? "일정 수정" : "상세 정보"}">${Icons.Info}</button>
+                                <button onclick="${clickAction}" class="absolute bottom-5 right-5 p-1.5 bg-white rounded-full shadow hover:bg-gray-100 text-gray-600" title="${isCustom ? "일정 수정" : "상세 정보"}">
+                                    ${actionIcon}
+                                </button>
                             </div>
                             <div class="flex-1 p-4 flex flex-col">
-                                <div class="flex justify-between items-start mb-2"><div><h4 class="font-medium text-gray-800">${item.place.name}</h4><p class="text-sm text-gray-500">${item.place.country}</p></div><button onclick="App.removeItem('${item.id}')" class="text-gray-400 hover:text-red-600">${Icons.Trash2}</button></div>
-                                <div class="flex items-center gap-2 mb-3 bg-gray-50 p-2 rounded-lg border border-gray-100"><div class="text-indigo-500">${Icons.Clock}</div><input type="time" value="${startTime}" onchange="App.updateItem('${item.id}', 'startTime', this.value)" class="bg-transparent text-sm font-bold text-gray-700 focus:outline-none focus:text-indigo-700" /><span class="text-gray-400 text-sm">~</span><input type="time" value="${endTime}" onchange="App.updateItem('${item.id}', 'endTime', this.value)" class="bg-transparent text-sm font-bold text-gray-700 focus:outline-none focus:text-indigo-700" /></div>
+                                <div class="flex justify-between items-start mb-2">
+                                    <div>
+                                        <h4 class="font-medium text-gray-800">${item.place.name}</h4>
+                                        <p class="text-sm text-gray-500">${item.place.country}</p>
+                                    </div>
+                                    <button onclick="App.removeItem('${item.id}')" class="text-gray-400 hover:text-red-600">${Icons.Trash2}</button>
+                                </div>
+                                
+                                <div class="flex items-center gap-2 mb-3 bg-gray-50 p-2 rounded-lg border border-gray-100">
+                                    <div class="text-primary">${Icons.Clock}</div>
+                                    <input type="time" value="${startTime}" 
+                                        onchange="App.updateItem('${item.id}', 'startTime', this.value)" 
+                                        class="bg-transparent text-sm font-bold border-0 text-gray-700 focus:outline-none focus:ring-0 focus:text-primary" />
+                                    <span class="text-gray-400 text-sm">~</span>
+                                    <input type="time" value="${endTime}" 
+                                        onchange="App.updateItem('${item.id}', 'endTime', this.value)" 
+                                        class="bg-transparent text-sm font-bold border-0 text-gray-700 focus:outline-none focus:ring-0 focus:text-primary" />
+                                </div>
+
                                 <textarea onchange="App.updateItem('${item.id}', 'memo', this.value)" placeholder="메모를 입력하세요" class="w-full text-sm border border-gray-200 rounded-lg p-3 resize-none flex-1 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-200 outline-none transition-all">${item.memo}</textarea>
                             </div>
                         </div>`;
@@ -839,7 +859,19 @@
 
                     blocksHtml += `<div onclick="App.openAddModal()" class="drop-zone border-2 border-dashed border-gray-300 rounded-lg min-h-[140px] flex items-center justify-center text-gray-400 bg-gray-50 hover:border-primary hover:text-black transition-colors cursor-pointer" data-day-index="${selectedDay}"><div class="text-center pointer-events-none"><div class="mx-auto mb-2 inline-block">${Icons.Plus}</div><p class="text-sm">장소를 드래그하거나 <span class="font-bold underline">클릭하여 일정 추가</span></p></div></div>`;
 
-                    return `<div class="flex-1 flex flex-col h-full overflow-hidden bg-transparent"><div class="p-6 border-b border-gray-200 bg-white"><h2 class="text-2xl font-semibold text-gray-800 mb-1">${tripName}</h2><p class="text-gray-500">${dateStr}</p></div><div class="flex-1 overflow-y-auto p-6 scroll-smooth"><div class="max-w-3xl mx-auto pb-20">${blocksHtml}</div></div></div>`;
+                    return `
+                    <div class="flex-1 flex flex-col h-full overflow-hidden bg-transparent">
+                        <div class="p-6 border-b border-gray-200 bg-white">
+                            <h2 class="text-2xl font-semibold text-gray-800 mb-1">${tripName}</h2>
+                            <p class="text-gray-500">${dateStr}</p>
+                        </div>
+                        <div class="flex-1 overflow-y-auto p-6 scroll-smooth">
+                            <div class="max-w-4xl mx-auto pb-20">
+                                ${blocksHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
                 },
             };
 

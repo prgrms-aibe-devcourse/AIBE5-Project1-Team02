@@ -26,6 +26,7 @@ function handleSignUp(event) {
     }
 
     const user = {
+        id: email, // 고유 ID로 email 사용
         name,
         gender: gender.value,
         birthdate,
@@ -123,7 +124,7 @@ function populateProfile() {
 
     const profileBio = document.getElementById('profileBio');
     if (profileBio) {
-        profileBio.innerText = user.selfIntroduction ? `"${user.selfIntroduction}"` : `"새로운 곳에서의 설렘을 즐기는 여행자입니다. 주로 휴양지보다는 도심 속 숨겨진 명소를 찾는 것을 좋아해요!"`;
+        profileBio.innerText = user.selfIntroduction ? user.selfIntroduction : "새로운 곳에서의 설렘을 즐기는 여행자입니다. 주로 휴양지보다는 도심 속 숨겨진 명소를 찾는 것을 좋아해요!";
     }
 
     const editBioInput = document.getElementById('editBioInput');
