@@ -831,6 +831,7 @@
                                 초기화
                             </button>
                             <button
+                                id="select-complete-button"
                                 class="flex items-center gap-2 px-10 h-12 rounded-xl bg-primary text-white text-sm font-bold shadow-lg shadow-primary/20 hover:bg-primary/90 hover:-translate-y-0.5 transition-all"
                             >
                                 <span>선택 완료</span>
@@ -1212,6 +1213,16 @@
                         );
                     }
                 });
+                // ===========================================
+                // "선택 완료" 버튼 클릭 처리
+                // ===========================================
+                const selectCompleteButton = document.getElementById('select-complete-button');
+                if (selectCompleteButton) {
+                    selectCompleteButton.addEventListener('click', () => {
+                        console.log("'선택 완료' 버튼 클릭! planner.html로 이동합니다.");
+                        window.location.href = '../plan/planner.html';
+                    });
+                }
             });
         </script>
         <script src="../../js/auth.js"></script>
