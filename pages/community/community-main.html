@@ -12,10 +12,8 @@
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
       rel="stylesheet"
     />
-    <!--테일윈드 경로-->
     <link rel="stylesheet" href="../../styles.css" />
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <!--MAP API KEY-->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB0XMMZaEehZifAghQxs-uj87OhbctmPUE&libraries=places&loading=async"></script>
     <script>
       tailwind.config = {
@@ -90,80 +88,73 @@
   <body
     class="bg-background-light dark:bg-background-dark text-text-main-light dark:text-text-main-dark font-display antialiased flex flex-col min-h-screen transition-colors duration-300"
   >
-  <header
-            class="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+    <header
+      class="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+    >
+      <div class="w-full px-8 relative flex h-20 items-center justify-between">
+        <a
+          class="flex items-center space-x-2 transition-transform duration-300 hover:scale-105"
+          href="../main/Main.html"
         >
-            <div
-                class="w-full px-8 relative flex h-20 items-center justify-between"
-            >
-                <a
-                    class="flex items-center space-x-2 transition-transform duration-300 hover:scale-105"
-                    href="Main.html"
-                >
-                    <img
-                        src="../../images/Logo.png"
-                        alt="여백 로고"
-                        class="h-9 w-9 rounded-full object-cover"
-                    />
-                    <span
-                        class="font-serif text-foreground font-bold ml-2 text-xl"
-                        >여백</span
-                    >
-                </a>
+          <img
+            src="../../images/Logo.png"
+            alt="여백 로고"
+            class="h-9 w-9 rounded-full object-cover"
+          />
+          <span class="font-serif text-foreground font-bold ml-2 text-xl"
+            >여백</span
+          >
+        </a>
 
-                <nav
-                    class="flex items-center justify-center text-muted-foreground gap-8 text-lg font-medium"
-                    style="
-                        position: absolute;
-                        left: 50%;
-                        transform: translateX(-50%);
-                    "
-                >
-                    <a
-                        href="../plan/planner.html"
-                        class="group relative py-1 transition-colors hover:text-foreground"
-                    >
-                        플래너
-                        <span
-                            class="absolute left-0 bottom-0 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full"
-                        ></span>
-                    </a>
-                    <a
-                        href="../stay/search.html"
-                        class="group relative py-1 transition-colors hover:text-foreground"
-                    >
-                        숙소
-                        <span
-                            class="absolute left-0 bottom-0 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full"
-                        ></span>
-                    </a>
-                    <a
-                        href="../community/community-main.html"
-                        class="group relative py-1 transition-colors hover:text-foreground"
-                    >
-                        여행기록
-                        <span
-                            class="absolute left-0 bottom-0 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full"
-                        ></span>
-                    </a>
-                </nav>
+        <nav
+          class="flex items-center justify-center text-muted-foreground gap-8 text-lg font-medium"
+          style="position: absolute; left: 50%; transform: translateX(-50%)"
+        >
+          <a
+            href="../plan/planner.html"
+            class="group relative py-1 transition-colors hover:text-foreground"
+          >
+            플래너
+            <span
+              class="absolute left-0 bottom-0 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full"
+            ></span>
+          </a>
+          <a
+            href="../stay/search.html"
+            class="group relative py-1 transition-colors hover:text-foreground"
+          >
+            숙소
+            <span
+              class="absolute left-0 bottom-0 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full"
+            ></span>
+          </a>
+          <a
+            href="../community/community-main.html"
+            class="group relative py-1 transition-colors hover:text-foreground"
+          >
+            여행기록
+            <span
+              class="absolute left-0 bottom-0 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full"
+            ></span>
+          </a>
+        </nav>
 
-                <div id="auth-links" class="flex items-center gap-6">
-                    <a
-                        href="../auth/SignIn.html"
-                        class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-                    >
-                        로그인
-                    </a>
-                    <a
-                        href="../auth/SignUp.html"
-                        class="text-sm font-bold text-white bg-primary px-5 py-2.5 rounded-full shadow-md transition-all duration-200 hover:bg-indigo-700 hover:shadow-lg hover:-translate-y-0.5 active:scale-95"
-                    >
-                        회원가입
-                    </a>
-                </div>
-            </div>
-        </header>
+        <div id="auth-links" class="flex items-center gap-6">
+          <a
+            href="../auth/SignIn.html"
+            class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+          >
+            로그인
+          </a>
+          <a
+            href="../auth/SignUp.html"
+            class="text-sm font-bold text-white bg-primary px-5 py-2.5 rounded-full shadow-md transition-all duration-200 hover:bg-indigo-700 hover:shadow-lg hover:-translate-y-0.5 active:scale-95"
+          >
+            회원가입
+          </a>
+        </div>
+      </div>
+    </header>
 
     <div
       class="flex flex-1 max-w-[1440px] mx-auto w-full pt-6 pb-20 px-4 lg:px-10 gap-8 items-start"
@@ -198,7 +189,7 @@
                   name="destination"
                   value="유럽"
                 /><span
-                  class="text-sm  dark:text-text-muted-dark group-hover/item:text-primary transition-colors"
+                  class="text-sm dark:text-text-muted-dark group-hover/item:text-primary transition-colors"
                   >유럽</span
                 ></label
               >
@@ -250,10 +241,7 @@
             <h1
               class="text-3xl md:text-4xl font-black text-text-main-light dark:text-white tracking-tight leading-tight mb-2"
             >
-              다음 <span class="text-primary">모험</span>을<br
-                class="hidden lg:block"
-              />
-              발견하세요
+              다음 <span class="text-primary">모험</span>을 발견하세요
             </h1>
             <p
               class="text-text-muted-light dark:text-text-muted-dark text-base md:text-lg max-w-xl"
@@ -367,7 +355,8 @@
           <button
             class="flex items-center gap-2 bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark px-4 py-2 rounded-full whitespace-nowrap shadow-sm text-sm font-medium"
           >
-            <span class="material-symbols-outlined text-[18px]">tune</span> 필터
+            <span class="material-symbols-outlined text-[18px]">tune</span>
+            필터
           </button>
         </div>
 
@@ -696,20 +685,23 @@
       </div>
     </div>
 
+    <script src="../../js/auth.js"></script>
     <script>
-      (function () {
-        const dummyUser = {
-          id: "user_test_123",
-          name: "테스트 여행자",
-          email: "test@example.com",
-        };
+      // 이 즉시 실행 함수는 테스트 목적으로 사용되었으며, 실제 로그인 로직과 충돌할 수 있으므로 제거합니다.
+      // (function () {
+      //    const dummyUser = {
+      //      id: "user_test_123",
+      //      name: "테스트 여행자",
+      //      email: "test@example.com",
+      //    };
 
-        if (!localStorage.getItem("currentUser")) {
-          localStorage.setItem("currentUser", JSON.stringify(dummyUser));
-        }
-      })();
+      //    if (!localStorage.getItem("currentUser")) {
+      //      localStorage.setItem("currentUser", JSON.stringify(dummyUser));
+      //    }
+      // })();
 
       document.addEventListener("DOMContentLoaded", function () {
+        checkLoginStatus(); // 로그인 상태 확인 및 UI 업데이트
         let allPostsData = [];
         let currentFilteredPosts = [];
         const initialVisibleCount = 9;
@@ -762,11 +754,36 @@
         );
         const detailMap = document.getElementById("detailMap");
         const detailRouteList = document.getElementById("detailRouteList");
+        const detailLinkedPlanContainer = document.getElementById(
+          "detailLinkedPlanContainer",
+        ); // New
+        const detailLinkedPlanName = document.getElementById(
+          "detailLinkedPlanName",
+        ); // New
+        const openLinkedPlanDetailButton = document.getElementById(
+          "openLinkedPlanDetailButton",
+        ); // New
+
+        // --- 연결된 계획 상세 모달 관련 변수 및 요소 ---
+        const linkedPlanDetailModal = document.getElementById(
+          "linkedPlanDetailModal",
+        );
+        const closeLinkedPlanDetailModalBtn = document.getElementById(
+          "closeLinkedPlanDetailModal",
+        );
+        const linkedPlanTitle = document.getElementById("linkedPlanTitle");
+        const linkedPlanDates = document.getElementById("linkedPlanDates");
+        const linkedPlanPlacesList = document.getElementById(
+          "linkedPlanPlacesList",
+        );
+        const linkedPlanMap = document.getElementById("linkedPlanMap");
 
         let detailMapInstance = null;
+        let linkedPlanMapInstance = null; // New map instance for linked plan modal
         let detailMarkers = [];
         let detailPolyline = null;
         let currentDetailPost = null;
+        let currentLinkedPlanData = null; // To store the plan object for the linked plan modal
 
         closeDetailModalBtn.addEventListener("click", () => {
           postDetailModal.classList.add("hidden");
@@ -822,18 +839,159 @@
             });
           }
 
-          // 8. 여행 경로 🗺️
-          if (post.routeData && post.routeData.length > 0) {
-            detailRouteContainer.classList.remove("hidden");
-            displayDetailRoute(post.routeData);
-          } else {
-            detailRouteContainer.classList.add("hidden");
+          // 8. 여행 경로 🗺️ 및 연결된 여행 계획
+          detailLinkedPlanContainer.classList.add("hidden"); // Reset
+          detailRouteContainer.classList.add("hidden"); // Reset
+
+          let displayRouteData = post.routeData;
+
+          if (post.linkedPlanId) {
+            let currentUser = null;
+            try {
+              currentUser =
+                JSON.parse(localStorage.getItem("loggedInUser")) ||
+                JSON.parse(localStorage.getItem("currentUser"));
+            } catch (e) {
+              console.error(
+                "Failed to parse current user from localStorage:",
+                e,
+              );
+            }
+
+            if (currentUser && (currentUser.email || currentUser.id)) {
+              const email = currentUser.email || currentUser.id;
+              const userPlansKey = "tripPlans_" + email;
+              let userPlans = [];
+              try {
+                userPlans = JSON.parse(
+                  localStorage.getItem(userPlansKey) || "[]",
+                );
+              } catch (e) {
+                console.error(
+                  "Failed to parse user plans from localStorage:",
+                  e,
+                );
+              }
+              const linkedPlan = userPlans.find(
+                (p) => p.id === post.linkedPlanId,
+              );
+
+              if (linkedPlan) {
+                currentLinkedPlanData = linkedPlan; // 데이터를 변수에 저장
+
+                detailLinkedPlanName.textContent = linkedPlan.name;
+
+                detailLinkedPlanContainer.classList.remove("hidden");
+              } else {
+                currentLinkedPlanData = null;
+
+                detailLinkedPlanContainer.classList.add("hidden");
+              }
+            }
           }
 
-          // 9. 좋아요/북마크 상태 (구현 필요 시 추가)
+          if (displayRouteData && displayRouteData.length > 0) {
+            detailRouteContainer.classList.remove("hidden");
+
+            displayDetailRoute(displayRouteData);
+          }
+
+          // 댓글 렌더링 함수 호출
+
+          renderComments();
+
+          // 11. 수정/삭제 버튼 표시 여부
+          const savedUser =
+            JSON.parse(localStorage.getItem("currentUser")) ||
+            JSON.parse(localStorage.getItem("loggedInUser"));
+          const editBtn = document.getElementById("editPostBtn");
+          const deleteBtn = document.getElementById("delete-post-button"); // Changed to new ID
+
+          if (savedUser && post.authorId === savedUser.id) {
+            editBtn.classList.remove("hidden");
+            deleteBtn.classList.remove("hidden");
+
+            editBtn.onclick = () => {
+              // Implement edit functionality here, similar to openWriteModalBtn logic but pre-filling data
+              // For now, let's just log and close the detail modal
+              console.log("Edit button clicked for post:", post.id);
+              postDetailModal.classList.add("hidden");
+              document.body.classList.remove("overflow-hidden");
+              // Example: Populate write modal with post data and open it
+              editPostId = post.id;
+              postTitleInput.value = post.title;
+              postContentTextarea.value = post.content;
+              setRating(post.rating);
+              setTags(post.tags);
+              setRouteData(post.routeData);
+              setThumbnail(post.thumbnail);
+              selectedPlanId = post.linkedPlanId;
+              // Need to correctly display the selected plan name if linkedPlanId exists
+              // This might require a lookup similar to loadUserPlans
+              if (selectedPlanId) {
+                let currentUser = null;
+                try {
+                  currentUser =
+                    JSON.parse(localStorage.getItem("loggedInUser")) ||
+                    JSON.parse(localStorage.getItem("currentUser"));
+                } catch {}
+                if (currentUser && (currentUser.email || currentUser.id)) {
+                  const email = currentUser.email || currentUser.id;
+                  const userPlansKey = "tripPlans_" + email;
+                  const plans = JSON.parse(
+                    localStorage.getItem(userPlansKey) || "[]",
+                  );
+                  const linkedPlan = plans.find((p) => p.id === selectedPlanId);
+                  if (linkedPlan) {
+                    document.getElementById("selected-plan-name").textContent =
+                      linkedPlan.name;
+                    document
+                      .getElementById("selected-plan-name")
+                      .classList.add("text-primary", "font-bold");
+                    document
+                      .getElementById("clear-selected-plan")
+                      .classList.remove("hidden");
+                  }
+                }
+              } else {
+                document.getElementById("selected-plan-name").textContent =
+                  "여행 계획을 선택하세요";
+                document
+                  .getElementById("selected-plan-name")
+                  .classList.remove("text-primary", "font-bold");
+                document
+                  .getElementById("clear-selected-plan")
+                  .classList.add("hidden");
+              }
+              document.getElementById("write-modal-title").textContent =
+                "게시글 수정";
+              communityWriteModal.classList.remove("hidden");
+              document.body.classList.add("overflow-hidden");
+              loadUserPlans(); // Ensure plans are loaded for selection
+            };
+
+            deleteBtn.onclick = () => {
+              if (confirm("정말 이 게시글을 삭제하시겠습니까?")) {
+                allPostsData = allPostsData.filter((p) => p.id !== post.id);
+                localStorage.setItem(
+                  "communityPosts",
+                  JSON.stringify(allPostsData),
+                );
+                postDetailModal.classList.add("hidden");
+                // document.body.classList.remove("overflow-hidden"); // This line was removed based on user's instruction.
+                updateGallery(true); // Changed to updateGallery(true)
+                alert("삭제되었습니다.");
+              }
+            };
+          } else {
+            editBtn.classList.add("hidden");
+            deleteBtn.classList.add("hidden");
+          }
+
+          // 12. 좋아요/북마크 상태 (구현 필요 시 추가)
           // ...
 
-          // 10. 모달 열기
+          // 13. 모달 열기
           postDetailModal.classList.remove("hidden");
           document.body.classList.add("overflow-hidden");
           // 모달 최상단으로 스크롤
@@ -892,7 +1050,10 @@
             if (!detailMapInstance) {
               detailMapInstance = new google.maps.Map(detailMap, {
                 zoom: 12,
-                center: { lat: routeData[0].lat, lng: routeData[0].lng },
+                center: {
+                  lat: routeData[0].lat,
+                  lng: routeData[0].lng,
+                },
                 disableDefaultUI: true,
                 zoomControl: true,
               });
@@ -955,188 +1116,329 @@
           const staticPosts = [
             {
               id: "static-1",
+
               title: "미식가를 위한 교토 7일",
+
               author: "사라 젠킨스",
+
               authorId: "user1",
+
               date: "2024-07-21",
+
               content: "교토의 숨겨진 미식 보석 탐험.",
+
               thumbnail: "./community-image/교토음식.JPG",
+
               likes: 1200,
+
               tags: ["미식", "아시아", "럭셔리"],
+
               duration: 7,
+
               rating: 4.8,
+
               continent: "아시아",
+
               destination: "교토",
+
               liked: false,
+
               bookmarked: false,
+
               routeData: [
                 {
                   id: "kyoto_1",
+
                   place_name: "금각사 (Kinkaku-ji)",
+
                   address: "1 Kinkakujicho, Kita Ward, Kyoto",
+
                   lat: 35.0394,
+
                   lng: 135.7292,
                 },
+
                 {
                   id: "kyoto_2",
+
                   place_name: "기온 거리 (Gion District)",
+
                   address: "Gionmachi, Higashiyama Ward, Kyoto",
+
                   lat: 35.0033,
+
                   lng: 135.7783,
                 },
+
                 {
                   id: "kyoto_3",
+
                   place_name: "니시키 시장 (Nishiki Market)",
+
                   address: "Nakagyo Ward, Kyoto",
+
                   lat: 35.005,
+
                   lng: 135.764,
                 },
               ],
             },
+
             {
               id: "static-3",
+
               title: "프라하 배낭여행",
+
               author: "알렉스 리베라",
+
               authorId: "user3",
+
               date: "2024-07-19",
+
               content: "배낭여행객을 위한 종합 가이드.",
+
               thumbnail: "./community-image/프라하.JPG",
+
               likes: 2100,
+
               tags: ["모험", "유럽"],
+
               duration: 14,
+
               rating: 4.9,
+
               continent: "유럽",
+
               destination: "프라하",
+
               liked: false,
+
               bookmarked: false,
+
               routeData: [
                 {
                   id: "prague_1",
+
                   place_name: "프라하 성 (Prague Castle)",
+
                   address: "Hradčany, 119 08 Prague 1",
+
                   lat: 50.0908,
+
                   lng: 14.4005,
                 },
+
                 {
                   id: "prague_2",
+
                   place_name: "카를교 (Charles Bridge)",
+
                   address: "Karlův most, 110 00 Prague 1",
+
                   lat: 50.0865,
+
                   lng: 14.4112,
                 },
               ],
             },
+
             {
               id: "static-4",
+
               title: "예산으로 세부 여행",
+
               author: "마야 첸",
+
               authorId: "user4",
+
               date: "2024-07-18",
+
               content: "비용 부담 없는 최고의 경험.",
+
               thumbnail: "./community-image/세부.JPG",
+
               likes: 3400,
+
               tags: ["예산", "아시아"],
+
               duration: 10,
+
               rating: 4.7,
+
               continent: "아시아",
+
               destination: "세부",
+
               liked: false,
+
               bookmarked: false,
+
               routeData: [
                 {
                   id: "cebu_1",
+
                   place_name: "마젤란의 십자가 (Magellan's Cross)",
+
                   address: "Plaza Sugbo, Cebu City",
+
                   lat: 10.2929,
+
                   lng: 123.9022,
                 },
+
                 {
                   id: "cebu_2",
+
                   place_name: "탑스힐 전망대 (Tops Lookout)",
+
                   address: "Busay, Cebu City",
+
                   lat: 10.3703,
+
                   lng: 123.8711,
                 },
               ],
             },
+
             {
               id: "static-5",
+
               title: "나홀로 타이베이 여행",
+
               author: "데이비드 김",
+
               authorId: "user5",
+
               date: "2024-07-17",
+
               content: "나홀로 여행자를 위한 안전하고 매력적인 여정.",
+
               thumbnail: "./community-image/대만.JPG",
+
               likes: 920,
+
               tags: ["나홀로 여행", "아시아"],
+
               duration: 5,
+
               rating: 4.6,
+
               continent: "아시아",
+
               destination: "타이베이",
+
               liked: false,
+
               bookmarked: false,
+
               routeData: [
                 {
                   id: "taipei_1",
+
                   place_name: "타이베이 101",
+
                   address:
                     "No. 7, Section 5, Xinyi Road, Xinyi District, Taipei",
+
                   lat: 25.0339,
+
                   lng: 121.5645,
                 },
+
                 {
                   id: "taipei_2",
+
                   place_name: "국립고궁박물원",
+
                   address:
                     "No. 221, Sec 2, Zhi Shan Rd, Shilin District, Taipei",
+
                   lat: 25.102,
+
                   lng: 121.548,
                 },
               ],
             },
+
             {
               id: "static-6",
+
               title: "나고야 & 지브리파크 가족 여행",
+
               author: "엘레나",
+
               authorId: "user6",
+
               date: "2024-07-16",
+
               content: "가족과 함께하는 스트레스 없는 여행.",
+
               thumbnail: "./community-image/나고야성.JPG",
+
               likes: 2800,
+
               tags: ["가족", "아시아"],
+
               duration: 12,
+
               rating: 4.9,
+
               continent: "아시아",
+
               destination: "나고야",
+
               liked: false,
+
               bookmarked: false,
+
               routeData: [
                 {
                   id: "nagoya_1",
+
                   place_name: "나고야 성 (Nagoya Castle)",
+
                   address: "1-1 Honmaru, Naka Ward, Nagoya",
+
                   lat: 35.1856,
+
                   lng: 136.8996,
                 },
+
                 {
                   id: "nagoya_2",
+
                   place_name: "지브리 파크 (Ghibli Park)",
+
                   address: "1533-1 Ibaragabasama, Nagakute, Aichi",
+
                   lat: 35.173,
+
                   lng: 137.107,
                 },
               ],
             },
           ];
-          const savedPosts =
-            JSON.parse(localStorage.getItem("communityPosts")) || [];
-          const combinedPosts = [...savedPosts];
-          staticPosts.forEach((staticPost) => {
-            if (!combinedPosts.some((p) => p.id === staticPost.id))
-              combinedPosts.push(staticPost);
-          });
-          allPostsData = combinedPosts;
-          localStorage.setItem("communityPosts", JSON.stringify(allPostsData));
+
+          let savedPosts = JSON.parse(localStorage.getItem("communityPosts"));
+
+          if (!savedPosts || savedPosts.length === 0) {
+            // localStorage가 비어있거나 없는 경우에만 staticPosts를 기본으로 사용
+
+            savedPosts = [...staticPosts];
+          } else {
+            // localStorage에 이미 글이 있다면 staticPosts 중 중복되지 않는 것만 추가 (id 기준)
+
+            staticPosts.forEach((staticPost) => {
+              if (!savedPosts.some((p) => p.id === staticPost.id)) {
+                savedPosts.push(staticPost);
+              }
+            });
+          }
+
+          allPostsData = savedPosts; // allPostsData는 항상 savedPosts를 참조
+
+          localStorage.setItem("communityPosts", JSON.stringify(allPostsData)); // 변경된 내용을 localStorage에 반영
+
           populateTagFilters();
         }
 
@@ -1448,6 +1750,136 @@
         initializeAndLoadPosts();
         updateGallery();
 
+        // 1. 댓글 목록 표시 함수
+        function renderComments() {
+          const comments = currentDetailPost.comments || [];
+          document.getElementById("commentCount").textContent = comments.length;
+          const commentsList = document.getElementById("commentsList");
+          commentsList.innerHTML = "";
+
+          if (comments.length === 0) {
+            commentsList.innerHTML =
+              '<p class="text-text-muted-light dark:text-text-muted-dark text-center py-8">첫 댓글을 남겨보세요!</p>';
+            return;
+          }
+
+          comments.forEach((comment) => {
+            const commentEl = document.createElement("div");
+            commentEl.className = "flex gap-4";
+            commentEl.innerHTML = `
+                    <div class="size-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold shrink-0">
+                        ${(comment.author || "익").charAt(0)}
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="font-bold text-text-main-light dark:text-white">${comment.author}</span>
+                            <span class="text-xs text-text-muted-light dark:text-text-muted-dark">${new Date(comment.date).toLocaleDateString()}</span>
+                        </div>
+                        <p class="text-text-main-light dark:text-text-main-dark leading-relaxed">${comment.content}</p>
+                    </div>
+                `;
+            commentsList.appendChild(commentEl);
+          });
+        }
+
+        // 2. 댓글 등록 버튼 클릭 이벤트
+        document
+          .getElementById("submitCommentBtn")
+          .addEventListener("click", () => {
+            const commentInput = document.getElementById("commentInput");
+            const content = commentInput.value.trim();
+
+            if (!content) return;
+
+            const currentUser =
+              JSON.parse(localStorage.getItem("loggedInUser")) ||
+              JSON.parse(localStorage.getItem("currentUser"));
+            if (!currentUser) {
+              alert("로그인이 필요합니다.");
+              return;
+            }
+
+            const newComment = {
+              id: "comm-" + Date.now(),
+              author: currentUser.name,
+              content: content,
+              date: new Date().toISOString(),
+            };
+
+            // 데이터 업데이트
+            const post = allPostsData.find(
+              (p) => p.id === currentDetailPost.id,
+            );
+            if (post) {
+              if (!post.comments) post.comments = [];
+              post.comments.push(newComment);
+              localStorage.setItem(
+                "communityPosts",
+                JSON.stringify(allPostsData),
+              );
+
+              commentInput.value = "";
+              renderComments(); // 댓글 목록 새로고침
+            }
+          });
+
+        // 연결된 여행 계획 모달 열기 버튼
+        openLinkedPlanDetailButton.addEventListener("click", () => {
+          if (currentLinkedPlanData) {
+            // 모달 데이터 채우기
+            linkedPlanTitle.textContent = currentLinkedPlanData.name;
+            linkedPlanDates.textContent = `${currentLinkedPlanData.startDate} ~ ${currentLinkedPlanData.endDate}`;
+
+            linkedPlanPlacesList.innerHTML = "";
+            // Add a check to ensure currentLinkedPlanData.places exists and is an array
+            if (
+              currentLinkedPlanData.places &&
+              Array.isArray(currentLinkedPlanData.places)
+            ) {
+              currentLinkedPlanData.places.forEach((place, idx) => {
+                const li = document.createElement("li");
+                li.className =
+                  "flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-xl";
+                li.innerHTML = `<span class="size-6 bg-primary text-white text-xs font-bold rounded-full flex items-center justify-center">${idx + 1}</span>
+                                        <div><p class="font-bold text-sm">${place.name}</p><p class="text-xs text-text-muted-light">${place.address}</p></div>`;
+                linkedPlanPlacesList.appendChild(li);
+              });
+            } else {
+              linkedPlanPlacesList.innerHTML =
+                '<li class="text-text-muted-light dark:text-text-muted-dark text-center py-4">연결된 계획에 장소 정보가 없습니다.</li>';
+            }
+
+            linkedPlanDetailModal.classList.remove("hidden");
+
+            // 지도 업데이트 (필요 시)
+            setTimeout(() => {
+              const centerLocation =
+                currentLinkedPlanData.places &&
+                currentLinkedPlanData.places.length > 0
+                  ? currentLinkedPlanData.places[0]?.location
+                  : { lat: 37.56, lng: 126.97 }; // Default center if no places or location
+
+              if (!linkedPlanMapInstance) {
+                linkedPlanMapInstance = new google.maps.Map(
+                  document.getElementById("linkedPlanMap"),
+                  {
+                    zoom: 12,
+                    center: centerLocation,
+                  },
+                );
+              } else if (centerLocation) {
+                // Check if centerLocation is valid before setting
+                linkedPlanMapInstance.setCenter(centerLocation);
+              }
+            }, 100);
+          }
+        });
+
+        // 연결된 여행 계획 모달 닫기 버튼
+        closeLinkedPlanDetailModalBtn.addEventListener("click", () => {
+          linkedPlanDetailModal.classList.add("hidden");
+        });
+
         // --- 글쓰기 모달 로직 (기존과 동일) ---
         const communityWriteModal = document.getElementById(
           "community-write-modal",
@@ -1582,6 +2014,12 @@
             .classList.add("hidden");
 
           loadUserPlans();
+
+          // 추가: 혹시 열려있을 수 있는 중첩된 모달/드롭다운 강제 닫기
+          mapModal.classList.add("hidden");
+          document
+            .getElementById("plan-selector-dropdown")
+            .classList.add("hidden");
         });
 
         function loadUserPlans() {
@@ -1593,7 +2031,9 @@
             currentUser =
               JSON.parse(localStorage.getItem("loggedInUser")) ||
               JSON.parse(localStorage.getItem("currentUser"));
-          } catch {}
+          } catch (e) {
+            console.error("사용자 정보 로드 실패", e);
+          }
 
           if (!currentUser || (!currentUser.email && !currentUser.id)) {
             dropdown.innerHTML =
@@ -1602,8 +2042,9 @@
           }
 
           const email = currentUser.email || currentUser.id;
-          const userPlansKey = `tripPlans_${email}`;
-          const plans = JSON.parse(localStorage.getItem(userPlansKey) || "[]");
+          const userPlansKey = "tripPlans_" + email;
+          // [수정] plans가 반드시 배열이 되도록 보장
+          const plans = JSON.parse(localStorage.getItem(userPlansKey)) || [];
 
           if (plans.length === 0) {
             dropdown.innerHTML =
@@ -1616,17 +2057,28 @@
             item.className =
               "p-3 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer flex justify-between items-center";
             item.innerHTML = `<span class="text-sm font-medium text-gray-800 dark:text-gray-200">${plan.name}</span><span class="text-xs text-gray-500">${plan.startDate || ""}</span>`;
+
             item.onclick = () => {
               selectedPlanId = plan.id;
               document.getElementById("selected-plan-name").textContent =
                 plan.name;
               document
-                .getElementById("selected-plan-name")
-                .classList.add("text-primary", "font-bold");
-              document
                 .getElementById("clear-selected-plan")
                 .classList.remove("hidden");
               dropdown.classList.add("hidden");
+
+              // [중요] 선택한 계획의 장소들을 현재 게시글의 routeData로 복사
+              if (plan.places && Array.isArray(plan.places)) {
+                routeData = plan.places.map((p) => ({
+                  id: p.id || "place-" + Date.now(),
+                  place_name: p.name,
+                  address: p.address,
+                  lat: p.location?.lat,
+                  lng: p.location?.lng,
+                }));
+                document.getElementById("location-display").value =
+                  `${plan.name} (${plan.places.length}개 장소)`;
+              }
             };
             dropdown.appendChild(item);
           });
@@ -1658,6 +2110,33 @@
         closeWriteModalBtn.addEventListener("click", () => {
           communityWriteModal.classList.add("hidden");
           document.body.classList.remove("overflow-hidden");
+
+          // 모달이 닫힐 때 주요 변수들도 초기화
+          editPostId = null;
+          postTitleInput.value = "";
+          postContentTextarea.value = "";
+          setTags([]);
+          setRating(0.0);
+          setRouteData([]);
+          setThumbnail("");
+          document.getElementById("write-modal-title").textContent =
+            "게시글 작성";
+
+          selectedPlanId = null;
+          document.getElementById("selected-plan-name").textContent =
+            "여행 계획을 선택하세요";
+          document
+            .getElementById("selected-plan-name")
+            .classList.remove("text-primary", "font-bold");
+          document
+            .getElementById("clear-selected-plan")
+            .classList.add("hidden");
+
+          // 추가: 혹시 열려있을 수 있는 중첩된 모달/드롭다운 강제 닫기
+          mapModal.classList.add("hidden");
+          document
+            .getElementById("plan-selector-dropdown")
+            .classList.add("hidden");
         });
         cancelPostBtn.addEventListener("click", () =>
           closeWriteModalBtn.click(),
@@ -1890,65 +2369,128 @@
         }
 
         submitPostBtn.addEventListener("click", () => {
-          const title = postTitleInput.value;
-          const content = postContentTextarea.value;
-          if (!title.trim() || !content.trim())
-            return alert("제목과 내용을 입력해주세요.");
-
-          // 기본값 설정
-          let currentUser = { name: "익명", id: "anonymous" };
           try {
-            // 저장된 유저 정보가 있다면 갱신
+            const title = postTitleInput.value;
+            const content = postContentTextarea.value;
+            if (!title.trim() || !content.trim()) {
+              alert("제목과 내용을 입력해주세요.");
+              return;
+            }
+
             const savedUser =
               JSON.parse(localStorage.getItem("currentUser")) ||
               JSON.parse(localStorage.getItem("loggedInUser"));
-            if (savedUser) currentUser = savedUser;
-          } catch {}
+            const currentUser = savedUser || { id: "anonymous", name: "익명" };
+            // Ensure currentUser has an id for authorId
+            if (!currentUser.id)
+              currentUser.id = currentUser.email || "anonymous";
 
-          const postData = {
-            title,
-            content,
-            tags,
-            rating,
-            routeData,
-            thumbnail,
-            linkedPlanId: selectedPlanId,
-            // ★ 중요: 여기서 authorId가 필터의 기준이 됩니다.
-            author: currentUser.name,
-            authorId: currentUser.id,
-            id: `post-${Date.now()}`,
-            date: new Date().toISOString(),
-            likes: 0,
-            liked: false,
-            bookmarked: false,
-          };
+            // [추가] 선택된 여행 계획의 경로 정보 가져오기
+            let finalRouteData = [...routeData]; // 직접 지도에서 설정한 경로가 있다면 우선 사용
+            if (selectedPlanId) {
+              const email = currentUser.email || currentUser.id;
+              const userPlansKey = "tripPlans_" + email;
+              const plans = JSON.parse(
+                localStorage.getItem(userPlansKey) || "[]",
+              );
+              const selectedPlan = plans.find((p) => p.id === selectedPlanId);
+              if (selectedPlan && selectedPlan.places) {
+                // 계획의 장소들을 경로 데이터로 변환
+                finalRouteData = selectedPlan.places.map((p) => ({
+                  place_name: p.name,
+                  address: p.address,
+                  lat: p.location?.lat,
+                  lng: p.location?.lng,
+                }));
+              }
+            }
 
-          const knownContinents = ["유럽", "아시아", "북미"];
-          const inferredContinent = tags.find((tag) =>
-            knownContinents.includes(tag),
-          );
-          if (inferredContinent) postData.continent = inferredContinent;
+            const postData = {
+              id: editPostId || "post-" + Date.now(),
+              title,
+              content,
+              author: currentUser.name,
+              authorId: currentUser.id,
+              date: new Date().toISOString(),
+              rating: rating,
+              tags: tags,
+              thumbnail: thumbnail,
+              routeData: finalRouteData, // [수정] 추출된 경로 저장
+              linkedPlanId: selectedPlanId,
+              comments: [], // [추가] 댓글 배열 초기화
+              likes: 0,
+              liked: false,
+              bookmarked: false,
+            };
 
-          if (editPostId) {
-            const index = allPostsData.findIndex((p) => p.id === editPostId);
-            if (index > -1)
-              allPostsData[index] = { ...allPostsData[index], ...postData };
-          } else {
-            allPostsData.unshift(postData); // postData에 모든 정보가 포함되므로 바로 추가
+            const knownContinents = ["유럽", "아시아", "북미"];
+            const inferredContinent = tags.find((tag) =>
+              knownContinents.includes(tag),
+            );
+            if (inferredContinent) postData.continent = inferredContinent;
+
+            if (editPostId) {
+              const index = allPostsData.findIndex((p) => p.id === editPostId);
+              if (index > -1) {
+                allPostsData[index] = {
+                  ...allPostsData[index],
+                  ...postData,
+                };
+              }
+            } else {
+              allPostsData.unshift(postData);
+            }
+
+            localStorage.setItem(
+              "communityPosts",
+              JSON.stringify(allPostsData),
+            );
+
+            // UI 업데이트는 독립적인 try-catch 블록으로 감싸기
+            try {
+              populateTagFilters();
+            } catch (uiError) {
+              console.error("태그 필터 업데이트 중 오류 발생:", uiError);
+            }
+
+            alert(
+              editPostId
+                ? "게시글이 수정되었습니다."
+                : "게시글이 작성되었습니다.",
+            );
+
+            closeWriteModalBtn.click(); // 모달 닫기
+
+            try {
+              updateGallery(true); // 갤러리 업데이트
+            } catch (uiError) {
+              console.error("갤러리 업데이트 중 오류 발생:", uiError);
+            }
+          } catch (error) {
+            console.error("게시글 저장 중 오류 발생:", error);
+            alert("게시글 저장 중 오류가 발생했습니다.");
           }
-          localStorage.setItem("communityPosts", JSON.stringify(allPostsData));
-          populateTagFilters();
-          alert(
-            editPostId
-              ? "게시글이 수정되었습니다."
-              : "게시글이 작성되었습니다.",
+        }); // submit 버튼 이벤트 리스너 닫기
+
+        // URL 쿼리 파라미터 확인 및 모달 열기
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get("action") === "new-post") {
+          openWriteModalBtn.click();
+        } else if (urlParams.has("view-post")) {
+          // view-post 파라미터 처리
+          const postIdToView = urlParams.get("view-post");
+          // allPostsData가 로드된 후에 실행되도록 setTimeout을 사용하거나
+          // initializeAndLoadPosts()가 비동기인 경우 Promise.then 등으로 처리해야 할 수 있습니다.
+          // 현재는 DOMContentLoaded 시점에 allPostsData가 채워져 있다고 가정하고 로직을 이어갑니다.
+          const postToView = allPostsData.find(
+            (post) => post.id === postIdToView,
           );
-          closeWriteModalBtn.click();
-          updateGallery(true);
-        });
-      });
+          if (postToView) {
+            openPostDetailModal(postToView);
+          }
+        }
+      }); // DOMContentLoaded 닫기
     </script>
-    <!-- Post Detail Modal -->
     <div
       id="postDetailModal"
       class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 hidden"
@@ -2015,16 +2557,12 @@
                   >star</span
                 >
                 <span id="detailRatingText" class="text-lg font-bold">0.0</span>
-                <div id="detailStarDisplay" class="flex items-center">
-                  <!-- Stars will be dynamically inserted here -->
-                </div>
+                <div id="detailStarDisplay" class="flex items-center"></div>
               </div>
               <div
                 id="detailTagsContainer"
                 class="flex flex-wrap gap-2 items-center"
-              >
-                <!-- Tags will be dynamically inserted here -->
-              </div>
+              ></div>
             </div>
 
             <div
@@ -2034,28 +2572,151 @@
               <p>Post content goes here...</p>
             </div>
 
-            <div id="detailRouteContainer" class="hidden">
-              <h2 class="text-2xl font-bold mb-4">여행 경로</h2>
-              <div class="flex flex-col md:flex-row gap-6">
-                <div
-                  id="detailMap"
-                  class="w-full md:w-2/3 h-80 rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-700 border border-border-light dark:border-border-dark"
+            <!-- Linked Travel Plan Section -->
+
+            <div id="detailLinkedPlanContainer" class="mb-10 hidden">
+              <h2 class="text-2xl font-bold mb-4">연결된 여행 계획</h2>
+
+              <div
+                id="openLinkedPlanDetailButton"
+                class="flex items-center gap-2 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+              >
+                <span class="material-symbols-outlined text-primary text-3xl"
+                  >map</span
                 >
-                  <!-- Map will be initialized here -->
-                </div>
-                <ul id="detailRouteList" class="w-full md:w-1/3 space-y-3"></ul>
+
+                <p
+                  id="detailLinkedPlanName"
+                  class="text-lg font-semibold text-text-main-light dark:text-white"
+                ></p>
+
+                <span class="material-symbols-outlined text-gray-500 ml-auto"
+                  >arrow_forward_ios</span
+                >
               </div>
             </div>
+
+            <!-- Route Display -->
+            <div id="detailRouteContainer" class="mt-8 hidden">
+              <h3
+                class="text-2xl font-bold mb-4 flex items-center gap-2 text-text-main-light dark:text-white"
+              >
+                <span class="material-symbols-outlined">alt_route</span>
+                여행 경로
+              </h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div
+                  id="detailMap"
+                  class="w-full h-72 bg-gray-200 rounded-xl overflow-hidden dark:bg-gray-700"
+                ></div>
+                <ul
+                  id="detailRouteList"
+                  class="space-y-2 max-h-72 overflow-y-auto custom-scrollbar p-2 -my-2"
+                >
+                  <!-- Route items will be inserted here by JS -->
+                </ul>
+              </div>
+            </div>
+
+            <div
+              class="mt-12 pt-8 border-t border-border-light dark:border-border-dark"
+            >
+              <h3
+                class="text-2xl font-bold mb-6 flex items-center gap-2 text-text-main-light dark:text-white"
+              >
+                <span class="material-symbols-outlined">chat</span>
+                댓글 <span id="commentCount" class="text-primary">0</span>
+              </h3>
+
+              <div class="mb-8 bg-gray-50 dark:bg-gray-800/50 p-4 rounded-xl">
+                <textarea
+                  id="commentInput"
+                  rows="3"
+                  class="w-full p-4 rounded-lg border border-border-light dark:border-border-dark bg-white dark:bg-surface-dark focus:ring-2 focus:ring-primary outline-none transition-all text-text-main-light dark:text-white"
+                  placeholder="따뜻한 댓글을 남겨주세요..."
+                ></textarea>
+                <div class="flex justify-end mt-2">
+                  <button
+                    id="submitCommentBtn"
+                    class="bg-primary hover:bg-primary-hover text-white px-6 py-2 rounded-lg font-bold transition-all active:scale-95"
+                  >
+                    댓글 등록
+                  </button>
+                </div>
+              </div>
+
+              <div id="commentsList" class="space-y-6"></div>
+            </div>
+          </div>
+
+          <!-- Edit/Delete Buttons for Post Detail Modal -->
+
+          <div
+            id="detail-actions"
+            class="flex justify-end gap-3 p-8 border-t border-border-light dark:border-border-dark"
+          >
+            <button
+              id="editPostBtn"
+              class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hidden"
+            >
+              수정
+            </button>
+
+            <button
+              id="delete-post-button"
+              class="hidden text-red-500 hover:bg-red-50 px-3 py-1 rounded-lg text-sm font-bold transition-colors"
+            >
+              삭제
+            </button>
           </div>
         </div>
       </div>
     </div>
-            <footer class="bg-muted py-8">
-            <div
-                class="container mx-auto text-center text-muted-foreground text-sm"
-            >
-                © 2026 여백. All rights reserved.
-            </div>
-        </footer>
+
+    <!-- Linked Plan Detail Modal -->
+    <div
+      id="linkedPlanDetailModal"
+      class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-[51] hidden"
+    >
+      <div
+        class="bg-surface-light dark:bg-surface-dark rounded-xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col relative"
+      >
+        <button
+          id="closeLinkedPlanDetailModal"
+          class="absolute top-4 right-4 p-2 rounded-full bg-black/20 hover:bg-black/40 text-white z-10 transition-colors"
+        >
+          <span class="material-symbols-outlined text-3xl">close</span>
+        </button>
+        <div class="flex-1 overflow-y-auto custom-scrollbar p-8 md:p-10">
+          <h2
+            id="linkedPlanTitle"
+            class="text-3xl md:text-4xl font-black text-text-main-light dark:text-white tracking-tight leading-tight mb-4"
+          ></h2>
+          <p
+            id="linkedPlanDates"
+            class="text-text-muted-light dark:text-text-muted-dark text-lg mb-6"
+          ></p>
+
+          <div class="mb-8">
+            <h3 class="text-xl font-bold mb-3">포함된 장소</h3>
+            <ul id="linkedPlanPlacesList" class="space-y-3">
+              <!-- Places will be dynamically loaded here -->
+            </ul>
+          </div>
+
+          <div
+            id="linkedPlanMapContainer"
+            class="w-full h-80 rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-700 border border-border-light dark:border-border-dark mt-6"
+          >
+            <div id="linkedPlanMap" style="width: 100%; height: 100%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer class="bg-muted py-8">
+      <div class="container mx-auto text-center text-muted-foreground text-sm">
+        © 2026 여백. All rights reserved.
+      </div>
+    </footer>
   </body>
 </html>
