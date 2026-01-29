@@ -288,12 +288,13 @@ AI 성향 기반 추천 루트입니다.
 │ │ ├─ ArrowIcon.png
 │ │ ├─ ButtonIcon.png
 │ │ └─ ButtonIcon2.png
-│ ├─ 📁 profile
-│ │ ├─ Login_Background_image01.jpg
-│ │ ├─ Login_Background_image02.jpg
-│ │ ├─ Login_Background_image03.jpg
-│ │ ├─ Logo_Google.png
-│ │ └─ Logo.png
+│ │
+│ └─ 📁 profile
+│ ├─ Login_Background_image01.jpg
+│ ├─ Login_Background_image02.jpg
+│ ├─ Login_Background_image03.jpg
+│ ├─ Logo_Google.png
+│ └─ Logo.png
 │
 ├─ 📁 js
 │ ├─ auth.js
@@ -308,7 +309,7 @@ AI 성향 기반 추천 루트입니다.
 │ ├─ 📁 auth
 │ │ ├─ SignIn.html
 │ │ └─ SignUp.html
-│
+│ │
 │ ├─ 📁 community
 │ │ ├─ 📁 community-image
 │ │ │ ├─ 교토.JPG
@@ -320,7 +321,7 @@ AI 성향 기반 추천 루트입니다.
 │ │ │ └─ 프라하.JPG
 │ │ ├─ community-main.html
 │ │ └─ community-post.html
-│
+│ │
 │ ├─ 📁 main
 │ │ ├─ AI_Personality_test.html
 │ │ ├─ AI_Travel_planner.html
@@ -328,23 +329,23 @@ AI 성향 기반 추천 루트입니다.
 │ │ ├─ ai-personality-test.html
 │ │ ├─ ai-travel-recommend.html
 │ │ └─ Main.html
-│
+│ │
 │ ├─ 📁 plan
 │ │ ├─ flight.html
 │ │ ├─ planner.html
 │ │ └─ schedule.html
-│
+│ │
 │ ├─ 📁 profile
 │ │ ├─ profile.html
 │ │ ├─ view_personality_card.html
 │ │ └─ view-personality-card.html
-│
+│ │
 │ └─ 📁 stay
 │ ├─ detail.html
 │ ├─ search.html
 │ └─ table.html
 │
 ├─ 📄 styles.css
-├─ 📄 README.md
+└─ 📄 README.md
 
 ---
